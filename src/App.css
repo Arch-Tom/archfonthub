@@ -1,0 +1,378 @@
+/* Universal Styles */
+html {
+    min-height: 100vh;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+    color: #374151; /* gray-800 */
+    background: linear-gradient(to bottom right, #f5f3ff, #e0e7ff); /* purple-50 to indigo-100 */
+    box-sizing: border-box;
+    /* Changed from scroll to auto */
+    overflow-x: hidden;
+    overflow-y: auto; /* Allow scrolling only if content overflows */
+    /* Flexbox for centering content within the viewport */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center horizontally */
+    justify-content: center; /* Center vertically if content doesn't fill height */
+}
+
+/* App Container */
+.app-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    flex: 1; /* Allow app-container to grow and fill available space */
+    padding: 0.5rem; /* Reduced padding */
+}
+
+@media (min-width: 640px) { /* sm: breakpoint */
+    .app-container {
+        padding: 1rem; /* Reduced padding for larger screens */
+    }
+}
+
+
+/* Main Content Wrapper (like a card) */
+.main-content-wrapper {
+    background-color: white;
+    border-radius: 0.75rem; /* rounded-xl */
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); /* shadow-2xl */
+    overflow: hidden;
+    width: 100%; /* Take 100% of the app-container's padded width */
+    max-width: 1500px; /* Set a large max-width to prevent it from becoming too wide on ultra-wide screens */
+}
+
+/* Header Styles */
+.app-header {
+    background-color: #4f46e5; /* indigo-600 */
+    color: white;
+    padding: 1rem; /* Reduced padding */
+    text-align: center;
+    border-top-left-radius: 0.75rem;
+    border-top-right-radius: 0.75rem;
+}
+
+.header-title {
+    font-size: 1.5rem; /* Reduced font size */
+    line-height: 2rem;
+    font-weight: 800; /* font-extrabold */
+    letter-spacing: -0.05em; /* tracking-tight */
+    margin: 0;
+}
+
+@media (min-width: 640px) { /* sm: breakpoint */
+    .header-title {
+        font-size: 2rem; /* sm:text-4xl, slightly reduced */
+        line-height: 2.5rem;
+    }
+}
+
+.header-subtitle {
+    margin-top: 0.25rem; /* Reduced margin */
+    color: #c7d2fe; /* text-indigo-200 */
+    font-size: 1rem; /* Reduced font size */
+    line-height: 1.5rem;
+}
+
+/* Main Sections Container - Now holds the padding */
+.main-sections-container {
+    padding: 1rem; /* Reduced padding */
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; /* Reduced gap */
+}
+
+@media (min-width: 640px) { /* sm: breakpoint */
+    .main-sections-container {
+        padding: 1.5rem; /* Reduced padding */
+    }
+}
+
+/* Section Card Base Styles */
+.section-card, .preview-section-card, .saved-output-section {
+    background-color: #f9fafb; /* gray-50 */
+    padding: 1rem; /* Reduced padding */
+    border-radius: 0.5rem; /* rounded-lg */
+    box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06); /* shadow-inner */
+    border: 1px solid #e0e7ff; /* border-indigo-200, used for preview/output as well */
+}
+
+.preview-section-card {
+    background-color: white; /* bg-white */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+}
+
+.saved-output-section {
+    background-color: #eef2ff; /* indigo-50 */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+    border-color: #c7d2fe; /* border-indigo-300 */
+}
+
+.section-title {
+    font-size: 1.25rem; /* Reduced font size */
+    line-height: 1.75rem;
+    font-weight: 700; /* font-bold */
+    color: #4338ca; /* indigo-700 */
+    margin-bottom: 0.75rem; /* Reduced margin */
+}
+
+/* Font Grid Container */
+.font-grid-container {
+    /* Removed max-height and overflow-y */
+    padding-right: 0; /* Remove padding if custom scrollbar not needed */
+}
+
+/* Font Category (for h3 in grid) */
+.font-category {
+    margin-bottom: 1rem; /* Reduced margin */
+}
+
+.font-category-title {
+    font-size: 1.125rem; /* Reduced font size */
+    font-weight: 600; /* font-semibold */
+    color: #4f46e5; /* indigo-600 */
+    margin-bottom: 0.5rem; /* Reduced margin */
+    border-bottom: 2px solid #a5b4fc; /* border-b-2 border-indigo-300 */
+    padding-bottom: 0.25rem;
+}
+
+/* Font Buttons Grid */
+.font-buttons-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr)); /* grid-cols-2 */
+    gap: 0.5rem; /* Reduced gap */
+}
+
+@media (min-width: 640px) { /* sm: breakpoint */
+    .font-buttons-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr)); /* sm:grid-cols-3 */
+    }
+}
+
+@media (min-width: 768px) { /* md: breakpoint */
+    .font-buttons-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr)); /* md:grid-cols-4 */
+    }
+}
+
+/* Font Button Styles */
+.font-button {
+    padding: 0.5rem; /* Reduced padding */
+    border-radius: 0.375rem; /* rounded-md */
+    border: 2px solid #d1d5db; /* border-2 border-gray-300 */
+    transition: all 200ms ease-in-out;
+    background-color: white;
+    color: #4b5563; /* text-gray-700 */
+    font-weight: 500; /* font-medium */
+    font-size: 0.75rem; /* Reduced font size */
+    line-height: 1rem;
+    cursor: pointer;
+    outline: none;
+}
+
+    .font-button:hover {
+        background-color: #eef2ff; /* hover:bg-indigo-50 */
+        border-color: #a5b4fc; /* hover:border-indigo-400 */
+    }
+
+.font-button-selected {
+    background-color: #6366f1; /* bg-indigo-500 */
+    color: white;
+    border-color: #4f46e5; /* border-indigo-600 */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transform: scale(1.05);
+}
+
+/* Text Input */
+.text-input {
+    width: 100%;
+    padding: 0.75rem; /* Reduced padding */
+    border: 1px solid #d1d5db; /* border border-gray-300 */
+    border-radius: 0.5rem; /* rounded-lg */
+    outline: none;
+    transition: all 200ms;
+    font-size: 1rem; /* Reduced font size */
+    line-height: 1.5rem;
+    resize: vertical; /* resize-y */
+    min-height: 80px; /* Reduced min-height */
+}
+
+    .text-input:focus {
+        box-shadow: 0 0 0 2px #a5b4fc; /* focus:ring-2 focus:ring-indigo-400 */
+        border-color: transparent;
+    }
+
+/* Live Preview & Simulated Output Text Container */
+.preview-text-container, .output-text-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; /* Reduced gap */
+}
+
+.empty-preview-message {
+    color: #6b7280; /* text-gray-500 */
+    font-style: italic;
+    text-align: center;
+    padding-top: 0.5rem; /* Reduced padding */
+    padding-bottom: 0.5rem; /* Reduced padding */
+}
+
+.preview-text-item, .output-text-item {
+    border-bottom: 1px solid #e5e7eb; /* border-b */
+    padding-bottom: 0.75rem; /* Reduced padding */
+}
+
+    .preview-text-item:last-child, .output-text-item:last-child {
+        border-bottom: none;
+    }
+
+.preview-font-label, .output-font-label {
+    font-size: 0.875rem; /* text-sm */
+    color: #4b5563; /* text-gray-600 */
+    margin-bottom: 0.25rem;
+    font-weight: 600; /* font-semibold */
+}
+
+.preview-text, .output-text {
+    font-size: 1.25rem; /* Reduced font size */
+    line-height: 1.75rem;
+    word-break: break-word;
+    line-height: 1.625; /* leading-relaxed (approx) */
+    margin: 0;
+}
+
+@media (min-width: 640px) { /* sm: breakpoint */
+    .preview-text, .output-text {
+        font-size: 1.5rem; /* sm:text-3xl, slightly reduced */
+        line-height: 2rem;
+    }
+}
+
+.output-description {
+    color: #6b7280; /* text-gray-600 */
+    margin-bottom: 0.75rem; /* Reduced margin */
+}
+
+/* Save Button */
+.save-button-container {
+    text-align: center;
+    margin-top: 1rem; /* Added margin-top */
+}
+
+.save-button {
+    padding: 0.75rem 1.5rem; /* px-8 py-4, reduced */
+    background-color: #22c55e; /* bg-green-500 */
+    color: white;
+    font-size: 1rem; /* Reduced font size */
+    line-height: 1.5rem;
+    font-weight: 700; /* font-bold */
+    border-radius: 9999px; /* rounded-full */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+    transition: all 300ms ease-in-out;
+    cursor: pointer;
+    border: none;
+    outline: none;
+}
+
+    .save-button:hover {
+        background-color: #16a34a; /* hover:bg-green-600 */
+        transform: scale(1.05);
+    }
+
+    .save-button:active {
+        transform: scale(0.95);
+    }
+
+    .save-button:focus {
+        box-shadow: 0 0 0 4px #86efac; /* focus:ring-4 focus:ring-green-300 */
+    }
+
+/* Footer */
+.app-footer {
+    background-color: #4338ca; /* indigo-700 */
+    color: white;
+    padding: 0.75rem; /* Reduced padding */
+    text-align: center;
+    font-size: 0.75rem; /* Reduced font size */
+    line-height: 1rem;
+    border-bottom-left-radius: 0.75rem;
+    border-bottom-right-radius: 0.75rem;
+}
+
+/* Message Box Overlay */
+.message-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.message-box {
+    background-color: white;
+    padding: 1rem; /* Reduced padding */
+    border-radius: 0.5rem; /* rounded-lg */
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); /* shadow-xl */
+    border: 1px solid #bfdbfe; /* border border-blue-200 */
+    text-align: center;
+}
+
+.message-text {
+    font-size: 1rem; /* Reduced font size */
+    font-weight: 600; /* font-semibold */
+    color: #1d4ed8; /* text-blue-700 */
+    margin-bottom: 0.75rem; /* Reduced margin */
+}
+
+.message-button {
+    margin-top: 0.75rem; /* Reduced margin */
+    padding: 0.4rem 1rem; /* px-6 py-2, reduced */
+    background-color: #2563eb; /* bg-blue-600 */
+    color: white;
+    border-radius: 0.375rem; /* rounded-md */
+    transition: background-color 300ms;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    cursor: pointer;
+    border: none;
+    outline: none;
+}
+
+    .message-button:hover {
+        background-color: #1d4ed8; /* hover:bg-blue-700 */
+    }
+
+/* Custom Scrollbar Styling (retained from previous versions) */
+/* The custom scrollbar styles will still apply if overflow happens */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #a78bfa; /* Tailwind indigo-400 */
+    border-radius: 10px;
+}
+
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #8b5cf6; /* Tailwind indigo-500 */
+    }
+/* Inter font is still loaded from Google Fonts in the useEffect if needed for default, but here it's assumed to be available */
