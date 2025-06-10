@@ -14,9 +14,8 @@ body {
     min-height: 100vh;
     font-family: 'Inter', sans-serif;
     color: #374151; /* gray-800 */
-    background: linear-gradient(to bottom right, #f5f3ff, #e0e7ff); /* purple-50 to indigo-100 */
+    background: linear-gradient(to bottom right, #eef2ff, #d2e4f7); /* Adapted light blue gradient */
     box-sizing: border-box;
-    /* Changed from scroll to auto */
     overflow-x: hidden;
     overflow-y: auto; /* Allow scrolling only if content overflows */
     /* Flexbox for centering content within the viewport */
@@ -54,7 +53,7 @@ body {
 
 /* Header Styles */
 .app-header {
-    background-color: #4f46e5; /* indigo-600 */
+    background-color: #2E7ABF; /* Medium Blue from logo */
     color: white;
     padding: 1rem; /* Reduced padding */
     text-align: center;
@@ -79,7 +78,7 @@ body {
 
 .header-subtitle {
     margin-top: 0.25rem; /* Reduced margin */
-    color: #c7d2fe; /* text-indigo-200 */
+    color: #dbeafe; /* Adjusted light blue for contrast */
     font-size: 1rem; /* Reduced font size */
     line-height: 1.5rem;
 }
@@ -100,11 +99,11 @@ body {
 
 /* Section Card Base Styles */
 .section-card, .preview-section-card, .saved-output-section {
-    background-color: #f9fafb; /* gray-50 */
+    background-color: #f9fafb; /* gray-50 - kept light for content contrast */
     padding: 1rem; /* Reduced padding */
     border-radius: 0.5rem; /* rounded-lg */
     box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06); /* shadow-inner */
-    border: 1px solid #e0e7ff; /* border-indigo-200, used for preview/output as well */
+    border: 1px solid #cfe2f7; /* Adapted light blue border */
 }
 
 .preview-section-card {
@@ -113,22 +112,21 @@ body {
 }
 
 .saved-output-section {
-    background-color: #eef2ff; /* indigo-50 */
+    background-color: #e6f0fa; /* Adapted light blue for saved output */
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
-    border-color: #c7d2fe; /* border-indigo-300 */
+    border-color: #9ac2e6; /* Adapted medium blue border */
 }
 
 .section-title {
     font-size: 1.25rem; /* Reduced font size */
     line-height: 1.75rem;
     font-weight: 700; /* font-bold */
-    color: #4338ca; /* indigo-700 */
+    color: #2E7ABF; /* Medium Blue from logo */
     margin-bottom: 0.75rem; /* Reduced margin */
 }
 
 /* Font Grid Container */
 .font-grid-container {
-    /* Removed max-height and overflow-y */
     padding-right: 0; /* Remove padding if custom scrollbar not needed */
 }
 
@@ -140,9 +138,9 @@ body {
 .font-category-title {
     font-size: 1.125rem; /* Reduced font size */
     font-weight: 600; /* font-semibold */
-    color: #4f46e5; /* indigo-600 */
+    color: #2E7ABF; /* Medium Blue from logo */
     margin-bottom: 0.5rem; /* Reduced margin */
-    border-bottom: 2px solid #a5b4fc; /* border-b-2 border-indigo-300 */
+    border-bottom: 2px solid #57A3E1; /* Light Blue from logo */
     padding-bottom: 0.25rem;
 }
 
@@ -167,12 +165,12 @@ body {
 
 /* Font Button Styles */
 .font-button {
-    padding: 0.5rem; /* Reduced padding */
+    padding: 0.5rem; /* p-3 */
     border-radius: 0.375rem; /* rounded-md */
-    border: 2px solid #d1d5db; /* border-2 border-gray-300 */
+    border: 2px solid #57A3E1; /* Light Blue from logo */
     transition: all 200ms ease-in-out;
     background-color: white;
-    color: #4b5563; /* text-gray-700 */
+    color: #181717; /* Dark Grey from logo */
     font-weight: 500; /* font-medium */
     font-size: 0.75rem; /* Reduced font size */
     line-height: 1rem;
@@ -181,14 +179,14 @@ body {
 }
 
     .font-button:hover {
-        background-color: #eef2ff; /* hover:bg-indigo-50 */
-        border-color: #a5b4fc; /* hover:border-indigo-400 */
+        background-color: #d2e4f7; /* Lighter blue on hover */
+        border-color: #2E7ABF; /* Medium Blue on hover */
     }
 
 .font-button-selected {
-    background-color: #6366f1; /* bg-indigo-500 */
+    background-color: #2E7ABF; /* Medium Blue from logo */
     color: white;
-    border-color: #4f46e5; /* border-indigo-600 */
+    border-color: #181717; /* Dark Grey from logo */
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     transform: scale(1.05);
 }
@@ -196,19 +194,19 @@ body {
 /* Text Input */
 .text-input {
     width: 100%;
-    padding: 0.75rem; /* Reduced padding */
-    border: 1px solid #d1d5db; /* border border-gray-300 */
+    padding: 0.75rem; /* p-4 */
+    border: 1px solid #57A3E1; /* Light Blue from logo */
     border-radius: 0.5rem; /* rounded-lg */
     outline: none;
     transition: all 200ms;
-    font-size: 1rem; /* Reduced font size */
+    font-size: 1rem; /* text-lg */
     line-height: 1.5rem;
     resize: vertical; /* resize-y */
-    min-height: 80px; /* Reduced min-height */
+    min-height: 80px; /* min-h-[100px] */
 }
 
     .text-input:focus {
-        box-shadow: 0 0 0 2px #a5b4fc; /* focus:ring-2 focus:ring-indigo-400 */
+        box-shadow: 0 0 0 2px #57A3E1; /* focus:ring-2 Light Blue from logo */
         border-color: transparent;
     }
 
@@ -216,20 +214,20 @@ body {
 .preview-text-container, .output-text-container {
     display: flex;
     flex-direction: column;
-    gap: 1rem; /* Reduced gap */
+    gap: 1rem; /* space-y-6 */
 }
 
 .empty-preview-message {
     color: #6b7280; /* text-gray-500 */
     font-style: italic;
     text-align: center;
-    padding-top: 0.5rem; /* Reduced padding */
-    padding-bottom: 0.5rem; /* Reduced padding */
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
 }
 
 .preview-text-item, .output-text-item {
     border-bottom: 1px solid #e5e7eb; /* border-b */
-    padding-bottom: 0.75rem; /* Reduced padding */
+    padding-bottom: 0.75rem;
 }
 
     .preview-text-item:last-child, .output-text-item:last-child {
@@ -244,7 +242,7 @@ body {
 }
 
 .preview-text, .output-text {
-    font-size: 1.25rem; /* Reduced font size */
+    font-size: 1.25rem; /* text-2xl */
     line-height: 1.75rem;
     word-break: break-word;
     line-height: 1.625; /* leading-relaxed (approx) */
@@ -253,27 +251,27 @@ body {
 
 @media (min-width: 640px) { /* sm: breakpoint */
     .preview-text, .output-text {
-        font-size: 1.5rem; /* sm:text-3xl, slightly reduced */
+        font-size: 1.5rem; /* sm:text-3xl */
         line-height: 2rem;
     }
 }
 
 .output-description {
     color: #6b7280; /* text-gray-600 */
-    margin-bottom: 0.75rem; /* Reduced margin */
+    margin-bottom: 0.75rem;
 }
 
 /* Save Button */
 .save-button-container {
     text-align: center;
-    margin-top: 1rem; /* Added margin-top */
+    margin-top: 1rem;
 }
 
 .save-button {
-    padding: 0.75rem 1.5rem; /* px-8 py-4, reduced */
-    background-color: #22c55e; /* bg-green-500 */
-    color: white;
-    font-size: 1rem; /* Reduced font size */
+    padding: 0.75rem 1.5rem; /* px-8 py-4 */
+    background-color: #57A3E1; /* Light Blue from logo */
+    color: #181717; /* Dark Grey from logo */
+    font-size: 1rem; /* text-xl */
     line-height: 1.5rem;
     font-weight: 700; /* font-bold */
     border-radius: 9999px; /* rounded-full */
@@ -285,7 +283,7 @@ body {
 }
 
     .save-button:hover {
-        background-color: #16a34a; /* hover:bg-green-600 */
+        background-color: #2E7ABF; /* Medium Blue from logo */
         transform: scale(1.05);
     }
 
@@ -294,16 +292,16 @@ body {
     }
 
     .save-button:focus {
-        box-shadow: 0 0 0 4px #86efac; /* focus:ring-4 focus:ring-green-300 */
+        box-shadow: 0 0 0 4px #57A3E1; /* focus:ring-4 Light Blue from logo */
     }
 
 /* Footer */
 .app-footer {
-    background-color: #4338ca; /* indigo-700 */
+    background-color: #181717; /* Dark Grey from logo */
     color: white;
-    padding: 0.75rem; /* Reduced padding */
+    padding: 0.75rem; /* p-4 */
     text-align: center;
-    font-size: 0.75rem; /* Reduced font size */
+    font-size: 0.75rem; /* text-sm */
     line-height: 1rem;
     border-bottom-left-radius: 0.75rem;
     border-bottom-right-radius: 0.75rem;
@@ -325,24 +323,24 @@ body {
 
 .message-box {
     background-color: white;
-    padding: 1rem; /* Reduced padding */
+    padding: 1rem; /* p-6 */
     border-radius: 0.5rem; /* rounded-lg */
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); /* shadow-xl */
-    border: 1px solid #bfdbfe; /* border border-blue-200 */
+    border: 1px solid #57A3E1; /* Light Blue from logo */
     text-align: center;
 }
 
 .message-text {
-    font-size: 1rem; /* Reduced font size */
+    font-size: 1rem; /* text-lg */
     font-weight: 600; /* font-semibold */
-    color: #1d4ed8; /* text-blue-700 */
-    margin-bottom: 0.75rem; /* Reduced margin */
+    color: #2E7ABF; /* Medium Blue from logo */
+    margin-bottom: 0.75rem;
 }
 
 .message-button {
-    margin-top: 0.75rem; /* Reduced margin */
-    padding: 0.4rem 1rem; /* px-6 py-2, reduced */
-    background-color: #2563eb; /* bg-blue-600 */
+    margin-top: 0.75rem; /* mt-4 */
+    padding: 0.4rem 1rem; /* px-6 py-2 */
+    background-color: #2E7ABF; /* Medium Blue from logo */
     color: white;
     border-radius: 0.375rem; /* rounded-md */
     transition: background-color 300ms;
@@ -353,11 +351,10 @@ body {
 }
 
     .message-button:hover {
-        background-color: #1d4ed8; /* hover:bg-blue-700 */
+        background-color: #57A3E1; /* Light Blue from logo */
     }
 
-/* Custom Scrollbar Styling (retained from previous versions) */
-/* The custom scrollbar styles will still apply if overflow happens */
+/* Custom Scrollbar Styling */
 .custom-scrollbar::-webkit-scrollbar {
     width: 8px;
 }
@@ -368,11 +365,10 @@ body {
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #a78bfa; /* Tailwind indigo-400 */
+    background: #57A3E1; /* Light Blue from logo */
     border-radius: 10px;
 }
 
     .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-        background: #8b5cf6; /* Tailwind indigo-500 */
+        background: #2E7ABF; /* Medium Blue from logo */
     }
-/* Inter font is still loaded from Google Fonts in the useEffect if needed for default, but here it's assumed to be available */
