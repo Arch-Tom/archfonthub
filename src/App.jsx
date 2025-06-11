@@ -179,6 +179,51 @@ const App = () => {
         showMessage('Generating PDF...');
     };
 
+    // SVG Export Handler
+    const handleSaveSvg = () => {
+        if (selectedFonts.length === 0 || customText.trim() === '' || customText === DEFAULT_TEXT_PLACEHOLDER) {
+            showMessage('Please select fonts and enter text to generate SVG.');
+            return;
+        }
+
+        // Split text into lines if needed
+        const lines = customText.split('\n');
+        const lineHeight = 40; // px, adjust as needed
+        const fontSize = 32; // px, adjust as needed
+        const padding = 20;
+        const svgWidth = 800;
+        const svgHeight = selectedFonts.length * lines.length * lineHeight + padding * 2;
+
+        // Build SVG content
+        let svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="${svgWidth}" height="${svgHeight}">\n`;
+
+        let y = padding + fontSize;
+        selectedFonts.forEach((font) => {
+            lines.forEach((line, idx) => {
+                if (line.trim() !== '') {
+                    svgContent += `<text x="${padding}" y="${y}" font-family="${font}" font-size="${fontSize}" fill="#181717">${line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</text>\n`;
+                    y += lineHeight;
+                }
+            });
+            y += lineHeight / 2; // Extra space between font groups
+        });
+
+        svgContent += '</svg>';
+
+        // Create a blob and trigger download
+        const blob = new Blob([svgContent], { type: 'image/svg+xml' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'ArchFontHub_Preview.svg';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        showMessage('SVG file generated!');
+    };
+
     const showMessage = (msg) => {
         setMessage(msg);
         setShowMessageBox(true);
@@ -287,6 +332,13 @@ const App = () => {
                             style={{ backgroundColor: '#dc3545' }}
                         >
                             Save Live Preview as PDF
+                        </button>
+                        <button
+                            onClick={handleSaveSvg}
+                            className="save-button"
+                            style={{ backgroundColor: '#28a745', marginLeft: '1rem' }}
+                        >
+                            Save Live Preview as SVG
                         </button>
                     </div>
 
