@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
-import html2pdf from 'html2pdf.js/dist/html2pdf.min';
+import React, { useState, useEffect, useRef } from 'react'; // useRef kept for PDF function
+import html2pdf from 'html2pdf.js/dist/html2pdf.min'; // html2pdf import kept for PDF function
 
 // Main App Component
 const App = () => {
-    // ... (existing categorizedFonts and other state declarations) ...
+    // Pre-defined list of fonts, now including Benguiat, Copperplate Gothic, and I Love Glitter
     const categorizedFonts = {
         'Sans-serif': [
             'Arial',
@@ -29,10 +29,11 @@ const App = () => {
 
     const [selectedFonts, setSelectedFonts] = useState([]);
     const [customText, setCustomText] = useState('Type your text here...');
-    const [savedOutput, setSavedOutput] = useState([]);
+    const [savedOutput, setSavedOutput] = useState([]); // Kept for the "Simulated CorelDRAW Output" section
     const [message, setMessage] = useState('');
     const [showMessageBox, setShowMessageBox] = useState(false);
 
+    // Create a ref for the preview section (used by PDF save)
     const previewSectionRef = useRef(null);
 
     // Define customFontsCss globally or ensure it's accessible for HTML export
@@ -111,11 +112,10 @@ const App = () => {
 
     useEffect(() => {
         const styleElement = document.createElement('style');
-        styleElement.textContent = customFontsCssContent; // Use the defined constant
+        styleElement.textContent = customFontsCssContent;
         document.head.appendChild(styleElement);
     }, []);
 
-    // ... (existing handleFontSelect and handleTextChange functions) ...
     const handleFontSelect = (font) => {
         if (selectedFonts.includes(font)) {
             setSelectedFonts(selectedFonts.filter((f) => f !== font));
@@ -166,80 +166,9 @@ const App = () => {
         showMessage('Generating PDF...');
     };
 
-    // NEW FUNCTION: handleExportHtml
-    const handleExportHtml = () => {
-        if (selectedFonts.length === 0 || customText.trim() === '') {
-            showMessage('Please select fonts and enter text to export HTML.');
-            return;
-        }
+    // Removed handleSave function
 
-        // Build the HTML content for the preview
-        let previewHtmlContent = '';
-        selectedFonts.forEach(font => {
-            previewHtmlContent += `
-        <div style="margin-bottom: 15px;">
-          <p style="font-size: 14px; color: #4b5563; margin-bottom: 5px; font-weight: 600;">Font: ${font}</p>
-          <p style="font-family: '${font}'; font-size: 24px; line-height: 1.625; word-break: break-word; margin: 0;">${customText}</p>
-        </div>
-      `;
-        });
-
-        // Create the full HTML document with embedded fonts and styles
-        const fullHtml = `
-      <!DOCTYPE html>
-      <html lang="en">
-      <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Arch Font Hub - Export</title>
-          <style>
-              body { font-family: sans-serif; margin: 20px; color: #181717; } /* Basic styling for the exported HTML */
-              ${customFontsCssContent} /* Embed all @font-face rules */
-          </style>
-      </head>
-      <body>
-          <h1>Arch Font Hub - Live Preview Export</h1>
-          <hr>
-          ${previewHtmlContent}
-          <p style="margin-top: 30px; font-size: 12px; color: #6b7280;">
-            This content was exported from the Arch Font Hub simulator.
-          </p>
-      </body>
-      </html>
-    `;
-
-        const blob = new Blob([fullHtml], { type: 'text/html;charset=utf-8' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'ArchFontHub_Preview.html';
-        document.body.appendChild(link); // Required for Firefox
-        link.click();
-        document.body.removeChild(link); // Clean up
-        URL.revokeObjectURL(url); // Free up memory
-
-        showMessage('Exporting as HTML...');
-    };
-
-
-    const handleSave = () => {
-        if (selectedFonts.length === 0) {
-            showMessage('Please select at least one font to save.');
-            return;
-        }
-        if (customText.trim() === '') {
-            showMessage('Please enter some text to save.');
-            return;
-        }
-
-        const output = selectedFonts.map((font) => ({
-            font: font,
-            text: customText,
-        }));
-        setSavedOutput(output);
-        showMessage('Text saved to simulated document!');
-    };
-
+    // Removed handleExportHtml function
 
     const showMessage = (msg) => {
         setMessage(msg);
@@ -249,7 +178,6 @@ const App = () => {
             setMessage('');
         }, 3000);
     };
-
 
     return (
         <div className="app-container">
@@ -343,26 +271,15 @@ const App = () => {
                     </section>
 
                     <div className="save-button-container">
-                        <button
-                            onClick={handleSave}
-                            className="save-button"
-                        >
-                            Simulate Save to Document
-                        </button>
+                        {/* Removed Simulate Save to Document button */}
                         <button
                             onClick={handleSavePdf}
                             className="save-button"
-                            style={{ marginLeft: '1rem', backgroundColor: '#dc3545' }}
+                            style={{ backgroundColor: '#dc3545' }} // Adjusted styling since it's now the primary save button
                         >
                             Save Live Preview as PDF
                         </button>
-                        <button
-                            onClick={handleExportHtml} // New button for HTML export
-                            className="save-button"
-                            style={{ marginLeft: '1rem', backgroundColor: '#007bff' }} // Example color
-                        >
-                            Export Live Preview as HTML
-                        </button>
+                        {/* Removed Export Live Preview as HTML button */}
                     </div>
 
                     {savedOutput.length > 0 && (
