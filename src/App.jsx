@@ -1,5 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react'; // useRef kept for PDF function
-import html2pdf from 'html2pdf.js/dist/html2pdf.min'; // html2pdf import kept for PDF function
+import React, { useState, useEffect, useRef } from 'react';
+import html2pdf from 'html2pdf.js/dist/html2pdf.min';
+
+// Define a constant for the default text
+const DEFAULT_TEXT_PLACEHOLDER = 'Type your text here...';
 
 // Main App Component
 const App = () => {
@@ -28,15 +31,14 @@ const App = () => {
     };
 
     const [selectedFonts, setSelectedFonts] = useState([]);
-    const [customText, setCustomText] = useState('Type your text here...');
-    const [savedOutput, setSavedOutput] = useState([]); // Kept for the "Simulated CorelDRAW Output" section
+    // Initialize customText with the constant
+    const [customText, setCustomText] = useState(DEFAULT_TEXT_PLACEHOLDER);
+    const [savedOutput, setSavedOutput] = useState([]);
     const [message, setMessage] = useState('');
     const [showMessageBox, setShowMessageBox] = useState(false);
 
-    // Create a ref for the preview section (used by PDF save)
     const previewSectionRef = useRef(null);
 
-    // Define customFontsCss globally or ensure it's accessible for HTML export
     const customFontsCssContent = `
     @font-face {
       font-family: 'Benguiat';
@@ -132,8 +134,22 @@ const App = () => {
         setCustomText(e.target.value);
     };
 
+    // New function to handle focus event
+    const handleFocus = () => {
+        if (customText === DEFAULT_TEXT_PLACEHOLDER) {
+            setCustomText('');
+        }
+    };
+
+    // New function to handle blur event
+    const handleBlur = () => {
+        if (customText.trim() === '') {
+            setCustomText(DEFAULT_TEXT_PLACEHOLDER);
+        }
+    };
+
     const handleSavePdf = () => {
-        if (selectedFonts.length === 0 || customText.trim() === '') {
+        if (selectedFonts.length === 0 || customText.trim() === '' || customText === DEFAULT_TEXT_PLACEHOLDER) { // Added check for default text
             showMessage('Please select fonts and enter text to generate PDF.');
             return;
         }
@@ -165,10 +181,6 @@ const App = () => {
 
         showMessage('Generating PDF...');
     };
-
-    // Removed handleSave function
-
-    // Removed handleExportHtml function
 
     const showMessage = (msg) => {
         setMessage(msg);
@@ -241,7 +253,8 @@ const App = () => {
                             className="text-input"
                             value={customText}
                             onChange={handleTextChange}
-                            placeholder="Type your text here..."
+                            onFocus={handleFocus}   {/* Added onFocus handler */}
+                            onBlur={handleBlur}     {/* Added onBlur handler */}
                         />
                     </section>
 
@@ -262,7 +275,8 @@ const App = () => {
                                             className="preview-text"
                                             style={{ fontFamily: font }}
                                         >
-                                            {customText}
+                                            {/* Only display customText if it's not the default placeholder when rendering */}
+                                            {customText === DEFAULT_TEXT_PLACEHOLDER ? '' : customText}
                                         </p>
                                     </div>
                                 ))}
@@ -271,15 +285,13 @@ const App = () => {
                     </section>
 
                     <div className="save-button-container">
-                        {/* Removed Simulate Save to Document button */}
                         <button
                             onClick={handleSavePdf}
                             className="save-button"
-                            style={{ backgroundColor: '#dc3545' }} // Adjusted styling since it's now the primary save button
+                            style={{ backgroundColor: '#dc3545' }}
                         >
                             Save Live Preview as PDF
                         </button>
-                        {/* Removed Export Live Preview as HTML button */}
                     </div>
 
                     {savedOutput.length > 0 && (
