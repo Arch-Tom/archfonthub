@@ -1,16 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react'; // Import useRef
-
-// Import the html2pdf library (after npm install html2pdf.js)
-// You might need to adjust the import path based on the library's exact structure
-// import html2pdf from 'html2pdf.js'; // This is a common way
-// Or if it's a default export from a specific path in node_modules
-import html2pdf from 'html2pdf.js/dist/html2pdf.min'; // This is a more specific common path
+import React, { useState, useEffect, useRef } from 'react';
+import html2pdf from 'html2pdf.js/dist/html2pdf.min';
 
 // Main App Component
 const App = () => {
     // ... (existing categorizedFonts and other state declarations) ...
-
-    // Pre-defined list of fonts, now including Benguiat, Copperplate Gothic, and I Love Glitter
     const categorizedFonts = {
         'Sans-serif': [
             'Arial',
@@ -40,88 +33,86 @@ const App = () => {
     const [message, setMessage] = useState('');
     const [showMessageBox, setShowMessageBox] = useState(false);
 
-    // Create a ref for the preview section
     const previewSectionRef = useRef(null);
 
-    // ... (existing useEffect for @font-face rules) ...
+    // Define customFontsCss globally or ensure it's accessible for HTML export
+    const customFontsCssContent = `
+    @font-face {
+      font-family: 'Benguiat';
+      src: url('/fonts/Benguiat.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Copperplate Gothic';
+      src: url('/fonts/Copperplate%20Gothic.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'I Love Glitter';
+      src: url('/fonts/I%20Love%20Glitter.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Arial';
+      src: url('/fonts/arial.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Calibri';
+      src: url('/fonts/CALIBRI.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Century Gothic';
+      src: url('/fonts/CenturyGothicPaneuropeanRegular.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Garamond';
+      src: url('/fonts/GARA.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Times New Roman';
+      src: url('/fonts/TIMES.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Tinplate Titling Black';
+      src: url('/fonts/Tinplate%20Titling%20Black.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Zapf Humanist';
+      src: url('/fonts/ZHUM601D.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+  `;
+
     useEffect(() => {
-        const customFontsCss = `
-      @font-face {
-        font-family: 'Benguiat';
-        src: url('/fonts/Benguiat.ttf') format('truetype');
-        font-weight: normal;
-        font-style: normal;
-        font-display: swap;
-      }
-      @font-face {
-        font-family: 'Copperplate Gothic';
-        src: url('/fonts/Copperplate%20Gothic.ttf') format('truetype');
-        font-weight: normal;
-        font-style: normal;
-        font-display: swap;
-      }
-      @font-face {
-        font-family: 'I Love Glitter';
-        src: url('/fonts/I%20Love%20Glitter.ttf') format('truetype');
-        font-weight: normal;
-        font-style: normal;
-        font-display: swap;
-      }
-      @font-face {
-        font-family: 'Arial';
-        src: url('/fonts/arial.ttf') format('truetype');
-        font-weight: normal;
-        font-style: normal;
-        font-display: swap;
-      }
-      @font-face {
-        font-family: 'Calibri';
-        src: url('/fonts/CALIBRI.ttf') format('truetype');
-        font-weight: normal;
-        font-style: normal;
-        font-display: swap;
-      }
-      @font-face {
-        font-family: 'Century Gothic';
-        src: url('/fonts/CenturyGothicPaneuropeanRegular.ttf') format('truetype');
-        font-weight: normal;
-        font-style: normal;
-        font-display: swap;
-      }
-      @font-face {
-        font-family: 'Garamond';
-        src: url('/fonts/GARA.ttf') format('truetype');
-        font-weight: normal;
-        font-style: normal;
-        font-display: swap;
-      }
-      @font-face {
-        font-family: 'Times New Roman';
-        src: url('/fonts/TIMES.ttf') format('truetype');
-        font-weight: normal;
-        font-style: normal;
-        font-display: swap;
-      }
-      @font-face {
-        font-family: 'Tinplate Titling Black';
-        src: url('/fonts/Tinplate%20Titling%20Black.ttf') format('truetype');
-        font-weight: normal;
-        font-style: normal;
-        font-display: swap;
-      }
-      @font-face {
-        font-family: 'Zapf Humanist';
-        src: url('/fonts/ZHUM601D.ttf') format('truetype');
-        font-weight: normal;
-        font-style: normal;
-        font-display: swap;
-      }
-    `;
-
         const styleElement = document.createElement('style');
-        styleElement.textContent = customFontsCss;
+        styleElement.textContent = customFontsCssContent; // Use the defined constant
         document.head.appendChild(styleElement);
-
     }, []);
 
     // ... (existing handleFontSelect and handleTextChange functions) ...
@@ -141,8 +132,6 @@ const App = () => {
         setCustomText(e.target.value);
     };
 
-
-    // Function to handle saving to PDF
     const handleSavePdf = () => {
         if (selectedFonts.length === 0 || customText.trim() === '') {
             showMessage('Please select fonts and enter text to generate PDF.');
@@ -155,13 +144,11 @@ const App = () => {
             return;
         }
 
-        // Temporarily hide the h2 heading before PDF generation
         const headingElement = previewElement.querySelector('.section-title');
         if (headingElement) {
             headingElement.style.display = 'none';
         }
 
-        // PDF generation options
         const options = {
             margin: 10,
             filename: 'ArchFontHub_Preview.pdf',
@@ -171,13 +158,67 @@ const App = () => {
         };
 
         html2pdf().set(options).from(previewElement).save().finally(() => {
-            // Show the h2 heading again after PDF generation is complete
             if (headingElement) {
-                headingElement.style.display = ''; // Reset to default display
+                headingElement.style.display = '';
             }
         });
 
         showMessage('Generating PDF...');
+    };
+
+    // NEW FUNCTION: handleExportHtml
+    const handleExportHtml = () => {
+        if (selectedFonts.length === 0 || customText.trim() === '') {
+            showMessage('Please select fonts and enter text to export HTML.');
+            return;
+        }
+
+        // Build the HTML content for the preview
+        let previewHtmlContent = '';
+        selectedFonts.forEach(font => {
+            previewHtmlContent += `
+        <div style="margin-bottom: 15px;">
+          <p style="font-size: 14px; color: #4b5563; margin-bottom: 5px; font-weight: 600;">Font: ${font}</p>
+          <p style="font-family: '${font}'; font-size: 24px; line-height: 1.625; word-break: break-word; margin: 0;">${customText}</p>
+        </div>
+      `;
+        });
+
+        // Create the full HTML document with embedded fonts and styles
+        const fullHtml = `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Arch Font Hub - Export</title>
+          <style>
+              body { font-family: sans-serif; margin: 20px; color: #181717; } /* Basic styling for the exported HTML */
+              ${customFontsCssContent} /* Embed all @font-face rules */
+          </style>
+      </head>
+      <body>
+          <h1>Arch Font Hub - Live Preview Export</h1>
+          <hr>
+          ${previewHtmlContent}
+          <p style="margin-top: 30px; font-size: 12px; color: #6b7280;">
+            This content was exported from the Arch Font Hub simulator.
+          </p>
+      </body>
+      </html>
+    `;
+
+        const blob = new Blob([fullHtml], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'ArchFontHub_Preview.html';
+        document.body.appendChild(link); // Required for Firefox
+        link.click();
+        document.body.removeChild(link); // Clean up
+        URL.revokeObjectURL(url); // Free up memory
+
+        showMessage('Exporting as HTML...');
     };
 
 
@@ -200,7 +241,6 @@ const App = () => {
     };
 
 
-    // Function to display a temporary message box to the user.
     const showMessage = (msg) => {
         setMessage(msg);
         setShowMessageBox(true);
@@ -277,7 +317,7 @@ const App = () => {
                         />
                     </section>
 
-                    <section className="preview-section-card" ref={previewSectionRef}> {/* Add ref here */}
+                    <section className="preview-section-card" ref={previewSectionRef}>
                         <h2 className="section-title">
                             3. Live Preview
                         </h2>
@@ -312,9 +352,16 @@ const App = () => {
                         <button
                             onClick={handleSavePdf}
                             className="save-button"
-                            style={{ marginLeft: '1rem', backgroundColor: '#dc3545' }} // Added a new button for PDF with some basic styling
+                            style={{ marginLeft: '1rem', backgroundColor: '#dc3545' }}
                         >
                             Save Live Preview as PDF
+                        </button>
+                        <button
+                            onClick={handleExportHtml} // New button for HTML export
+                            className="save-button"
+                            style={{ marginLeft: '1rem', backgroundColor: '#007bff' }} // Example color
+                        >
+                            Export Live Preview as HTML
                         </button>
                     </div>
 
