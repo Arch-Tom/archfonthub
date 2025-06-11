@@ -1,19 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react'; // Import useRef
+
+// Import the html2pdf library (after npm install html2pdf.js)
+// You might need to adjust the import path based on the library's exact structure
+// import html2pdf from 'html2pdf.js'; // This is a common way
+// Or if it's a default export from a specific path in node_modules
+import html2pdf from 'html2pdf.js/dist/html2pdf.min'; // This is a more specific common path
 
 // Main App Component
 const App = () => {
+    // ... (existing categorizedFonts and other state declarations) ...
+
     // Pre-defined list of fonts, now including Benguiat, Copperplate Gothic, and I Love Glitter
     const categorizedFonts = {
         'Sans-serif': [
             'Arial',
             'Calibri',
-            'Century Gothic', // Changed from 'Century Gothic Paneuropean Regular'
+            'Century Gothic',
         ],
         'Serif': [
             'Benguiat',
             'Copperplate Gothic',
             'Garamond',
-            'Times New Roman' // Changed from 'TIMES'
+            'Times New Roman'
         ],
         'Script': [
             'I Love Glitter'
@@ -21,31 +29,22 @@ const App = () => {
         'Display': [
             'Tinplate Titling Black'
         ],
-        'Monospace': [ // Changed category for ZHUM601D to Monospace (assuming this is a suitable category for Zapf Humanist)
-            'Zapf Humanist' // Changed from 'ZHUM601D'
+        'Monospace': [
+            'Zapf Humanist'
         ]
     };
 
-    // Flattened list of all available fonts
-    const allAvailableFonts = Object.values(categorizedFonts).flat();
-
-    // State for selected fonts (up to 3)
     const [selectedFonts, setSelectedFonts] = useState([]);
-    // State for user-entered text
     const [customText, setCustomText] = useState('Type your text here...');
-    // State for the final "saved" output
     const [savedOutput, setSavedOutput] = useState([]);
-    // State for message box
     const [message, setMessage] = useState('');
     const [showMessageBox, setShowMessageBox] = useState(false);
 
-    // useEffect hook runs after the component renders.
-    // The empty dependency array `[]` ensures it runs only once after the initial render.
+    // Create a ref for the preview section
+    const previewSectionRef = useRef(null);
+
+    // ... (existing useEffect for @font-face rules) ...
     useEffect(() => {
-        // --- Custom Hosted Fonts ---
-        // This defines the font families and tells the browser where to find them.
-        // Ensure .ttf files are in your 'public/fonts/' directory.
-        // Spaces in URLs are now URL-encoded (%20) for better browser compatibility.
         const customFontsCss = `
       @font-face {
         font-family: 'Benguiat';
@@ -68,7 +67,6 @@ const App = () => {
         font-style: normal;
         font-display: swap;
       }
-      /* New @font-face rules below this line */
       @font-face {
         font-family: 'Arial';
         src: url('/fonts/arial.ttf') format('truetype');
@@ -84,8 +82,8 @@ const App = () => {
         font-display: swap;
       }
       @font-face {
-        font-family: 'Century Gothic'; /* Changed font-family name */
-        src: url('/fonts/CenturyGothicPaneuropeanRegular.ttf') format('truetype'); /* File name remains the same */
+        font-family: 'Century Gothic';
+        src: url('/fonts/CenturyGothicPaneuropeanRegular.ttf') format('truetype');
         font-weight: normal;
         font-style: normal;
         font-display: swap;
@@ -98,8 +96,8 @@ const App = () => {
         font-display: swap;
       }
       @font-face {
-        font-family: 'Times New Roman'; /* Changed font-family name */
-        src: url('/fonts/TIMES.ttf') format('truetype'); /* File name remains the same */
+        font-family: 'Times New Roman';
+        src: url('/fonts/TIMES.ttf') format('truetype');
         font-weight: normal;
         font-style: normal;
         font-display: swap;
@@ -112,23 +110,21 @@ const App = () => {
         font-display: swap;
       }
       @font-face {
-        font-family: 'Zapf Humanist'; /* Changed font-family name */
-        src: url('/fonts/ZHUM601D.ttf') format('truetype'); /* File name remains the same */
+        font-family: 'Zapf Humanist';
+        src: url('/fonts/ZHUM601D.ttf') format('truetype');
         font-weight: normal;
         font-style: normal;
         font-display: swap;
       }
-      /* End of new @font-face rules */
     `;
 
         const styleElement = document.createElement('style');
         styleElement.textContent = customFontsCss;
         document.head.appendChild(styleElement);
 
-    }, []); // Empty dependency array ensures this runs only once
+    }, []);
 
-    // Function to handle selecting and deselecting fonts.
-    // Allows up to 3 fonts to be selected.
+    // ... (existing handleFontSelect and handleTextChange functions) ...
     const handleFontSelect = (font) => {
         if (selectedFonts.includes(font)) {
             setSelectedFonts(selectedFonts.filter((f) => f !== font));
@@ -141,12 +137,50 @@ const App = () => {
         }
     };
 
-    // Handles changes in the custom text input field.
     const handleTextChange = (e) => {
         setCustomText(e.target.value);
     };
 
-    // Simulates saving the text with chosen fonts to a "document".
+
+    // Function to handle saving to PDF
+    const handleSavePdf = () => {
+        if (selectedFonts.length === 0 || customText.trim() === '') {
+            showMessage('Please select fonts and enter text to generate PDF.');
+            return;
+        }
+
+        const previewElement = previewSectionRef.current;
+        if (!previewElement) {
+            showMessage('Could not find preview section to save.');
+            return;
+        }
+
+        // Temporarily hide the h2 heading before PDF generation
+        const headingElement = previewElement.querySelector('.section-title');
+        if (headingElement) {
+            headingElement.style.display = 'none';
+        }
+
+        // PDF generation options
+        const options = {
+            margin: 10,
+            filename: 'ArchFontHub_Preview.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+
+        html2pdf().set(options).from(previewElement).save().finally(() => {
+            // Show the h2 heading again after PDF generation is complete
+            if (headingElement) {
+                headingElement.style.display = ''; // Reset to default display
+            }
+        });
+
+        showMessage('Generating PDF...');
+    };
+
+
     const handleSave = () => {
         if (selectedFonts.length === 0) {
             showMessage('Please select at least one font to save.');
@@ -175,6 +209,7 @@ const App = () => {
             setMessage('');
         }, 3000);
     };
+
 
     return (
         <div className="app-container">
@@ -242,7 +277,7 @@ const App = () => {
                         />
                     </section>
 
-                    <section className="preview-section-card">
+                    <section className="preview-section-card" ref={previewSectionRef}> {/* Add ref here */}
                         <h2 className="section-title">
                             3. Live Preview
                         </h2>
@@ -273,6 +308,13 @@ const App = () => {
                             className="save-button"
                         >
                             Simulate Save to Document
+                        </button>
+                        <button
+                            onClick={handleSavePdf}
+                            className="save-button"
+                            style={{ marginLeft: '1rem', backgroundColor: '#dc3545' }} // Added a new button for PDF with some basic styling
+                        >
+                            Save Live Preview as PDF
                         </button>
                     </div>
 
