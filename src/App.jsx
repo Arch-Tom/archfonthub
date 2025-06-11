@@ -5,24 +5,24 @@ const App = () => {
     // Pre-defined list of fonts, now including Benguiat, Copperplate Gothic, and I Love Glitter
     const categorizedFonts = {
         'Sans-serif': [
-            'Arial', // Added Arial
-            'Calibri', // Added Calibri
-            'Century Gothic Paneuropean Regular', // Added Century Gothic Paneuropean Regular
+            'Arial',
+            'Calibri',
+            'Century Gothic Paneuropean Regular',
         ],
         'Serif': [
             'Benguiat',
             'Copperplate Gothic',
-            'GARA', // Added GARA
-            'TIMES' // Added TIMES
+            'Garamond', // Changed GARA to Garamond
+            'TIMES'
         ],
         'Script': [
             'I Love Glitter'
         ],
         'Display': [
-            'Tinplate Titling Black' // Added Tinplate Titling Black
+            'Tinplate Titling Black'
         ],
         'Monospace': [
-            'ZHUM601D' // Added ZHUM601D
+            'ZHUM601D'
         ]
     };
 
@@ -84,15 +84,15 @@ const App = () => {
         font-display: swap;
       }
       @font-face {
-        font-family: 'Century Gothic Paneuropean Regular'; /* Adjusted for readability and consistency */
+        font-family: 'Century Gothic Paneuropean Regular';
         src: url('/fonts/CenturyGothicPaneuropeanRegular.ttf') format('truetype');
         font-weight: normal;
         font-style: normal;
         font-display: swap;
       }
       @font-face {
-        font-family: 'GARA';
-        src: url('/fonts/GARA.ttf') format('truetype');
+        font-family: 'Garamond'; /* Changed font-family name to Garamond */
+        src: url('/fonts/GARA.ttf') format('truetype'); /* File name remains GARA.ttf */
         font-weight: normal;
         font-style: normal;
         font-display: swap;
@@ -106,7 +106,7 @@ const App = () => {
       }
       @font-face {
         font-family: 'Tinplate Titling Black';
-        src: url('/fonts/Tinplate%20Titling%20Black.ttf') format('truetype'); /* Handle space in filename */
+        src: url('/fonts/Tinplate%20Titling%20Black.ttf') format('truetype');
         font-weight: normal;
         font-style: normal;
         font-display: swap;
