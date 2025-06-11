@@ -5,20 +5,24 @@ const App = () => {
     // Pre-defined list of fonts, now including Benguiat, Copperplate Gothic, and I Love Glitter
     const categorizedFonts = {
         'Sans-serif': [
-            // No sans-serif custom fonts added yet, but you can add them here
+            'Arial', // Added Arial
+            'Calibri', // Added Calibri
+            'Century Gothic Paneuropean Regular', // Added Century Gothic Paneuropean Regular
         ],
         'Serif': [
             'Benguiat',
-            'Copperplate Gothic'
+            'Copperplate Gothic',
+            'GARA', // Added GARA
+            'TIMES' // Added TIMES
         ],
         'Script': [
-            'I Love Glitter' // Added I Love Glitter
+            'I Love Glitter'
         ],
         'Display': [
-            // No display custom fonts added yet
+            'Tinplate Titling Black' // Added Tinplate Titling Black
         ],
         'Monospace': [
-            // No monospace custom fonts added yet
+            'ZHUM601D' // Added ZHUM601D
         ]
     };
 
@@ -40,32 +44,81 @@ const App = () => {
     useEffect(() => {
         // --- Custom Hosted Fonts ---
         // This defines the font families and tells the browser where to find them.
-        // Ensure 'Benguiat.ttf', 'Copperplate Gothic.ttf', and 'I Love Glitter.ttf' are in your 'public/fonts/'
-        // directory in your Cloudflare Pages deployment.
+        // Ensure .ttf files are in your 'public/fonts/' directory.
         // Spaces in URLs are now URL-encoded (%20) for better browser compatibility.
         const customFontsCss = `
       @font-face {
-        font-family: 'Benguiat'; /* Font family name */
-        src: url('/fonts/Benguiat.ttf') format('truetype'); /* Path relative to your deployed Cloudflare Pages site */
+        font-family: 'Benguiat';
+        src: url('/fonts/Benguiat.ttf') format('truetype');
         font-weight: normal;
         font-style: normal;
         font-display: swap;
       }
       @font-face {
-        font-family: 'Copperplate Gothic'; /* Font family name for Copperplate Gothic */
-        src: url('/fonts/Copperplate%20Gothic.ttf') format('truetype'); /* URL-encoded path for space */
+        font-family: 'Copperplate Gothic';
+        src: url('/fonts/Copperplate%20Gothic.ttf') format('truetype');
         font-weight: normal;
         font-style: normal;
         font-display: swap;
       }
       @font-face {
-        font-family: 'I Love Glitter'; /* Font family name for I Love Glitter */
-        src: url('/fonts/I%20Love%20Glitter.ttf') format('truetype'); /* URL-encoded path for space */
+        font-family: 'I Love Glitter';
+        src: url('/fonts/I%20Love%20Glitter.ttf') format('truetype');
         font-weight: normal;
         font-style: normal;
         font-display: swap;
       }
-      /* Add more @font-face rules here for other custom fonts if needed */
+      /* New @font-face rules below this line */
+      @font-face {
+        font-family: 'Arial';
+        src: url('/fonts/arial.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: 'Calibri';
+        src: url('/fonts/CALIBRI.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: 'Century Gothic Paneuropean Regular'; /* Adjusted for readability and consistency */
+        src: url('/fonts/CenturyGothicPaneuropeanRegular.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: 'GARA';
+        src: url('/fonts/GARA.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: 'TIMES';
+        src: url('/fonts/TIMES.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: 'Tinplate Titling Black';
+        src: url('/fonts/Tinplate%20Titling%20Black.ttf') format('truetype'); /* Handle space in filename */
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: 'ZHUM601D';
+        src: url('/fonts/ZHUM601D.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+      }
+      /* End of new @font-face rules */
     `;
 
         const styleElement = document.createElement('style');
@@ -142,7 +195,7 @@ const App = () => {
             <div className="main-content-wrapper">
                 <header className="app-header">
                     <h1 className="header-title">
-                        Arch Font Hub {/* Changed text here */}
+                        Arch Font Hub
                     </h1>
                     <p className="header-subtitle">
                         Experiment with fonts and text display
