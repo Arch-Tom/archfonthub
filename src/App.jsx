@@ -7,13 +7,13 @@ const App = () => {
         'Sans-serif': [
             'Arial',
             'Calibri',
-            'Century Gothic Paneuropean Regular',
+            'Century Gothic', // Changed from 'Century Gothic Paneuropean Regular'
         ],
         'Serif': [
             'Benguiat',
             'Copperplate Gothic',
-            'Garamond', // Changed GARA to Garamond
-            'TIMES'
+            'Garamond',
+            'Times New Roman' // Changed from 'TIMES'
         ],
         'Script': [
             'I Love Glitter'
@@ -21,8 +21,8 @@ const App = () => {
         'Display': [
             'Tinplate Titling Black'
         ],
-        'Monospace': [
-            'ZHUM601D'
+        'Monospace': [ // Changed category for ZHUM601D to Monospace (assuming this is a suitable category for Zapf Humanist)
+            'Zapf Humanist' // Changed from 'ZHUM601D'
         ]
     };
 
@@ -84,22 +84,22 @@ const App = () => {
         font-display: swap;
       }
       @font-face {
-        font-family: 'Century Gothic Paneuropean Regular';
-        src: url('/fonts/CenturyGothicPaneuropeanRegular.ttf') format('truetype');
+        font-family: 'Century Gothic'; /* Changed font-family name */
+        src: url('/fonts/CenturyGothicPaneuropeanRegular.ttf') format('truetype'); /* File name remains the same */
         font-weight: normal;
         font-style: normal;
         font-display: swap;
       }
       @font-face {
-        font-family: 'Garamond'; /* Changed font-family name to Garamond */
-        src: url('/fonts/GARA.ttf') format('truetype'); /* File name remains GARA.ttf */
+        font-family: 'Garamond';
+        src: url('/fonts/GARA.ttf') format('truetype');
         font-weight: normal;
         font-style: normal;
         font-display: swap;
       }
       @font-face {
-        font-family: 'TIMES';
-        src: url('/fonts/TIMES.ttf') format('truetype');
+        font-family: 'Times New Roman'; /* Changed font-family name */
+        src: url('/fonts/TIMES.ttf') format('truetype'); /* File name remains the same */
         font-weight: normal;
         font-style: normal;
         font-display: swap;
@@ -112,8 +112,8 @@ const App = () => {
         font-display: swap;
       }
       @font-face {
-        font-family: 'ZHUM601D';
-        src: url('/fonts/ZHUM601D.ttf') format('truetype');
+        font-family: 'Zapf Humanist'; /* Changed font-family name */
+        src: url('/fonts/ZHUM601D.ttf') format('truetype'); /* File name remains the same */
         font-weight: normal;
         font-style: normal;
         font-display: swap;
