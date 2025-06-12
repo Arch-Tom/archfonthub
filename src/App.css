@@ -22,7 +22,9 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center; /* Center horizontally */
-    justify-content: center; /* Center vertically if content doesn't fill height */
+    justify-content: flex-start; /* Align content to the top */
+    padding-top: 2rem; /* Add some space at the top */
+    padding-bottom: 2rem; /* Add some space at the bottom */
 }
 
 /* App Container */
@@ -32,6 +34,7 @@ body {
     width: 100%;
     flex: 1; /* Allow app-container to grow and fill available space */
     padding: 0.5rem; /* Reduced padding */
+    max-width: 1500px; /* Consistent max-width */
 }
 
 @media (min-width: 640px) { /* sm: breakpoint */
@@ -48,7 +51,6 @@ body {
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); /* shadow-2xl */
     overflow: hidden;
     width: 100%; /* Take 100% of the app-container's padded width */
-    max-width: 1500px; /* Set a large max-width to prevent it from becoming too wide on ultra-wide screens */
 }
 
 /* Header Styles */
@@ -127,7 +129,9 @@ body {
 
 /* Font Grid Container */
 .font-grid-container {
-    padding-right: 0; /* Remove padding if custom scrollbar not needed */
+    padding-right: 8px; /* Space for scrollbar */
+    max-height: 400px; /* Or any height you prefer */
+    overflow-y: auto;
 }
 
 /* Font Category (for h3 in grid) */
@@ -176,6 +180,7 @@ body {
     line-height: 1rem;
     cursor: pointer;
     outline: none;
+    text-align: center;
 }
 
     .font-button:hover {
@@ -203,6 +208,7 @@ body {
     line-height: 1.5rem;
     resize: vertical; /* resize-y */
     min-height: 80px; /* min-h-[100px] */
+    box-sizing: border-box;
 }
 
     .text-input:focus {
@@ -284,6 +290,7 @@ body {
 
     .save-button:hover {
         background-color: #2E7ABF; /* Medium Blue from logo */
+        color: white;
         transform: scale(1.05);
     }
 
@@ -323,11 +330,13 @@ body {
 
 .message-box {
     background-color: white;
-    padding: 1rem; /* p-6 */
+    padding: 1.5rem; /* p-6 */
     border-radius: 0.5rem; /* rounded-lg */
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); /* shadow-xl */
     border: 1px solid #57A3E1; /* Light Blue from logo */
     text-align: center;
+    color: #333;
+    min-width: 300px;
 }
 
 .message-text {
@@ -335,6 +344,7 @@ body {
     font-weight: 600; /* font-semibold */
     color: #2E7ABF; /* Medium Blue from logo */
     margin-bottom: 0.75rem;
+    margin-top: 0;
 }
 
 .message-button {
@@ -348,6 +358,7 @@ body {
     cursor: pointer;
     border: none;
     outline: none;
+    font-weight: bold;
 }
 
     .message-button:hover {
@@ -372,3 +383,18 @@ body {
     .custom-scrollbar::-webkit-scrollbar-thumb:hover {
         background: #2E7ABF; /* Medium Blue from logo */
     }
+
+/* --- NEW STYLES --- */
+/* Wrapper for top sections to enable grid layout */
+.top-sections-wrapper {
+    display: grid;
+    grid-template-columns: 1fr; /* Default to a single column for mobile */
+    gap: 1.5rem;
+}
+
+/* On screens larger than 1024px, switch to two columns */
+@media (min-width: 1024px) {
+    .top-sections-wrapper {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
