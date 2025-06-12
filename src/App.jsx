@@ -18,6 +18,7 @@ const App = () => {
             'Copperplate Gothic',
             'Garamond',
             'Times New Roman'
+            'Zapf Humanist'
         ],
         'Script': [
             'I Love Glitter'
@@ -26,7 +27,7 @@ const App = () => {
             'Tinplate Titling Black'
         ],
         'Monospace': [
-            'Zapf Humanist'
+            
         ]
     };
 
