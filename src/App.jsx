@@ -4,6 +4,7 @@ import './App.css';
 // Constants
 const DEFAULT_TEXT_PLACEHOLDER = 'Type your text here to see a live preview.';
 const MAX_SELECTED_FONTS = 3;
+const CLOUDFLARE_WORKER_URL = 'https://arch-worker.tom-4a9.workers.dev';
 
 // Font data
 const categorizedFonts = {
@@ -18,7 +19,6 @@ const App = () => {
     // State variables
     const [selectedFonts, setSelectedFonts] = useState([]);
     const [customText, setCustomText] = useState(DEFAULT_TEXT_PLACEHOLDER);
-    const [savedOutput, setSavedOutput] = useState([]);
     const [message, setMessage] = useState('');
     const [showMessageBox, setShowMessageBox] = useState(false);
     const [showCustomerModal, setShowCustomerModal] = useState(false);
@@ -49,7 +49,7 @@ const App = () => {
     // Helper Functions
     const formatForFilename = (str) => str.trim().replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_-]/g, '');
 
-    const showMessage = (msg, duration = 3000) => {
+    const showMessage = (msg, duration = 4000) => {
         setMessage(msg);
         setShowMessageBox(true);
         setTimeout(() => {
@@ -98,10 +98,12 @@ const App = () => {
         const svgWidth = 800;
         let y = padding + fontSize;
 
-        let svgContent = '';
+        let svgTextElements = '';
         selectedFonts.forEach((font, fontIndex) => {
             lines.forEach((line) => {
-                svgContent += `<text x="${padding}" y="${y}" font-family="${font}" font-size="${fontSize}" fill="#181717">${line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</text>\n`;
+                // Sanitize text for SVG
+                const sanitizedLine = line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                svgTextElements += `<text x="${padding}" y="${y}" font-family="${font}" font-size="${fontSize}" fill="#181717">${sanitizedLine}</text>\n`;
                 y += lineHeight;
             });
             if (fontIndex < selectedFonts.length - 1) {
@@ -110,13 +112,14 @@ const App = () => {
         });
 
         const svgHeight = y;
-        const fullSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="${svgWidth}" height="${svgHeight}">\n<style>\n${`
+        const fontFaceStyles = `
           @font-face { font-family: 'Benguiat'; src: url('/fonts/Benguiat-Regular.woff') format('woff'); }
           @font-face { font-family: 'I Love Glitter'; src: url('/fonts/I-Love-Glitter.woff') format('woff'); }
           @font-face { font-family: 'Tinplate Titling Black'; src: url('/fonts/Tinplate-Titling-Black.woff') format('woff'); }
           @font-face { font-family: 'Zapf Humanist'; src: url('/fonts/Zapf-Humanist.woff') format('woff'); }
-        `}\n</style>${svgContent}</svg>`;
+        `;
 
+        const fullSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="${svgWidth}" height="${svgHeight}">\n<style>${fontFaceStyles}</style>\n${svgTextElements}</svg>`;
 
         setPendingSvgContent(fullSvg);
         setShowCustomerModal(true);
@@ -135,20 +138,45 @@ const App = () => {
         const company = customerCompany.trim() ? formatForFilename(customerCompany) : '';
         const filename = [order, name, company].filter(Boolean).join('_') + '.svg';
 
-        // Local Save
-        const blob = new Blob([pendingSvgContent], { type: 'image/svg+xml' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
+        // 1. Local Save
+        try {
+            const blob = new Blob([pendingSvgContent], { type: 'image/svg+xml' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showMessage('SVG saved locally. Now uploading...');
+        } catch (error) {
+            showMessage(`Could not save file locally: ${error.message}`);
+        }
 
-        showMessage('SVG saved locally successfully!');
 
-        // Reset fields
+        // 2. Upload to Cloudflare Worker
+        try {
+            const response = await fetch(CLOUDFLARE_WORKER_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'image/svg+xml',
+                    'X-Filename': filename
+                },
+                body: pendingSvgContent
+            });
+            if (!response.ok) {
+                // Try to get a more detailed error message from the worker response
+                const errorText = await response.text();
+                throw new Error(`Upload failed with status ${response.status}. ${errorText}`);
+            }
+            showMessage('SVG uploaded successfully!', 5000);
+        } catch (error) {
+            console.error('Upload error:', error);
+            showMessage(`Error uploading SVG: ${error.message}`, 6000);
+        }
+
+        // 3. Reset fields
         setCustomerName('');
         setCustomerCompany('');
         setOrderNumber('');
@@ -325,16 +353,6 @@ const App = () => {
                     border: 1px solid #ccc;
                     border-radius: 4px;
                     box-sizing: border-box; /* Important for padding */
-                }
-                .top-sections-wrapper {
-                    display: grid;
-                    grid-template-columns: 1fr;
-                    gap: 1.5rem;
-                }
-                @media (min-width: 1024px) { /* lg breakpoint */
-                    .top-sections-wrapper {
-                        grid-template-columns: 1fr 1fr;
-                    }
                 }
             `}</style>
         </div>
