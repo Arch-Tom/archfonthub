@@ -232,13 +232,13 @@ const App = () => {
                 body: svgContent
             });
 
-            if (response.ok) {
-                showMessage('SVG file generated and uploaded!');
-            } else {
-                showMessage('SVG saved, but upload failed.');
+            if (!response.ok) {
+                throw new Error('Failed to upload SVG to Cloudflare Worker.');
             }
+
+            showMessage('SVG uploaded successfully.');
         } catch (error) {
-            showMessage('SVG saved, but upload failed.');
+            showMessage(`Error uploading SVG: ${error.message}`);
         }
     };
 
