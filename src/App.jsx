@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import './App.css'
 
 // Define a constant for the default text
 const DEFAULT_TEXT_PLACEHOLDER = 'Type your text here...';
