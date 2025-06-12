@@ -40,7 +40,7 @@ const App = () => {
 
     const customFontsCssContent = `
     @font-face {
-      font-family: 'Benguiat';
+      font-family: 'Benguiat Book Bt';
       src: url('/fonts/Benguiat.ttf') format('truetype');
       font-weight: normal;
       font-style: normal;
