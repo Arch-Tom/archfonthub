@@ -147,23 +147,33 @@ const App = () => {
         // Build the <text> elements
         let svgTextElements = '';
         const lineHeight = 40;
-        const fontSize = 32;
+        const mainFontSize = 32;
+        const labelFontSize = 16;
         const padding = 20;
-        let y = padding + fontSize;
+        let y = padding;
 
         selectedFonts.forEach((font, fontIndex) => {
+            // Add font name as a label
+            y += labelFontSize + 5; // Add space for the label
+            svgTextElements += `<text x="${padding}" y="${y}" font-family="Arial, sans-serif" font-size="${labelFontSize}" fill="#888">${font}</text>\n`;
+            y += lineHeight * 0.5; // Space between label and text
+
+            // Add the user's text rendered in the selected font
             lines.forEach((line) => {
                 const sanitizedLine = line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                svgTextElements += `<text x="${padding}" y="${y}" font-family="${font}" font-size="${fontSize}" fill="#181717">${sanitizedLine}</text>\n`;
                 y += lineHeight;
+                svgTextElements += `<text x="${padding}" y="${y}" font-family="${font}" font-size="${mainFontSize}" fill="#181717">${sanitizedLine}</text>\n`;
             });
-            if (fontIndex < selectedFonts.length - 1) { y += lineHeight / 2; }
+
+            if (fontIndex < selectedFonts.length - 1) {
+                y += lineHeight * 0.75; // Extra space between font groups
+            }
         });
 
         // Assemble the final SVG
         const svgWidth = 800;
-        const svgHeight = y;
-        const fullSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="${svgWidth}" height="${svgHeight}">\n<style>${fontFaceStyles}</style>\n${svgTextElements}</svg>`;
+        const svgHeight = y + padding; // Adjust height based on content
+        const fullSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="${svgWidth}" height="${svgHeight}" style="background-color: #FFF;">\n<style>${fontFaceStyles}</style>\n${svgTextElements}</svg>`;
 
         setPendingSvgContent(fullSvg);
         setShowCustomerModal(true);
