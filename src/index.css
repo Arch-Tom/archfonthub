@@ -1,3 +1,13 @@
+/* ==== Reset Styles ==== */
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ==== Font Faces (use actual file names and casing) ==== */
+
+/* Benguiat */
 @font-face {
     font-family: 'Benguiat';
     src: url('/fonts/Benguiat.woff2') format('woff2'), url('/fonts/Benguiat.woff') format('woff');
@@ -6,6 +16,7 @@
     font-display: swap;
 }
 
+/* Calibri */
 @font-face {
     font-family: 'Calibri';
     src: url('/fonts/Calibri.woff2') format('woff2'), url('/fonts/Calibri.woff') format('woff');
@@ -14,6 +25,7 @@
     font-display: swap;
 }
 
+/* Century Gothic */
 @font-face {
     font-family: 'Century Gothic';
     src: url('/fonts/CenturyGothicPaneuropean.woff2') format('woff2'), url('/fonts/CenturyGothicPaneuropean.woff') format('woff');
@@ -22,6 +34,7 @@
     font-display: swap;
 }
 
+/* Copperplate Gothic */
 @font-face {
     font-family: 'Copperplate Gothic';
     src: url('/fonts/CopperplateGothicBT-Roman.woff2') format('woff2'), url('/fonts/CopperplateGothicBT-Roman.woff') format('woff');
@@ -30,6 +43,7 @@
     font-display: swap;
 }
 
+/* Garamond */
 @font-face {
     font-family: 'Garamond';
     src: url('/fonts/Garamond.woff2') format('woff2'), url('/fonts/Garamond.woff') format('woff');
@@ -38,6 +52,7 @@
     font-display: swap;
 }
 
+/* I Love Glitter */
 @font-face {
     font-family: 'I Love Glitter';
     src: url('/fonts/ILoveGlitter.woff2') format('woff2'), url('/fonts/ILoveGlitter.woff') format('woff');
@@ -46,6 +61,7 @@
     font-display: swap;
 }
 
+/* Times New Roman */
 @font-face {
     font-family: 'Times New Roman';
     src: url('/fonts/TimesNewRomanPSMT.woff2') format('woff2'), url('/fonts/TimesNewRomanPSMT.woff') format('woff');
@@ -54,6 +70,7 @@
     font-display: swap;
 }
 
+/* Tinplate Titling Black */
 @font-face {
     font-family: 'Tinplate Titling Black';
     src: url('/fonts/TinplateTitlingBlack.woff2') format('woff2'), url('/fonts/TinplateTitlingBlack.woff') format('woff');
@@ -62,10 +79,58 @@
     font-display: swap;
 }
 
+/* ZHUM601D */
 @font-face {
     font-family: 'ZHUM601D';
     src: url('/fonts/ZHUM601D.woff2') format('woff2'), url('/fonts/ZHUM601D.woff') format('woff');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
+}
+
+/* Arial (system fallback only, web safe, no file needed) */
+.arial {
+    font-family: 'Arial', sans-serif;
+}
+
+/* ==== Example Usage Classes ==== */
+.benguiat {
+    font-family: 'Benguiat', serif;
+}
+
+.calibri {
+    font-family: 'Calibri', sans-serif;
+}
+
+.centurygothic {
+    font-family: 'Century Gothic', sans-serif;
+}
+
+.copperplategothic {
+    font-family: 'Copperplate Gothic', serif;
+}
+
+.garamond {
+    font-family: 'Garamond', serif;
+}
+
+.iloveglitter {
+    font-family: 'I Love Glitter', cursive;
+}
+
+.timesnewroman {
+    font-family: 'Times New Roman', serif;
+}
+
+.tinplatetitlingblack {
+    font-family: 'Tinplate Titling Black', serif;
+}
+
+.zhum601d {
+    font-family: 'ZHUM601D', serif;
+}
+
+/* ==== Body Default Font ==== */
+body {
+    font-family: 'Arial', sans-serif;
 }
