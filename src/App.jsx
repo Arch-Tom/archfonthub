@@ -76,17 +76,17 @@ const App = () => {
         }
     };
 
-  const handleTextChange = (e) => setCustomText(e.target.value);
-  const handleFocus = () => { if (customText === DEFAULT_TEXT_PLACEHOLDER) setCustomText(''); };
-  const handleBlur = () => { if (customText.trim() === '') setCustomText(DEFAULT_TEXT_PLACEHOLDER); };
+    const handleTextChange = (e) => setCustomText(e.target.value);
+    const handleFocus = () => { if (customText === DEFAULT_TEXT_PLACEHOLDER) setCustomText(''); };
+    const handleBlur = () => { if (customText.trim() === '') setCustomText(DEFAULT_TEXT_PLACEHOLDER); };
 
-  const showMessage = (msg, duration = 4000) => {
-    setMessage(msg);
-    setShowMessageBox(true);
-    setTimeout(() => { setShowMessageBox(false); setMessage(''); }, duration);
-  };
+    const showMessage = (msg, duration = 4000) => {
+        setMessage(msg);
+        setShowMessageBox(true);
+        setTimeout(() => { setShowMessageBox(false); setMessage(''); }, duration);
+    };
 
-  const formatForFilename = (str) => str.trim().replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_-]/g, '');
+    const formatForFilename = (str) => str.trim().replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_-]/g, '');
 
     // --- WORKING SAVE FUNCTIONALITY ---
     const handleSaveSvg = () => {
@@ -100,47 +100,47 @@ const App = () => {
             return;
         }
 
-    let svgTextElements = '';
-    const lineHeight = 40;
-    const mainFontSize = 32;
-    const labelFontSize = 16;
-    const padding = 20;
-    let y = padding;
+        let svgTextElements = '';
+        const lineHeight = 40;
+        const mainFontSize = 32;
+        const labelFontSize = 16;
+        const padding = 20;
+        let y = padding;
 
-    selectedFonts.forEach((font, fontIndex) => {
-      y += labelFontSize + 5;
-      svgTextElements += `<text x="${padding}" y="${y}" font-family="Arial, sans-serif" font-size="${labelFontSize}" fill="#888">${font}</text>\n`;
-      y += lineHeight * 0.5;
-      lines.forEach((line) => {
-        const sanitizedLine = line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        y += lineHeight;
-        svgTextElements += `<text x="${padding}" y="${y}" font-family="${font}" font-size="${mainFontSize}" fill="#181717">${sanitizedLine}</text>\n`;
-      });
-      if (fontIndex < selectedFonts.length - 1) {
-        y += lineHeight * 0.75;
-      }
-    });
+        selectedFonts.forEach((font, fontIndex) => {
+            y += labelFontSize + 5;
+            svgTextElements += `<text x="${padding}" y="${y}" font-family="Arial, sans-serif" font-size="${labelFontSize}" fill="#888">${font}</text>\n`;
+            y += lineHeight * 0.5;
+            lines.forEach((line) => {
+                const sanitizedLine = line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                y += lineHeight;
+                svgTextElements += `<text x="${padding}" y="${y}" font-family="${font}" font-size="${mainFontSize}" fill="#181717">${sanitizedLine}</text>\n`;
+            });
+            if (fontIndex < selectedFonts.length - 1) {
+                y += lineHeight * 0.75;
+            }
+        });
 
-    const svgWidth = 800;
-    const svgHeight = y + padding;
-    const fullSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="${svgWidth}" height="${svgHeight}" style="background-color: #FFF;">\n${svgTextElements}</svg>`;
+        const svgWidth = 800;
+        const svgHeight = y + padding;
+        const fullSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="${svgWidth}" height="${svgHeight}" style="background-color: #FFF;">\n${svgTextElements}</svg>`;
 
-    setPendingSvgContent(fullSvg);
-    setShowCustomerModal(true);
-  };
+        setPendingSvgContent(fullSvg);
+        setShowCustomerModal(true);
+    };
 
-  const handleCustomerModalSubmit = async (e) => {
-    e.preventDefault();
-    if (!orderNumber.trim() || !customerName.trim()) {
-      showMessage('Order Number and Customer Name are required.');
-      return;
-    }
-    setShowCustomerModal(false);
+    const handleCustomerModalSubmit = async (e) => {
+        e.preventDefault();
+        if (!orderNumber.trim() || !customerName.trim()) {
+            showMessage('Order Number and Customer Name are required.');
+            return;
+        }
+        setShowCustomerModal(false);
 
-    const order = formatForFilename(orderNumber);
-    const name = formatForFilename(customerName);
-    const company = customerCompany.trim() ? formatForFilename(customerCompany) : '';
-    const filename = [order, name, company].filter(Boolean).join('_') + '.svg';
+        const order = formatForFilename(orderNumber);
+        const name = formatForFilename(customerName);
+        const company = customerCompany.trim() ? formatForFilename(customerCompany) : '';
+        const filename = [order, name, company].filter(Boolean).join('_') + '.svg';
 
         try {
             const blob = new Blob([pendingSvgContent], { type: 'image/svg+xml' });
@@ -243,18 +243,18 @@ const App = () => {
                         </div>
                     </section>
 
-          <section className="section-card">
-            <h2 className="section-title">2. Enter Your Custom Text</h2>
-            <textarea
-              className="text-input"
-              value={customText}
-              onChange={handleTextChange}
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-              placeholder={DEFAULT_TEXT_PLACEHOLDER}
-              style={{ fontFamily: 'Arial' }}
-            />
-          </section>
+                    <section className="section-card">
+                        <h2 className="section-title">2. Enter Your Custom Text</h2>
+                        <textarea
+                            className="text-input"
+                            value={customText}
+                            onChange={handleTextChange}
+                            onFocus={handleFocus}
+                            onBlur={handleBlur}
+                            placeholder={DEFAULT_TEXT_PLACEHOLDER}
+                            style={{ fontFamily: 'Arial' }}
+                        />
+                    </section>
 
                     <section className="preview-section-card">
                         <h2 className="section-title">3. Live Preview</h2>
@@ -555,4 +555,3 @@ const App = () => {
 };
 
 export default App;
-
