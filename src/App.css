@@ -13,8 +13,8 @@ body {
     width: 100%;
     min-height: 100vh;
     font-family: 'Inter', sans-serif;
-    color: #374151; /* gray-800 */
-    background: linear-gradient(to bottom right, #eef2ff, #d2e4f7); /* Adapted light blue gradient */
+    color: rgb(255, 255, 255); 
+    background: rgb(255, 255, 255);
     box-sizing: border-box;
     overflow-x: hidden;
     overflow-y: auto; /* Allow scrolling only if content overflows */
