@@ -7,14 +7,15 @@ const App = () => {
     const DEFAULT_TEXT_PLACEHOLDER = 'Type your text here...';
     const MAX_SELECTED_FONTS = 3;
 
+    // This font list is from the version you provided.
     const categorizedFonts = {
         'Sans-serif': [
             'Arial',
             'Calibri',
-            'Century Gothic'
+            'Century Gothic',
         ],
         'Serif': [
-            'Benguiat Book BT',
+            'Benguiat',
             'Copperplate Gothic',
             'Garamond',
             'Times New Roman'
@@ -30,69 +31,231 @@ const App = () => {
         ]
     };
 
+    // --- State Management ---
     const [selectedFonts, setSelectedFonts] = useState([]);
     const [customText, setCustomText] = useState(DEFAULT_TEXT_PLACEHOLDER);
     const [message, setMessage] = useState('');
     const [showMessageBox, setShowMessageBox] = useState(false);
+
+    // --- State needed for the new Save-to-R2 functionality ---
     const [showCustomerModal, setShowCustomerModal] = useState(false);
     const [customerName, setCustomerName] = useState('');
     const [customerCompany, setCustomerCompany] = useState('');
     const [orderNumber, setOrderNumber] = useState('');
     const [pendingSvgContent, setPendingSvgContent] = useState(null);
 
+    // This useEffect handles loading the custom fonts for display.
     useEffect(() => {
         const customFontsCss = `
-          @font-face { font-family: 'Benguiat Book BT'; src: url('/fonts/Benguiat.ttf') format('truetype'); font-display: swap; }
-          @font-face { font-family: 'Copperplate Gothic'; src: url('/fonts/Copperplate Gothic.ttf') format('truetype'); font-display: swap; }
-          @font-face { font-family: 'I Love Glitter'; src: url('/fonts/I Love Glitter.ttf') format('truetype'); font-display: swap; }
-          @font-face { font-family: 'Arial'; src: url('/fonts/arial.ttf') format('truetype'); font-display: swap; }
-          @font-face { font-family: 'Calibri'; src: url('/fonts/CALIBRI.ttf') format('truetype'); font-display: swap; }
-          @font-face { font-family: 'Century Gothic'; src: url('/fonts/CenturyGothicPaneuropeanRegular.ttf') format('truetype'); font-display: swap; }
-          @font-face { font-family: 'Garamond'; src: url('/fonts/GARA.ttf') format('truetype'); font-display: swap; }
-          @font-face { font-family: 'Times New Roman'; src: url('/fonts/TIMES.ttf') format('truetype'); font-display: swap; }
-          @font-face { font-family: 'Tinplate Titling Black'; src: url('/fonts/Tinplate Titling Black.ttf') format('truetype'); font-display: swap; }
-          @font-face { font-family: 'Zapf Humanist'; src: url('/fonts/ZHUM601D.ttf') format('truetype'); font-display: swap; }
+          @font-face { font-family: 'Benguiat'; src: url('/fonts/Benguiat.ttf') format('truetype'); }
+          @font-face { font-family: 'Copperplate Gothic'; src: url('/fonts/Copperplate%20Gothic.ttf') format('truetype'); }
+          @font-face { font-family: 'I Love Glitter'; src: url('/fonts/I%20Love%20Glitter.ttf') format('truetype'); }
+          @font-face { font-family: 'Arial'; src: url('/fonts/arial.ttf') format('truetype'); }
+          @font-face { font-family: 'Calibri'; src: url('/fonts/CALIBRI.ttf') format('truetype'); }
+          @font-face { font-family: 'Century Gothic'; src: url('/fonts/CenturyGothicPaneuropeanRegular.ttf') format('truetype'); }
+          @font-face { font-family: 'Garamond'; src: url('/fonts/GARA.ttf') format('truetype'); }
+          @font-face { font-family: 'Times New Roman'; src: url('/fonts/TIMES.ttf') format('truetype'); }
+          @font-face { font-family: 'Tinplate Titling Black'; src: url('/fonts/Tinplate%20Titling%20Black.ttf') format('truetype'); }
+          @font-face { font-family: 'Zapf Humanist'; src: url('/fonts/ZHUM601D.ttf') format('truetype'); }
         `;
         const styleElement = document.createElement('style');
         styleElement.textContent = customFontsCss;
         document.head.appendChild(styleElement);
     }, []);
 
-    // Rest of the component remains unchanged...
+    // --- Helper & Event Handler Functions ---
+    const handleFontSelect = (font) => {
+        if (selectedFonts.includes(font)) {
+            setSelectedFonts(selectedFonts.filter((f) => f !== font));
+        } else {
+            if (selectedFonts.length < MAX_SELECTED_FONTS) {
+                setSelectedFonts([...selectedFonts, font]);
+            } else {
+                showMessage(`You can select a maximum of ${MAX_SELECTED_FONTS} fonts.`);
+            }
+        }
+    };
+
+    const handleTextChange = (e) => setCustomText(e.target.value);
+    const handleFocus = () => { if (customText === DEFAULT_TEXT_PLACEHOLDER) setCustomText(''); };
+    const handleBlur = () => { if (customText.trim() === '') setCustomText(DEFAULT_TEXT_PLACEHOLDER); };
+
+    const showMessage = (msg, duration = 4000) => {
+        setMessage(msg);
+        setShowMessageBox(true);
+        setTimeout(() => { setShowMessageBox(false); setMessage(''); }, duration);
+    };
+
+    const formatForFilename = (str) => str.trim().replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_-]/g, '');
+
+    // --- NEW SAVE FUNCTIONALITY ---
+    const handleSaveSvg = () => {
+        if (selectedFonts.length === 0 || customText.trim() === '' || customText === DEFAULT_TEXT_PLACEHOLDER) {
+            showMessage('Please select at least one font and enter some text to save an SVG.');
+            return;
+        }
+        const lines = customText.split('\n').filter(line => line.trim() !== '');
+        if (lines.length === 0) {
+            showMessage('Please enter some text to save an SVG.');
+            return;
+        }
+
+        let svgTextElements = '';
+        const lineHeight = 40;
+        const mainFontSize = 32;
+        const labelFontSize = 16;
+        const padding = 20;
+        let y = padding;
+
+        selectedFonts.forEach((font, fontIndex) => {
+            y += labelFontSize + 5;
+            svgTextElements += `<text x="${padding}" y="${y}" font-family="Arial, sans-serif" font-size="${labelFontSize}" fill="#888">${font}</text>\n`;
+            y += lineHeight * 0.5;
+            lines.forEach((line) => {
+                const sanitizedLine = line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                y += lineHeight;
+                svgTextElements += `<text x="${padding}" y="${y}" font-family="${font}" font-size="${mainFontSize}" fill="#181717">${sanitizedLine}</text>\n`;
+            });
+            if (fontIndex < selectedFonts.length - 1) {
+                y += lineHeight * 0.75;
+            }
+        });
+
+        const svgWidth = 800;
+        const svgHeight = y + padding;
+        const fullSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="${svgWidth}" height="${svgHeight}" style="background-color: #FFF;">\n${svgTextElements}</svg>`;
+
+        setPendingSvgContent(fullSvg);
+        setShowCustomerModal(true);
+    };
+
+    const handleCustomerModalSubmit = async (e) => {
+        e.preventDefault();
+        if (!orderNumber.trim() || !customerName.trim()) {
+            showMessage('Order Number and Customer Name are required.');
+            return;
+        }
+        setShowCustomerModal(false);
+
+        const order = formatForFilename(orderNumber);
+        const name = formatForFilename(customerName);
+        const company = customerCompany.trim() ? formatForFilename(customerCompany) : '';
+        const filename = [order, name, company].filter(Boolean).join('_') + '.svg';
+
+        try {
+            const blob = new Blob([pendingSvgContent], { type: 'image/svg+xml' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a); a.click(); document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        } catch (error) {
+            showMessage(`Could not save file locally: ${error.message}`);
+        }
+
+        try {
+            const response = await fetch(`${WORKER_URL}/${filename}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'image/svg+xml' },
+                body: pendingSvgContent
+            });
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Upload failed with status ${response.status}. ${errorText}`);
+            }
+            showMessage('SVG uploaded successfully!');
+        } catch (error) {
+            console.error('Upload error:', error);
+            showMessage(`Error uploading SVG: ${error.message}`, 6000);
+        }
+
+        setCustomerName(''); setCustomerCompany(''); setOrderNumber(''); setPendingSvgContent(null);
+    };
+
+    // --- Render Method ---
     return (
-        <div className="main-sections-container">
-            <header className="app-header">
-                <h1 className="header-title">Upload SVG to Cloudflare Worker</h1>
-            </header>
+        <div className="app-container">
+            {/* Customer Info Modal */}
+            {showCustomerModal && (
+                <div className="modal-overlay">
+                    <div className="modal-box">
+                        <h3>Enter Customer Information to Save SVG</h3>
+                        <form onSubmit={handleCustomerModalSubmit}>
+                            <div>
+                                <label>Order Number<span style={{ color: 'red' }}>*</span>:</label>
+                                <input type="text" value={orderNumber} onChange={e => setOrderNumber(e.target.value)} required />
+                            </div>
+                            <div>
+                                <label>Customer Name<span style={{ color: 'red' }}>*</span>:</label>
+                                <input type="text" value={customerName} onChange={e => setCustomerName(e.target.value)} required />
+                            </div>
+                            <div>
+                                <label>Customer Company:</label>
+                                <input type="text" value={customerCompany} onChange={e => setCustomerCompany(e.target.value)} />
+                            </div>
+                            <div style={{ marginTop: '1em', display: 'flex', justifyContent: 'flex-end', gap: '1em' }}>
+                                <button type="button" className="message-button" style={{ background: '#aaa' }} onClick={() => setShowCustomerModal(false)}>Cancel</button>
+                                <button type="submit" className="message-button">Submit & Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
 
-            <div className="section-card">
-                <label className="section-title" htmlFor="svgUpload">Select an SVG file</label>
-                <input id="svgUpload" type="file" accept=".svg" onChange={(e) => {
-                    const selectedFile = e.target.files[0];
-                    if (selectedFile && selectedFile.type === 'image/svg+xml') {
-                        setPendingSvgContent(selectedFile);
-                        setMessage('');
-                    } else {
-                        setMessage('Please upload a valid SVG file.');
-                    }
-                }} />
-                <button className="save-button" onClick={() => setShowCustomerModal(true)}>
-                    Upload
-                </button>
-                {message && <p className="output-description">{message}</p>}
-            </div>
+            {/* General Message Box */}
+            {showMessageBox && (
+                <div className="message-overlay">
+                    <div className="message-box">
+                        <p className="message-text">{message}</p>
+                        <button onClick={() => setShowMessageBox(false)} className="message-button">OK</button>
+                    </div>
+                </div>
+            )}
 
-                    <section className="section-card">
-                        <h2 className="section-title">2. Enter Your Custom Text</h2>
-                        <textarea
-                            className="text-input"
-                            value={customText}
-                            onChange={handleTextChange}
-                            onFocus={handleFocus}
-                            onBlur={handleBlur}
-                            placeholder={DEFAULT_TEXT_PLACEHOLDER}
-                        />
-                    </section>
+            <div className="main-content-wrapper">
+                <header className="app-header">
+                    <h1 className="header-title">Arch Font Hub</h1>
+                    <p className="header-subtitle">Experiment with fonts and text display</p>
+                </header>
+
+                <main className="main-sections-container">
+                    <div className="top-sections-wrapper">
+                        <section className="section-card">
+                            <h2 className="section-title">1. Choose Your Fonts (Max 3)</h2>
+                            <div className="font-grid-container custom-scrollbar">
+                                {Object.keys(categorizedFonts).map(category => (
+                                    <div key={category} className="font-category">
+                                        <h3 className="font-category-title">{category}</h3>
+                                        <div className="font-buttons-grid">
+                                            {categorizedFonts[category].map((font) => (
+                                                <button
+                                                    key={font}
+                                                    onClick={() => handleFontSelect(font)}
+                                                    className={`font-button ${selectedFonts.includes(font) ? 'font-button-selected' : ''}`}
+                                                    style={{ fontFamily: font }}
+                                                >
+                                                    {font}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+
+                        <section className="section-card">
+                            <h2 className="section-title">2. Enter Your Custom Text</h2>
+                            <textarea
+                                className="text-input"
+                                value={customText}
+                                onChange={handleTextChange}
+                                onFocus={handleFocus}
+                                onBlur={handleBlur}
+                                placeholder={DEFAULT_TEXT_PLACEHOLDER}
+                            />
+                        </section>
+                    </div>
 
                     <section className="preview-section-card">
                         <h2 className="section-title">3. Live Preview</h2>
