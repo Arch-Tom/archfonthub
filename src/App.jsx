@@ -56,7 +56,7 @@ const App = () => {
           @font-face { font-family: 'Century Gothic'; src: url('/fonts/CenturyGothicPaneuropeanRegular.ttf') format('truetype'); }
           @font-face { font-family: 'Garamond'; src: url('/fonts/GARA.ttf') format('truetype'); }
           @font-face { font-family: 'Times New Roman'; src: url('/fonts/TIMES.ttf') format('truetype'); }
-          @font-face { font-family: 'Tinplate Titling Black'; src: url('/fonts/Tinplate%20Titling%20Black.ttf') format('truetype'); }
+          @font-face { font-family: 'Tinplate Titling Black'; src: url('/fonts/TinplateTitlingBlack.ttf') format('truetype'); }
           @font-face { font-family: 'Zapf Humanist'; src: url('/fonts/ZHUM601D.ttf') format('truetype'); }
         `;
         const styleElement = document.createElement('style');
