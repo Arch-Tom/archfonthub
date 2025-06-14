@@ -252,6 +252,7 @@ const App = () => {
                             onFocus={handleFocus}
                             onBlur={handleBlur}
                             placeholder={DEFAULT_TEXT_PLACEHOLDER}
+                            style={{ fontFamily: 'Arial' }}
                         />
                     </section>
 
