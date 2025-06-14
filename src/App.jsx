@@ -272,7 +272,6 @@ const App = () => {
                     </section>
 
                     <div className="save-button-container">
-                        {/* This button now triggers the real save process */}
                         <button onClick={handleSaveSvg} className="save-button">
                             Save Live Preview as SVG
                         </button>
@@ -284,7 +283,6 @@ const App = () => {
                 </footer>
             </div>
 
-            {/* This is the full style block from your working version */}
             <style>{`
                 /* Universal Styles */
                 html {
