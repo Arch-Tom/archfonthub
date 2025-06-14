@@ -3,6 +3,9 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+    background: rgb(255, 255, 255); /* Set white background */
+    color: #222;
 }
 
 /* ==== Font Faces (use actual file names and casing) ==== */
@@ -143,7 +146,130 @@ body {
     font-family: 'Zapf Humanist', sans-serif;
 }
 
-/* ==== Body Default Font ==== */
-body {
-    font-family: 'Arial', sans-serif;
+/* ==== Core Color Palette ==== */
+:root {
+    --primary-bg: rgb(255, 255, 255);
+    --accent: rgb(70, 130, 180);
+    --accent-dark: rgb(55, 104, 144);
+    --text-color: #222;
+    --border-radius: 14px;
+    --box-shadow: 0 4px 24px rgba(70,130,180,0.10);
+}
+
+/* ==== Header/Top Bar ==== */
+.header, header {
+    background: var(--accent);
+    color: #fff;
+    padding: 28px 0 24px 0;
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    border-radius: 0 0 24px 24px;
+    margin-bottom: 36px;
+    box-shadow: 0 6px 32px rgba(70,130,180,0.08);
+}
+
+/* ==== Cards, Panels, Font Samples ==== */
+.card, .panel, .font-sample, .output-box {
+    background: #fff;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 18px 24px;
+    margin-bottom: 24px;
+}
+
+/* ==== Buttons ==== */
+button, .btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 11px 24px;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.18s;
+    margin: 6px 0;
+    box-shadow: 0 2px 8px rgba(70,130,180,0.10);
+    outline: none;
+}
+
+    button:hover, .btn:hover {
+        background: var(--accent-dark);
+    }
+
+    button:active, .btn:active {
+        background: var(--accent-dark);
+    }
+
+    button:focus, .btn:focus {
+        outline: 2px solid var(--accent);
+    }
+
+/* ==== Form Elements ==== */
+input, select, textarea {
+    border: 1px solid #b0c4de;
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin: 8px 0;
+    font-size: 1rem;
+    background: #f7fafd;
+    transition: border 0.2s;
+}
+
+    input:focus, select:focus, textarea:focus {
+        border: 1.5px solid var(--accent);
+        outline: none;
+    }
+
+label {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 5px;
+    display: inline-block;
+}
+
+/* ==== Misc Styles ==== */
+hr {
+    border: none;
+    border-bottom: 1.5px solid #e0e8ef;
+    margin: 20px 0;
+}
+
+a {
+    color: var(--accent);
+    text-decoration: none;
+    transition: text-decoration 0.2s;
+}
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+.font-sample {
+    font-size: 1.6rem;
+    padding: 18px 24px;
+    border: 1.5px solid #e4eaf1;
+    margin: 18px 0 0 0;
+}
+
+.font-sample-label {
+    display: block;
+    font-size: 1.05rem;
+    font-weight: 400;
+    color: #4886b3;
+    margin-bottom: 4px;
+}
+
+/* ==== Responsive tweaks ==== */
+@media (max-width: 600px) {
+    .header {
+        font-size: 1.2rem;
+        padding: 18px 0 12px 0;
+    }
+
+    .card, .panel, .font-sample, .output-box {
+        padding: 12px 8px;
+    }
 }
