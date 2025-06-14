@@ -88,6 +88,15 @@ body {
     font-display: swap;
 }
 
+/* Zapf Humanist */
+@font-face {
+    font-family: 'Zapf Humanist';
+    src: url('/fonts/ZapfHumanist601BT-Demi.woff2') format('woff2'), url('/fonts/ZapfHumanist601BT-Demi.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
 /* Arial (system fallback only, web safe, no file needed) */
 .arial {
     font-family: 'Arial', sans-serif;
@@ -128,6 +137,10 @@ body {
 
 .zhum601d {
     font-family: 'ZHUM601D', serif;
+}
+
+.zapfhumanist {
+    font-family: 'Zapf Humanist', sans-serif;
 }
 
 /* ==== Body Default Font ==== */
