@@ -1,74 +1,82 @@
-:root {
-    font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-    line-height: 1.5;
+/* Load custom fonts available on system or locally defined */
+
+@font-face {
+    font-family: 'Arial';
+    src: local('Arial');
     font-weight: 400;
-    color-scheme: light dark;
-    color: rgba(255, 255, 255, 0.87);
-    background-color: #242424;
-    font-synthesis: none;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    font-style: normal;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+@font-face {
+    font-family: 'Benguiat';
+    src: local('Benguiat');
+    font-weight: 400;
+    font-style: normal;
 }
 
+@font-face {
+    font-family: 'Calibri';
+    src: local('Calibri');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Century Gothic';
+    src: local('CenturyGothicPaneuropeanRegular'), local('Century Gothic');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Copperplate Gothic';
+    src: local('Copperplate Gothic');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Garamond';
+    src: local('GARA'), local('Garamond');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'I Love Glitter';
+    src: local('I Love Glitter');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Times New Roman';
+    src: local('TIMES'), local('Times New Roman');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Tinplate Titling Black';
+    src: local('Tinplate Titling Black');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'ZHUM601D';
+    src: local('ZHUM601D');
+    font-weight: 400;
+    font-style: normal;
+}
+
+/* Apply base font styles */
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+    font-family: 'Arial', sans-serif;
+    font-weight: 400;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #fff;
+    color: #000;
 }
