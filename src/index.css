@@ -1,34 +1,50 @@
-/* ==== Reset Styles ==== */
+/* src/index.css */
+
+/**
+ * ==== Reset & Base Styles ====
+ * Establishes a consistent base across browsers.
+ */
 body {
     margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Arial', sans-serif;
-    background: rgb(255, 255, 255); /* Set white background */
-    color: #222;
+    font-family: 'Inter', sans-serif; /* A clean, modern default font */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: var(--primary-bg-light);
+    color: var(--text-primary);
 }
 
-/* ==== Font Faces (use actual file names and casing) ==== */
+/**
+ * ==== Core Color Palette ====
+ * Defines the new color scheme based on your request.
+ */
+:root {
+    --primary-bg: rgb(255, 255, 255);
+    --primary-bg-light: #f7fafd; /* A very light blue for the body background */
+    --accent: rgb(70, 130, 180);
+    --accent-dark: rgb(55, 104, 144); /* A darker shade for hover effects */
+    --text-primary: #1f2937; /* A dark gray for main text */
+    --text-secondary: #6b7280; /* A lighter gray for subtitles/labels */
+    --text-on-accent: #FFFFFF;
+    --border-color: #dbeafe; /* A light blue for borders and dividers */
+    --radius-md: 0.75rem;
+    --radius-sm: 0.5rem;
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+}
 
-/* Benguiat */
+/**
+ * ==== Font Faces ====
+ * All @font-face rules are consolidated here.
+ * The 'font-family' names have been standardized to match the JavaScript array.
+ */
 @font-face {
-    font-family: 'Benguiat';
-    src: url('/fonts/Benguiat.woff2') format('woff2'), url('/fonts/Benguiat.woff') format('woff');
+    font-family: 'Arial';
+    src: url('/fonts/ArialMT.woff2') format('woff2'), url('/fonts/ArialMT.woff') format('woff');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
 }
 
-/* Calibri */
-@font-face {
-    font-family: 'Calibri';
-    src: url('/fonts/Calibri.woff2') format('woff2'), url('/fonts/Calibri.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
-/* Century Gothic */
 @font-face {
     font-family: 'Century Gothic';
     src: url('/fonts/CenturyGothicPaneuropean.woff2') format('woff2'), url('/fonts/CenturyGothicPaneuropean.woff') format('woff');
@@ -37,34 +53,22 @@ body {
     font-display: swap;
 }
 
-/* Copperplate Gothic */
 @font-face {
-    font-family: 'Copperplate Gothic';
-    src: url('/fonts/CopperplateGothicBT-Roman.woff2') format('woff2'), url('/fonts/CopperplateGothicBT-Roman.woff') format('woff');
+    font-family: 'Benguiat';
+    src: url('/fonts/Benguiat.woff2') format('woff2'), url('/fonts/Benguiat.woff') format('woff');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
 }
 
-/* Garamond */
 @font-face {
-    font-family: 'Garamond';
-    src: url('/fonts/Garamond.woff2') format('woff2'), url('/fonts/Garamond.woff') format('woff');
+    font-family: 'Calibri';
+    src: url('/fonts/Calibri.woff2') format('woff2'), url('/fonts/Calibri.woff') format('woff');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
 }
 
-/* I Love Glitter */
-@font-face {
-    font-family: 'I Love Glitter';
-    src: url('/fonts/ILoveGlitter.woff2') format('woff2'), url('/fonts/ILoveGlitter.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
-/* Times New Roman */
 @font-face {
     font-family: 'Times New Roman';
     src: url('/fonts/TimesNewRomanPSMT.woff2') format('woff2'), url('/fonts/TimesNewRomanPSMT.woff') format('woff');
@@ -73,25 +77,6 @@ body {
     font-display: swap;
 }
 
-/* Tinplate Titling Black */
-@font-face {
-    font-family: 'Tinplate Titling Black';
-    src: url('/fonts/TinplateTitlingBlack.woff2') format('woff2'), url('/fonts/TinplateTitlingBlack.woff') format('woff'), url('/fonts/TinplateTitlingBlack.ttf') format('ttf');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
-/* ZHUM601D */
-@font-face {
-    font-family: 'ZHUM601D';
-    src: url('/fonts/ZHUM601D.woff2') format('woff2'), url('/fonts/ZHUM601D.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
-/* Zapf Humanist */
 @font-face {
     font-family: 'Zapf Humanist';
     src: url('/fonts/ZapfHumanist601BT-Demi.woff2') format('woff2'), url('/fonts/ZapfHumanist601BT-Demi.woff') format('woff');
@@ -100,176 +85,34 @@ body {
     font-display: swap;
 }
 
-/* Arial (system fallback only, web safe, no file needed) */
-.arial {
-    font-family: 'Arial', sans-serif;
+@font-face {
+    font-family: 'Tinplate Titling Black';
+    src: url('/fonts/TinplateTitlingBlack.woff2') format('woff2'), url('/fonts/TinplateTitlingBlack.woff') format('woff');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
 }
 
-/* ==== Example Usage Classes ==== */
-.benguiat {
-    font-family: 'Benguiat', serif;
+@font-face {
+    font-family: 'I Love Glitter';
+    src: url('/fonts/ILoveGlitter.woff2') format('woff2'), url('/fonts/ILoveGlitter.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
 }
 
-.calibri {
-    font-family: 'Calibri', sans-serif;
+@font-face {
+    font-family: 'Garamond';
+    src: url('/fonts/Garamond.woff2') format('woff2'), url('/fonts/Garamond.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
 }
 
-.centurygothic {
-    font-family: 'Century Gothic', sans-serif;
-}
-
-.copperplategothic {
-    font-family: 'Copperplate Gothic', serif;
-}
-
-.garamond {
-    font-family: 'Garamond', serif;
-}
-
-.iloveglitter {
-    font-family: 'I Love Glitter', cursive;
-}
-
-.timesnewroman {
-    font-family: 'Times New Roman', serif;
-}
-
-.tinplatetitlingblack {
-    font-family: 'Tinplate Titling Black', serif;
-}
-
-.zhum601d {
-    font-family: 'ZHUM601D', serif;
-}
-
-.zapfhumanist {
-    font-family: 'Zapf Humanist', sans-serif;
-}
-
-/* ==== Core Color Palette ==== */
-:root {
-    --primary-bg: rgb(255, 255, 255);
-    --accent: rgb(70, 130, 180);
-    --accent-dark: rgb(55, 104, 144);
-    --text-color: #222;
-    --border-radius: 14px;
-    --box-shadow: 0 4px 24px rgba(70,130,180,0.10);
-}
-
-/* ==== Header/Top Bar ==== */
-.header, header {
-    background: var(--accent);
-    color: #fff;
-    padding: 28px 0 24px 0;
-    text-align: center;
-    font-size: 2rem;
-    font-weight: 600;
-    letter-spacing: 2px;
-    border-radius: 0 0 24px 24px;
-    margin-bottom: 36px;
-    box-shadow: 0 6px 32px rgba(70,130,180,0.08);
-}
-
-/* ==== Cards, Panels, Font Samples ==== */
-.card, .panel, .font-sample, .output-box {
-    background: #fff;
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
-    padding: 18px 24px;
-    margin-bottom: 24px;
-}
-
-/* ==== Buttons ==== */
-button, .btn {
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    padding: 11px 24px;
-    border-radius: 12px;
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.18s;
-    margin: 6px 0;
-    box-shadow: 0 2px 8px rgba(70,130,180,0.10);
-    outline: none;
-}
-
-    button:hover, .btn:hover {
-        background: var(--accent-dark);
-    }
-
-    button:active, .btn:active {
-        background: var(--accent-dark);
-    }
-
-    button:focus, .btn:focus {
-        outline: 2px solid var(--accent);
-    }
-
-/* ==== Form Elements ==== */
-input, select, textarea {
-    border: 1px solid #b0c4de;
-    border-radius: 8px;
-    padding: 8px 12px;
-    margin: 8px 0;
-    font-size: 1rem;
-    background: #f7fafd;
-    transition: border 0.2s;
-}
-
-    input:focus, select:focus, textarea:focus {
-        border: 1.5px solid var(--accent);
-        outline: none;
-    }
-
-label {
-    font-size: 1rem;
-    font-weight: 500;
-    margin-bottom: 5px;
-    display: inline-block;
-}
-
-/* ==== Misc Styles ==== */
-hr {
-    border: none;
-    border-bottom: 1.5px solid #e0e8ef;
-    margin: 20px 0;
-}
-
-a {
-    color: var(--accent);
-    text-decoration: none;
-    transition: text-decoration 0.2s;
-}
-
-    a:hover {
-        text-decoration: underline;
-    }
-
-.font-sample {
-    font-size: 1.6rem;
-    padding: 18px 24px;
-    border: 1.5px solid #e4eaf1;
-    margin: 18px 0 0 0;
-}
-
-.font-sample-label {
-    display: block;
-    font-size: 1.05rem;
-    font-weight: 400;
-    color: #4886b3;
-    margin-bottom: 4px;
-}
-
-/* ==== Responsive tweaks ==== */
-@media (max-width: 600px) {
-    .header {
-        font-size: 1.2rem;
-        padding: 18px 0 12px 0;
-    }
-
-    .card, .panel, .font-sample, .output-box {
-        padding: 12px 8px;
-    }
+@font-face {
+    font-family: 'Copperplate Gothic';
+    src: url('/fonts/CopperplateGothicBT-Roman.woff2') format('woff2'), url('/fonts/CopperplateGothicBT-Roman.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
 }
