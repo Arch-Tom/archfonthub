@@ -1,143 +1,71 @@
-/* Reset some default styles */
-body {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-/* ==== Custom Font Faces ==== */
-/* Arial (Web Safe - usually doesn't need loading, but included for completeness) */
-@font-face {
-    font-family: 'Arial';
-    src: url('/fonts/arial.woff2') format('woff2'), url('/fonts/arial.woff') format('woff'), url('/fonts/arial.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
-/* Benguiat */
 @font-face {
     font-family: 'Benguiat';
-    src: url('/fonts/Benguiat.woff2') format('woff2'), url('/fonts/Benguiat.woff') format('woff'), url('/fonts/Benguiat.ttf') format('truetype');
+    src: url('/fonts/Benguiat.woff2') format('woff2'), url('/fonts/Benguiat.woff') format('woff');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
 }
 
-/* CALIBRI */
 @font-face {
     font-family: 'Calibri';
-    src: url('/fonts/CALIBRI.woff2') format('woff2'), url('/fonts/CALIBRI.woff') format('woff'), url('/fonts/CALIBRI.ttf') format('truetype');
+    src: url('/fonts/Calibri.woff2') format('woff2'), url('/fonts/Calibri.woff') format('woff');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
 }
 
-/* Century Gothic Paneuropean Regular */
 @font-face {
     font-family: 'Century Gothic';
-    src: url('/fonts/CenturyGothicPaneuropeanRegular.woff2') format('woff2'), url('/fonts/CenturyGothicPaneuropeanRegular.woff') format('woff'), url('/fonts/CenturyGothicPaneuropeanRegular.ttf') format('truetype');
+    src: url('/fonts/CenturyGothicPaneuropean.woff2') format('woff2'), url('/fonts/CenturyGothicPaneuropean.woff') format('woff');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
 }
 
-/* Copperplate Gothic */
 @font-face {
     font-family: 'Copperplate Gothic';
-    src: url('/fonts/Copperplate Gothic.woff2') format('woff2'), url('/fonts/Copperplate Gothic.woff') format('woff'), url('/fonts/Copperplate Gothic.ttf') format('truetype');
+    src: url('/fonts/CopperplateGothicBT-Roman.woff2') format('woff2'), url('/fonts/CopperplateGothicBT-Roman.woff') format('woff');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
 }
 
-/* GARA (Garamond?) */
 @font-face {
     font-family: 'Garamond';
-    src: url('/fonts/GARA.woff2') format('woff2'), url('/fonts/GARA.woff') format('woff'), url('/fonts/GARA.ttf') format('truetype');
+    src: url('/fonts/Garamond.woff2') format('woff2'), url('/fonts/Garamond.woff') format('woff');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
 }
 
-/* I Love Glitter */
 @font-face {
     font-family: 'I Love Glitter';
-    src: url('/fonts/I Love Glitter.woff2') format('woff2'), url('/fonts/I Love Glitter.woff') format('woff'), url('/fonts/I Love Glitter.ttf') format('truetype');
+    src: url('/fonts/ILoveGlitter.woff2') format('woff2'), url('/fonts/ILoveGlitter.woff') format('woff');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
 }
 
-/* TIMES (Times New Roman?) */
 @font-face {
     font-family: 'Times New Roman';
-    src: url('/fonts/TIMES.woff2') format('woff2'), url('/fonts/TIMES.woff') format('woff'), url('/fonts/TIMES.ttf') format('truetype');
+    src: url('/fonts/TimesNewRomanPSMT.woff2') format('woff2'), url('/fonts/TimesNewRomanPSMT.woff') format('woff');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
 }
 
-/* Tinplate Titling Black */
 @font-face {
     font-family: 'Tinplate Titling Black';
-    src: url('/fonts/Tinplate Titling Black.woff2') format('woff2'), url('/fonts/Tinplate Titling Black.woff') format('woff'), url('/fonts/Tinplate Titling Black.ttf') format('truetype');
+    src: url('/fonts/TinplateTitlingBlack.woff2') format('woff2'), url('/fonts/TinplateTitlingBlack.woff') format('woff');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
 }
 
-/* ZHUM601D */
 @font-face {
     font-family: 'ZHUM601D';
-    src: url('/fonts/ZHUM601D.woff2') format('woff2'), url('/fonts/ZHUM601D.woff') format('woff'), url('/fonts/ZHUM601D.ttf') format('truetype');
+    src: url('/fonts/ZHUM601D.woff2') format('woff2'), url('/fonts/ZHUM601D.woff') format('woff');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
-}
-
-/* ==== Example Usage Classes ==== */
-.arial {
-    font-family: 'Arial', sans-serif;
-}
-
-.benguiat {
-    font-family: 'Benguiat', serif;
-}
-
-.calibri {
-    font-family: 'Calibri', sans-serif;
-}
-
-.centurygothic {
-    font-family: 'Century Gothic', sans-serif;
-}
-
-.copperplategothic {
-    font-family: 'Copperplate Gothic', serif;
-}
-
-.garamond {
-    font-family: 'Garamond', serif;
-}
-
-.iloveglitter {
-    font-family: 'I Love Glitter', cursive;
-}
-
-.timesnewroman {
-    font-family: 'Times New Roman', serif;
-}
-
-.tinplatetitling {
-    font-family: 'Tinplate Titling Black', serif;
-}
-
-.zhum601d {
-    font-family: 'ZHUM601D', serif;
-}
-
-/* ==== Body default (optional) ==== */
-body {
-    font-family: 'Arial', sans-serif;
 }

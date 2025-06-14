@@ -1,0 +1,90 @@
+@font-face {
+    font-family: 'Arial';
+    src: url('ArialMT.woff2') format('woff2'),
+        url('ArialMT.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Century Gothic Paneuropean';
+    src: url('CenturyGothicPaneuropean.woff2') format('woff2'),
+        url('CenturyGothicPaneuropean.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Benguiat';
+    src: url('Benguiat.woff2') format('woff2'),
+        url('Benguiat.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Calibri';
+    src: url('Calibri.woff2') format('woff2'),
+        url('Calibri.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Times New Roman';
+    src: url('TimesNewRomanPSMT.woff2') format('woff2'),
+        url('TimesNewRomanPSMT.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'ZapfHumnst Dm BT';
+    src: url('ZapfHumanist601BT-Demi.woff2') format('woff2'),
+        url('ZapfHumanist601BT-Demi.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'TinplateTitlingBlack';
+    src: url('TinplateTitlingBlack.woff2') format('woff2'),
+        url('TinplateTitlingBlack.woff') format('woff');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'I Love Glitter';
+    src: url('ILoveGlitter.woff2') format('woff2'),
+        url('ILoveGlitter.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Garamond';
+    src: url('Garamond.woff2') format('woff2'),
+        url('Garamond.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'CopprplGoth BT';
+    src: url('CopperplateGothicBT-Roman.woff2') format('woff2'),
+        url('CopperplateGothicBT-Roman.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
