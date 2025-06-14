@@ -61,9 +61,11 @@ const App = () => {
         const styleElement = document.createElement('style');
         styleElement.textContent = customFontsCss;
         document.head.appendChild(styleElement);
-    }, []);
 
-    // --- Helper & Event Handler Functions ---
+    }, []); // Empty dependency array ensures this runs only once
+
+    // Function to handle selecting and deselecting fonts.
+    // Allows up to 3 fonts to be selected.
     const handleFontSelect = (font) => {
         if (selectedFonts.includes(font)) {
             setSelectedFonts(selectedFonts.filter((f) => f !== font));
@@ -84,14 +86,14 @@ const App = () => {
         setMessage(msg);
         setShowMessageBox(true);
         setTimeout(() => { setShowMessageBox(false); setMessage(''); }, duration);
-    };
-
     const formatForFilename = (str) => str.trim().replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_-]/g, '');
 
     // --- WORKING SAVE FUNCTIONALITY ---
     const handleSaveSvg = () => {
         if (selectedFonts.length === 0 || customText.trim() === '' || customText === DEFAULT_TEXT_PLACEHOLDER) {
             showMessage('Please select at least one font and enter some text to save an SVG.');
+        if (selectedFonts.length === 0) {
+            showMessage('Please select at least one font to save.');
             return;
         }
         const lines = customText.split('\n').filter(line => line.trim() !== '');
@@ -119,14 +121,14 @@ const App = () => {
             if (fontIndex < selectedFonts.length - 1) {
                 y += lineHeight * 0.75;
             }
-        });
-
         const svgWidth = 800;
         const svgHeight = y + padding;
         const fullSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="${svgWidth}" height="${svgHeight}" style="background-color: #FFF;">\n${svgTextElements}</svg>`;
 
         setPendingSvgContent(fullSvg);
         setShowCustomerModal(true);
+        setSavedOutput(output);
+        showMessage('Text saved to simulated document!');
     };
 
     const handleCustomerModalSubmit = async (e) => {
@@ -171,6 +173,7 @@ const App = () => {
         }
 
         setCustomerName(''); setCustomerCompany(''); setOrderNumber(''); setPendingSvgContent(null);
+    // --- Render Method ---
     };
 
     // --- Render Method ---
@@ -281,6 +284,7 @@ const App = () => {
                 <footer className="app-footer">
                     <p>&copy; 2023 Font Preview Simulator. All rights reserved.</p>
                 </footer>
+            {/* This is the full style block from your working version */}
             </div>
 
             <style>{`
@@ -549,6 +553,8 @@ const App = () => {
                 .message-button { margin-top: 0.75rem; padding: 0.4rem 1rem; background-color: #2E7ABF; color: white; border-radius: 0.375rem; transition: background-color 300ms; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); cursor: pointer; border: none; outline: none; }
                 .message-button:hover { background-color: #57A3E1; }
             `}</style>
+        }
+      `}</style>
         </div>
     );
 };
