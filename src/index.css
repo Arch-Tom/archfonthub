@@ -73,7 +73,7 @@ body {
 /* Tinplate Titling Black */
 @font-face {
     font-family: 'Tinplate Titling Black';
-    src: url('/fonts/TinplateTitlingBlack.woff2') format('woff2'), url('/fonts/TinplateTitlingBlack.woff') format('woff');
+    src: url('/fonts/TinplateTitlingBlack.woff2') format('woff2'), url('/fonts/TinplateTitlingBlack.woff') format('woff'), url('/fonts/TinplateTitlingBlack.ttf') format('ttf');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
