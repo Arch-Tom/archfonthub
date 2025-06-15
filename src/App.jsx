@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import './App.css';
 
-// Main App Component
 const App = () => {
     const WORKER_URL = "https://customerfontselection-worker.tom-4a9.workers.dev";
     const DEFAULT_TEXT_PLACEHOLDER = 'Type your text here...';
@@ -15,7 +14,6 @@ const App = () => {
         'Monospace': ['Zapf Humanist']
     };
 
-    // --- State Management ---
     const [selectedFonts, setSelectedFonts] = useState([]);
     const [customText, setCustomText] = useState(DEFAULT_TEXT_PLACEHOLDER);
     const [message, setMessage] = useState('');
@@ -26,7 +24,6 @@ const App = () => {
     const [orderNumber, setOrderNumber] = useState('');
     const [pendingSvgContent, setPendingSvgContent] = useState(null);
 
-    // --- Event Handlers ---
     const handleFontSelect = (font) => {
         setSelectedFonts(prev =>
             prev.includes(font)
@@ -47,7 +44,6 @@ const App = () => {
 
     const formatForFilename = (str) => str.trim().replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_-]/g, '');
 
-    // --- SVG and Upload Logic ---
     const handleSaveSvg = () => {
         if (selectedFonts.length === 0 || customText.trim() === '' || customText === DEFAULT_TEXT_PLACEHOLDER) {
             showMessage('Please select at least one font and enter some text to save an SVG.');
@@ -132,7 +128,6 @@ const App = () => {
             showMessage(`Error uploading SVG: ${error.message}`, 6000);
         }
 
-        // Reset form
         setCustomerName('');
         setCustomerCompany('');
         setOrderNumber('');
@@ -141,13 +136,11 @@ const App = () => {
 
     return (
         <div className="app-layout">
-            {/* Sidebar */}
             <aside className="sidebar">
                 <div className="sidebar-title">ARCH<br />FONT HUB</div>
                 <div className="sidebar-desc">Experiment with fonts and text display</div>
             </aside>
 
-            {/* Modal for customer info */}
             {showCustomerModal && (
                 <div className="modal-overlay">
                     <div className="modal-box">
@@ -174,7 +167,6 @@ const App = () => {
                 </div>
             )}
 
-            {/* Message box modal */}
             {showMessageBox && (
                 <div className="modal-overlay">
                     <div className="message-box modal-box">
@@ -184,11 +176,9 @@ const App = () => {
                 </div>
             )}
 
-            {/* Main content */}
             <div className="main-content">
-                {/* 1. Font Picker */}
                 <section className="section-card">
-                    <h2 className="section-title">1. Choose Your Fonts (Max {MAX_SELECTED_FONTS})</h2>
+                    <h2 className="section-title">1?? Choose Your Fonts (Max {MAX_SELECTED_FONTS})</h2>
                     <div className="font-grid-container">
                         {Object.entries(categorizedFonts).map(([category, fonts]) => (
                             <div key={category} className="font-category">
@@ -210,12 +200,8 @@ const App = () => {
                     </div>
                 </section>
 
-                {/* 2. Text Input */}
                 <section className="section-card">
-                    <h2 className="section-title">2. Enter Your Custom Text</h2>
-                    <div style={{ marginBottom: '0.5rem', color: '#555', fontSize: '0.97rem' }}>
-                        Select up to 3 fonts and enter text to see a live preview.
-                    </div>
+                    <h2 className="section-title">2?? Enter Your Custom Text</h2>
                     <textarea
                         className="text-input"
                         style={{ fontFamily: 'Arial, sans-serif' }}
@@ -227,12 +213,8 @@ const App = () => {
                     />
                 </section>
 
-                {/* 3. Live Preview */}
                 <section className="section-card">
-                    <h2 className="section-title">3. Live Preview</h2>
-                    <div style={{ marginBottom: '0.5rem', color: '#555', fontSize: '0.97rem' }}>
-                        Select up to 3 fonts and enter text to see a live preview.
-                    </div>
+                    <h2 className="section-title">3?? Live Preview</h2>
                     {selectedFonts.length === 0 && customText === DEFAULT_TEXT_PLACEHOLDER ? (
                         <p className="empty-preview-message">Select up to 3 fonts and enter text to see a live preview.</p>
                     ) : (
@@ -247,7 +229,6 @@ const App = () => {
                     )}
                 </section>
 
-                {/* Save Button */}
                 <button className="save-button" onClick={handleSaveSvg}>
                     Submit Fonts to Arch Engraving
                 </button>
