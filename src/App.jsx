@@ -216,7 +216,6 @@ const App = () => {
                             onChange={handleTextChange}
                             onFocus={handleFocus}
                             onBlur={handleBlur}
-                            font={Arial}
                             placeholder={DEFAULT_TEXT_PLACEHOLDER}
                         />
                     </section>
