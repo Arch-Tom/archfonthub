@@ -238,7 +238,7 @@ const App = () => {
 
                     <div className="save-button-container">
                         <button onClick={handleSaveSvg} className="save-button">
-                            Save Live Preview as SVG
+                            Submit Fonts to Arch Engraving
                         </button>
                     </div>
                 </main>
