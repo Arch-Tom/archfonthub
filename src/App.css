@@ -1,324 +1,138 @@
-/* src/App.css */
+:root {
+    --sidebar-bg: #18305b; /* Deep navy */
+    --main-bg: #fff; /* White */
+    --card-bg: #fff;
+    --card-radius: 1.25rem;
+    --card-shadow: 0 2px 12px rgba(24,48,91,0.07);
+    --accent-blue: #20468b; /* Slightly lighter navy for buttons */
+    --accent-blue-hover: #163060;
+    --text: #181717;
+}
 
-/* ==== App Layout ==== */
-.app-container {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 2rem 1rem;
+body, html {
+    background: var(--main-bg);
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', Arial, sans-serif;
+    color: var(--text);
     min-height: 100vh;
-    width: 100%;
-    box-sizing: border-box;
 }
 
-.main-content-wrapper {
-    width: 100%;
-    max-width: 1200px;
-    background-color: var(--primary-bg);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-lg);
-    overflow: hidden;
+.app-layout {
+    display: flex;
+    min-height: 100vh;
 }
 
-/* ==== Header ==== */
-.app-header {
-    background-color: var(--accent);
-    color: var(--text-on-accent);
-    padding: 1.5rem 2rem;
-    text-align: center;
+.sidebar {
+    background: var(--sidebar-bg);
+    color: #fff;
+    width: 320px;
+    min-width: 230px;
+    padding: 2.5rem 2rem 2rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    border-top-right-radius: 2rem;
+    border-bottom-right-radius: 2rem;
 }
 
-.header-title {
+.sidebar-title {
     font-size: 2rem;
     font-weight: 800;
-    margin: 0;
-    letter-spacing: -0.025em;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.03em;
 }
 
-.header-subtitle {
+.sidebar-desc {
     font-size: 1rem;
-    opacity: 0.9;
-    margin-top: 0.25rem;
+    font-weight: 400;
+    opacity: 0.85;
 }
 
-/* ==== Main Content ==== */
-.main-sections-container {
-    padding: 2rem;
-    display: grid;
+.main-content {
+    flex: 1;
+    padding: 3rem 2rem;
+    display: flex;
+    flex-direction: column;
     gap: 2rem;
 }
 
-/* Generic Card Style */
 .section-card {
-    background-color: var(--primary-bg);
-    border: 1px solid var(--border-color);
-    padding: 1.5rem;
-    border-radius: var(--radius-sm);
-    box-shadow: var(--shadow-md);
+    background: var(--card-bg);
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+    padding: 2rem 2rem 1.5rem 2rem;
+    margin-bottom: 0.5rem;
 }
 
 .section-title {
-    font-size: 1.25rem;
+    font-size: 1.35rem;
     font-weight: 700;
-    color: var(--accent-dark);
-    margin-top: 0;
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid var(--border-color);
-}
-
-/* ==== Font Selection Section ==== */
-.font-grid-container {
-    max-height: 400px;
-    overflow-y: auto;
-    padding-right: 1rem; /* for scrollbar */
-}
-
-.font-category {
-    margin-bottom: 1.5rem;
-}
-
-.font-category-title {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--accent);
     margin-bottom: 1rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-.font-buttons-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 0.75rem;
 }
 
 .font-button {
-    padding: 0.75rem;
-    border-radius: var(--radius-sm);
-    border: 2px solid var(--border-color);
-    background-color: transparent;
-    color: var(--text-primary);
-    font-weight: 500;
+    background: #fff;
+    color: var(--accent-blue);
+    border: 2px solid var(--accent-blue);
+    border-radius: 1.2rem;
+    padding: 0.5rem 1.3rem;
+    margin: 0.3rem;
+    font-size: 1rem;
     cursor: pointer;
-    outline: none;
-    text-align: center;
-    transition: all 0.2s ease-in-out;
+    transition: background 0.15s, color 0.15s, border 0.15s;
+    font-weight: 500;
 }
 
+    .font-button-selected,
     .font-button:hover {
-        border-color: var(--accent);
-        background-color: var(--primary-bg-light);
-        transform: translateY(-2px);
+        background: var(--accent-blue);
+        color: #fff;
     }
 
-.font-button-selected {
-    background-color: var(--primary-bg); /* White */
-    color: var(--accent); /* Steel blue */
-    border-color: var(--accent);
-    box-shadow: 0 4px 8px -2px rgba(70,130,180,0.10);
-    transform: scale(1.05);
-    font-weight: 700;
-}
-
-/* ==== Text Input Section ==== */
 .text-input {
     width: 100%;
-    box-sizing: border-box;
-    padding: 1rem;
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-sm);
-    outline: none;
-    transition: all 0.2s;
-    font-size: 1rem;
-    resize: vertical;
-    min-height: 100px;
-    background: var(--primary-bg);
-    color: var(--text-primary);
-}
-
-    .text-input:focus {
-        border-color: var(--accent);
-        box-shadow: 0 0 0 3px rgba(70, 130, 180, 0.2);
-    }
-
-/* ==== Preview Section ==== */
-.preview-text-container {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
-
-.empty-preview-message {
-    color: var(--text-secondary);
-    font-style: italic;
-    text-align: center;
-    padding: 2rem 0;
-}
-
-.preview-font-label {
-    font-size: 0.875rem;
-    color: var(--text-secondary);
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-}
-
-.preview-text {
-    font-size: 1.75rem;
-    line-height: 1.5;
-    word-break: break-word;
-    margin: 0;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.preview-text-container > div:last-child .preview-text {
-    border-bottom: none;
-}
-
-
-/* ==== Save Button ==== */
-.save-button-container {
-    text-align: center;
-    margin-top: 1rem;
+    padding: 1.1rem;
+    border-radius: 0.75rem;
+    border: 1.5px solid #c5c9d6;
+    font-size: 1.18rem;
+    margin-top: 0.2rem;
+    font-family: Arial, sans-serif;
+    background: #f9fafb;
+    color: #181717;
 }
 
 .save-button {
-    padding: 0.75rem 2rem;
-    background-color: var(--accent);
-    color: var(--text-on-accent);
-    font-size: 1rem;
-    font-weight: 700;
-    border-radius: 9999px;
-    box-shadow: var(--shadow-md);
-    transition: all 0.2s;
-    cursor: pointer;
+    width: 100%;
+    margin-top: 1.3rem;
+    background: var(--accent-blue);
+    color: #fff;
     border: none;
-    outline: none;
+    border-radius: 1.2rem;
+    padding: 1rem;
+    font-size: 1.22rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.18s;
 }
 
     .save-button:hover {
-        background-color: var(--accent-dark);
-        transform: translateY(-2px);
-        box-shadow: 0 15px 20px -5px rgba(0, 0, 0, 0.1);
+        background: var(--accent-blue-hover);
     }
 
-
-/* ==== Footer ==== */
-.app-footer {
-    background-color: var(--accent-dark);
-    color: var(--text-on-accent);
-    padding: 1rem;
-    text-align: center;
-    font-size: 0.875rem;
-    opacity: 0.9;
-}
-
-
-/* ==== Modals ==== */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(10, 20, 30, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    backdrop-filter: blur(4px);
-}
-
-.modal-box {
-    background: var(--primary-bg);
-    padding: 2rem;
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-lg);
-    width: 90%;
-    max-width: 500px;
-    color: var(--text-primary);
-}
-
-    .modal-box h3 {
-        margin-top: 0;
-        color: var(--accent-dark);
+@media (max-width: 850px) {
+    .app-layout {
+        flex-direction: column;
     }
 
-    .modal-box label {
-        display: block;
-        margin-bottom: 0.5rem;
-        font-weight: 600;
-    }
-
-    .modal-box input {
+    .sidebar {
         width: 100%;
-        padding: 0.75rem;
-        margin-bottom: 1rem;
-        box-sizing: border-box;
+        border-radius: 0;
+        align-items: center;
+        text-align: center;
     }
 
-/* Message Box for alerts */
-.message-box {
-    text-align: center;
-}
-
-.message-text {
-    font-size: 1.125rem;
-    font-weight: 600;
-    color: var(--accent-dark);
-    margin: 0 0 1.5rem 0;
-}
-
-.modal-box button,
-.message-button {
-    margin-top: 0.5rem;
-    padding: 0.6rem 1.5rem;
-    background-color: var(--accent);
-    color: var(--text-on-accent);
-    border-radius: var(--radius-sm);
-    transition: background-color 0.2s;
-    cursor: pointer;
-    border: none;
-    outline: none;
-    font-weight: 600;
-}
-
-    .modal-box button:hover,
-    .message-button:hover {
-        background-color: var(--accent-dark);
+    .main-content {
+        padding: 1.5rem 0.5rem;
     }
-
-.modal-box .button-group {
-    margin-top: 1rem;
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
 }
-
-.modal-box .cancel-button {
-    background-color: #ccc;
-    color: #333;
-}
-
-    .modal-box .cancel-button:hover {
-        background-color: #bbb;
-    }
-
-/* ==== Scrollbar ==== */
-::-webkit-scrollbar {
-    width: 8px;
-}
-
-::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-    background: var(--border-color);
-    border-radius: 10px;
-}
-
-    ::-webkit-scrollbar-thumb:hover {
-        background: var(--accent);
-    }

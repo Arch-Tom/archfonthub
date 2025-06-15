@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
-import './App.css'; // Import the new, consolidated CSS
+import './App.css';
 
 // Main App Component
 const App = () => {
-    // --- Constants ---
     const WORKER_URL = "https://customerfontselection-worker.tom-4a9.workers.dev";
     const DEFAULT_TEXT_PLACEHOLDER = 'Type your text here...';
     const MAX_SELECTED_FONTS = 3;
 
-    // This font list matches the `font-family` names in `index.css`
     const categorizedFonts = {
         'Sans-serif': ['Arial', 'Calibri', 'Century Gothic'],
         'Serif': ['Benguiat', 'Copperplate Gothic', 'Garamond', 'Times New Roman'],
@@ -142,7 +140,14 @@ const App = () => {
     };
 
     return (
-        <div className="app-container">
+        <div className="app-layout">
+            {/* Sidebar */}
+            <aside className="sidebar">
+                <div className="sidebar-title">ARCH<br />FONT HUB</div>
+                <div className="sidebar-desc">Experiment with fonts and text display</div>
+            </aside>
+
+            {/* Modal for customer info */}
             {showCustomerModal && (
                 <div className="modal-overlay">
                     <div className="modal-box">
@@ -169,6 +174,7 @@ const App = () => {
                 </div>
             )}
 
+            {/* Message box modal */}
             {showMessageBox && (
                 <div className="modal-overlay">
                     <div className="message-box modal-box">
@@ -178,75 +184,73 @@ const App = () => {
                 </div>
             )}
 
-            <div className="main-content-wrapper">
-                <header className="app-header">
-                    <h1 className="header-title">Arch Font Hub</h1>
-                    <p className="header-subtitle">Experiment with fonts and text display</p>
-                </header>
+            {/* Main content */}
+            <div className="main-content">
+                {/* 1. Font Picker */}
+                <section className="section-card">
+                    <h2 className="section-title">1. Choose Your Fonts (Max {MAX_SELECTED_FONTS})</h2>
+                    <div className="font-grid-container">
+                        {Object.entries(categorizedFonts).map(([category, fonts]) => (
+                            <div key={category} className="font-category">
+                                <h3 className="font-category-title">{category}</h3>
+                                <div className="font-buttons-grid">
+                                    {fonts.map((font) => (
+                                        <button
+                                            key={font}
+                                            onClick={() => handleFontSelect(font)}
+                                            className={`font-button ${selectedFonts.includes(font) ? 'font-button-selected' : ''}`}
+                                            style={{ fontFamily: font }}
+                                        >
+                                            {font}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </section>
 
-                <main className="main-sections-container">
-                    <section className="section-card">
-                        <h2 className="section-title">1. Choose Your Fonts (Max {MAX_SELECTED_FONTS})</h2>
-                        <div className="font-grid-container">
-                            {Object.entries(categorizedFonts).map(([category, fonts]) => (
-                                <div key={category} className="font-category">
-                                    <h3 className="font-category-title">{category}</h3>
-                                    <div className="font-buttons-grid">
-                                        {fonts.map((font) => (
-                                            <button
-                                                key={font}
-                                                onClick={() => handleFontSelect(font)}
-                                                className={`font-button ${selectedFonts.includes(font) ? 'font-button-selected' : ''}`}
-                                                style={{ fontFamily: font }}
-                                            >
-                                                {font}
-                                            </button>
-                                        ))}
-                                    </div>
+                {/* 2. Text Input */}
+                <section className="section-card">
+                    <h2 className="section-title">2. Enter Your Custom Text</h2>
+                    <div style={{ marginBottom: '0.5rem', color: '#555', fontSize: '0.97rem' }}>
+                        Select up to 3 fonts and enter text to see a live preview.
+                    </div>
+                    <textarea
+                        className="text-input"
+                        style={{ fontFamily: 'Arial, sans-serif' }}
+                        value={customText}
+                        onChange={handleTextChange}
+                        onFocus={handleFocus}
+                        onBlur={handleBlur}
+                        placeholder={DEFAULT_TEXT_PLACEHOLDER}
+                    />
+                </section>
+
+                {/* 3. Live Preview */}
+                <section className="section-card">
+                    <h2 className="section-title">3. Live Preview</h2>
+                    <div style={{ marginBottom: '0.5rem', color: '#555', fontSize: '0.97rem' }}>
+                        Select up to 3 fonts and enter text to see a live preview.
+                    </div>
+                    {selectedFonts.length === 0 && customText === DEFAULT_TEXT_PLACEHOLDER ? (
+                        <p className="empty-preview-message">Select up to 3 fonts and enter text to see a live preview.</p>
+                    ) : (
+                        <div className="preview-text-container">
+                            {selectedFonts.map((font) => (
+                                <div key={`preview-${font}`}>
+                                    <p className="preview-font-label">{font}:</p>
+                                    <p className="preview-text" style={{ fontFamily: font }}>{customText}</p>
                                 </div>
                             ))}
                         </div>
-                    </section>
+                    )}
+                </section>
 
-                    <section className="section-card">
-                        <h2 className="section-title">2. Enter Your Custom Text</h2>
-                        <textarea
-                            className="text-input"
-                            style={{ fontFamily: 'Arial, sans-serif' }}
-                            value={customText}
-                            onChange={handleTextChange}
-                            onFocus={handleFocus}
-                            onBlur={handleBlur}
-                            placeholder={DEFAULT_TEXT_PLACEHOLDER}
-                        />
-                    </section>
-
-                    <section className="section-card">
-                        <h2 className="section-title">3. Live Preview</h2>
-                        {selectedFonts.length === 0 && customText === DEFAULT_TEXT_PLACEHOLDER ? (
-                            <p className="empty-preview-message">Select up to 3 fonts and enter text to see a live preview.</p>
-                        ) : (
-                            <div className="preview-text-container">
-                                {selectedFonts.map((font) => (
-                                    <div key={`preview-${font}`}>
-                                        <p className="preview-font-label">{font}:</p>
-                                        <p className="preview-text" style={{ fontFamily: font }}>{customText}</p>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </section>
-
-                    <div className="save-button-container">
-                        <button onClick={handleSaveSvg} className="save-button">
-                            Submit Fonts to Arch Engraving
-                        </button>
-                    </div>
-                </main>
-
-                <footer className="app-footer">
-                    <p>&copy; {new Date().getFullYear()} Arch Font Hub. All rights reserved.</p>
-                </footer>
+                {/* Save Button */}
+                <button className="save-button" onClick={handleSaveSvg}>
+                    Submit Fonts to Arch Engraving
+                </button>
             </div>
         </div>
     );
