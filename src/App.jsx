@@ -98,23 +98,7 @@ const App = () => {
             customerCompany.trim() ? formatForFilename(customerCompany) : ''
         ].filter(Boolean).join('_') + '.svg';
 
-        // Save file locally
-        try {
-            const blob = new Blob([pendingSvgContent], { type: 'image/svg+xml' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            showMessage('SVG saved locally!');
-        } catch (error) {
-            showMessage(`Could not save file locally: ${error.message}`);
-        }
-
-        // Upload to Cloudflare R2
+        // Only upload to Cloudflare R2
         try {
             const response = await fetch(`${WORKER_URL}/${filename}`, {
                 method: 'PUT',

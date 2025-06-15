@@ -1,5 +1,5 @@
 :root {
-    --sidebar-bg: linear-gradient(135deg, #18305b 80%, #20468b 100%);
+    --sidebar-bg: #3c5471; /* Your image color */
     --main-bg: #fff;
     --card-bg: #fff;
     --card-radius: 1rem;
