@@ -212,6 +212,7 @@ const App = () => {
                         <h2 className="section-title">2. Enter Your Custom Text</h2>
                         <textarea
                             className="text-input"
+                            style={{ fontFamily: 'Arial, sans-serif' }}
                             value={customText}
                             onChange={handleTextChange}
                             onFocus={handleFocus}
