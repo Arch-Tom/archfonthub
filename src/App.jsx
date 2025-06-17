@@ -1,6 +1,3 @@
-// Fully corrected App.jsx
-// Includes proper async usage and complete working structure
-
 import React, { useState } from 'react';
 import './App.css';
 
@@ -101,6 +98,23 @@ const App = () => {
             customerCompany.trim() ? formatForFilename(customerCompany) : ''
         ].filter(Boolean).join('_') + '.svg';
 
+        // Save file locally
+        try {
+            const blob = new Blob([pendingSvgContent], { type: 'image/svg+xml' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showMessage('SVG saved locally!');
+        } catch (error) {
+            showMessage(`Could not save file locally: ${error.message}`);
+        }
+
+        // Upload to Cloudflare R2
         try {
             const response = await fetch(`${WORKER_URL}/${filename}`, {
                 method: 'PUT',
@@ -145,8 +159,8 @@ const App = () => {
                                 <input id="customerCompany" type="text" value={customerCompany} onChange={e => setCustomerCompany(e.target.value)} />
                             </div>
                             <div className="button-group">
-                                <button type="button" className="cancel-button same-size-button" onClick={() => setShowCustomerModal(false)}>Cancel</button>
-                                <button type="submit" className="same-size-button">Submit & Save</button>
+                                <button type="button" className="cancel-button" onClick={() => setShowCustomerModal(false)}>Cancel</button>
+                                <button type="submit">Submit & Save</button>
                             </div>
                         </form>
                     </div>
@@ -157,14 +171,14 @@ const App = () => {
                 <div className="modal-overlay">
                     <div className="message-box modal-box">
                         <p className="message-text">{message}</p>
-                        <button onClick={() => setShowMessageBox(false)} className="message-button same-size-button">OK</button>
+                        <button onClick={() => setShowMessageBox(false)} className="message-button">OK</button>
                     </div>
                 </div>
             )}
 
             <div className="main-content">
                 <section className="section-card">
-                    <h2 className="section-title">Choose Your Fonts (Max {MAX_SELECTED_FONTS})</h2>
+                    <h2 className="section-title">1?? Choose Your Fonts (Max {MAX_SELECTED_FONTS})</h2>
                     <div className="font-grid-container">
                         {Object.entries(categorizedFonts).map(([category, fonts]) => (
                             <div key={category} className="font-category">
@@ -187,7 +201,7 @@ const App = () => {
                 </section>
 
                 <section className="section-card">
-                    <h2 className="section-title">Enter Your Custom Text</h2>
+                    <h2 className="section-title">2?? Enter Your Custom Text</h2>
                     <textarea
                         className="text-input"
                         style={{ fontFamily: 'Arial, sans-serif' }}
@@ -200,7 +214,7 @@ const App = () => {
                 </section>
 
                 <section className="section-card">
-                    <h2 className="section-title">Live Preview</h2>
+                    <h2 className="section-title">3?? Live Preview</h2>
                     {selectedFonts.length === 0 && customText === DEFAULT_TEXT_PLACEHOLDER ? (
                         <p className="empty-preview-message">Select up to 3 fonts and enter text to see a live preview.</p>
                     ) : (
@@ -215,7 +229,7 @@ const App = () => {
                     )}
                 </section>
 
-                <button className="save-button same-size-button" onClick={handleSaveSvg}>
+                <button className="save-button" onClick={handleSaveSvg}>
                     Submit Fonts to Arch Engraving
                 </button>
             </div>
