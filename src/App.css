@@ -1,5 +1,5 @@
 :root {
-    --sidebar-bg: #3c5471; /* Your image color */
+    --sidebar-bg: #3c5471;
     --main-bg: #fff;
     --card-bg: #fff;
     --card-radius: 1rem;
@@ -254,6 +254,29 @@ body, html {
         background: var(--accent-blue);
         color: #fff;
     }
+
+.same-size-button {
+    min-width: 160px;
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: center;
+    border-radius: 0.7rem;
+    cursor: pointer;
+    box-sizing: border-box;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.save-button.same-size-button,
+.message-button.same-size-button,
+.cancel-button.same-size-button {
+    font-size: inherit;
+    padding: inherit;
+    min-width: inherit;
+    border-radius: inherit;
+    font-weight: inherit;
+}
 
 @media (max-width: 900px) {
     .app-layout {
