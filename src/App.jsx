@@ -87,20 +87,6 @@ const App = () => {
         setShowCustomerModal(true);
     };
 
-    const handleCustomerModalSubmit = async (e) => {
-        e.preventDefault();
-        if (!orderNumber.trim() || !customerName.trim()) {
-            showMessage('Order Number and Customer Name are required.');
-            return;
-        }
-        setShowCustomerModal(false);
-
-        const filename = [
-            formatForFilename(orderNumber),
-            formatForFilename(customerName),
-            customerCompany.trim() ? formatForFilename(customerCompany) : ''
-        ].filter(Boolean).join('_') + '.svg';
-
         try {
             const response = await fetch(`${WORKER_URL}/${filename}`, {
                 method: 'PUT',
