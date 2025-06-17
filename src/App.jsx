@@ -1,5 +1,5 @@
-// Final fixed App.jsx file
-// Includes: showCustomerModal state + async fix on handleCustomerModalSubmit
+// Fully corrected App.jsx
+// Includes proper async usage and complete working structure
 
 import React, { useState } from 'react';
 import './App.css';
