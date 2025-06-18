@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-// import './App.css'; // Commented out for testing Tailwind
+import './App.css';
 
 const App = () => {
     const WORKER_URL = "https://customerfontselection-worker.tom-4a9.workers.dev";
@@ -214,7 +214,7 @@ const App = () => {
                 </section>
 
                 <section className="section-card">
-                    <h2 className="section-title bg-red-500 text-white font-bold p-4 text-3xl">Live Preview</h2>
+                    <h2 className="section-title">Live Preview</h2>
                     {selectedFonts.length === 0 && customText === DEFAULT_TEXT_PLACEHOLDER ? (
                         <p className="empty-preview-message">Select up to 3 fonts and enter text to see a live preview.</p>
                     ) : (
