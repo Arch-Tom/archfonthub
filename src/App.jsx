@@ -6,12 +6,40 @@ const App = () => {
     const DEFAULT_TEXT_PLACEHOLDER = 'Type your text here...';
     const MAX_SELECTED_FONTS = 3;
 
+    // Updated font categories and list (all available fonts):
     const categorizedFonts = {
-        'Sans-serif': ['Arial', 'Calibri', 'Century Gothic'],
-        'Serif': ['Benguiat', 'Copperplate Gothic', 'Garamond', 'Times New Roman'],
-        'Script': ['I Love Glitter'],
-        'Display': ['Tinplate Titling Black'],
-        'Monospace': ['Zapf Humanist']
+        'Sans-serif': [
+            'Arial',
+            'Calibri',
+            'Century Gothic',
+            'Berlin Sans FB',      // New
+            'Bebas Neue'           // New
+        ],
+        'Serif': [
+            'Benguiat',
+            'Benguiat Bk BT',      // New
+            'Copperplate Gothic',
+            'Garamond',
+            'Times New Roman',
+            'Murray Hill'          // New
+        ],
+        'Script': [
+            'I Love Glitter',
+            'Amazone BT',          // New
+            'Great Vibes',         // New
+            'Honey Script',        // New
+            'ITC Zapf Chancery',   // New
+            'BlackChancery'        // New
+        ],
+        'Display': [
+            'Tinplate Titling Black',
+            'ChocolateBox',        // New
+            'CollegiateBlackFLF',  // New
+            'CollegiateOutlineFLF' // New
+        ],
+        'Monospace': [
+            'Zapf Humanist'
+        ]
     };
 
     const [selectedFonts, setSelectedFonts] = useState([]);
@@ -238,5 +266,3 @@ const App = () => {
 };
 
 export default App;
-
-//comment to commit

@@ -120,3 +120,132 @@ body {
     font-style: normal;
     font-display: swap;
 }
+
+/* ==== Additional New Font Faces ==== */
+@font-face {
+    font-family: 'Amazone BT';
+    src: url('/fonts/AmazoneBT-Regular.woff2') format('woff2'), url('/fonts/AmazoneBT-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Benguiat Bk BT';
+    src: url('/fonts/BenguiatITCbyBT-Bold.woff2') format('woff2'), url('/fonts/BenguiatITCbyBT-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Benguiat Bk BT';
+    src: url('/fonts/BenguiatITCbyBT-BookItalic.woff2') format('woff2'), url('/fonts/BenguiatITCbyBT-BookItalic.woff') format('woff');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Bebas Neue';
+    src: url('/fonts/BebasNeue-Regular.woff2') format('woff2'), url('/fonts/BebasNeue-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Bebas Neue';
+    src: url('/fonts/BebasNeue-Bold.woff2') format('woff2'), url('/fonts/BebasNeue-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Berlin Sans FB';
+    src: url('/fonts/BerlinSansFB-Bold.woff2') format('woff2'), url('/fonts/BerlinSansFB-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Berlin Sans FB';
+    src: url('/fonts/BerlinSansFB-Reg.woff2') format('woff2'), url('/fonts/BerlinSansFB-Reg.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'BlackChancery';
+    src: url('/fonts/BlackChancery.woff2') format('woff2'), url('/fonts/BlackChancery.woff') format('woff');
+    font-weight: 100;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'ChocolateBox';
+    src: url('/fonts/ChocolateBox.woff2') format('woff2'), url('/fonts/ChocolateBox.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'CollegiateBlackFLF';
+    src: url('/fonts/CollegiateBlackFLF.woff2') format('woff2'), url('/fonts/CollegiateBlackFLF.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'CollegiateOutlineFLF';
+    src: url('/fonts/CollegiateOutlineFLF.woff2') format('woff2'), url('/fonts/CollegiateOutlineFLF.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Great Vibes';
+    src: url('/fonts/GreatVibes-Regular.woff2') format('woff2'), url('/fonts/GreatVibes-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Honey Script';
+    src: url('/fonts/HoneyScript-Light.woff2') format('woff2'), url('/fonts/HoneyScript-Light.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Honey Script';
+    src: url('/fonts/HoneyScript-SemiBold.woff2') format('woff2'), url('/fonts/HoneyScript-SemiBold.woff') format('woff');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'ITC Zapf Chancery';
+    src: url('/fonts/ZapfChancery-Roman.woff2') format('woff2'), url('/fonts/ZapfChancery-Roman.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Murray Hill';
+    src: url('/fonts/MurrayHill.woff2') format('woff2'), url('/fonts/MurrayHill.woff') format('woff');
+    font-weight: 100;
+    font-style: normal;
+    font-display: swap;
+}
