@@ -1,15 +1,9 @@
-Yes, absolutely. Here is the full, corrected code for your `src/index.css` file.
-
-The only change is the addition of the three required `@tailwind` directives at the very top. These are necessary to instruct the build process to inject Tailwind's styles into your project.
-
-Please replace the entire contents of your `src/index.css` file with the code below.
-
-### `src/index.css` (Corrected)
-```css
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 /* src/index.css */
+
 /**
  * ==== Reset & Base Styles ====
  * Establishes a consistent base across browsers.
@@ -126,5 +120,3 @@ body {
     font-style: normal;
     font-display: swap;
 }
-
-```
