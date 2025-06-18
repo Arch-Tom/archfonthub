@@ -178,7 +178,7 @@ const App = () => {
 
             <div className="main-content">
                 <section className="section-card">
-                    <h2 className="section-title">1?? Choose Your Fonts (Max {MAX_SELECTED_FONTS})</h2>
+                    <h2 className="section-title">Choose Your Fonts (Max {MAX_SELECTED_FONTS})</h2>
                     <div className="font-grid-container">
                         {Object.entries(categorizedFonts).map(([category, fonts]) => (
                             <div key={category} className="font-category">
@@ -201,7 +201,7 @@ const App = () => {
                 </section>
 
                 <section className="section-card">
-                    <h2 className="section-title">2?? Enter Your Custom Text</h2>
+                    <h2 className="section-title">Enter text you would like to preview</h2>
                     <textarea
                         className="text-input"
                         style={{ fontFamily: 'Arial, sans-serif' }}
@@ -214,7 +214,7 @@ const App = () => {
                 </section>
 
                 <section className="section-card">
-                    <h2 className="section-title">3?? Live Preview</h2>
+                    <h2 className="section-title">Live Preview</h2>
                     {selectedFonts.length === 0 && customText === DEFAULT_TEXT_PLACEHOLDER ? (
                         <p className="empty-preview-message">Select up to 3 fonts and enter text to see a live preview.</p>
                     ) : (
