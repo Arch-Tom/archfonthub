@@ -6,36 +6,35 @@ const App = () => {
     const DEFAULT_TEXT_PLACEHOLDER = 'Type your text here...';
     const MAX_SELECTED_FONTS = 3;
 
-    // Updated font categories and list (all available fonts):
     const categorizedFonts = {
         'Sans-serif': [
             'Arial',
             'Calibri',
             'Century Gothic',
-            'Berlin Sans FB',      // New
-            'Bebas Neue'           // New
+            'Berlin Sans FB',
+            'Bebas Neue'
         ],
         'Serif': [
             'Benguiat',
-            'Benguiat Bk BT',      // New
+            'Benguiat Bk BT',
             'Copperplate Gothic',
             'Garamond',
             'Times New Roman',
-            'Murray Hill'          // New
+            'Murray Hill'
         ],
         'Script': [
             'I Love Glitter',
-            'Amazone BT',          // New
-            'Great Vibes',         // New
-            'Honey Script',        // New
-            'ITC Zapf Chancery',   // New
-            'BlackChancery'        // New
+            'Amazone BT',
+            'Great Vibes',
+            'Honey Script',
+            'ITC Zapf Chancery',
+            'BlackChancery'
         ],
         'Display': [
             'Tinplate Titling Black',
-            'ChocolateBox',        // New
-            'CollegiateBlackFLF',  // New
-            'CollegiateOutlineFLF' // New
+            'ChocolateBox',
+            'CollegiateBlackFLF',
+            'CollegiateOutlineFLF'
         ],
         'Monospace': [
             'Zapf Humanist'
@@ -165,6 +164,20 @@ const App = () => {
     return (
         <div className="app-layout">
             <aside className="sidebar">
+                <div className="sidebar-logo">
+                    <img
+                        src="/images/Arch Vector Logo White.svg"
+                        alt="Arch Font Hub Logo"
+                        style={{
+                            maxWidth: 120,
+                            width: '100%',
+                            margin: '0 auto 16px auto',
+                            display: 'block',
+                            borderRadius: '1rem',
+                            boxShadow: '0 2px 8px rgba(70,130,180,0.09)'
+                        }}
+                    />
+                </div>
                 <div className="sidebar-title">ARCH<br />FONT HUB</div>
                 <div className="sidebar-desc">Experiment with fonts and text display</div>
             </aside>
