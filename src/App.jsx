@@ -169,7 +169,7 @@ const App = () => {
                         src="/images/Arch Vector Logo White.svg"
                         alt="Arch Font Hub Logo"
                         style={{
-                            maxWidth: 150, // 25% larger than 120
+                            maxWidth: 300, 
                             width: '100%',
                             margin: '0 auto 16px auto',
                             display: 'block',
