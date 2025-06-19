@@ -2,45 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-/* src/index.css */
+/* All custom CSS variables and base styles are now handled by Tailwind */
 
-/**
- * ==== Reset & Base Styles ====
- * Establishes a consistent base across browsers.
- */
-body {
-    margin: 0;
-    font-family: 'Inter', sans-serif; /* A clean, modern default font */
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    background-color: var(--primary-bg-light);
-    color: var(--text-primary);
-}
-
-/**
- * ==== Core Color Palette ====
- * Defines the new color scheme based on your request.
- */
-:root {
-    --primary-bg: rgb(255, 255, 255);
-    --primary-bg-light: #f7fafd; /* A very light blue for the body background */
-    --accent: rgb(70, 130, 180);
-    --accent-dark: rgb(55, 104, 144); /* A darker shade for hover effects */
-    --text-primary: #1f2937; /* A dark gray for main text */
-    --text-secondary: #6b7280; /* A lighter gray for subtitles/labels */
-    --text-on-accent: #FFFFFF;
-    --border-color: #dbeafe; /* A light blue for borders and dividers */
-    --radius-md: 0.75rem;
-    --radius-sm: 0.5rem;
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
-}
-
-/**
- * ==== Font Faces ====
- * All @font-face rules are consolidated here.
- * The 'font-family' names have been standardized to match the JavaScript array.
- */
+/* ==== All of your Font Faces ==== */
 @font-face {
     font-family: 'Arial';
     src: url('/fonts/ArialMT.woff2') format('woff2'), url('/fonts/ArialMT.woff') format('woff');
@@ -121,7 +85,6 @@ body {
     font-display: swap;
 }
 
-/* ==== Additional New Font Faces ==== */
 @font-face {
     font-family: 'Amazone BT';
     src: url('/fonts/AmazoneBT-Regular.woff2') format('woff2'), url('/fonts/AmazoneBT-Regular.woff') format('woff');
