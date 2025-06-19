@@ -76,7 +76,7 @@ body {
 
 @font-face {
     font-family: 'Zapf Humanist';
-    src: url('/fonts/ZapfHumanist601BT-Demi.woff2') format('woff2'), url('/fonts/ZapfHumanist601BT-Demi.woff') format('woff');
+    src: url('/fonts/ZHUM601D.woff2') format('woff2'), url('/fonts/ZHUM601D.woff') format('woff');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
