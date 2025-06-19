@@ -143,7 +143,7 @@ const App = () => {
                     <div className="mb-4">
                         {/* Real logo SVG */}
                         <img
-                            src="/images/Arch Logo Vector White.svg"
+                            src="/images/Arch Vector Logo White.svg"
                             alt="Arch Font Hub Logo"
                             className="w-64 h-64 object-contain drop-shadow-lg" // UPDATED: Logo size increased 4x (was w-16 h-16)
                         />
