@@ -201,12 +201,12 @@ const App = () => {
                         {/* Live Preview Card */}
                         <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
                             <h2 className="text-2xl font-black text-slate-900 mb-6 tracking-tight">Live Preview</h2>
-                            <div className="bg-gradient-to-b from-slate-50 to-slate-200 p-6 rounded-xl min-h-[150px] space-y-12 border border-slate-100">
+                            <div className="bg-gradient-to-b from-slate-50 to-slate-200 p-6 rounded-xl min-h-[150px] space-y-16 border border-slate-100">
                                 {selectedFonts.length > 0 && customText.trim() !== '' ? (
                                     selectedFonts.map((font) => (
-                                        <div key={`preview-${font}`} className="relative">
-                                            <span className="absolute -top-4 left-0 bg-blue-600 text-white px-4 py-1 rounded-full text-xs font-bold shadow-sm z-10" style={{ fontFamily: 'Arial' }}>{font}</span>
-                                            <p className="text-3xl text-slate-800 break-words mt-8" style={{ fontFamily: font }}>{customText}</p>
+                                        <div key={`preview-${font}`} className="relative flex flex-col items-start gap-3">
+                                            <span className="bg-blue-600 text-white px-4 py-1 rounded-full text-xs font-bold shadow-sm z-10 mb-2 mt-2" style={{ fontFamily: 'Arial' }}>{font}</span>
+                                            <p className="text-3xl text-slate-800 break-words" style={{ fontFamily: font }}>{customText}</p>
                                         </div>
                                     ))
                                 ) : (
