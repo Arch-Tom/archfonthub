@@ -143,7 +143,7 @@ const App = () => {
                     <div className="mb-4">
                         {/* Real logo SVG */}
                         <img
-                            src="/images/Arch Logo Vector White.svg"
+                            src="/images/Arch Vector Logo White.svg"
                             alt="Arch Font Hub Logo"
                             className="w-16 h-16 object-contain drop-shadow-lg"
                         />
@@ -201,7 +201,7 @@ const App = () => {
                         {/* Live Preview Card */}
                         <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
                             <h2 className="text-2xl font-black text-slate-900 mb-6 tracking-tight">Live Preview</h2>
-                            <div className="bg-gradient-to-b from-slate-50 to-slate-200 p-6 rounded-xl min-h-[150px] space-y-16 border border-slate-100">
+                            <div className="bg-gradient-to-b from-slate-50 to-slate-200 p-6 rounded-xl min-h-[150px] space-y-10 border border-slate-100">
                                 {selectedFonts.length > 0 && customText.trim() !== '' ? (
                                     selectedFonts.map((font) => (
                                         <div key={`preview-${font}`} className="relative flex flex-col items-start gap-3">
