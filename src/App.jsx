@@ -1,15 +1,10 @@
 import React, { useState } from 'react';
 
-// NOTE: Ensure the import for App.css is removed or the file is empty.
-// import './App.css'; 
-
 const App = () => {
-    // State and constants from your original file
     const WORKER_URL = "https://customerfontselection-worker.tom-4a9.workers.dev";
     const DEFAULT_TEXT_PLACEHOLDER = 'Type your text here...';
     const MAX_SELECTED_FONTS = 3;
 
-    // The updated font list from the file you provided
     const categorizedFonts = {
         'Sans-serif': ['Arial', 'Calibri', 'Century Gothic', 'Berlin Sans FB', 'Bebas Neue'],
         'Serif': ['Benguiat', 'Benguiat Bk BT', 'Copperplate Gothic', 'Garamond', 'Times New Roman', 'Murray Hill'],
@@ -28,7 +23,6 @@ const App = () => {
     const [orderNumber, setOrderNumber] = useState('');
     const [pendingSvgContent, setPendingSvgContent] = useState(null);
 
-    // All your handler functions remain the same
     const handleFontSelect = (font) => {
         setSelectedFonts(prev =>
             prev.includes(font)
@@ -136,7 +130,7 @@ const App = () => {
                 value={value}
                 onChange={onChange}
                 required={required}
-                className="w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-3 py-2 border border-slate-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-400 text-base"
             />
         </div>
     );
@@ -144,33 +138,43 @@ const App = () => {
     return (
         <div className="flex flex-col lg:flex-row min-h-screen bg-slate-100 font-sans">
             {/* Sidebar */}
-            <aside className="bg-slate-800 text-white w-full lg:w-72 p-6 lg:p-8 shrink-0 flex flex-col">
-                <div className="font-black text-3xl tracking-wide leading-tight text-white">ARCH<br />FONT HUB</div>
-                <p className="mt-2 text-sm text-slate-400 border-b border-slate-700 pb-6">
+            <aside className="bg-gradient-to-b from-slate-800 to-slate-900 text-white w-full lg:w-80 p-8 flex flex-col items-center justify-center shadow-xl rounded-r-3xl">
+                <div className="flex flex-col items-center">
+                    <div className="mb-4">
+                        {/* Real logo SVG */}
+                        <img
+                            src="/images/Arch Logo Vector White.svg"
+                            alt="Arch Font Hub Logo"
+                            className="w-16 h-16 object-contain drop-shadow-lg"
+                        />
+                    </div>
+                    <div className="font-black text-3xl tracking-wide leading-tight text-white text-center">ARCH<br />FONT HUB</div>
+                </div>
+                <p className="mt-4 text-base text-slate-300 border-t border-slate-700 pt-6 text-center">
                     Experiment with fonts and text display for customer proofs.
                 </p>
             </aside>
 
             {/* Main Content */}
-            <main className="flex-1 p-4 sm:p-6 lg:p-8">
+            <main className="flex-1 p-4 sm:p-8 lg:p-12">
                 <div className="max-w-4xl mx-auto">
-                    <div className="grid grid-cols-1 gap-8">
+                    <div className="space-y-10">
                         {/* Font Selection Card */}
-                        <section className="bg-white rounded-xl shadow-lg p-6">
-                            <h2 className="text-xl font-bold text-slate-900 mb-5">1. Choose Your Fonts (Max {MAX_SELECTED_FONTS})</h2>
-                            <div className="space-y-5">
+                        <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
+                            <h2 className="text-2xl font-black text-slate-900 mb-6 tracking-tight">Font Selection</h2>
+                            <div className="space-y-6">
                                 {Object.entries(categorizedFonts).map(([category, fonts]) => (
                                     <div key={category}>
-                                        <h3 className="text-md font-semibold text-slate-700 border-b-2 border-slate-200 pb-2 mb-4">{category}</h3>
+                                        <h3 className="text-md font-semibold text-slate-700 border-b-2 border-slate-200 pb-2 mb-3 tracking-wide">{category}</h3>
                                         <div className="flex flex-wrap gap-3">
                                             {fonts.map((font) => (
                                                 <button
                                                     key={font}
                                                     onClick={() => handleFontSelect(font)}
-                                                    className={`px-4 py-2 rounded-lg text-base font-semibold border-2 transition-all duration-200 ease-in-out transform hover:scale-105
+                                                    className={`px-4 py-2 rounded-xl text-base font-semibold border-2 transition-all duration-150 transform hover:scale-105 focus:outline-none
                                                         ${selectedFonts.includes(font)
                                                             ? 'bg-blue-600 text-white border-blue-600 shadow-md'
-                                                            : 'bg-white text-blue-600 border-blue-500 hover:bg-blue-50'
+                                                            : 'bg-white text-blue-600 border-blue-400 hover:bg-blue-50'
                                                         }`}
                                                     style={{ fontFamily: font }}
                                                 >
@@ -184,10 +188,10 @@ const App = () => {
                         </section>
 
                         {/* Text Input Card */}
-                        <section className="bg-white rounded-xl shadow-lg p-6">
-                            <h2 className="text-xl font-bold text-slate-900 mb-5">2. Enter Text to Preview</h2>
+                        <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
+                            <h2 className="text-2xl font-black text-slate-900 mb-6 tracking-tight">Custom Text</h2>
                             <textarea
-                                className="w-full p-4 border-2 border-slate-200 rounded-md shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[120px] text-lg"
+                                className="w-full p-5 border-2 border-slate-200 rounded-xl shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 min-h-[120px] text-lg"
                                 value={customText}
                                 onChange={handleTextChange}
                                 placeholder={DEFAULT_TEXT_PLACEHOLDER}
@@ -195,14 +199,14 @@ const App = () => {
                         </section>
 
                         {/* Live Preview Card */}
-                        <section className="bg-white rounded-xl shadow-lg p-6">
-                            <h2 className="text-xl font-bold text-slate-900 mb-5">3. Live Preview</h2>
-                            <div className="bg-slate-50 p-4 rounded-lg min-h-[150px] space-y-6">
+                        <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
+                            <h2 className="text-2xl font-black text-slate-900 mb-6 tracking-tight">Live Preview</h2>
+                            <div className="bg-gradient-to-b from-slate-50 to-slate-200 p-6 rounded-xl min-h-[150px] space-y-12 border border-slate-100">
                                 {selectedFonts.length > 0 && customText.trim() !== '' ? (
                                     selectedFonts.map((font) => (
-                                        <div key={`preview-${font}`}>
-                                            <p className="text-sm font-bold text-blue-700 mb-2 tracking-wide uppercase">{font}</p>
-                                            <p className="text-3xl text-slate-800 break-words" style={{ fontFamily: font }}>{customText}</p>
+                                        <div key={`preview-${font}`} className="relative">
+                                            <span className="absolute -top-4 left-0 bg-blue-600 text-white px-4 py-1 rounded-full text-xs font-bold shadow-sm z-10" style={{ fontFamily: 'Arial' }}>{font}</span>
+                                            <p className="text-3xl text-slate-800 break-words mt-8" style={{ fontFamily: font }}>{customText}</p>
                                         </div>
                                     ))
                                 ) : (
@@ -215,9 +219,9 @@ const App = () => {
                     </div>
 
                     {/* Submit Button */}
-                    <div className="mt-10">
+                    <div className="mt-12">
                         <button
-                            className="w-full bg-blue-600 text-white font-bold py-4 px-6 rounded-lg shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-100 transition-all duration-200 transform hover:scale-[1.01]"
+                            className="w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white font-bold py-5 px-8 rounded-2xl shadow-2xl hover:shadow-blue-200 hover:from-blue-700 hover:to-blue-600 transition-all duration-200 transform hover:scale-105 text-xl tracking-wide"
                             onClick={handleSaveSvg}
                         >
                             Submit Fonts to Arch Engraving
@@ -228,26 +232,26 @@ const App = () => {
 
             {/* Modals Overlay */}
             {(showCustomerModal || showMessageBox) && (
-                <div className="fixed inset-0 bg-slate-900 bg-opacity-75 flex items-center justify-center p-4 z-50 transition-opacity">
-                    <div className="bg-white rounded-lg shadow-2xl p-8 w-full max-w-lg">
+                <div className="fixed inset-0 bg-slate-900 bg-opacity-75 flex items-center justify-center p-4 z-50 transition-opacity animate-fade-in">
+                    <div className="bg-white rounded-2xl shadow-2xl p-10 w-full max-w-lg animate-fade-in">
                         {showCustomerModal && (
-                            <form onSubmit={handleCustomerModalSubmit} className="space-y-6">
-                                <h3 className="text-xl font-bold text-slate-900">Enter Customer Information to Save</h3>
+                            <form onSubmit={handleCustomerModalSubmit} className="space-y-8">
+                                <h3 className="text-2xl font-bold text-slate-900">Enter Customer Information to Save</h3>
                                 <FormInput label="Order Number" id="orderNumber" value={orderNumber} onChange={e => setOrderNumber(e.target.value)} required />
                                 <FormInput label="Customer Name" id="customerName" value={customerName} onChange={e => setCustomerName(e.target.value)} required />
                                 <FormInput label="Customer Company" id="customerCompany" value={customerCompany} onChange={e => setCustomerCompany(e.target.value)} isOptional />
                                 <div className="flex justify-end gap-4 pt-4">
-                                    <button type="button" className="px-5 py-2 bg-slate-200 text-slate-800 rounded-md hover:bg-slate-300 font-semibold transition-colors" onClick={() => setShowCustomerModal(false)}>Cancel</button>
-                                    <button type="submit" className="px-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-semibold transition-colors shadow-sm">Submit & Save</button>
+                                    <button type="button" className="px-5 py-2 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors" onClick={() => setShowCustomerModal(false)}>Cancel</button>
+                                    <button type="submit" className="px-5 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-semibold transition-colors shadow-sm">Submit & Save</button>
                                 </div>
                             </form>
                         )}
                         {showMessageBox && (
                             <div className="text-center">
-                                <p className="text-slate-800 text-lg mb-6">{message}</p>
+                                <p className="text-slate-800 text-lg mb-8">{message}</p>
                                 <button
                                     onClick={() => setShowMessageBox(false)}
-                                    className="px-8 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-semibold transition-colors shadow-sm"
+                                    className="px-10 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-semibold transition-colors shadow-sm"
                                 >
                                     OK
                                 </button>

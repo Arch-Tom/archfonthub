@@ -2,9 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
-/* All custom CSS variables and base styles are now handled by Tailwind */
+/* Extra customizations for modern look */
 
-/* ==== All of your Font Faces ==== */
+:root {
+    --main-bg: #f8fafc;
+    --sidebar-bg: #0f172a;
+    --card-bg: #fff;
+    --accent: #2563eb;
+    --radius: 1.5rem;
+}
+
+body {
+    background: var(--main-bg);
+}
+
+.animate-fade-in {
+    animation: fade-in 0.35s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(32px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Font face rules (copy from your current index.css) */
+
 @font-face {
     font-family: 'Arial';
     src: url('/fonts/ArialMT.woff2') format('woff2'), url('/fonts/ArialMT.woff') format('woff');
