@@ -1,39 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* Extra customizations for modern look */
-
-:root {
-    --main-bg: #f8fafc;
-    --sidebar-bg: #0f172a;
-    --card-bg: #fff;
-    --accent: #2563eb;
-    --radius: 1.5rem;
-}
-
-body {
-    background: var(--main-bg);
-}
-
-.animate-fade-in {
-    animation: fade-in 0.35s cubic-bezier(0.33, 1, 0.68, 1);
-}
-
-@keyframes fade-in {
-    from {
-        opacity: 0;
-        transform: translateY(32px) scale(0.98);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-/* Font face rules (copy from your current index.css) */
-
+/* SYSTEM & COMMON FONTS */
 @font-face {
     font-family: 'Arial';
     src: url('/fonts/ArialMT.woff2') format('woff2'), url('/fonts/ArialMT.woff') format('woff');
@@ -43,101 +8,30 @@ body {
 }
 
 @font-face {
-    font-family: 'Century Gothic';
-    src: url('/fonts/CenturyGothicPaneuropean.woff2') format('woff2'), url('/fonts/CenturyGothicPaneuropean.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Benguiat';
-    src: url('/fonts/Benguiat.woff2') format('woff2'), url('/fonts/Benguiat.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Calibri';
-    src: url('/fonts/Calibri.woff2') format('woff2'), url('/fonts/Calibri.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Times New Roman';
-    src: url('/fonts/TimesNewRomanPSMT.woff2') format('woff2'), url('/fonts/TimesNewRomanPSMT.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Zapf Humanist';
-    src: url('/fonts/ZHUM601D.woff2') format('woff2'), url('/fonts/ZHUM601D.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Tinplate Titling Black';
-    src: url('/fonts/TinplateTitlingBlack.woff2') format('woff2'), url('/fonts/TinplateTitlingBlack.woff') format('woff');
-    font-weight: 900;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'I Love Glitter';
-    src: url('/fonts/ILoveGlitter.woff2') format('woff2'), url('/fonts/ILoveGlitter.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Garamond';
-    src: url('/fonts/Garamond.woff2') format('woff2'), url('/fonts/Garamond.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'CopprplGoth BT';
-    src: url('/fonts/CopperplateGothicBT-Roman.woff2') format('woff2'), url('/fonts/CopperplateGothicBT-Roman.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Amazone BT';
-    src: url('/fonts/AmazoneBT-Regular.woff2') format('woff2'), url('/fonts/AmazoneBT-Regular.woff') format('woff');
-    font-weight: normal;
-    font-style: italic;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Benguiat Bk BT';
-    src: url('/fonts/BenguiatITCbyBT-Bold.woff2') format('woff2'), url('/fonts/BenguiatITCbyBT-Bold.woff') format('woff');
+    font-family: 'Arial';
+    src: url('/fonts/Arial-BoldMT.woff2') format('woff2'), url('/fonts/Arial-BoldMT.woff') format('woff');
     font-weight: bold;
     font-style: normal;
     font-display: swap;
 }
 
 @font-face {
-    font-family: 'Benguiat Bk BT';
-    src: url('/fonts/BenguiatITCbyBT-BookItalic.woff2') format('woff2'), url('/fonts/BenguiatITCbyBT-BookItalic.woff') format('woff');
+    font-family: 'Arial';
+    src: url('/fonts/Arial-ItalicMT.woff2') format('woff2'), url('/fonts/Arial-ItalicMT.woff') format('woff');
     font-weight: normal;
     font-style: italic;
     font-display: swap;
 }
 
+@font-face {
+    font-family: 'Arial';
+    src: url('/fonts/Arial-BoldItalicMT.woff2') format('woff2'), url('/fonts/Arial-BoldItalicMT.woff') format('woff');
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+}
+
+/* BEBAS NEUE */
 @font-face {
     font-family: 'Bebas Neue';
     src: url('/fonts/BebasNeue-Regular.woff2') format('woff2'), url('/fonts/BebasNeue-Regular.woff') format('woff');
@@ -154,14 +48,32 @@ body {
     font-display: swap;
 }
 
+/* BENGUIAT */
 @font-face {
-    font-family: 'Berlin Sans FB';
-    src: url('/fonts/BerlinSansFB-Bold.woff2') format('woff2'), url('/fonts/BerlinSansFB-Bold.woff') format('woff');
+    font-family: 'Benguiat';
+    src: url('/fonts/Benguiat.woff2') format('woff2'), url('/fonts/Benguiat.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Benguiat ITC by BT';
+    src: url('/fonts/BenguiatITCbyBT-Bold.woff2') format('woff2'), url('/fonts/BenguiatITCbyBT-Bold.woff') format('woff');
     font-weight: bold;
     font-style: normal;
     font-display: swap;
 }
 
+@font-face {
+    font-family: 'Benguiat ITC by BT';
+    src: url('/fonts/BenguiatITCbyBT-BookItalic.woff2') format('woff2'), url('/fonts/BenguiatITCbyBT-BookItalic.woff') format('woff');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+
+/* BERLIN SANS FB */
 @font-face {
     font-family: 'Berlin Sans FB';
     src: url('/fonts/BerlinSansFB-Reg.woff2') format('woff2'), url('/fonts/BerlinSansFB-Reg.woff') format('woff');
@@ -171,13 +83,107 @@ body {
 }
 
 @font-face {
-    font-family: 'BlackChancery';
-    src: url('/fonts/BlackChancery.woff2') format('woff2'), url('/fonts/BlackChancery.woff') format('woff');
-    font-weight: 100;
+    font-family: 'Berlin Sans FB';
+    src: url('/fonts/BerlinSansFB-Bold.woff2') format('woff2'), url('/fonts/BerlinSansFB-Bold.woff') format('woff');
+    font-weight: bold;
     font-style: normal;
     font-display: swap;
 }
 
+/* BLACK CHANCERY */
+@font-face {
+    font-family: 'BlackChancery';
+    src: url('/fonts/BlackChancery.woff2') format('woff2'), url('/fonts/BlackChancery.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* CALIBRI */
+@font-face {
+    font-family: 'Calibri';
+    src: url('/fonts/Calibri.woff2') format('woff2'), url('/fonts/Calibri.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Calibri';
+    src: url('/fonts/Calibri-Bold.woff2') format('woff2'), url('/fonts/Calibri-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Calibri';
+    src: url('/fonts/Calibri-Italic.woff2') format('woff2'), url('/fonts/Calibri-Italic.woff') format('woff');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Calibri';
+    src: url('/fonts/Calibri-BoldItalic.woff2') format('woff2'), url('/fonts/Calibri-BoldItalic.woff') format('woff');
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+}
+
+/* CENTURY GOTHIC */
+@font-face {
+    font-family: 'Century Gothic';
+    src: url('/fonts/CenturyGothicPaneuropean.woff2') format('woff2'), url('/fonts/CenturyGothicPaneuropean.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Century Gothic';
+    src: url('/fonts/CenturyGothicPaneuropean-Bold.woff2') format('woff2'), url('/fonts/CenturyGothicPaneuropean-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Century Gothic';
+    src: url('/fonts/CenturyGothicPaneuropean-BoldItalic.woff2') format('woff2'), url('/fonts/CenturyGothicPaneuropean-BoldItalic.woff') format('woff');
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Century Gothic';
+    src: url('/fonts/CenturyGothicPaneuropean-ItalicMT.woff2') format('woff2'), url('/fonts/CenturyGothicPaneuropean-ItalicMT.woff') format('woff');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Century Gothic';
+    src: url('/fonts/CenturyGothicPaneuropean-BoldItalicMT.woff2') format('woff2'), url('/fonts/CenturyGothicPaneuropean-BoldItalicMT.woff') format('woff');
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+}
+
+/* CENTURY SCHOOLBOOK */
+@font-face {
+    font-family: 'Century Schoolbook';
+    src: url('/fonts/CenturySchoolbook.woff2') format('woff2'), url('/fonts/CenturySchoolbook.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+/* Add more variants here (Bold, Italic) as in folder */
+
+/* CHOCOLATE BOX */
 @font-face {
     font-family: 'ChocolateBox';
     src: url('/fonts/ChocolateBox.woff2') format('woff2'), url('/fonts/ChocolateBox.woff') format('woff');
@@ -186,6 +192,7 @@ body {
     font-display: swap;
 }
 
+/* COLLEGIATE BLACK/OUTLINE */
 @font-face {
     font-family: 'CollegiateBlackFLF';
     src: url('/fonts/CollegiateBlackFLF.woff2') format('woff2'), url('/fonts/CollegiateBlackFLF.woff') format('woff');
@@ -202,6 +209,26 @@ body {
     font-display: swap;
 }
 
+/* COPPRPLGOTH BT / COPPERPLATE GOTHIC */
+@font-face {
+    font-family: 'CopprplGoth BT';
+    src: url('/fonts/CopperplateGothicBT-Roman.woff2') format('woff2'), url('/fonts/CopperplateGothicBT-Roman.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+/* For SVG/CorelDRAW, use font-family="CopprplGoth BT" */
+
+/* GARAMOND */
+@font-face {
+    font-family: 'Garamond';
+    src: url('/fonts/Garamond.woff2') format('woff2'), url('/fonts/Garamond.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* GREAT VIBES */
 @font-face {
     font-family: 'Great Vibes';
     src: url('/fonts/GreatVibes-Regular.woff2') format('woff2'), url('/fonts/GreatVibes-Regular.woff') format('woff');
@@ -210,6 +237,7 @@ body {
     font-display: swap;
 }
 
+/* HONEY SCRIPT */
 @font-face {
     font-family: 'Honey Script';
     src: url('/fonts/HoneyScript-Light.woff2') format('woff2'), url('/fonts/HoneyScript-Light.woff') format('woff');
@@ -226,6 +254,67 @@ body {
     font-display: swap;
 }
 
+/* I LOVE GLITTER */
+@font-face {
+    font-family: 'I Love Glitter';
+    src: url('/fonts/ILoveGlitter.woff2') format('woff2'), url('/fonts/ILoveGlitter.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* MURRAY HILL */
+@font-face {
+    font-family: 'Murray Hill';
+    src: url('/fonts/MurrayHill.woff2') format('woff2'), url('/fonts/MurrayHill.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* TIMES NEW ROMAN */
+@font-face {
+    font-family: 'Times New Roman';
+    src: url('/fonts/TimesNewRomanPSMT.woff2') format('woff2'), url('/fonts/TimesNewRomanPSMT.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Times New Roman';
+    src: url('/fonts/TimesNewRomanPS-BoldMT.woff2') format('woff2'), url('/fonts/TimesNewRomanPS-BoldMT.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Times New Roman';
+    src: url('/fonts/TimesNewRomanPS-ItalicMT.woff2') format('woff2'), url('/fonts/TimesNewRomanPS-ItalicMT.woff') format('woff');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Times New Roman';
+    src: url('/fonts/TimesNewRomanPS-BoldItalicMT.woff2') format('woff2'), url('/fonts/TimesNewRomanPS-BoldItalicMT.woff') format('woff');
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+}
+
+/* TINPLATE TITLING BLACK */
+@font-face {
+    font-family: 'Tinplate Titling Black';
+    src: url('/fonts/TinplateTitlingBlack.woff2') format('woff2'), url('/fonts/TinplateTitlingBlack.woff') format('woff');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* ZAPF CHANCERY / ZAPF HUMANIST */
 @font-face {
     font-family: 'ITC Zapf Chancery';
     src: url('/fonts/ZapfChancery-Roman.woff2') format('woff2'), url('/fonts/ZapfChancery-Roman.woff') format('woff');
@@ -235,10 +324,28 @@ body {
 }
 
 @font-face {
-    font-family: 'Murray Hill';
-    src: url('/fonts/MurrayHill.woff2') format('woff2'), url('/fonts/MurrayHill.woff') format('woff');
-    font-weight: 100;
+    font-family: 'Zapf Humanist';
+    src: url('/fonts/ZHUM601D.woff2') format('woff2'), url('/fonts/ZHUM601D.woff') format('woff');
+    font-weight: normal;
     font-style: normal;
     font-display: swap;
 }
-/*commen to allow commit*/
+
+@font-face {
+    font-family: 'ZapfHumanist601BT-Demi';
+    src: url('/fonts/ZapfHumanist601BT-Demi.woff2') format('woff2'), url('/fonts/ZapfHumanist601BT-Demi.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* AMAZONE */
+@font-face {
+    font-family: 'Amazone BT';
+    src: url('/fonts/AmazoneBT-Regular.woff2') format('woff2'), url('/fonts/AmazoneBT-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+
+/* ILoveGlitter, GreatVibes, BlackChancery, and other single-weight/variant fonts are already covered above. */
