@@ -5,12 +5,12 @@ const App = () => {
     const DEFAULT_TEXT_PLACEHOLDER = 'Type your text here...';
     const MAX_SELECTED_FONTS = 3;
 
+    // MODIFIED: Fonts have been reviewed and recategorized for accuracy.
     const categorizedFonts = {
-        'Sans-serif': ['Arial', 'Calibri', 'Century Gothic', 'Berlin Sans FB', 'Bebas Neue'],
-        'Serif': ['Benguiat', 'Benguiat Bk BT', 'Copperplate Gothic', 'Garamond', 'Times New Roman', 'Murray Hill'],
-        'Script': ['I Love Glitter', 'Amazone BT', 'Great Vibes', 'Honey Script', 'ITC Zapf Chancery', 'BlackChancery'],
-        'Display': ['Tinplate Titling Black', 'ChocolateBox', 'CollegiateBlackFLF', 'CollegiateOutlineFLF'],
-        'Monospace': ['Zapf Humanist']
+        'Sans-serif': ['Arial', 'Calibri', 'Century Gothic', 'Berlin Sans FB', 'Bebas Neue', 'Zapf Humanist'],
+        'Serif': ['Benguiat', 'Benguiat Bk BT', 'Garamond', 'Times New Roman'],
+        'Script': ['I Love Glitter', 'Amazone BT', 'Great Vibes', 'Honey Script', 'ITC Zapf Chancery', 'BlackChancery', 'Murray Hill'],
+        'Display': ['Copperplate Gothic', 'Tinplate Titling Black', 'ChocolateBox', 'CollegiateBlackFLF', 'CollegiateOutlineFLF']
     };
 
     const glyphs = [
@@ -180,16 +180,14 @@ const App = () => {
     return (
         <div className="flex flex-col lg:flex-row min-h-screen bg-slate-100 font-sans">
             {/* Sidebar */}
-            {/* MODIFIED: Adjusted padding and justification for mobile. */}
             <aside className="bg-gradient-to-b from-slate-800 to-slate-900 text-white w-full lg:w-80 lg:h-auto p-4 lg:p-8 flex-shrink-0 flex flex-col items-center justify-center lg:justify-start lg:pt-16 shadow-xl lg:rounded-r-3xl">
-                {/* MODIFIED: Changed to row layout on mobile and column on desktop. */}
                 <div className="flex flex-row lg:flex-col items-center justify-center gap-4">
                     <div className="flex-shrink-0">
                         <img
                             src="/images/Arch Vector Logo White.svg"
                             alt="Arch Font Hub Logo"
-                            // MODIFIED: Made logo size responsive.
-                            className="h-16 w-16 lg:h-32 lg:w-32 object-contain drop-shadow-lg"
+                            // MODIFIED: Increased logo size for better visual weight.
+                            className="h-20 w-20 lg:h-40 lg:w-40 object-contain drop-shadow-lg"
                         />
                     </div>
                     <div className="font-black text-2xl lg:text-3xl tracking-wide leading-tight text-white text-center">ARCH<br className="hidden lg:block" /> FONT HUB</div>
