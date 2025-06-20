@@ -107,7 +107,7 @@ body {
 }
 
 @font-face {
-    font-family: 'Copperplate Gothic';
+    font-family = 'CopprplGoth BT';
     src: url('/fonts/CopperplateGothicBT-Roman.woff2') format('woff2'), url('/fonts/CopperplateGothicBT-Roman.woff') format('woff');
     font-weight: normal;
     font-style: normal;
