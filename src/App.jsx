@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState, useRef } from 'react';
 
 const App = () => {
     const WORKER_URL = "https://customerfontselection-worker.tom-4a9.workers.dev";
@@ -13,16 +13,28 @@ const App = () => {
         'Monospace': ['Zapf Humanist']
     };
 
+    // NEW: List of glyphs for the palette
+    const glyphs = ['©', '®', '™', '℠', '°', '’', '‘', '“', '”', '–', '—', '…', '•', '·', '★', '☆', '♥', '♦', '♣', '♠', '♪', '→', '←', '↑', '↓'];
+
+
     const [selectedFonts, setSelectedFonts] = useState([]);
     const [customText, setCustomText] = useState('');
     const [fontSize, setFontSize] = useState(36);
     const [message, setMessage] = useState('');
     const [showMessageBox, setShowMessageBox] = useState(false);
     const [showCustomerModal, setShowCustomerModal] = useState(false);
+
+    // NEW: State to control the glyph palette visibility
+    const [showGlyphPalette, setShowGlyphPalette] = useState(false);
+
     const [customerName, setCustomerName] = useState('');
     const [customerCompany, setCustomerCompany] = useState('');
     const [orderNumber, setOrderNumber] = useState('');
     const [pendingSvgContent, setPendingSvgContent] = useState(null);
+
+    // NEW: Ref for the textarea to manage cursor position
+    const textInputRef = useRef(null);
+
 
     const handleFontSelect = (font) => {
         setSelectedFonts(prev =>
@@ -42,6 +54,25 @@ const App = () => {
     };
 
     const formatForFilename = (str) => str.trim().replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_-]/g, '');
+
+    // NEW: Function to insert a glyph into the textarea at the cursor position
+    const handleGlyphInsert = (glyph) => {
+        const textarea = textInputRef.current;
+        if (!textarea) return;
+
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const text = customText;
+
+        const newText = text.substring(0, start) + glyph + text.substring(end);
+        setCustomText(newText);
+
+        // This ensures the cursor is placed after the inserted glyph
+        textarea.focus();
+        setTimeout(() => {
+            textarea.selectionStart = textarea.selectionEnd = start + glyph.length;
+        }, 0);
+    };
 
     const handleSaveSvg = () => {
         if (selectedFonts.length === 0 || customText.trim() === '') {
@@ -143,10 +174,10 @@ const App = () => {
     return (
         <div className="flex flex-col lg:flex-row min-h-screen bg-slate-100 font-sans">
             {/* Sidebar */}
-            <aside className="bg-gradient-to-b from-slate-800 to-slate-900 text-white w-full lg:w-80 p-8 flex flex-col items-center justify-center shadow-xl rounded-r-3xl">
+            {/* MODIFIED: Changed justify-center to justify-start and added top padding */}
+            <aside className="bg-gradient-to-b from-slate-800 to-slate-900 text-white w-full lg:w-80 p-8 flex flex-col items-center justify-start pt-16 shadow-xl rounded-r-3xl">
                 <div className="flex flex-col items-center">
                     <div className="mb-4">
-                        {/* Real logo SVG */}
                         <img
                             src="/images/Arch Vector Logo White.svg"
                             alt="Arch Font Hub Logo"
@@ -179,8 +210,7 @@ const App = () => {
                                                     className={`px-4 py-2 rounded-xl text-base font-semibold border-2 transition-all duration-150 transform hover:scale-105 focus:outline-none
                                                         ${selectedFonts.includes(font)
                                                             ? 'bg-blue-600 text-white border-blue-600 shadow-md'
-                                                            // MODIFIED: Changed text color to a dark slate to match the sidebar.
-                                                            : 'bg-white text-slate-800 border-slate-400 hover:bg-slate-50'
+                                                            : 'bg-white text-blue-900 border-blue-500 hover:bg-blue-50'
                                                         }`}
                                                     style={{ fontFamily: font }}
                                                 >
@@ -195,8 +225,18 @@ const App = () => {
 
                         {/* Text Input Card */}
                         <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
-                            <h2 className="text-2xl font-black text-slate-900 mb-6 tracking-tight">Custom Text</h2>
+                            {/* MODIFIED: Added a flex container and the new Glyphs button */}
+                            <div className="flex justify-between items-center mb-6">
+                                <h2 className="text-2xl font-black text-slate-900 tracking-tight">Custom Text</h2>
+                                <button
+                                    onClick={() => setShowGlyphPalette(true)}
+                                    className="px-4 py-2 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-sm"
+                                >
+                                    Ω Glyphs
+                                </button>
+                            </div>
                             <textarea
+                                ref={textInputRef} // NEW: Added ref
                                 className="w-full p-5 border-2 border-slate-200 rounded-xl shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 min-h-[120px] text-lg"
                                 value={customText}
                                 onChange={handleTextChange}
@@ -213,7 +253,6 @@ const App = () => {
                                     <input
                                         id="fontSizeSlider"
                                         type="range"
-                                        // MODIFIED: Slider range is now 36 to 100.
                                         min="36"
                                         max="100"
                                         step="1"
@@ -254,9 +293,31 @@ const App = () => {
             </main>
 
             {/* Modals Overlay */}
-            {(showCustomerModal || showMessageBox) && (
+            {/* MODIFIED: Condition now includes the glyph palette */}
+            {(showCustomerModal || showMessageBox || showGlyphPalette) && (
                 <div className="fixed inset-0 bg-slate-900 bg-opacity-75 flex items-center justify-center p-4 z-50 transition-opacity animate-fade-in">
-                    <div className="bg-white rounded-2xl shadow-2xl p-10 w-full max-w-lg animate-fade-in">
+                    <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-lg animate-fade-in">
+                        {/* NEW: Glyph Palette Modal */}
+                        {showGlyphPalette && (
+                            <div className="space-y-6">
+                                <h3 className="text-2xl font-bold text-slate-900">Glyph Palette</h3>
+                                <div className="grid grid-cols-6 sm:grid-cols-8 gap-2 bg-slate-100 p-4 rounded-lg">
+                                    {glyphs.map(glyph => (
+                                        <button
+                                            key={glyph}
+                                            onClick={() => handleGlyphInsert(glyph)}
+                                            className="flex items-center justify-center h-12 w-12 bg-white rounded-lg shadow-sm text-2xl text-slate-700 hover:bg-blue-100 hover:text-blue-700 transition-colors"
+                                            title={`Insert ${glyph}`}
+                                        >
+                                            {glyph}
+                                        </button>
+                                    ))}
+                                </div>
+                                <div className="flex justify-end pt-2">
+                                    <button type="button" className="px-5 py-2 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors" onClick={() => setShowGlyphPalette(false)}>Close</button>
+                                </div>
+                            </div>
+                        )}
                         {showCustomerModal && (
                             <form onSubmit={handleCustomerModalSubmit} className="space-y-8">
                                 <h3 className="text-2xl font-bold text-slate-900">Enter Customer Information to Save</h3>
