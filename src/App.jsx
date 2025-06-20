@@ -13,14 +13,14 @@ const App = () => {
         'Monospace': ['Zapf Humanist']
     };
 
-    // MODIFIED: Re-organized glyphs into a perfect 12x5 grid and added more symbols.
+    // MODIFIED: Replaced the cross glyph with the Star of David.
     const glyphs = [
         // Row 1: Common Symbols & Punctuation
         '©', '®', '™', '&', '#', '+', '–', '—', '…', '•', '°', '·',
         // Row 2: Hearts, Diamonds, Clubs, Spades
         '♥', '♡', '♦', '♢', '♣', '♧', '♠', '♤', '★', '☆', '♪', '♫',
-        // Row 3: Arrows & Crosses
-        '←', '→', '↑', '↓', '∞', '†', '✝', '✞', '✠', '±', '½', '¼',
+        // Row 3: Arrows & Religious/Cultural Symbols
+        '←', '→', '↑', '↓', '∞', '†', '✡', '✞', '✠', '±', '½', '¼',
         // Row 4: Greek Alphabet (Alpha to Mu)
         'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ', 'Ι', 'Κ', 'Λ', 'Μ',
         // Row 5: Greek Alphabet (Nu to Omega)
@@ -304,7 +304,6 @@ const App = () => {
                         {showGlyphPalette && (
                             <div className="space-y-6">
                                 <h3 className="text-2xl font-bold text-slate-900">Glyph Palette</h3>
-                                {/* MODIFIED: Changed to a 12-column grid for an even layout. */}
                                 <div className="grid grid-cols-12 gap-2 bg-slate-100 p-4 rounded-lg">
                                     {glyphs.map(glyph => (
                                         <button
