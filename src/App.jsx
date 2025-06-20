@@ -5,27 +5,54 @@ const App = () => {
     const DEFAULT_TEXT_PLACEHOLDER = 'Type your text here...';
     const MAX_SELECTED_FONTS = 3;
 
-    // MODIFIED: Fonts have been reviewed and recategorized for accuracy.
+    // UPDATED FONT CATEGORIES
     const categorizedFonts = {
-        'Sans-serif': ['Arial', 'Calibri', 'Century Gothic', 'Berlin Sans FB', 'Bebas Neue', 'Zapf Humanist'],
-        'Serif': ['Benguiat', 'Benguiat Bk BT', 'Garamond', 'Times New Roman'],
-        'Script': ['I Love Glitter', 'Amazone BT', 'Great Vibes', 'Honey Script', 'ITC Zapf Chancery', 'BlackChancery', 'Murray Hill'],
-        'Display': ['Copperplate Gothic', 'Tinplate Titling Black', 'ChocolateBox', 'CollegiateBlackFLF', 'CollegiateOutlineFLF']
+        'Sans-serif': [
+            'Arial',
+            'Calibri',
+            'Century Gothic',
+            'Berlin Sans FB',
+            'Bebas Neue',
+            'Tinplate Titling Black',
+            'CollegiateBlackFLF',
+            'CollegiateOutlineFLF',
+            'Zapf Humanist'
+        ],
+        'Serif': [
+            'Times New Roman',
+            'Garamond',
+            'Benguiat',
+            'Benguiat ITC by BT',
+            'Century Schoolbook',
+            'CopprplGoth BT',
+            'ChocolateBox'
+        ],
+        'Script': [
+            'I Love Glitter',
+            'Amazone BT',
+            'Great Vibes',
+            'Honey Script',
+            'ITC Zapf Chancery',
+            'Zapf Humanist',
+            'Murray Hill',
+            'BlackChancery'
+        ],
+        'Display': [
+            'Tinplate Titling Black',
+            'CollegiateBlackFLF',
+            'CollegiateOutlineFLF',
+            'ChocolateBox',
+            'Bebas Neue'
+        ]
     };
 
     const glyphs = [
-        // Row 1: Common Symbols & Punctuation
         '©', '®', '™', '&', '#', '+', '–', '—', '…', '•', '°', '·',
-        // Row 2: Hearts, Diamonds, Clubs, Spades
         '♥', '♡', '♦', '♢', '♣', '♧', '♠', '♤', '★', '☆', '♪', '♫',
-        // Row 3: Arrows & Religious/Cultural Symbols
         '←', '→', '↑', '↓', '∞', '†', '✡\uFE0E', '✞', '✠', '±', '½', '¼',
-        // Row 4: Greek Alphabet (Alpha to Mu)
         'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ', 'Ι', 'Κ', 'Λ', 'Μ',
-        // Row 5: Greek Alphabet (Nu to Omega)
         'Ν', 'Ξ', 'Ο', 'Π', 'Ρ', 'Σ', 'Τ', 'Υ', 'Φ', 'Χ', 'Ψ', 'Ω'
     ];
-
 
     const [selectedFonts, setSelectedFonts] = useState([]);
     const [customText, setCustomText] = useState('');
@@ -33,16 +60,13 @@ const App = () => {
     const [message, setMessage] = useState('');
     const [showMessageBox, setShowMessageBox] = useState(false);
     const [showCustomerModal, setShowCustomerModal] = useState(false);
-
     const [showGlyphPalette, setShowGlyphPalette] = useState(false);
-
     const [customerName, setCustomerName] = useState('');
     const [customerCompany, setCustomerCompany] = useState('');
     const [orderNumber, setOrderNumber] = useState('');
     const [pendingSvgContent, setPendingSvgContent] = useState(null);
 
     const textInputRef = useRef(null);
-
 
     const handleFontSelect = (font) => {
         setSelectedFonts(prev =>
@@ -66,14 +90,11 @@ const App = () => {
     const handleGlyphInsert = (glyph) => {
         const textarea = textInputRef.current;
         if (!textarea) return;
-
         const start = textarea.selectionStart;
         const end = textarea.selectionEnd;
         const text = customText;
-
         const newText = text.substring(0, start) + glyph + text.substring(end);
         setCustomText(newText);
-
         textarea.focus();
         setTimeout(() => {
             textarea.selectionStart = textarea.selectionEnd = start + glyph.length;
@@ -110,7 +131,7 @@ const App = () => {
         });
         const svgWidth = 800;
         const svgHeight = y + padding;
-        const fullSvg = `<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"${svgWidth}\" height=\"${svgHeight}\" style=\"background-color: #FFF;\">\n${svgTextElements}</svg>`;
+        const fullSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="${svgWidth}" height="${svgHeight}" style="background-color: #FFF;">\n${svgTextElements}</svg>`;
         setPendingSvgContent(fullSvg);
         setShowCustomerModal(true);
     };
@@ -186,7 +207,6 @@ const App = () => {
                         <img
                             src="/images/Arch Vector Logo White.svg"
                             alt="Arch Font Hub Logo"
-                            // MODIFIED: Increased logo size for better visual weight.
                             className="h-20 w-20 lg:h-40 lg:w-40 object-contain drop-shadow-lg"
                         />
                     </div>
@@ -329,7 +349,9 @@ const App = () => {
                                 <FormInput label="Customer Company" id="customerCompany" value={customerCompany} onChange={e => setCustomerCompany(e.target.value)} isOptional />
                                 <div className="flex justify-end gap-4 pt-4">
                                     <button type="button" className="px-5 py-2 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors" onClick={() => setShowCustomerModal(false)}>Cancel</button>
-                                    <button type="submit" className="px-5 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-semibold transition-colors shadow-sm">Submit & Save</button>
+                                    <button type="submit" className="px-5 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-semibold transition-colors shadow-sm">
+                                        Submit & Save
+                                    </button>
                                 </div>
                             </form>
                         )}
