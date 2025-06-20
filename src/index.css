@@ -1,4 +1,48 @@
-/* SYSTEM & COMMON FONTS */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Extra customizations for modern look */
+:root {
+    --main-bg: #f8fafc;
+    --sidebar-bg: #0f172a;
+    --card-bg: #fff;
+    --accent: #2563eb;
+    --radius: 1.5rem;
+}
+
+body {
+    background: var(--main-bg);
+}
+
+.animate-fade-in {
+    animation: fade-in 0.35s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(32px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* ----------- Font face rules for all available fonts ----------- */
+
+/* AMAZONE BT */
+@font-face {
+    font-family: 'Amazone BT';
+    src: url('/fonts/AmazoneBT-Regular.woff2') format('woff2'), url('/fonts/AmazoneBT-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+
+/* ARIAL (Regular, Bold, Italic, BoldItalic) */
 @font-face {
     font-family: 'Arial';
     src: url('/fonts/ArialMT.woff2') format('woff2'), url('/fonts/ArialMT.woff') format('woff');
@@ -48,7 +92,7 @@
     font-display: swap;
 }
 
-/* BENGUIAT */
+/* BENGUIAT (and ITC by BT) */
 @font-face {
     font-family: 'Benguiat';
     src: url('/fonts/Benguiat.woff2') format('woff2'), url('/fonts/Benguiat.woff') format('woff');
@@ -90,7 +134,7 @@
     font-display: swap;
 }
 
-/* BLACK CHANCERY */
+/* BLACKCHANCERY */
 @font-face {
     font-family: 'BlackChancery';
     src: url('/fonts/BlackChancery.woff2') format('woff2'), url('/fonts/BlackChancery.woff') format('woff');
@@ -99,7 +143,7 @@
     font-display: swap;
 }
 
-/* CALIBRI */
+/* CALIBRI (Normal, Bold, Italic, BoldItalic) */
 @font-face {
     font-family: 'Calibri';
     src: url('/fonts/Calibri.woff2') format('woff2'), url('/fonts/Calibri.woff') format('woff');
@@ -132,7 +176,7 @@
     font-display: swap;
 }
 
-/* CENTURY GOTHIC */
+/* CENTURY GOTHIC (All known variants) */
 @font-face {
     font-family: 'Century Gothic';
     src: url('/fonts/CenturyGothicPaneuropean.woff2') format('woff2'), url('/fonts/CenturyGothicPaneuropean.woff') format('woff');
@@ -173,7 +217,7 @@
     font-display: swap;
 }
 
-/* CENTURY SCHOOLBOOK */
+/* CENTURY SCHOOLBOOK (add more if you have variants) */
 @font-face {
     font-family: 'Century Schoolbook';
     src: url('/fonts/CenturySchoolbook.woff2') format('woff2'), url('/fonts/CenturySchoolbook.woff') format('woff');
@@ -181,7 +225,6 @@
     font-style: normal;
     font-display: swap;
 }
-/* Add more variants here (Bold, Italic) as in folder */
 
 /* CHOCOLATE BOX */
 @font-face {
@@ -192,7 +235,7 @@
     font-display: swap;
 }
 
-/* COLLEGIATE BLACK/OUTLINE */
+/* COLLEGIATE FLF */
 @font-face {
     font-family: 'CollegiateBlackFLF';
     src: url('/fonts/CollegiateBlackFLF.woff2') format('woff2'), url('/fonts/CollegiateBlackFLF.woff') format('woff');
@@ -217,7 +260,6 @@
     font-style: normal;
     font-display: swap;
 }
-/* For SVG/CorelDRAW, use font-family="CopprplGoth BT" */
 
 /* GARAMOND */
 @font-face {
@@ -272,7 +314,7 @@
     font-display: swap;
 }
 
-/* TIMES NEW ROMAN */
+/* TIMES NEW ROMAN (Regular, Bold, Italic, BoldItalic) */
 @font-face {
     font-family: 'Times New Roman';
     src: url('/fonts/TimesNewRomanPSMT.woff2') format('woff2'), url('/fonts/TimesNewRomanPSMT.woff') format('woff');
@@ -314,7 +356,7 @@
     font-display: swap;
 }
 
-/* ZAPF CHANCERY / ZAPF HUMANIST */
+/* ITC ZAPF CHANCERY, ZAPF HUMANIST */
 @font-face {
     font-family: 'ITC Zapf Chancery';
     src: url('/fonts/ZapfChancery-Roman.woff2') format('woff2'), url('/fonts/ZapfChancery-Roman.woff') format('woff');
@@ -338,14 +380,3 @@
     font-style: normal;
     font-display: swap;
 }
-
-/* AMAZONE */
-@font-face {
-    font-family: 'Amazone BT';
-    src: url('/fonts/AmazoneBT-Regular.woff2') format('woff2'), url('/fonts/AmazoneBT-Regular.woff') format('woff');
-    font-weight: normal;
-    font-style: italic;
-    font-display: swap;
-}
-
-/* ILoveGlitter, GreatVibes, BlackChancery, and other single-weight/variant fonts are already covered above. */
