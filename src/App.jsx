@@ -13,7 +13,6 @@ const App = () => {
         'Monospace': ['Zapf Humanist']
     };
 
-    // MODIFIED: Added a variation selector to the Star of David to force text rendering.
     const glyphs = [
         // Row 1: Common Symbols & Punctuation
         '©', '®', '™', '&', '#', '+', '–', '—', '…', '•', '°', '·',
@@ -181,25 +180,27 @@ const App = () => {
     return (
         <div className="flex flex-col lg:flex-row min-h-screen bg-slate-100 font-sans">
             {/* Sidebar */}
-            <aside className="bg-gradient-to-b from-slate-800 to-slate-900 text-white w-full lg:w-80 p-8 flex flex-col items-center justify-start pt-16 shadow-xl rounded-r-3xl">
-                <div className="flex flex-col items-center">
-                    <div className="mb-4">
+            {/* MODIFIED: Adjusted padding and justification for mobile. */}
+            <aside className="bg-gradient-to-b from-slate-800 to-slate-900 text-white w-full lg:w-80 lg:h-auto p-4 lg:p-8 flex-shrink-0 flex flex-col items-center justify-center lg:justify-start lg:pt-16 shadow-xl lg:rounded-r-3xl">
+                {/* MODIFIED: Changed to row layout on mobile and column on desktop. */}
+                <div className="flex flex-row lg:flex-col items-center justify-center gap-4">
+                    <div className="flex-shrink-0">
                         <img
                             src="/images/Arch Vector Logo White.svg"
                             alt="Arch Font Hub Logo"
-                            className="w-140 h-140 object-contain drop-shadow-lg"
+                            // MODIFIED: Made logo size responsive.
+                            className="h-16 w-16 lg:h-32 lg:w-32 object-contain drop-shadow-lg"
                         />
                     </div>
-                    <div className="font-black text-3xl tracking-wide leading-tight text-white text-center">ARCH<br />FONT HUB</div>
+                    <div className="font-black text-2xl lg:text-3xl tracking-wide leading-tight text-white text-center">ARCH<br className="hidden lg:block" /> FONT HUB</div>
                 </div>
-                <p className="mt-4 text-base text-slate-300 border-t border-slate-700 pt-6 text-center">
+                <p className="hidden lg:block mt-4 text-base text-slate-300 border-t border-slate-700 pt-6 text-center">
                     Experiment with fonts and text display for customer proofs.
                 </p>
             </aside>
 
             {/* Main Content */}
             <main className="flex-1 p-4 sm:p-8 lg:p-12">
-                {/* MODIFIED: Increased max-width from 4xl to 7xl to make the content area wider. */}
                 <div className="max-w-7xl mx-auto">
                     <div className="space-y-10">
                         {/* Font Selection Card */}
