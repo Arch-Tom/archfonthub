@@ -20,7 +20,7 @@ const App = () => {
         // Row 2: Hearts, Diamonds, Clubs, Spades
         '♥', '♡', '♦', '♢', '♣', '♧', '♠', '♤', '★', '☆', '♪', '♫',
         // Row 3: Arrows & Religious/Cultural Symbols
-        '←', '→', '↑', '↓', '∞', '†', '✞', '✡\uFE0E', '✠', '±', '½', '¼',
+        '←', '→', '↑', '↓', '∞', '†', '✡\uFE0E', '✞', '✠', '±', '½', '¼',
         // Row 4: Greek Alphabet (Alpha to Mu)
         'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ', 'Ι', 'Κ', 'Λ', 'Μ',
         // Row 5: Greek Alphabet (Nu to Omega)
@@ -199,7 +199,8 @@ const App = () => {
 
             {/* Main Content */}
             <main className="flex-1 p-4 sm:p-8 lg:p-12">
-                <div className="max-w-4xl mx-auto">
+                {/* MODIFIED: Increased max-width from 4xl to 7xl to make the content area wider. */}
+                <div className="max-w-7xl mx-auto">
                     <div className="space-y-10">
                         {/* Font Selection Card */}
                         <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
