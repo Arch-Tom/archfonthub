@@ -138,7 +138,7 @@ const App = () => {
     return (
         <div className="flex flex-col lg:flex-row min-h-screen bg-slate-100 font-sans">
             {/* Sidebar */}
-            <aside className="bg-gradient-to-b from-slate-800 to-slate-900 text-white w-full lg:w-80 p-8 flex flex-col items-center justify-center shadow-xl rounded-r-3xl">
+            <aside className="bg-gradient-to-b from-slate-800 to-slate-900 text-white w-full lg:w-80 p-8 pt-12 flex flex-col items-center justify-start shadow-xl rounded-r-3xl">
                 <div className="flex flex-col items-center">
                     <div className="mb-4">
                         {/* Real logo SVG */}
