@@ -5,12 +5,12 @@ const App = () => {
     const DEFAULT_TEXT_PLACEHOLDER = 'Type your text here...';
     const MAX_SELECTED_FONTS = 3;
 
-    // MODIFIED: Fonts have been reviewed and re-categorized again for better accuracy.
+    // MODIFIED: Fonts have been reviewed and recategorized for accuracy.
     const categorizedFonts = {
         'Sans-serif': ['Arial', 'Calibri', 'Century Gothic', 'Berlin Sans FB', 'Bebas Neue', 'Zapf Humanist'],
-        'Serif': ['Garamond', 'Times New Roman'],
-        'Script': ['I Love Glitter', 'Amazone BT', 'Great Vibes', 'Honey Script', 'ITC Zapf Chancery', 'Murray Hill'],
-        'Display': ['Copperplate Gothic', 'Benguiat', 'Benguiat Bk BT', 'BlackChancery', 'Tinplate Titling Black', 'ChocolateBox', 'CollegiateBlackFLF', 'CollegiateOutlineFLF']
+        'Serif': ['Benguiat', 'Benguiat Bk BT', 'Garamond', 'Times New Roman'],
+        'Script': ['I Love Glitter', 'Amazone BT', 'Great Vibes', 'Honey Script', 'ITC Zapf Chancery', 'BlackChancery', 'Murray Hill'],
+        'Display': ['Copperplate Gothic', 'Tinplate Titling Black', 'ChocolateBox', 'CollegiateBlackFLF', 'CollegiateOutlineFLF']
     };
 
     const glyphs = [
@@ -186,6 +186,7 @@ const App = () => {
                         <img
                             src="/images/Arch Vector Logo White.svg"
                             alt="Arch Font Hub Logo"
+                            // MODIFIED: Increased logo size for better visual weight.
                             className="h-20 w-20 lg:h-40 lg:w-40 object-contain drop-shadow-lg"
                         />
                     </div>
