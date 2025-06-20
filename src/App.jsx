@@ -150,7 +150,7 @@ const App = () => {
                         <img
                             src="/images/Arch Vector Logo White.svg"
                             alt="Arch Font Hub Logo"
-                            className="w-64 h-64 object-contain drop-shadow-lg" // UPDATED: Logo size increased 4x (was w-16 h-16)
+                            className="w-110 h-110 object-contain drop-shadow-lg" // UPDATED: Logo size increased 4x (was w-16 h-16)
                         />
                     </div>
                     <div className="font-black text-3xl tracking-wide leading-tight text-white text-center">ARCH<br />FONT HUB</div>
@@ -205,13 +205,31 @@ const App = () => {
 
                         {/* Live Preview Card */}
                         <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
-                            <h2 className="text-2xl font-black text-slate-900 mb-6 tracking-tight">Live Preview</h2>
+                            {/* MODIFIED: Header now includes the font size slider */}
+                            <div className="flex justify-between items-center mb-6">
+                                <h2 className="text-2xl font-black text-slate-900 tracking-tight">Live Preview</h2>
+                                <div className="flex items-center gap-3">
+                                    <label htmlFor="fontSizeSlider" className="text-sm font-medium text-slate-600">Size</label>
+                                    <input
+                                        id="fontSizeSlider"
+                                        type="range"
+                                        min="12"
+                                        max="128"
+                                        step="1"
+                                        value={fontSize}
+                                        onChange={handleFontSizeChange}
+                                        className="w-32 lg:w-48 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                                    />
+                                    <span className="text-sm font-medium text-slate-600 w-12 text-left">{fontSize}px</span>
+                                </div>
+                            </div>
                             <div className="bg-gradient-to-b from-slate-50 to-slate-200 p-6 rounded-xl min-h-[150px] space-y-10 border border-slate-100">
                                 {selectedFonts.length > 0 && customText.trim() !== '' ? (
                                     selectedFonts.map((font) => (
                                         <div key={`preview-${font}`} className="relative flex flex-col items-start gap-3">
                                             <span className="bg-blue-600 text-white px-4 py-1 rounded-full text-xs font-bold shadow-sm z-10 mb-2 mt-2" style={{ fontFamily: 'Arial' }}>{font}</span>
-                                            <p className="text-3xl text-slate-800 break-words" style={{ fontFamily: font }}>{customText}</p>
+                                            {/* MODIFIED: Font size is now dynamic and the `text-3xl` class is removed */}
+                                            <p className="text-slate-800 break-words w-full" style={{ fontFamily: font, fontSize: `${fontSize}px`, lineHeight: 1.4 }}>{customText}</p>
                                         </div>
                                     ))
                                 ) : (
