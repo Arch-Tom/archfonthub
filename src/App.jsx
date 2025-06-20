@@ -20,7 +20,7 @@ const App = () => {
         // Row 2: Hearts, Diamonds, Clubs, Spades
         '♥', '♡', '♦', '♢', '♣', '♧', '♠', '♤', '★', '☆', '♪', '♫',
         // Row 3: Arrows & Religious/Cultural Symbols
-        '←', '→', '↑', '↓', '∞', '†', '✡\uFE0E', '✞', '✠', '±', '½', '¼',
+        '←', '→', '↑', '↓', '∞', '†', '✞', '✡\uFE0E', '✠', '±', '½', '¼',
         // Row 4: Greek Alphabet (Alpha to Mu)
         'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ', 'Ι', 'Κ', 'Λ', 'Μ',
         // Row 5: Greek Alphabet (Nu to Omega)
