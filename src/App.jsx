@@ -13,8 +13,10 @@ const App = () => {
         'Monospace': ['Zapf Humanist']
     };
 
-    // NEW: List of glyphs for the palette
-    const glyphs = ['©', '®', '™', '℠', '°', '’', '‘', '“', '”', '–', '—', '…', '•', '·', '★', '☆', '♥', '♦', '♣', '♠', '♪', '→', '←', '↑', '↓'];
+    const glyphs = [
+        '©', '®', '™', '℠', '°', '’', '‘', '“', '”', '–', '—', '…', '•', '·', '★', '☆', '♥', '♦', '♣', '♠', '♪', '→', '←', '↑', '↓',
+        'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ', 'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ρ', 'Σ', 'Τ', 'Υ', 'Φ', 'Χ', 'Ψ', 'Ω'
+    ];
 
 
     const [selectedFonts, setSelectedFonts] = useState([]);
@@ -24,7 +26,6 @@ const App = () => {
     const [showMessageBox, setShowMessageBox] = useState(false);
     const [showCustomerModal, setShowCustomerModal] = useState(false);
 
-    // NEW: State to control the glyph palette visibility
     const [showGlyphPalette, setShowGlyphPalette] = useState(false);
 
     const [customerName, setCustomerName] = useState('');
@@ -32,7 +33,6 @@ const App = () => {
     const [orderNumber, setOrderNumber] = useState('');
     const [pendingSvgContent, setPendingSvgContent] = useState(null);
 
-    // NEW: Ref for the textarea to manage cursor position
     const textInputRef = useRef(null);
 
 
@@ -55,7 +55,6 @@ const App = () => {
 
     const formatForFilename = (str) => str.trim().replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_-]/g, '');
 
-    // NEW: Function to insert a glyph into the textarea at the cursor position
     const handleGlyphInsert = (glyph) => {
         const textarea = textInputRef.current;
         if (!textarea) return;
@@ -67,7 +66,6 @@ const App = () => {
         const newText = text.substring(0, start) + glyph + text.substring(end);
         setCustomText(newText);
 
-        // This ensures the cursor is placed after the inserted glyph
         textarea.focus();
         setTimeout(() => {
             textarea.selectionStart = textarea.selectionEnd = start + glyph.length;
@@ -174,7 +172,6 @@ const App = () => {
     return (
         <div className="flex flex-col lg:flex-row min-h-screen bg-slate-100 font-sans">
             {/* Sidebar */}
-            {/* MODIFIED: Changed justify-center to justify-start and added top padding */}
             <aside className="bg-gradient-to-b from-slate-800 to-slate-900 text-white w-full lg:w-80 p-8 flex flex-col items-center justify-start pt-16 shadow-xl rounded-r-3xl">
                 <div className="flex flex-col items-center">
                     <div className="mb-4">
@@ -225,7 +222,6 @@ const App = () => {
 
                         {/* Text Input Card */}
                         <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
-                            {/* MODIFIED: Added a flex container and the new Glyphs button */}
                             <div className="flex justify-between items-center mb-6">
                                 <h2 className="text-2xl font-black text-slate-900 tracking-tight">Custom Text</h2>
                                 <button
@@ -236,7 +232,7 @@ const App = () => {
                                 </button>
                             </div>
                             <textarea
-                                ref={textInputRef} // NEW: Added ref
+                                ref={textInputRef}
                                 className="w-full p-5 border-2 border-slate-200 rounded-xl shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 min-h-[120px] text-lg"
                                 value={customText}
                                 onChange={handleTextChange}
@@ -293,15 +289,13 @@ const App = () => {
             </main>
 
             {/* Modals Overlay */}
-            {/* MODIFIED: Condition now includes the glyph palette */}
             {(showCustomerModal || showMessageBox || showGlyphPalette) && (
                 <div className="fixed inset-0 bg-slate-900 bg-opacity-75 flex items-center justify-center p-4 z-50 transition-opacity animate-fade-in">
                     <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-lg animate-fade-in">
-                        {/* NEW: Glyph Palette Modal */}
                         {showGlyphPalette && (
                             <div className="space-y-6">
                                 <h3 className="text-2xl font-bold text-slate-900">Glyph Palette</h3>
-                                <div className="grid grid-cols-6 sm:grid-cols-8 gap-2 bg-slate-100 p-4 rounded-lg">
+                                <div className="grid grid-cols-8 sm:grid-cols-10 gap-2 bg-slate-100 p-4 rounded-lg">
                                     {glyphs.map(glyph => (
                                         <button
                                             key={glyph}
