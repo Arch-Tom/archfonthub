@@ -13,8 +13,9 @@ const App = () => {
         'Monospace': ['Zapf Humanist']
     };
 
+    // MODIFIED: Added more common engraving symbols
     const glyphs = [
-        '©', '®', '™', '℠', '°', '’', '‘', '“', '”', '–', '—', '…', '•', '·', '★', '☆', '♥', '♦', '♣', '♠', '♪', '→', '←', '↑', '↓',
+        '©', '®', '™', '℠', '°', '’', '‘', '“', '”', '–', '—', '…', '•', '·', '★', '☆', '♥', '♡', '♦', '♢', '♣', '♧', '♠', '♤', '♪', '♫', '→', '←', '↑', '↓', '∞', '†', '‡', '☨', '✝', '✞', '✠',
         'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ', 'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ρ', 'Σ', 'Τ', 'Υ', 'Φ', 'Χ', 'Ψ', 'Ω'
     ];
 
@@ -295,7 +296,6 @@ const App = () => {
                         {showGlyphPalette && (
                             <div className="space-y-6">
                                 <h3 className="text-2xl font-bold text-slate-900">Glyph Palette</h3>
-                                {/* MODIFIED: Increased gap for better spacing */}
                                 <div className="grid grid-cols-8 sm:grid-cols-12 gap-3 bg-slate-100 p-4 rounded-lg">
                                     {glyphs.map(glyph => (
                                         <button
