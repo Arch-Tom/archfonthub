@@ -4,7 +4,7 @@ const App = () => {
     // URL for the Cloudflare Worker for file uploads
     const WORKER_URL = "https://customerfontselection-worker.tom-4a9.workers.dev";
     const DEFAULT_TEXT_PLACEHOLDER = 'Type your text here...';
-    const MAX_SELECTED_FONTS = 3; // --- Restored font selection limit ---
+    // const MAX_SELECTED_FONTS = 3; // --- Temporarily disabled for testing ---
 
     // --- REVISED: Font Structure for CorelDraw Compatibility ---
     // Each style is now treated as a unique font-family name.
@@ -61,12 +61,13 @@ const App = () => {
         if (isSelected) {
             setSelectedFonts(prev => prev.filter(f => f.name !== font.name));
         } else {
-            if (selectedFonts.length < MAX_SELECTED_FONTS) {
-                const defaultStyleKey = Object.keys(font.styles)[0];
-                setSelectedFonts(prev => [...prev, { ...font, activeStyle: defaultStyleKey }]);
-            } else {
-                showMessage(`You can select a maximum of ${MAX_SELECTED_FONTS} fonts.`);
-            }
+            // --- FONT LIMIT CHECK DISABLED FOR TESTING ---
+            // if (selectedFonts.length < MAX_SELECTED_FONTS) {
+            const defaultStyleKey = Object.keys(font.styles)[0];
+            setSelectedFonts(prev => [...prev, { ...font, activeStyle: defaultStyleKey }]);
+            // } else {
+            //     showMessage(`You can select a maximum of ${MAX_SELECTED_FONTS} fonts.`);
+            // }
         }
     };
 
