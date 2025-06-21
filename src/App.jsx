@@ -4,44 +4,43 @@ const App = () => {
     // URL for the Cloudflare Worker for file uploads
     const WORKER_URL = "https://customerfontselection-worker.tom-4a9.workers.dev";
     const DEFAULT_TEXT_PLACEHOLDER = 'Type your text here...';
-    const MAX_SELECTED_FONTS = 3;
+    const MAX_SELECTED_FONTS = 3; // --- Restored font selection limit ---
 
-    // --- NEW: Detailed Font Structure ---
-    // This new structure includes variations for each font family.
-    // This allows us to dynamically show style options (bold, italic) for each selected font.
+    // --- REVISED: Font Structure for CorelDraw Compatibility ---
+    // Each style is now treated as a unique font-family name.
+    // This is the most reliable way to ensure vector editors recognize the styles.
     const fontLibrary = {
         'Sans-serif': [
-            { name: 'Arial', styles: { regular: { fontWeight: 'normal', fontStyle: 'normal' }, bold: { fontWeight: 'bold', fontStyle: 'normal' }, italic: { fontWeight: 'normal', fontStyle: 'italic' }, boldItalic: { fontWeight: 'bold', fontStyle: 'italic' } } },
-            { name: 'Calibri', styles: { regular: { fontWeight: 'normal', fontStyle: 'normal' }, bold: { fontWeight: 'bold', fontStyle: 'normal' }, italic: { fontWeight: 'normal', fontStyle: 'italic' }, boldItalic: { fontWeight: 'bold', fontStyle: 'italic' } } },
-            { name: 'Century Gothic', styles: { regular: { fontWeight: 'normal', fontStyle: 'normal' }, bold: { fontWeight: 'bold', fontStyle: 'normal' }, italic: { fontWeight: 'normal', fontStyle: 'italic' }, boldItalic: { fontWeight: 'bold', fontStyle: 'italic' } } },
-            { name: 'Berlin Sans FB', styles: { regular: { fontWeight: 'normal', fontStyle: 'normal' }, bold: { fontWeight: 'bold', fontStyle: 'normal' } } },
-            { name: 'Bebas Neue', styles: { regular: { fontWeight: 'normal', fontStyle: 'normal' }, bold: { fontWeight: 'bold', fontStyle: 'normal' } } },
-            { name: 'Zapf Humanist', styles: { regular: { fontWeight: 'normal', fontStyle: 'normal' }, bold: { fontWeight: 'bold', fontStyle: 'normal' } } },
+            { name: 'Arial', styles: { regular: 'Arial', bold: 'Arial Bold', italic: 'Arial Italic', boldItalic: 'Arial Bold Italic' } },
+            { name: 'Calibri', styles: { regular: 'Calibri', bold: 'Calibri Bold', italic: 'Calibri Italic', boldItalic: 'Calibri Bold Italic' } },
+            { name: 'Century Gothic', styles: { regular: 'Century Gothic', bold: 'Century Gothic Bold', italic: 'Century Gothic Italic', boldItalic: 'Century Gothic Bold Italic' } },
+            { name: 'Berlin Sans FB', styles: { regular: 'Berlin Sans FB', bold: 'Berlin Sans FB Bold' } },
+            { name: 'Bebas Neue', styles: { regular: 'Bebas Neue', bold: 'Bebas Neue Bold' } },
+            { name: 'Zapf Humanist', styles: { regular: 'Zapf Humanist', bold: 'ZapfHumanist601BT-Demi' } },
         ],
         'Serif': [
-            { name: 'Times New Roman', styles: { regular: { fontWeight: 'normal', fontStyle: 'normal' }, bold: { fontWeight: 'bold', fontStyle: 'normal' }, italic: { fontWeight: 'normal', fontStyle: 'italic' }, boldItalic: { fontWeight: 'bold', fontStyle: 'italic' } } },
-            { name: 'Garamond', styles: { regular: { fontWeight: 'normal', fontStyle: 'normal' } } },
-            { name: 'Benguiat', styles: { regular: { fontWeight: 'normal', fontStyle: 'normal' } } },
-            { name: 'Benguiat ITC by BT', styles: { bold: { fontWeight: 'bold', fontStyle: 'normal' }, italic: { fontWeight: 'normal', fontStyle: 'italic' } } },
-            { name: 'Century Schoolbook', styles: { regular: { fontWeight: 'normal', fontStyle: 'normal' } } },
-            { name: 'CopprplGoth BT', styles: { regular: { fontWeight: 'normal', fontStyle: 'normal' } } },
+            { name: 'Times New Roman', styles: { regular: 'Times New Roman', bold: 'Times New Roman Bold', italic: 'Times New Roman Italic', boldItalic: 'Times New Roman Bold Italic' } },
+            { name: 'Garamond', styles: { regular: 'Garamond' } },
+            { name: 'Benguiat', styles: { regular: 'Benguiat' } },
+            { name: 'Benguiat ITC by BT', styles: { bold: 'Benguiat ITC by BT Bold', italic: 'Benguiat ITC by BT Italic' } },
+            { name: 'Century Schoolbook', styles: { regular: 'Century Schoolbook' } },
+            { name: 'CopprplGoth BT', styles: { regular: 'CopprplGoth BT' } },
         ],
         'Script & Display': [
-            { name: 'Amazone BT', styles: { regular: { fontWeight: 'normal', fontStyle: 'italic' } } },
-            { name: 'BlackChancery', styles: { regular: { fontWeight: 'normal', fontStyle: 'normal' } } },
-            { name: 'ChocolateBox', styles: { regular: { fontWeight: 'normal', fontStyle: 'normal' } } },
-            { name: 'CollegiateBlackFLF', styles: { regular: { fontWeight: 'normal', fontStyle: 'normal' } } },
-            { name: 'CollegiateOutlineFLF', styles: { regular: { fontWeight: 'normal', fontStyle: 'normal' } } },
-            { name: 'Great Vibes', styles: { regular: { fontWeight: 'normal', fontStyle: 'normal' } } },
-            { name: 'Honey Script', styles: { light: { fontWeight: '300', fontStyle: 'normal' }, semiBold: { fontWeight: '600', fontStyle: 'normal' } } },
-            { name: 'I Love Glitter', styles: { regular: { fontWeight: 'normal', fontStyle: 'normal' } } },
-            { name: 'ITC Zapf Chancery', styles: { regular: { fontWeight: 'normal', fontStyle: 'normal' } } },
-            { name: 'Murray Hill', styles: { regular: { fontWeight: 'normal', fontStyle: 'normal' } } },
-            { name: 'Tinplate Titling Black', styles: { regular: { fontWeight: '900', fontStyle: 'normal' } } },
+            { name: 'Amazone BT', styles: { regular: 'Amazone BT' } },
+            { name: 'BlackChancery', styles: { regular: 'BlackChancery' } },
+            { name: 'ChocolateBox', styles: { regular: 'ChocolateBox' } },
+            { name: 'CollegiateBlackFLF', styles: { regular: 'CollegiateBlackFLF' } },
+            { name: 'CollegiateOutlineFLF', styles: { regular: 'CollegiateOutlineFLF' } },
+            { name: 'Great Vibes', styles: { regular: 'Great Vibes' } },
+            { name: 'Honey Script', styles: { light: 'Honey Script Light', semiBold: 'Honey Script SemiBold' } },
+            { name: 'I Love Glitter', styles: { regular: 'I Love Glitter' } },
+            { name: 'ITC Zapf Chancery', styles: { regular: 'ITC Zapf Chancery' } },
+            { name: 'Murray Hill', styles: { regular: 'Murray Hill' } },
+            { name: 'Tinplate Titling Black', styles: { regular: 'Tinplate Titling Black' } },
         ],
     };
 
-    // --- NEW: State to manage selected fonts and their styles ---
     const [selectedFonts, setSelectedFonts] = useState([]);
     const [customText, setCustomText] = useState('');
     const [fontSize, setFontSize] = useState(36);
@@ -56,23 +55,22 @@ const App = () => {
 
     const textInputRef = useRef(null);
 
-    // --- UPDATED: Font selection logic ---
+    // --- Font selection logic updated to handle new structure ---
     const handleFontSelect = (font) => {
         const isSelected = selectedFonts.some(f => f.name === font.name);
         if (isSelected) {
             setSelectedFonts(prev => prev.filter(f => f.name !== font.name));
         } else {
             if (selectedFonts.length < MAX_SELECTED_FONTS) {
-                // When a new font is selected, add it with a default style
-                const defaultStyle = Object.keys(font.styles)[0];
-                setSelectedFonts(prev => [...prev, { ...font, activeStyle: defaultStyle }]);
+                const defaultStyleKey = Object.keys(font.styles)[0];
+                setSelectedFonts(prev => [...prev, { ...font, activeStyle: defaultStyleKey }]);
             } else {
                 showMessage(`You can select a maximum of ${MAX_SELECTED_FONTS} fonts.`);
             }
         }
     };
 
-    // --- NEW: Function to handle style changes ---
+    // --- Function to handle style changes ---
     const handleStyleChange = (fontName, newStyle) => {
         setSelectedFonts(prev =>
             prev.map(font =>
@@ -106,7 +104,7 @@ const App = () => {
         }, 0);
     };
 
-    // --- UPDATED: SVG saving logic now includes font styles ---
+    // --- UPDATED: SVG saving logic now uses specific font-family names ---
     const handleSaveSvg = () => {
         if (selectedFonts.length === 0 || customText.trim() === '') {
             showMessage('Please select at least one font and enter some text to save an SVG.');
@@ -118,22 +116,23 @@ const App = () => {
             return;
         }
         let svgTextElements = '';
-        const lineHeight = fontSize * 1.4; // Increased line height for better readability
+        const lineHeight = fontSize * 1.4;
         const labelFontSize = 16;
         const padding = 20;
         let y = padding;
         selectedFonts.forEach((font, fontIndex) => {
-            y += labelFontSize + 10;
+            const activeFontFamily = font.styles[font.activeStyle];
             const styleName = font.activeStyle.charAt(0).toUpperCase() + font.activeStyle.slice(1);
+
+            y += labelFontSize + 10;
             svgTextElements += `<text x="${padding}" y="${y}" font-family="Arial, sans-serif" font-size="${labelFontSize}" fill="#6b7280" font-weight="600">${font.name} (${styleName})</text>\n`;
             y += lineHeight * 0.5;
-
-            const { fontWeight, fontStyle } = font.styles[font.activeStyle];
 
             lines.forEach((line) => {
                 const sanitizedLine = line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
                 y += lineHeight;
-                svgTextElements += `<text x="${padding}" y="${y}" font-family="${font.name}" font-size="${fontSize}" font-weight="${fontWeight}" font-style="${fontStyle}" fill="#181717">${sanitizedLine}</text>\n`;
+                // Use the specific font-family for the style, and remove font-weight/font-style attributes
+                svgTextElements += `<text x="${padding}" y="${y}" font-family="${activeFontFamily}" font-size="${fontSize}" fill="#181717">${sanitizedLine}</text>\n`;
             });
             if (fontIndex < selectedFonts.length - 1) {
                 y += lineHeight * 0.75;
@@ -277,12 +276,12 @@ const App = () => {
                             <div className="bg-gradient-to-b from-slate-50 to-slate-200 p-6 rounded-xl min-h-[150px] space-y-10 border border-slate-100">
                                 {selectedFonts.length > 0 && customText.trim() !== '' ? (
                                     selectedFonts.map((font) => {
-                                        const { fontWeight, fontStyle } = font.styles[font.activeStyle];
+                                        const activeFontFamily = font.styles[font.activeStyle];
                                         return (
                                             <div key={`preview-${font.name}`} className="relative flex flex-col items-start gap-3">
                                                 <div className="flex items-center gap-4 mb-2">
                                                     <span className="bg-blue-600 text-white px-4 py-1 rounded-full text-xs font-bold shadow-sm z-10" style={{ fontFamily: 'Arial' }}>{font.name}</span>
-                                                    {/* --- NEW: Style Toggles --- */}
+                                                    {/* --- Style Toggles --- */}
                                                     <div className="flex gap-1">
                                                         {Object.keys(font.styles).map(styleKey => (
                                                             <button
@@ -295,7 +294,7 @@ const App = () => {
                                                         ))}
                                                     </div>
                                                 </div>
-                                                <p className="text-slate-800 break-words w-full" style={{ fontFamily: font.name, fontSize: `${fontSize}px`, fontWeight, fontStyle, lineHeight: 1.4 }}>{customText}</p>
+                                                <p className="text-slate-800 break-words w-full" style={{ fontFamily: activeFontFamily, fontSize: `${fontSize}px`, lineHeight: 1.4 }}>{customText}</p>
                                             </div>
                                         )
                                     })
