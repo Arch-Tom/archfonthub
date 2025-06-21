@@ -68,6 +68,7 @@ body {
     font-family: 'Calibri-Italic';
     src: url('/fonts/CALIBRII.TTF') format('truetype');
 }
+/* Note: No 'Calibri-BoldItalic' found in font_list.txt */
 
 @font-face {
     font-family: 'CenturyGothic';
@@ -83,6 +84,7 @@ body {
     font-family: 'CenturyGothic-BoldItalic';
     src: url('/fonts/CenturyGothicPaneuropeanBoldItalic.ttf') format('truetype');
 }
+/* Note: No 'CenturyGothic-Italic' found in font_list.txt to match your app's fontLibrary, so I have omitted it. */
 
 @font-face {
     font-family: 'BRLNSR';
@@ -116,6 +118,8 @@ body {
     src: url('/fonts/TIMES.TTF') format('truetype');
 }
 
+
+/* Serif */
 @font-face {
     font-family: 'TimesNewRomanPS-BoldMT';
     src: url('/fonts/timesbd.ttf') format('truetype');
@@ -178,6 +182,7 @@ body {
     src: url('/fonts/AmazonRg_0.ttf') format('truetype');
 }
 
+/* Script & Display */
 @font-face {
     font-family: 'BLACKCHA';
     src: url('/fonts/BLACKCHA.TTF') format('truetype');
