@@ -1,8 +1,6 @@
 ﻿import React, { useState, useRef } from 'react';
 
 // --- BUG FIX: Moved FormInput outside the App component ---
-// By defining it here, it won't be re-created on every render of App,
-// which prevents the input fields from losing focus.
 const FormInput = ({ label, id, value, onChange, required = false, isOptional = false }) => (
     <div>
         <label htmlFor={id} className="block text-sm font-medium text-slate-700 mb-1">
@@ -23,42 +21,39 @@ const FormInput = ({ label, id, value, onChange, required = false, isOptional = 
 
 
 const App = () => {
-    // URL for the Cloudflare Worker for file uploads
     const WORKER_URL = "https://customerfontselection-worker.tom-4a9.workers.dev";
     const DEFAULT_TEXT_PLACEHOLDER = 'Type your text here...';
     // const MAX_SELECTED_FONTS = 3; // --- Font selection limit remains disabled for testing ---
 
-    // --- FINAL, MOST ROBUST FONT STRUCTURE ---
-    // This structure provides everything needed for both web preview and a compatible SVG export.
+    // --- FONT LIBRARY GENERATED FROM YOUR FONT LIST ---
     const fontLibrary = {
         'Sans-serif': [
-            { name: 'Arial', styles: { regular: { css: 'ArialMT', weight: 'normal', style: 'normal' }, bold: { css: 'Arial-BoldMT', weight: 'bold', style: 'normal' }, italic: { css: 'Arial-ItalicMT', weight: 'normal', style: 'italic' }, boldItalic: { css: 'Arial-BoldItalicMT', weight: 'bold', style: 'italic' } } },
-            { name: 'Calibri', styles: { regular: { css: 'Calibri', weight: 'normal', style: 'normal' }, bold: { css: 'Calibri-Bold', weight: 'bold', style: 'normal' }, italic: { css: 'Calibri-Italic', weight: 'normal', style: 'italic' }, boldItalic: { css: 'Calibri-BoldItalic', weight: 'bold', style: 'italic' } } },
-            { name: 'Century Gothic', styles: { regular: { css: 'CenturyGothic', weight: 'normal', style: 'normal' }, bold: { css: 'CenturyGothic-Bold', weight: 'bold', style: 'normal' }, italic: { css: 'CenturyGothic-Italic', weight: 'normal', style: 'italic' }, boldItalic: { css: 'CenturyGothic-BoldItalic', weight: 'bold', style: 'italic' } } },
-            { name: 'Berlin Sans FB', styles: { regular: { css: 'BerlinSansFB', weight: 'normal', style: 'normal' }, bold: { css: 'BerlinSansFB-Bold', weight: 'bold', style: 'normal' } } },
-            { name: 'Bebas Neue', styles: { regular: { css: 'BebasNeue', weight: 'normal', style: 'normal' }, bold: { css: 'BebasNeue-Bold', weight: 'bold', style: 'normal' } } },
-            { name: 'Zapf Humanist', styles: { regular: { css: 'ZapfHumanist', weight: 'normal', style: 'normal' }, bold: { css: 'ZapfHumanist601BT-Demi', weight: 'bold', style: 'normal' } } },
+            { name: 'Arial', styles: { regular: 'ArialMT', bold: 'Arial-BoldMT', italic: 'Arial-ItalicMT', boldItalic: 'Arial-BoldItalicMT' } },
+            { name: 'Calibri', styles: { regular: 'Calibri', bold: 'Calibri-Bold', italic: 'Calibri-Italic' } },
+            { name: 'Century Gothic', styles: { regular: 'CenturyGothic', bold: 'CenturyGothic-Bold', italic: 'CenturyGothic-Italic', boldItalic: 'CenturyGothic-BoldItalic' } },
+            { name: 'Berlin Sans FB', styles: { regular: 'BRLNSR', bold: 'BRLNSB' } },
+            { name: 'Bebas Neue', styles: { regular: 'BebasNeue-Regular', bold: 'BebasNeue-Bold' } },
+            { name: 'Zapf Humanist', styles: { demi: 'ZHUM601D' } },
         ],
         'Serif': [
-            { name: 'Times New Roman', styles: { regular: { css: 'TimesNewRomanPSMT', weight: 'normal', style: 'normal' }, bold: { css: 'TimesNewRomanPS-BoldMT', weight: 'bold', style: 'normal' }, italic: { css: 'TimesNewRomanPS-ItalicMT', weight: 'normal', style: 'italic' }, boldItalic: { css: 'TimesNewRomanPS-BoldItalicMT', weight: 'bold', style: 'italic' } } },
-            { name: 'Garamond', styles: { regular: { css: 'Garamond', weight: 'normal', style: 'normal' } } },
-            { name: 'Benguiat', styles: { regular: { css: 'Benguiat', weight: 'normal', style: 'normal' } } },
-            { name: 'Benguiat ITC by BT', styles: { bold: { css: 'BenguiatITCbyBT-Bold', weight: 'bold', style: 'normal' }, italic: { css: 'BenguiatITCbyBT-BookItalic', weight: 'normal', style: 'italic' } } },
-            { name: 'Century Schoolbook', styles: { regular: { css: 'CenturySchoolbook', weight: 'normal', style: 'normal' }, bold: { css: 'SCHLBKB', weight: 'bold', style: 'normal' } } },
-            { name: 'CopprplGoth BT', styles: { regular: { css: 'CopperplateGothicBT-Roman', weight: 'normal', style: 'normal' } } },
+            { name: 'Times New Roman', styles: { regular: 'TimesNewRomanPSMT', bold: 'TimesNewRomanPS-BoldMT', italic: 'TimesNewRomanPS-ItalicMT', boldItalic: 'TimesNewRomanPS-BoldItalicMT' } },
+            { name: 'Garamond', styles: { regular: 'GARA' } },
+            { name: 'Benguiat', styles: { regular: 'Benguiat', bold: 'BENGUIAB', italic: 'benguini' } },
+            { name: 'Century Schoolbook', styles: { regular: 'CENSCBK', bold: 'SCHLBKB', boldItalic: 'SCHLBKBI' } },
+            { name: 'CopprplGoth BT', styles: { roman: 'CopperplateGothic' } },
         ],
         'Script & Display': [
-            { name: 'Amazone BT', styles: { regular: { css: 'AmazoneBT-Regular', weight: 'normal', style: 'italic' } } },
-            { name: 'BlackChancery', styles: { regular: { css: 'BlackChancery', weight: 'normal', style: 'normal' } } },
-            { name: 'ChocolateBox', styles: { regular: { css: 'ChocolateBox', weight: 'normal', style: 'normal' } } },
-            { name: 'CollegiateBlackFLF', styles: { regular: { css: 'CollegiateBlackFLF', weight: 'normal', style: 'normal' } } },
-            { name: 'CollegiateOutlineFLF', styles: { regular: { css: 'CollegiateOutlineFLF', weight: 'normal', style: 'normal' } } },
-            { name: 'Great Vibes', styles: { regular: { css: 'GreatVibes-Regular', weight: 'normal', style: 'normal' } } },
-            { name: 'Honey Script', styles: { light: { css: 'HoneyScript-Light', weight: '300', style: 'normal' }, semiBold: { css: 'HoneyScript-SemiBold', weight: '600', style: 'normal' } } },
-            { name: 'I Love Glitter', styles: { regular: { css: 'ILoveGlitter', weight: 'normal', style: 'normal' } } },
-            { name: 'ITC Zapf Chancery', styles: { regular: { css: 'ZapfChancery-Roman', weight: 'normal', style: 'normal' } } },
-            { name: 'Murray Hill', styles: { regular: { css: 'MurrayHill', weight: 'normal', style: 'normal' } } },
-            { name: 'Tinplate Titling Black', styles: { regular: { css: 'TinplateTitlingBlack', weight: '900', style: 'normal' } } },
+            { name: 'Amazone BT', styles: { regular: 'AmazonRg' } },
+            { name: 'BlackChancery', styles: { regular: 'BLACKCHA' } },
+            { name: 'ChocolateBox', styles: { regular: 'C_BOX' } },
+            { name: 'CollegiateBlackFLF', styles: { regular: 'CollegiateBlackFLF' } },
+            { name: 'CollegiateOutlineFLF', styles: { regular: 'CollegiateOutlineFLF' } },
+            { name: 'Great Vibes', styles: { regular: 'GreatVibes-Regular' } },
+            { name: 'Honey Script', styles: { light: 'HONEYSCL', semiBold: 'HONEYSSB' } },
+            { name: 'I Love Glitter', styles: { regular: 'ILoveGlitter' } },
+            { name: 'ITC Zapf Chancery', styles: { roman: 'ZapfChancery' } },
+            { name: 'Murray Hill', styles: { regular: 'MurrayHill-Regular' } },
+            { name: 'Tinplate Titling Black', styles: { regular: 'TinplateTitlingBlack' } },
         ],
     };
 
@@ -140,7 +135,7 @@ const App = () => {
         const padding = 20;
         let y = padding;
         selectedFonts.forEach((font, fontIndex) => {
-            const activeStyleInfo = font.styles[font.activeStyle];
+            const activeFontFamily = font.styles[font.activeStyle];
             const styleName = font.activeStyle.charAt(0).toUpperCase() + font.activeStyle.slice(1);
 
             y += labelFontSize + 10;
@@ -150,9 +145,7 @@ const App = () => {
             lines.forEach((line) => {
                 const sanitizedLine = line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
                 y += lineHeight;
-                // --- FINAL SVG EXPORT LOGIC ---
-                // Use the base font name for 'font-family' and add 'font-weight' and 'font-style' attributes.
-                svgTextElements += `<text x="${padding}" y="${y}" font-family="${font.name}" font-size="${fontSize}" font-weight="${activeStyleInfo.weight}" font-style="${activeStyleInfo.style}" fill="#181717">${sanitizedLine}</text>\n`;
+                svgTextElements += `<text x="${padding}" y="${y}" font-family="${activeFontFamily}" font-size="${fontSize}" fill="#181717">${sanitizedLine}</text>\n`;
             });
             if (fontIndex < selectedFonts.length - 1) {
                 y += lineHeight * 0.75;
@@ -242,7 +235,7 @@ const App = () => {
                                                             ? 'bg-blue-600 text-white border-blue-600 shadow-md'
                                                             : 'bg-white text-blue-900 border-blue-500 hover:bg-blue-50'
                                                         }`}
-                                                    style={{ fontFamily: font.styles.regular ? font.styles.regular.css : font.styles[Object.keys(font.styles)[0]].css }}
+                                                    style={{ fontFamily: font.styles[Object.keys(font.styles)[0]] }}
                                                 >
                                                     {font.name}
                                                 </button>
@@ -273,7 +266,7 @@ const App = () => {
                             <div className="bg-gradient-to-b from-slate-50 to-slate-200 p-6 rounded-xl min-h-[150px] space-y-10 border border-slate-100">
                                 {selectedFonts.length > 0 && customText.trim() !== '' ? (
                                     selectedFonts.map((font) => {
-                                        const activeFontFamily = font.styles[font.activeStyle].css;
+                                        const activeFontFamily = font.styles[font.activeStyle];
                                         return (
                                             <div key={`preview-${font.name}`} className="relative flex flex-col items-start gap-3">
                                                 <div className="flex items-center gap-4 mb-2">
