@@ -25,34 +25,37 @@ const App = () => {
     const DEFAULT_TEXT_PLACEHOLDER = 'Type your text here...';
     // const MAX_SELECTED_FONTS = 3; // --- Font selection limit remains disabled for testing ---
 
-    // --- FONT LIBRARY GENERATED FROM YOUR FONT LIST ---
+    // --- FINAL, MOST ROBUST FONT STRUCTURE ---
+    // This structure maps a user-friendly style name (e.g., 'bold') to its exact
+    // PostScript name (e.g., 'Arial-BoldMT'), which is needed for CorelDraw & browser preview.
     const fontLibrary = {
         'Sans-serif': [
             { name: 'Arial', styles: { regular: 'ArialMT', bold: 'Arial-BoldMT', italic: 'Arial-ItalicMT', boldItalic: 'Arial-BoldItalicMT' } },
-            { name: 'Calibri', styles: { regular: 'Calibri', bold: 'Calibri-Bold', italic: 'Calibri-Italic' } },
+            { name: 'Calibri', styles: { regular: 'Calibri', bold: 'Calibri-Bold', italic: 'Calibri-Italic', boldItalic: 'Calibri-BoldItalic' } },
             { name: 'Century Gothic', styles: { regular: 'CenturyGothic', bold: 'CenturyGothic-Bold', italic: 'CenturyGothic-Italic', boldItalic: 'CenturyGothic-BoldItalic' } },
-            { name: 'Berlin Sans FB', styles: { regular: 'BRLNSR', bold: 'BRLNSB' } },
-            { name: 'Bebas Neue', styles: { regular: 'BebasNeue-Regular', bold: 'BebasNeue-Bold' } },
-            { name: 'Zapf Humanist', styles: { demi: 'ZHUM601D' } },
+            { name: 'Berlin Sans FB', styles: { regular: 'BerlinSansFB', bold: 'BerlinSansFB-Bold' } },
+            { name: 'Bebas Neue', styles: { regular: 'BebasNeue', bold: 'BebasNeue-Bold' } },
+            { name: 'Zapf Humanist', styles: { regular: 'ZapfHumanist', bold: 'ZapfHumanist601BT-Demi' } },
         ],
         'Serif': [
             { name: 'Times New Roman', styles: { regular: 'TimesNewRomanPSMT', bold: 'TimesNewRomanPS-BoldMT', italic: 'TimesNewRomanPS-ItalicMT', boldItalic: 'TimesNewRomanPS-BoldItalicMT' } },
-            { name: 'Garamond', styles: { regular: 'GARA' } },
-            { name: 'Benguiat', styles: { regular: 'Benguiat', bold: 'BENGUIAB', italic: 'benguini' } },
-            { name: 'Century Schoolbook', styles: { regular: 'CENSCBK', bold: 'SCHLBKB', boldItalic: 'SCHLBKBI' } },
-            { name: 'CopprplGoth BT', styles: { roman: 'CopperplateGothic' } },
+            { name: 'Garamond', styles: { regular: 'Garamond' } },
+            { name: 'Benguiat', styles: { regular: 'Benguiat' } },
+            { name: 'Benguiat ITC by BT', styles: { bold: 'BenguiatITCbyBT-Bold', italic: 'BenguiatITCbyBT-BookItalic' } },
+            { name: 'Century Schoolbook', styles: { regular: 'CenturySchoolbook', bold: 'SCHLBKB' } },
+            { name: 'CopprplGoth BT', styles: { regular: 'CopperplateGothicBT-Roman' } },
         ],
         'Script & Display': [
-            { name: 'Amazone BT', styles: { regular: 'AmazonRg' } },
-            { name: 'BlackChancery', styles: { regular: 'BLACKCHA' } },
-            { name: 'ChocolateBox', styles: { regular: 'C_BOX' } },
+            { name: 'Amazone BT', styles: { regular: 'AmazoneBT-Regular' } },
+            { name: 'BlackChancery', styles: { regular: 'BlackChancery' } },
+            { name: 'ChocolateBox', styles: { regular: 'ChocolateBox' } },
             { name: 'CollegiateBlackFLF', styles: { regular: 'CollegiateBlackFLF' } },
             { name: 'CollegiateOutlineFLF', styles: { regular: 'CollegiateOutlineFLF' } },
             { name: 'Great Vibes', styles: { regular: 'GreatVibes-Regular' } },
-            { name: 'Honey Script', styles: { light: 'HONEYSCL', semiBold: 'HONEYSSB' } },
+            { name: 'Honey Script', styles: { light: 'HoneyScript-Light', semiBold: 'HoneyScript-SemiBold' } },
             { name: 'I Love Glitter', styles: { regular: 'ILoveGlitter' } },
-            { name: 'ITC Zapf Chancery', styles: { roman: 'ZapfChancery' } },
-            { name: 'Murray Hill', styles: { regular: 'MurrayHill-Regular' } },
+            { name: 'ITC Zapf Chancery', styles: { regular: 'ZapfChancery-Roman' } },
+            { name: 'Murray Hill', styles: { regular: 'MurrayHill' } },
             { name: 'Tinplate Titling Black', styles: { regular: 'TinplateTitlingBlack' } },
         ],
     };
@@ -145,6 +148,8 @@ const App = () => {
             lines.forEach((line) => {
                 const sanitizedLine = line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
                 y += lineHeight;
+                // --- CORRECTED SVG EXPORT LOGIC ---
+                // Use the specific PostScript name as the font-family for maximum compatibility.
                 svgTextElements += `<text x="${padding}" y="${y}" font-family="${activeFontFamily}" font-size="${fontSize}" fill="#181717">${sanitizedLine}</text>\n`;
             });
             if (fontIndex < selectedFonts.length - 1) {
