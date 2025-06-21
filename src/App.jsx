@@ -30,7 +30,7 @@ const App = () => {
 
     // --- FINAL, MOST ROBUST FONT STRUCTURE ---
     // This structure maps a user-friendly style name (e.g., 'bold') to its exact
-    // PostScript name (e.g., 'Arial-BoldMT'), which is needed for CorelDraw.
+    // PostScript name (e.g., 'Arial-BoldMT'), which is needed for CorelDraw & browser preview.
     const fontLibrary = {
         'Sans-serif': [
             { name: 'Arial', styles: { regular: 'ArialMT', bold: 'Arial-BoldMT', italic: 'Arial-ItalicMT', boldItalic: 'Arial-BoldItalicMT' } },

@@ -144,6 +144,11 @@ body {
 }
 
 @font-face {
+    font-family: 'SCHLBKB';
+    src: url('/fonts/SCHLBKB.woff2') format('woff2'), url('/fonts/SCHLBKB.woff') format('woff');
+}
+
+@font-face {
     font-family: 'ChocolateBox';
     src: url('/fonts/ChocolateBox.woff2') format('woff2'), url('/fonts/ChocolateBox.woff') format('woff');
 }
