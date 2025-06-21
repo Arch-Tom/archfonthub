@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Extra customizations for modern look */
+/* --- Base Styles & Animations --- */
 :root {
     --main-bg: #f8fafc;
     --sidebar-bg: #0f172a;
@@ -31,13 +31,9 @@ body {
     }
 }
 
-/* --- FINAL: Font-Face Rules with Exact PostScript Names --- */
+/* --- Corrected & Complete Font-Face Definitions --- */
 
-@font-face {
-    font-family: 'AmazonRg';
-    src: url('/fonts/AmazonRg_0.ttf') format('truetype');
-}
-
+/* Sans-serif */
 @font-face {
     font-family: 'ArialMT';
     src: url('/fonts/arial.ttf') format('truetype');
@@ -49,53 +45,13 @@ body {
 }
 
 @font-face {
-    font-family: 'Arial-BoldItalicMT';
-    src: url('/fonts/arialbi.ttf') format('truetype');
-}
-
-@font-face {
     font-family: 'Arial-ItalicMT';
     src: url('/fonts/ariali.ttf') format('truetype');
 }
 
 @font-face {
-    font-family: 'BebasNeue-Regular';
-    src: url('/fonts/Bebas Neue Regular 400.ttf') format('truetype');
-}
-
-@font-face {
-    font-family: 'BebasNeue-Bold';
-    src: url('/fonts/BebasNeue-Bold.otf') format('opentype');
-}
-
-@font-face {
-    font-family: 'BENGUIAB';
-    src: url('/fonts/BENGUIAB.TTF') format('truetype');
-}
-
-@font-face {
-    font-family: 'Benguiat';
-    src: url('/fonts/Benguiat.ttf') format('truetype');
-}
-
-@font-face {
-    font-family: 'benguini';
-    src: url('/fonts/benguini.ttf') format('truetype');
-}
-
-@font-face {
-    font-family: 'BLACKCHA';
-    src: url('/fonts/BLACKCHA.TTF') format('truetype');
-}
-
-@font-face {
-    font-family: 'BRLNSB';
-    src: url('/fonts/BRLNSB.TTF') format('truetype');
-}
-
-@font-face {
-    font-family: 'BRLNSR';
-    src: url('/fonts/BRLNSR.TTF') format('truetype');
+    font-family: 'Arial-BoldItalicMT';
+    src: url('/fonts/arialbi.ttf') format('truetype');
 }
 
 @font-face {
@@ -112,10 +68,11 @@ body {
     font-family: 'Calibri-Italic';
     src: url('/fonts/CALIBRII.TTF') format('truetype');
 }
+/* Note: No 'Calibri-BoldItalic' found in font_list.txt */
 
 @font-face {
-    font-family: 'CENSCBK';
-    src: url('/fonts/CENSCBK.TTF') format('truetype');
+    font-family: 'CenturyGothic';
+    src: url('/fonts/CenturyGothicPaneuropeanRegular.ttf') format('truetype');
 }
 
 @font-face {
@@ -127,10 +84,114 @@ body {
     font-family: 'CenturyGothic-BoldItalic';
     src: url('/fonts/CenturyGothicPaneuropeanBoldItalic.ttf') format('truetype');
 }
+/* Note: No 'CenturyGothic-Italic' found in font_list.txt to match your app's fontLibrary, so I have omitted it. */
 
 @font-face {
-    font-family: 'CenturyGothic';
-    src: url('/fonts/CenturyGothicPaneuropeanRegular.ttf') format('truetype');
+    font-family: 'BRLNSR';
+    src: url('/fonts/BRLNSR.TTF') format('truetype');
+}
+
+@font-face {
+    font-family: 'BRLNSB';
+    src: url('/fonts/BRLNSB.TTF') format('truetype');
+}
+
+@font-face {
+    font-family: 'BebasNeue-Regular';
+    src: url('/fonts/Bebas Neue Regular 400.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'BebasNeue-Bold';
+    src: url('/fonts/BebasNeue-Bold.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'ZapfHumanist601BT-Demi';
+    src: url('/fonts/ZHUM601D.TTF') format('truetype');
+}
+
+@font-face {
+    font-family: 'ZHUM601D';
+    src: url('/fonts/ZHUM601D.TTF') format('truetype');
+}
+
+
+/* Serif */
+@font-face {
+    font-family: 'TimesNewRomanPSMT';
+    src: url('/fonts/TIMES.TTF') format('truetype');
+}
+
+@font-face {
+    font-family: 'TimesNewRomanPS-BoldMT';
+    src: url('/fonts/timesbd.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'TimesNewRomanPS-ItalicMT';
+    src: url('/fonts/timesi.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'TimesNewRomanPS-BoldItalicMT';
+    src: url('/fonts/timesbi.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'GARA';
+    src: url('/fonts/GARA.TTF') format('truetype');
+}
+
+@font-face {
+    font-family: 'Benguiat';
+    src: url('/fonts/Benguiat.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'BENGUIAB';
+    src: url('/fonts/BENGUIAB.TTF') format('truetype');
+}
+
+@font-face {
+    font-family: 'benguini';
+    src: url('/fonts/benguini.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'CENSCBK';
+    src: url('/fonts/CENSCBK.TTF') format('truetype');
+}
+
+@font-face {
+    font-family: 'SCHLBKB';
+    src: url('/fonts/SCHLBKB.TTF') format('truetype');
+}
+
+@font-face {
+    font-family: 'SCHLBKBI';
+    src: url('/fonts/SCHLBKBI.TTF') format('truetype');
+}
+
+@font-face {
+    font-family: 'Copperplate Gothic';
+    src: url('/fonts/Copperplate Gothic.ttf') format('truetype');
+}
+
+/* Script & Display */
+@font-face {
+    font-family: 'AmazonRg_0';
+    src: url('/fonts/AmazonRg_0.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'BLACKCHA';
+    src: url('/fonts/BLACKCHA.TTF') format('truetype');
+}
+
+@font-face {
+    font-family: 'C_BOX';
+    src: url('/fonts/C_BOX.TTF') format('truetype');
 }
 
 @font-face {
@@ -141,21 +202,6 @@ body {
 @font-face {
     font-family: 'CollegiateOutlineFLF';
     src: url('/fonts/CollegiateOutlineFLF.ttf') format('truetype');
-}
-
-@font-face {
-    font-family: 'CopperplateGothic';
-    src: url('/fonts/Copperplate Gothic.ttf') format('truetype');
-}
-
-@font-face {
-    font-family: 'C_BOX';
-    src: url('/fonts/C_BOX.TTF') format('truetype');
-}
-
-@font-face {
-    font-family: 'GARA';
-    src: url('/fonts/GARA.TTF') format('truetype');
 }
 
 @font-face {
@@ -179,51 +225,16 @@ body {
 }
 
 @font-face {
-    font-family: 'MurrayHill-Regular';
-    src: url('/fonts/Murray Hill Regular.ttf') format('truetype');
-}
-
-@font-face {
-    font-family: 'SCHLBKB';
-    src: url('/fonts/SCHLBKB.TTF') format('truetype');
-}
-
-@font-face {
-    font-family: 'SCHLBKBI';
-    src: url('/fonts/SCHLBKBI.TTF') format('truetype');
-}
-
-@font-face {
-    font-family: 'TimesNewRomanPSMT';
-    src: url('/fonts/TIMES.TTF') format('truetype');
-}
-
-@font-face {
-    font-family: 'TimesNewRomanPS-BoldMT';
-    src: url('/fonts/timesbd.ttf') format('truetype');
-}
-
-@font-face {
-    font-family: 'TimesNewRomanPS-BoldItalicMT';
-    src: url('/fonts/timesbi.ttf') format('truetype');
-}
-
-@font-face {
-    font-family: 'TimesNewRomanPS-ItalicMT';
-    src: url('/fonts/timesi.ttf') format('truetype');
-}
-
-@font-face {
-    font-family: 'TinplateTitlingBlack';
-    src: url('/fonts/TinplateTitlingBlack.ttf') format('truetype');
-}
-
-@font-face {
     font-family: 'ZapfChancery';
     src: url('/fonts/Zapf Chancery Font.otf') format('opentype');
 }
 
 @font-face {
-    font-family: 'ZHUM601D';
-    src: url('/fonts/ZHUM601D.TTF') format('truetype');
+    font-family: 'MurrayHill-Regular';
+    src: url('/fonts/Murray Hill Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'TinplateTitlingBlack';
+    src: url('/fonts/TinplateTitlingBlack.ttf') format('truetype');
 }
