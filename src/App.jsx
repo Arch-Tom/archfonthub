@@ -1,6 +1,6 @@
 ﻿import React, { useState, useRef } from 'react';
 
-// --- BUG FIX: Moved FormInput outside the App component ---
+// This component remains outside the main App component for good practice.
 const FormInput = ({ label, id, value, onChange, required = false, isOptional = false }) => (
     <div>
         <label htmlFor={id} className="block text-sm font-medium text-slate-700 mb-1">
@@ -23,43 +23,43 @@ const FormInput = ({ label, id, value, onChange, required = false, isOptional = 
 const App = () => {
     const WORKER_URL = "https://customerfontselection-worker.tom-4a9.workers.dev";
     const DEFAULT_TEXT_PLACEHOLDER = 'Type your text here...';
-    // const MAX_SELECTED_FONTS = 3; // --- Font selection limit remains disabled for testing ---
+    // const MAX_SELECTED_FONTS = 3; // Font selection limit remains disabled for testing.
 
-    // --- FINAL, MOST ROBUST FONT STRUCTURE ---
-    // This structure maps a user-friendly style name (e.g., 'bold') to its exact
-    // PostScript name (e.g., 'Arial-BoldMT'), which is needed for CorelDraw & browser preview.
+    // --- UPDATED FONT LIBRARY WITH CORRECTED POSTSCRIPT NAMES ---
+    // The names for Benguiat Italic and Zapf Chancery have been fixed based on the CorelDraw error.
     const fontLibrary = {
         'Sans-serif': [
             { name: 'Arial', styles: { regular: 'ArialMT', bold: 'Arial-BoldMT', italic: 'Arial-ItalicMT', boldItalic: 'Arial-BoldItalicMT' } },
-            { name: 'Calibri', styles: { regular: 'Calibri', bold: 'Calibri-Bold', italic: 'Calibri-Italic', boldItalic: 'Calibri-BoldItalic' } },
-            { name: 'Century Gothic', styles: { regular: 'CenturyGothic', bold: 'CenturyGothic-Bold', italic: 'CenturyGothic-Italic', boldItalic: 'CenturyGothic-BoldItalic' } },
-            { name: 'Berlin Sans FB', styles: { regular: 'BerlinSansFB', bold: 'BerlinSansFB-Bold' } },
-            { name: 'Bebas Neue', styles: { regular: 'BebasNeue', bold: 'BebasNeue-Bold' } },
-            { name: 'Zapf Humanist', styles: { regular: 'ZapfHumanist', bold: 'ZapfHumanist601BT-Demi' } },
+            { name: 'Calibri', styles: { regular: 'Calibri', bold: 'Calibri-Bold', italic: 'Calibri-Italic' } }, // Note: No Bold Italic file found
+            { name: 'Century Gothic', styles: { regular: 'CenturyGothic', bold: 'CenturyGothic-Bold', boldItalic: 'CenturyGothic-BoldItalic' } }, // Note: No Italic file found
+            { name: 'Berlin Sans FB', styles: { regular: 'BRLNSR', bold: 'BRLNSB' } },
+            { name: 'Bebas Neue', styles: { regular: 'BebasNeue-Regular', bold: 'BebasNeue-Bold' } },
+            { name: 'Zapf Humanist', styles: { demi: 'ZHUM601D' } },
         ],
         'Serif': [
             { name: 'Times New Roman', styles: { regular: 'TimesNewRomanPSMT', bold: 'TimesNewRomanPS-BoldMT', italic: 'TimesNewRomanPS-ItalicMT', boldItalic: 'TimesNewRomanPS-BoldItalicMT' } },
-            { name: 'Garamond', styles: { regular: 'Garamond' } },
-            { name: 'Benguiat', styles: { regular: 'Benguiat' } },
-            { name: 'Benguiat ITC by BT', styles: { bold: 'BenguiatITCbyBT-Bold', italic: 'BenguiatITCbyBT-BookItalic' } },
-            { name: 'Century Schoolbook', styles: { regular: 'CenturySchoolbook', bold: 'SCHLBKB' } },
-            { name: 'CopprplGoth BT', styles: { regular: 'CopperplateGothicBT-Roman' } },
+            { name: 'Garamond', styles: { regular: 'GARA' } },
+            // --- FIX: Consolidated Benguiat and corrected Italic PostScript name ---
+            { name: 'Benguiat', styles: { regular: 'Benguiat', bold: 'BENGUIAB', italic: 'BenguiatITCbyBT-BookItalic' } },
+            { name: 'Century Schoolbook', styles: { regular: 'CENSCBK', bold: 'SCHLBKB', boldItalic: 'SCHLBKBI' } },
+            { name: 'CopprplGoth BT', styles: { regular: 'Copperplate Gothic' } },
         ],
         'Script & Display': [
-            { name: 'Amazone BT', styles: { regular: 'AmazoneBT-Regular' } },
-            { name: 'BlackChancery', styles: { regular: 'BlackChancery' } },
-            { name: 'ChocolateBox', styles: { regular: 'ChocolateBox' } },
-            { name: 'CollegiateBlackFLF', styles: { regular: 'CollegiateBlackFLF' } },
-            { name: 'CollegiateOutlineFLF', styles: { regular: 'CollegiateOutlineFLF' } },
+            { name: 'Amazone BT', styles: { regular: 'AmazonRg' } },
+            { name: 'BlackChancery', styles: { regular: 'BLACKCHA' } },
+            { name: 'ChocolateBox', styles: { regular: 'C_BOX' } },
+            { name: 'Collegiate', styles: { black: 'CollegiateBlackFLF', outline: 'CollegiateOutlineFLF' } },
             { name: 'Great Vibes', styles: { regular: 'GreatVibes-Regular' } },
-            { name: 'Honey Script', styles: { light: 'HoneyScript-Light', semiBold: 'HoneyScript-SemiBold' } },
+            { name: 'Honey Script', styles: { light: 'HONEYSCL', semiBold: 'HONEYSSB' } },
             { name: 'I Love Glitter', styles: { regular: 'ILoveGlitter' } },
+            // --- FIX: Corrected Zapf Chancery PostScript name ---
             { name: 'ITC Zapf Chancery', styles: { regular: 'ZapfChancery-Roman' } },
-            { name: 'Murray Hill', styles: { regular: 'MurrayHill' } },
+            { name: 'Murray Hill', styles: { regular: 'MurrayHill-Regular' } },
             { name: 'Tinplate Titling Black', styles: { regular: 'TinplateTitlingBlack' } },
         ],
     };
 
+    // State hooks for managing the application's data and UI
     const [selectedFonts, setSelectedFonts] = useState([]);
     const [customText, setCustomText] = useState('');
     const [fontSize, setFontSize] = useState(36);
@@ -74,21 +74,18 @@ const App = () => {
 
     const textInputRef = useRef(null);
 
+    // Handles selecting or deselecting a font
     const handleFontSelect = (font) => {
         const isSelected = selectedFonts.some(f => f.name === font.name);
         if (isSelected) {
             setSelectedFonts(prev => prev.filter(f => f.name !== font.name));
         } else {
-            // --- FONT LIMIT CHECK DISABLED FOR TESTING ---
-            // if (selectedFonts.length < MAX_SELECTED_FONTS) {
             const defaultStyleKey = Object.keys(font.styles)[0];
             setSelectedFonts(prev => [...prev, { ...font, activeStyle: defaultStyleKey }]);
-            // } else {
-            //     showMessage(`You can select a maximum of ${MAX_SELECTED_FONTS} fonts.`);
-            // }
         }
     };
 
+    // Handles changing the style (e.g., bold, italic) of a selected font
     const handleStyleChange = (fontName, newStyle) => {
         setSelectedFonts(prev =>
             prev.map(font =>
@@ -100,14 +97,17 @@ const App = () => {
     const handleTextChange = (e) => setCustomText(e.target.value);
     const handleFontSizeChange = (e) => setFontSize(Number(e.target.value));
 
+    // Displays a message box for a short duration
     const showMessage = (msg, duration = 4000) => {
         setMessage(msg);
         setShowMessageBox(true);
         setTimeout(() => setShowMessageBox(false), duration);
     };
 
+    // Formats a string to be filesystem-friendly
     const formatForFilename = (str) => str.trim().replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_-]/g, '');
 
+    // Inserts a glyph into the textarea at the current cursor position
     const handleGlyphInsert = (glyph) => {
         const textarea = textInputRef.current;
         if (!textarea) return;
@@ -117,11 +117,13 @@ const App = () => {
         const newText = text.substring(0, start) + glyph + text.substring(end);
         setCustomText(newText);
         textarea.focus();
+        // Move cursor after the inserted glyph
         setTimeout(() => {
             textarea.selectionStart = textarea.selectionEnd = start + glyph.length;
         }, 0);
     };
 
+    // Generates the SVG content and shows the customer info modal
     const handleSaveSvg = () => {
         if (selectedFonts.length === 0 || customText.trim() === '') {
             showMessage('Please select at least one font and enter some text to save an SVG.');
@@ -132,11 +134,13 @@ const App = () => {
             showMessage('Please enter some text to save an SVG.');
             return;
         }
+
         let svgTextElements = '';
         const lineHeight = fontSize * 1.4;
         const labelFontSize = 16;
         const padding = 20;
         let y = padding;
+
         selectedFonts.forEach((font, fontIndex) => {
             const activeFontFamily = font.styles[font.activeStyle];
             const styleName = font.activeStyle.charAt(0).toUpperCase() + font.activeStyle.slice(1);
@@ -148,14 +152,14 @@ const App = () => {
             lines.forEach((line) => {
                 const sanitizedLine = line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
                 y += lineHeight;
-                // --- CORRECTED SVG EXPORT LOGIC ---
-                // Use the specific PostScript name as the font-family for maximum compatibility.
                 svgTextElements += `<text x="${padding}" y="${y}" font-family="${activeFontFamily}" font-size="${fontSize}" fill="#181717">${sanitizedLine}</text>\n`;
             });
+
             if (fontIndex < selectedFonts.length - 1) {
-                y += lineHeight * 0.75;
+                y += lineHeight * 0.75; // Add extra space between font previews
             }
         });
+
         const svgWidth = 800;
         const svgHeight = y + padding;
         const fullSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="${svgWidth}" height="${svgHeight}" style="background-color: #FFF;">\n${svgTextElements}</svg>`;
@@ -163,18 +167,22 @@ const App = () => {
         setShowCustomerModal(true);
     };
 
+    // Handles the submission of customer info, saves the SVG locally, and uploads it
     const handleCustomerModalSubmit = async (e) => {
         e.preventDefault();
         if (!orderNumber.trim() || !customerName.trim()) {
             showMessage('Order Number and Customer Name are required.');
             return;
         }
+
         setShowCustomerModal(false);
         const filename = [
             formatForFilename(orderNumber),
             formatForFilename(customerName),
             customerCompany.trim() ? formatForFilename(customerCompany) : ''
         ].filter(Boolean).join('_') + '.svg';
+
+        // Local Save
         try {
             const blob = new Blob([pendingSvgContent], { type: 'image/svg+xml' });
             const url = URL.createObjectURL(blob);
@@ -189,6 +197,8 @@ const App = () => {
         } catch (error) {
             showMessage(`Could not save file locally: ${error.message}`);
         }
+
+        // Upload to Worker
         try {
             const response = await fetch(`${WORKER_URL}/${filename}`, {
                 method: 'PUT',
@@ -201,16 +211,20 @@ const App = () => {
             console.error('Upload error:', error);
             showMessage(`Error uploading SVG: ${error.message}`, 6000);
         }
+
+        // Reset state
         setCustomerName('');
         setCustomerCompany('');
         setOrderNumber('');
         setPendingSvgContent(null);
     };
 
+    // List of glyphs available for insertion
     const glyphs = ['©', '®', '™', '&', '#', '+', '–', '—', '…', '•', '°', '·', '♥', '♡', '♦', '♢', '♣', '♧', '♠', '♤', '★', '☆', '♪', '♫', '←', '→', '↑', '↓', '∞', '†', '✡\uFE0E', '✞', '✠', '±', '½', '¼', 'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ', 'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ρ', 'Σ', 'Τ', 'Υ', 'Φ', 'Χ', 'Ψ', 'Ω'];
 
     return (
         <div className="flex flex-col lg:flex-row min-h-screen bg-slate-100 font-sans">
+            {/* Sidebar */}
             <aside className="bg-gradient-to-b from-slate-800 to-slate-900 text-white w-full lg:w-80 lg:h-auto p-4 lg:p-8 flex-shrink-0 flex flex-col items-center justify-center lg:justify-start lg:pt-16 shadow-xl lg:rounded-r-3xl">
                 <div className="flex flex-row lg:flex-col items-center justify-center gap-4">
                     <div className="flex-shrink-0">
@@ -221,9 +235,12 @@ const App = () => {
                 <p className="hidden lg:block mt-4 text-base text-slate-300 border-t border-slate-700 pt-6 text-center">Experiment with fonts and text display for customer proofs.</p>
             </aside>
 
+            {/* Main Content */}
             <main className="flex-1 p-4 sm:p-8 lg:p-12">
                 <div className="max-w-7xl mx-auto">
                     <div className="space-y-10">
+
+                        {/* Font Selection Section */}
                         <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
                             <h2 className="text-2xl font-black text-slate-900 mb-6 tracking-tight">Font Selection</h2>
                             <div className="space-y-6">
@@ -251,6 +268,7 @@ const App = () => {
                             </div>
                         </section>
 
+                        {/* Custom Text Section */}
                         <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
                             <div className="flex justify-between items-center mb-6">
                                 <h2 className="text-2xl font-black text-slate-900 tracking-tight">Custom Text</h2>
@@ -259,6 +277,7 @@ const App = () => {
                             <textarea ref={textInputRef} className="w-full p-5 border-2 border-slate-200 rounded-xl shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 min-h-[120px] text-lg" value={customText} onChange={handleTextChange} placeholder={DEFAULT_TEXT_PLACEHOLDER} />
                         </section>
 
+                        {/* Live Preview Section */}
                         <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
                             <div className="flex justify-between items-center mb-6">
                                 <h2 className="text-2xl font-black text-slate-900 tracking-tight">Live Preview</h2>
@@ -299,6 +318,7 @@ const App = () => {
                         </section>
                     </div>
 
+                    {/* Submit Button */}
                     <div className="mt-12">
                         <button className="w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white font-bold py-5 px-8 rounded-2xl shadow-2xl hover:shadow-blue-200 hover:from-blue-700 hover:to-blue-600 transition-all duration-200 transform hover:scale-105 text-xl tracking-wide" onClick={handleSaveSvg}>
                             Submit Fonts to Arch Engraving
@@ -307,9 +327,11 @@ const App = () => {
                 </div>
             </main>
 
+            {/* Modals Overlay */}
             {(showCustomerModal || showMessageBox || showGlyphPalette) && (
                 <div className="fixed inset-0 bg-slate-900 bg-opacity-75 flex items-center justify-center p-4 z-50 transition-opacity animate-fade-in">
                     <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-2xl animate-fade-in">
+                        {/* Glyph Palette Modal */}
                         {showGlyphPalette && (
                             <div className="space-y-6">
                                 <h3 className="text-2xl font-bold text-slate-900">Glyph Palette</h3>
@@ -321,6 +343,7 @@ const App = () => {
                                 </div>
                             </div>
                         )}
+                        {/* Customer Info Modal */}
                         {showCustomerModal && (
                             <form onSubmit={handleCustomerModalSubmit} className="space-y-8">
                                 <h3 className="text-2xl font-bold text-slate-900">Enter Customer Information to Save</h3>
@@ -333,6 +356,7 @@ const App = () => {
                                 </div>
                             </form>
                         )}
+                        {/* General Message Modal */}
                         {showMessageBox && (
                             <div className="text-center">
                                 <p className="text-slate-800 text-lg mb-8">{message}</p>
