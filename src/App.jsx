@@ -1,42 +1,63 @@
 ﻿import React, { useState, useRef } from 'react';
 
+// --- BUG FIX: Moved FormInput outside the App component ---
+// By defining it here, it won't be re-created on every render of App,
+// which prevents the input fields from losing focus.
+const FormInput = ({ label, id, value, onChange, required = false, isOptional = false }) => (
+    <div>
+        <label htmlFor={id} className="block text-sm font-medium text-slate-700 mb-1">
+            {label}
+            {required && <span className="text-red-500 ml-1">*</span>}
+            {isOptional && <span className="text-slate-500 text-xs ml-1">(Optional)</span>}
+        </label>
+        <input
+            id={id}
+            type="text"
+            value={value}
+            onChange={onChange}
+            required={required}
+            className="w-full px-3 py-2 border border-slate-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-400 text-base"
+        />
+    </div>
+);
+
 const App = () => {
     // URL for the Cloudflare Worker for file uploads
     const WORKER_URL = "https://customerfontselection-worker.tom-4a9.workers.dev";
     const DEFAULT_TEXT_PLACEHOLDER = 'Type your text here...';
-    // const MAX_SELECTED_FONTS = 3; // --- Font selection limit remains disabled for testing ---
+    const MAX_SELECTED_FONTS = 3; // --- Font selection limit restored ---
 
     // --- FINAL, MOST ROBUST FONT STRUCTURE ---
     // This structure provides everything needed for both web preview and a compatible SVG export.
     const fontLibrary = {
         'Sans-serif': [
-            { name: 'Arial', styles: { regular: { css: 'ArialMT', weight: 'normal', style: 'normal' }, bold: { css: 'Arial-BoldMT', weight: 'bold', style: 'normal' }, italic: { css: 'Arial-ItalicMT', weight: 'normal', style: 'italic' }, boldItalic: { css: 'Arial-BoldItalicMT', weight: 'bold', style: 'italic' } } },
-            { name: 'Calibri', styles: { regular: { css: 'Calibri', weight: 'normal', style: 'normal' }, bold: { css: 'Calibri-Bold', weight: 'bold', style: 'normal' }, italic: { css: 'Calibri-Italic', weight: 'normal', style: 'italic' }, boldItalic: { css: 'Calibri-BoldItalic', weight: 'bold', style: 'italic' } } },
-            { name: 'Century Gothic', styles: { regular: { css: 'CenturyGothic', weight: 'normal', style: 'normal' }, bold: { css: 'CenturyGothic-Bold', weight: 'bold', style: 'normal' }, italic: { css: 'CenturyGothic-Italic', weight: 'normal', style: 'italic' }, boldItalic: { css: 'CenturyGothic-BoldItalic', weight: 'bold', style: 'italic' } } },
-            { name: 'Berlin Sans FB', styles: { regular: { css: 'BerlinSansFB', weight: 'normal', style: 'normal' }, bold: { css: 'BerlinSansFB-Bold', weight: 'bold', style: 'normal' } } },
-            { name: 'Bebas Neue', styles: { regular: { css: 'BebasNeue', weight: 'normal', style: 'normal' }, bold: { css: 'BebasNeue-Bold', weight: 'bold', style: 'normal' } } },
-            { name: 'Zapf Humanist', styles: { regular: { css: 'ZapfHumanist', weight: 'normal', style: 'normal' }, bold: { css: 'ZapfHumanist601BT-Demi', weight: 'bold', style: 'normal' } } },
+            { name: 'Arial', styles: { regular: { css: 'ArialMT' }, bold: { css: 'Arial-BoldMT' }, italic: { css: 'Arial-ItalicMT' }, boldItalic: { css: 'Arial-BoldItalicMT' } } },
+            { name: 'Calibri', styles: { regular: { css: 'Calibri' }, bold: { css: 'Calibri-Bold' }, italic: { css: 'Calibri-Italic' }, boldItalic: { css: 'Calibri-BoldItalic' } } },
+            { name: 'Century Gothic', styles: { regular: { css: 'CenturyGothic' }, bold: { css: 'CenturyGothic-Bold' }, italic: { css: 'CenturyGothic-Italic' }, boldItalic: { css: 'CenturyGothic-BoldItalic' } } },
+            { name: 'Berlin Sans FB', styles: { regular: { css: 'BerlinSansFB' }, bold: { css: 'BerlinSansFB-Bold' } } },
+            { name: 'Bebas Neue', styles: { regular: { css: 'BebasNeue' }, bold: { css: 'BebasNeue-Bold' } } },
+            { name: 'Zapf Humanist', styles: { regular: { css: 'ZapfHumanist' }, bold: { css: 'ZapfHumanist601BT-Demi' } } },
         ],
         'Serif': [
-            { name: 'Times New Roman', styles: { regular: { css: 'TimesNewRomanPSMT', weight: 'normal', style: 'normal' }, bold: { css: 'TimesNewRomanPS-BoldMT', weight: 'bold', style: 'normal' }, italic: { css: 'TimesNewRomanPS-ItalicMT', weight: 'normal', style: 'italic' }, boldItalic: { css: 'TimesNewRomanPS-BoldItalicMT', weight: 'bold', style: 'italic' } } },
-            { name: 'Garamond', styles: { regular: { css: 'Garamond', weight: 'normal', style: 'normal' } } },
-            { name: 'Benguiat', styles: { regular: { css: 'Benguiat', weight: 'normal', style: 'normal' } } },
-            { name: 'Benguiat ITC by BT', styles: { bold: { css: 'BenguiatITCbyBT-Bold', weight: 'bold', style: 'normal' }, italic: { css: 'BenguiatITCbyBT-BookItalic', weight: 'normal', style: 'italic' } } },
-            { name: 'Century Schoolbook', styles: { regular: { css: 'CenturySchoolbook', weight: 'normal', style: 'normal' } } },
-            { name: 'CopprplGoth BT', styles: { regular: { css: 'CopperplateGothicBT-Roman', weight: 'normal', style: 'normal' } } },
+            { name: 'Times New Roman', styles: { regular: { css: 'TimesNewRomanPSMT' }, bold: { css: 'TimesNewRomanPS-BoldMT' }, italic: { css: 'TimesNewRomanPS-ItalicMT' }, boldItalic: { css: 'TimesNewRomanPS-BoldItalicMT' } } },
+            { name: 'Garamond', styles: { regular: { css: 'Garamond' } } },
+            { name: 'Benguiat', styles: { regular: { css: 'Benguiat' } } },
+            { name: 'Benguiat ITC by BT', styles: { bold: { css: 'BenguiatITCbyBT-Bold' }, italic: { css: 'BenguiatITCbyBT-BookItalic' } } },
+            { name: 'Century Schoolbook', styles: { regular: { css: 'CenturySchoolbook' }, bold: { css: 'SCHLBKB' } } },
+            { name: 'CopprplGoth BT', styles: { regular: { css: 'CopperplateGothicBT-Roman' } } },
         ],
         'Script & Display': [
-            { name: 'Amazone BT', styles: { regular: { css: 'AmazoneBT-Regular', weight: 'normal', style: 'italic' } } },
-            { name: 'BlackChancery', styles: { regular: { css: 'BlackChancery', weight: 'normal', style: 'normal' } } },
-            { name: 'ChocolateBox', styles: { regular: { css: 'ChocolateBox', weight: 'normal', style: 'normal' } } },
-            { name: 'CollegiateBlackFLF', styles: { regular: { css: 'CollegiateBlackFLF', weight: 'normal', style: 'normal' } } },
-            { name: 'CollegiateOutlineFLF', styles: { regular: { css: 'CollegiateOutlineFLF', weight: 'normal', style: 'normal' } } },
-            { name: 'Great Vibes', styles: { regular: { css: 'GreatVibes-Regular', weight: 'normal', style: 'normal' } } },
-            { name: 'Honey Script', styles: { light: { css: 'HoneyScript-Light', weight: '300', style: 'normal' }, semiBold: { css: 'HoneyScript-SemiBold', weight: '600', style: 'normal' } } },
-            { name: 'I Love Glitter', styles: { regular: { css: 'ILoveGlitter', weight: 'normal', style: 'normal' } } },
-            { name: 'ITC Zapf Chancery', styles: { regular: { css: 'ZapfChancery-Roman', weight: 'normal', style: 'normal' } } },
-            { name: 'Murray Hill', styles: { regular: { css: 'MurrayHill', weight: 'normal', style: 'normal' } } },
-            { name: 'Tinplate Titling Black', styles: { regular: { css: 'TinplateTitlingBlack', weight: '900', style: 'normal' } } },
+            { name: 'Amazone BT', styles: { regular: { css: 'AmazoneBT-Regular' } } },
+            { name: 'BlackChancery', styles: { regular: { css: 'BlackChancery' } } },
+            { name: 'ChocolateBox', styles: { regular: { css: 'ChocolateBox' } } },
+            { name: 'CollegiateBlackFLF', styles: { regular: { css: 'CollegiateBlackFLF' } } },
+            { name: 'CollegiateOutlineFLF', styles: { regular: { css: 'CollegiateOutlineFLF' } } },
+            { name: 'Great Vibes', styles: { regular: { css: 'GreatVibes-Regular' } } },
+            { name: 'Honey Script', styles: { light: { css: 'HoneyScript-Light' }, semiBold: { css: 'HoneyScript-SemiBold' } } },
+            { name: 'I Love Glitter', styles: { regular: { css: 'ILoveGlitter' } } },
+            { name: 'ITC Zapf Chancery', styles: { regular: { css: 'ZapfChancery-Roman' } } },
+            { name: 'Murray Hill', styles: { regular: { css: 'MurrayHill' } } },
+            { name: 'Tinplate Titling Black', styles: { regular: { css: 'TinplateTitlingBlack' } } },
         ],
     };
 
@@ -59,13 +80,12 @@ const App = () => {
         if (isSelected) {
             setSelectedFonts(prev => prev.filter(f => f.name !== font.name));
         } else {
-            // --- FONT LIMIT CHECK DISABLED FOR TESTING ---
-            // if (selectedFonts.length < MAX_SELECTED_FONTS) {
-            const defaultStyleKey = Object.keys(font.styles)[0];
-            setSelectedFonts(prev => [...prev, { ...font, activeStyle: defaultStyleKey }]);
-            // } else {
-            //     showMessage(`You can select a maximum of ${MAX_SELECTED_FONTS} fonts.`);
-            // }
+            if (selectedFonts.length < MAX_SELECTED_FONTS) {
+                const defaultStyleKey = Object.keys(font.styles)[0];
+                setSelectedFonts(prev => [...prev, { ...font, activeStyle: defaultStyleKey }]);
+            } else {
+                showMessage(`You can select a maximum of ${MAX_SELECTED_FONTS} fonts.`);
+            }
         }
     };
 
@@ -128,9 +148,8 @@ const App = () => {
             lines.forEach((line) => {
                 const sanitizedLine = line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
                 y += lineHeight;
-                // --- FINAL SVG EXPORT LOGIC ---
-                // Use the base font name for 'font-family' and add 'font-weight' and 'font-style' attributes.
-                svgTextElements += `<text x="${padding}" y="${y}" font-family="${font.name}" font-size="${fontSize}" font-weight="${activeStyleInfo.weight}" font-style="${activeStyleInfo.style}" fill="#181717">${sanitizedLine}</text>\n`;
+                // Use the specific PostScript name as the font-family for maximum compatibility.
+                svgTextElements += `<text x="${padding}" y="${y}" font-family="${activeStyleInfo.css}" font-size="${fontSize}" fill="#181717">${sanitizedLine}</text>\n`;
             });
             if (fontIndex < selectedFonts.length - 1) {
                 y += lineHeight * 0.75;
@@ -186,24 +205,6 @@ const App = () => {
         setOrderNumber('');
         setPendingSvgContent(null);
     };
-
-    const FormInput = ({ label, id, value, onChange, required = false, isOptional = false }) => (
-        <div>
-            <label htmlFor={id} className="block text-sm font-medium text-slate-700 mb-1">
-                {label}
-                {required && <span className="text-red-500 ml-1">*</span>}
-                {isOptional && <span className="text-slate-500 text-xs ml-1">(Optional)</span>}
-            </label>
-            <input
-                id={id}
-                type="text"
-                value={value}
-                onChange={onChange}
-                required={required}
-                className="w-full px-3 py-2 border border-slate-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-400 text-base"
-            />
-        </div>
-    );
 
     const glyphs = ['©', '®', '™', '&', '#', '+', '–', '—', '…', '•', '°', '·', '♥', '♡', '♦', '♢', '♣', '♧', '♠', '♤', '★', '☆', '♪', '♫', '←', '→', '↑', '↓', '∞', '†', '✡\uFE0E', '✞', '✠', '±', '½', '¼', 'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ', 'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ρ', 'Σ', 'Τ', 'Υ', 'Φ', 'Χ', 'Ψ', 'Ω'];
 
@@ -320,12 +321,14 @@ const App = () => {
                             </div>
                         )}
                         {showCustomerModal && (
-                            <form onSubmit={handleCustomerModalSubmit} className="space-y-8">
-                                <h3 className="text-2xl font-bold text-slate-900">Enter Customer Information to Save</h3>
-                                <FormInput label="Order Number" id="orderNumber" value={orderNumber} onChange={e => setOrderNumber(e.target.value)} required />
-                                <FormInput label="Customer Name" id="customerName" value={customerName} onChange={e => setCustomerName(e.target.value)} required />
-                                <FormInput label="Customer Company" id="customerCompany" value={customerCompany} onChange={e => setCustomerCompany(e.target.value)} isOptional />
-                                <div className="flex justify-end gap-4 pt-4">
+                            <form onSubmit={handleCustomerModalSubmit}>
+                                <div className="space-y-8">
+                                    <h3 className="text-2xl font-bold text-slate-900">Enter Customer Information to Save</h3>
+                                    <FormInput label="Order Number" id="orderNumber" value={orderNumber} onChange={e => setOrderNumber(e.target.value)} required />
+                                    <FormInput label="Customer Name" id="customerName" value={customerName} onChange={e => setCustomerName(e.target.value)} required />
+                                    <FormInput label="Customer Company" id="customerCompany" value={customerCompany} onChange={e => setCustomerCompany(e.target.value)} isOptional />
+                                </div>
+                                <div className="flex justify-end gap-4 pt-8">
                                     <button type="button" className="px-5 py-2 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors" onClick={() => setShowCustomerModal(false)}>Cancel</button>
                                     <button type="submit" className="px-5 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-semibold transition-colors shadow-sm">Submit & Save</button>
                                 </div>
