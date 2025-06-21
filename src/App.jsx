@@ -4,7 +4,7 @@ const App = () => {
     // URL for the Cloudflare Worker for file uploads
     const WORKER_URL = "https://customerfontselection-worker.tom-4a9.workers.dev";
     const DEFAULT_TEXT_PLACEHOLDER = 'Type your text here...';
-    const MAX_SELECTED_FONTS = 3; // --- Font selection limit is now restored ---
+    // const MAX_SELECTED_FONTS = 3; // --- Temporarily disabled for testing ---
 
     // --- FINAL REVISION: Font Structure with Exact PostScript Names ---
     // Using precise PostScript names ensures compatibility with design software like CorelDraw.
@@ -54,20 +54,23 @@ const App = () => {
 
     const textInputRef = useRef(null);
 
+    // --- Font selection logic updated to handle new structure ---
     const handleFontSelect = (font) => {
         const isSelected = selectedFonts.some(f => f.name === font.name);
         if (isSelected) {
             setSelectedFonts(prev => prev.filter(f => f.name !== font.name));
         } else {
-            if (selectedFonts.length < MAX_SELECTED_FONTS) {
-                const defaultStyleKey = Object.keys(font.styles)[0];
-                setSelectedFonts(prev => [...prev, { ...font, activeStyle: defaultStyleKey }]);
-            } else {
-                showMessage(`You can select a maximum of ${MAX_SELECTED_FONTS} fonts.`);
-            }
+            // --- FONT LIMIT CHECK DISABLED FOR TESTING ---
+            // if (selectedFonts.length < MAX_SELECTED_FONTS) {
+            const defaultStyleKey = Object.keys(font.styles)[0];
+            setSelectedFonts(prev => [...prev, { ...font, activeStyle: defaultStyleKey }]);
+            // } else {
+            //     showMessage(`You can select a maximum of ${MAX_SELECTED_FONTS} fonts.`);
+            // }
         }
     };
 
+    // --- Function to handle style changes ---
     const handleStyleChange = (fontName, newStyle) => {
         setSelectedFonts(prev =>
             prev.map(font =>
@@ -101,6 +104,7 @@ const App = () => {
         }, 0);
     };
 
+    // --- UPDATED: SVG saving logic now uses specific font-family names ---
     const handleSaveSvg = () => {
         if (selectedFonts.length === 0 || customText.trim() === '') {
             showMessage('Please select at least one font and enter some text to save an SVG.');
@@ -127,6 +131,7 @@ const App = () => {
             lines.forEach((line) => {
                 const sanitizedLine = line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
                 y += lineHeight;
+                // Use the specific font-family for the style, and remove font-weight/font-style attributes
                 svgTextElements += `<text x="${padding}" y="${y}" font-family="${activeFontFamily}" font-size="${fontSize}" fill="#181717">${sanitizedLine}</text>\n`;
             });
             if (fontIndex < selectedFonts.length - 1) {
