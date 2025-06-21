@@ -4,9 +4,9 @@ const App = () => {
     // URL for the Cloudflare Worker for file uploads
     const WORKER_URL = "https://customerfontselection-worker.tom-4a9.workers.dev";
     const DEFAULT_TEXT_PLACEHOLDER = 'Type your text here...';
-    const MAX_SELECTED_FONTS = 3;
+    // const MAX_SELECTED_FONTS = 3; // --- Temporarily disabled for testing ---
 
-    // --- NEW: Detailed Font Structure ---
+    // --- Detailed Font Structure ---
     // This new structure includes variations for each font family.
     // This allows us to dynamically show style options (bold, italic) for each selected font.
     const fontLibrary = {
@@ -41,7 +41,6 @@ const App = () => {
         ],
     };
 
-    // --- NEW: State to manage selected fonts and their styles ---
     const [selectedFonts, setSelectedFonts] = useState([]);
     const [customText, setCustomText] = useState('');
     const [fontSize, setFontSize] = useState(36);
@@ -62,17 +61,18 @@ const App = () => {
         if (isSelected) {
             setSelectedFonts(prev => prev.filter(f => f.name !== font.name));
         } else {
-            if (selectedFonts.length < MAX_SELECTED_FONTS) {
-                // When a new font is selected, add it with a default style
-                const defaultStyle = Object.keys(font.styles)[0];
-                setSelectedFonts(prev => [...prev, { ...font, activeStyle: defaultStyle }]);
-            } else {
-                showMessage(`You can select a maximum of ${MAX_SELECTED_FONTS} fonts.`);
-            }
+            // --- FONT LIMIT CHECK DISABLED FOR TESTING ---
+            // if (selectedFonts.length < MAX_SELECTED_FONTS) {
+            // When a new font is selected, add it with a default style
+            const defaultStyle = Object.keys(font.styles)[0];
+            setSelectedFonts(prev => [...prev, { ...font, activeStyle: defaultStyle }]);
+            // } else {
+            //     showMessage(`You can select a maximum of ${MAX_SELECTED_FONTS} fonts.`);
+            // }
         }
     };
 
-    // --- NEW: Function to handle style changes ---
+    // --- Function to handle style changes ---
     const handleStyleChange = (fontName, newStyle) => {
         setSelectedFonts(prev =>
             prev.map(font =>
@@ -106,7 +106,7 @@ const App = () => {
         }, 0);
     };
 
-    // --- UPDATED: SVG saving logic now includes font styles ---
+    // --- SVG saving logic now includes font styles ---
     const handleSaveSvg = () => {
         if (selectedFonts.length === 0 || customText.trim() === '') {
             showMessage('Please select at least one font and enter some text to save an SVG.');
@@ -118,7 +118,7 @@ const App = () => {
             return;
         }
         let svgTextElements = '';
-        const lineHeight = fontSize * 1.4; // Increased line height for better readability
+        const lineHeight = fontSize * 1.4;
         const labelFontSize = 16;
         const padding = 20;
         let y = padding;
@@ -282,7 +282,7 @@ const App = () => {
                                             <div key={`preview-${font.name}`} className="relative flex flex-col items-start gap-3">
                                                 <div className="flex items-center gap-4 mb-2">
                                                     <span className="bg-blue-600 text-white px-4 py-1 rounded-full text-xs font-bold shadow-sm z-10" style={{ fontFamily: 'Arial' }}>{font.name}</span>
-                                                    {/* --- NEW: Style Toggles --- */}
+                                                    {/* --- Style Toggles --- */}
                                                     <div className="flex gap-1">
                                                         {Object.keys(font.styles).map(styleKey => (
                                                             <button
