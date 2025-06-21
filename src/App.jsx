@@ -21,43 +21,45 @@ const FormInput = ({ label, id, value, onChange, required = false, isOptional = 
     </div>
 );
 
+
 const App = () => {
     // URL for the Cloudflare Worker for file uploads
     const WORKER_URL = "https://customerfontselection-worker.tom-4a9.workers.dev";
     const DEFAULT_TEXT_PLACEHOLDER = 'Type your text here...';
-    const MAX_SELECTED_FONTS = 3; // --- Font selection limit restored ---
+    // const MAX_SELECTED_FONTS = 3; // --- Font selection limit remains disabled for testing ---
 
     // --- FINAL, MOST ROBUST FONT STRUCTURE ---
-    // This structure provides everything needed for both web preview and a compatible SVG export.
+    // This structure maps a user-friendly style name (e.g., 'bold') to its exact
+    // PostScript name (e.g., 'Arial-BoldMT'), which is needed for CorelDraw.
     const fontLibrary = {
         'Sans-serif': [
-            { name: 'Arial', styles: { regular: { css: 'ArialMT' }, bold: { css: 'Arial-BoldMT' }, italic: { css: 'Arial-ItalicMT' }, boldItalic: { css: 'Arial-BoldItalicMT' } } },
-            { name: 'Calibri', styles: { regular: { css: 'Calibri' }, bold: { css: 'Calibri-Bold' }, italic: { css: 'Calibri-Italic' }, boldItalic: { css: 'Calibri-BoldItalic' } } },
-            { name: 'Century Gothic', styles: { regular: { css: 'CenturyGothic' }, bold: { css: 'CenturyGothic-Bold' }, italic: { css: 'CenturyGothic-Italic' }, boldItalic: { css: 'CenturyGothic-BoldItalic' } } },
-            { name: 'Berlin Sans FB', styles: { regular: { css: 'BerlinSansFB' }, bold: { css: 'BerlinSansFB-Bold' } } },
-            { name: 'Bebas Neue', styles: { regular: { css: 'BebasNeue' }, bold: { css: 'BebasNeue-Bold' } } },
-            { name: 'Zapf Humanist', styles: { regular: { css: 'ZapfHumanist' }, bold: { css: 'ZapfHumanist601BT-Demi' } } },
+            { name: 'Arial', styles: { regular: 'ArialMT', bold: 'Arial-BoldMT', italic: 'Arial-ItalicMT', boldItalic: 'Arial-BoldItalicMT' } },
+            { name: 'Calibri', styles: { regular: 'Calibri', bold: 'Calibri-Bold', italic: 'Calibri-Italic', boldItalic: 'Calibri-BoldItalic' } },
+            { name: 'Century Gothic', styles: { regular: 'CenturyGothic', bold: 'CenturyGothic-Bold', italic: 'CenturyGothic-Italic', boldItalic: 'CenturyGothic-BoldItalic' } },
+            { name: 'Berlin Sans FB', styles: { regular: 'BerlinSansFB', bold: 'BerlinSansFB-Bold' } },
+            { name: 'Bebas Neue', styles: { regular: 'BebasNeue', bold: 'BebasNeue-Bold' } },
+            { name: 'Zapf Humanist', styles: { regular: 'ZapfHumanist', bold: 'ZapfHumanist601BT-Demi' } },
         ],
         'Serif': [
-            { name: 'Times New Roman', styles: { regular: { css: 'TimesNewRomanPSMT' }, bold: { css: 'TimesNewRomanPS-BoldMT' }, italic: { css: 'TimesNewRomanPS-ItalicMT' }, boldItalic: { css: 'TimesNewRomanPS-BoldItalicMT' } } },
-            { name: 'Garamond', styles: { regular: { css: 'Garamond' } } },
-            { name: 'Benguiat', styles: { regular: { css: 'Benguiat' } } },
-            { name: 'Benguiat ITC by BT', styles: { bold: { css: 'BenguiatITCbyBT-Bold' }, italic: { css: 'BenguiatITCbyBT-BookItalic' } } },
-            { name: 'Century Schoolbook', styles: { regular: { css: 'CenturySchoolbook' }, bold: { css: 'SCHLBKB' } } },
-            { name: 'CopprplGoth BT', styles: { regular: { css: 'CopperplateGothicBT-Roman' } } },
+            { name: 'Times New Roman', styles: { regular: 'TimesNewRomanPSMT', bold: 'TimesNewRomanPS-BoldMT', italic: 'TimesNewRomanPS-ItalicMT', boldItalic: 'TimesNewRomanPS-BoldItalicMT' } },
+            { name: 'Garamond', styles: { regular: 'Garamond' } },
+            { name: 'Benguiat', styles: { regular: 'Benguiat' } },
+            { name: 'Benguiat ITC by BT', styles: { bold: 'BenguiatITCbyBT-Bold', italic: 'BenguiatITCbyBT-BookItalic' } },
+            { name: 'Century Schoolbook', styles: { regular: 'CenturySchoolbook', bold: 'SCHLBKB' } },
+            { name: 'CopprplGoth BT', styles: { regular: 'CopperplateGothicBT-Roman' } },
         ],
         'Script & Display': [
-            { name: 'Amazone BT', styles: { regular: { css: 'AmazoneBT-Regular' } } },
-            { name: 'BlackChancery', styles: { regular: { css: 'BlackChancery' } } },
-            { name: 'ChocolateBox', styles: { regular: { css: 'ChocolateBox' } } },
-            { name: 'CollegiateBlackFLF', styles: { regular: { css: 'CollegiateBlackFLF' } } },
-            { name: 'CollegiateOutlineFLF', styles: { regular: { css: 'CollegiateOutlineFLF' } } },
-            { name: 'Great Vibes', styles: { regular: { css: 'GreatVibes-Regular' } } },
-            { name: 'Honey Script', styles: { light: { css: 'HoneyScript-Light' }, semiBold: { css: 'HoneyScript-SemiBold' } } },
-            { name: 'I Love Glitter', styles: { regular: { css: 'ILoveGlitter' } } },
-            { name: 'ITC Zapf Chancery', styles: { regular: { css: 'ZapfChancery-Roman' } } },
-            { name: 'Murray Hill', styles: { regular: { css: 'MurrayHill' } } },
-            { name: 'Tinplate Titling Black', styles: { regular: { css: 'TinplateTitlingBlack' } } },
+            { name: 'Amazone BT', styles: { regular: 'AmazoneBT-Regular' } },
+            { name: 'BlackChancery', styles: { regular: 'BlackChancery' } },
+            { name: 'ChocolateBox', styles: { regular: 'ChocolateBox' } },
+            { name: 'CollegiateBlackFLF', styles: { regular: 'CollegiateBlackFLF' } },
+            { name: 'CollegiateOutlineFLF', styles: { regular: 'CollegiateOutlineFLF' } },
+            { name: 'Great Vibes', styles: { regular: 'GreatVibes-Regular' } },
+            { name: 'Honey Script', styles: { light: 'HoneyScript-Light', semiBold: 'HoneyScript-SemiBold' } },
+            { name: 'I Love Glitter', styles: { regular: 'ILoveGlitter' } },
+            { name: 'ITC Zapf Chancery', styles: { regular: 'ZapfChancery-Roman' } },
+            { name: 'Murray Hill', styles: { regular: 'MurrayHill' } },
+            { name: 'Tinplate Titling Black', styles: { regular: 'TinplateTitlingBlack' } },
         ],
     };
 
@@ -80,12 +82,13 @@ const App = () => {
         if (isSelected) {
             setSelectedFonts(prev => prev.filter(f => f.name !== font.name));
         } else {
-            if (selectedFonts.length < MAX_SELECTED_FONTS) {
-                const defaultStyleKey = Object.keys(font.styles)[0];
-                setSelectedFonts(prev => [...prev, { ...font, activeStyle: defaultStyleKey }]);
-            } else {
-                showMessage(`You can select a maximum of ${MAX_SELECTED_FONTS} fonts.`);
-            }
+            // --- FONT LIMIT CHECK DISABLED FOR TESTING ---
+            // if (selectedFonts.length < MAX_SELECTED_FONTS) {
+            const defaultStyleKey = Object.keys(font.styles)[0];
+            setSelectedFonts(prev => [...prev, { ...font, activeStyle: defaultStyleKey }]);
+            // } else {
+            //     showMessage(`You can select a maximum of ${MAX_SELECTED_FONTS} fonts.`);
+            // }
         }
     };
 
@@ -138,7 +141,7 @@ const App = () => {
         const padding = 20;
         let y = padding;
         selectedFonts.forEach((font, fontIndex) => {
-            const activeStyleInfo = font.styles[font.activeStyle];
+            const activeFontFamily = font.styles[font.activeStyle];
             const styleName = font.activeStyle.charAt(0).toUpperCase() + font.activeStyle.slice(1);
 
             y += labelFontSize + 10;
@@ -148,8 +151,9 @@ const App = () => {
             lines.forEach((line) => {
                 const sanitizedLine = line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
                 y += lineHeight;
+                // --- CORRECTED SVG EXPORT LOGIC ---
                 // Use the specific PostScript name as the font-family for maximum compatibility.
-                svgTextElements += `<text x="${padding}" y="${y}" font-family="${activeStyleInfo.css}" font-size="${fontSize}" fill="#181717">${sanitizedLine}</text>\n`;
+                svgTextElements += `<text x="${padding}" y="${y}" font-family="${activeFontFamily}" font-size="${fontSize}" fill="#181717">${sanitizedLine}</text>\n`;
             });
             if (fontIndex < selectedFonts.length - 1) {
                 y += lineHeight * 0.75;
@@ -239,7 +243,7 @@ const App = () => {
                                                             ? 'bg-blue-600 text-white border-blue-600 shadow-md'
                                                             : 'bg-white text-blue-900 border-blue-500 hover:bg-blue-50'
                                                         }`}
-                                                    style={{ fontFamily: font.styles.regular ? font.styles.regular.css : font.styles[Object.keys(font.styles)[0]].css }}
+                                                    style={{ fontFamily: font.styles[Object.keys(font.styles)[0]] }}
                                                 >
                                                     {font.name}
                                                 </button>
@@ -270,7 +274,7 @@ const App = () => {
                             <div className="bg-gradient-to-b from-slate-50 to-slate-200 p-6 rounded-xl min-h-[150px] space-y-10 border border-slate-100">
                                 {selectedFonts.length > 0 && customText.trim() !== '' ? (
                                     selectedFonts.map((font) => {
-                                        const activeFontFamily = font.styles[font.activeStyle].css;
+                                        const activeFontFamily = font.styles[font.activeStyle];
                                         return (
                                             <div key={`preview-${font.name}`} className="relative flex flex-col items-start gap-3">
                                                 <div className="flex items-center gap-4 mb-2">
@@ -321,14 +325,12 @@ const App = () => {
                             </div>
                         )}
                         {showCustomerModal && (
-                            <form onSubmit={handleCustomerModalSubmit}>
-                                <div className="space-y-8">
-                                    <h3 className="text-2xl font-bold text-slate-900">Enter Customer Information to Save</h3>
-                                    <FormInput label="Order Number" id="orderNumber" value={orderNumber} onChange={e => setOrderNumber(e.target.value)} required />
-                                    <FormInput label="Customer Name" id="customerName" value={customerName} onChange={e => setCustomerName(e.target.value)} required />
-                                    <FormInput label="Customer Company" id="customerCompany" value={customerCompany} onChange={e => setCustomerCompany(e.target.value)} isOptional />
-                                </div>
-                                <div className="flex justify-end gap-4 pt-8">
+                            <form onSubmit={handleCustomerModalSubmit} className="space-y-8">
+                                <h3 className="text-2xl font-bold text-slate-900">Enter Customer Information to Save</h3>
+                                <FormInput label="Order Number" id="orderNumber" value={orderNumber} onChange={e => setOrderNumber(e.target.value)} required />
+                                <FormInput label="Customer Name" id="customerName" value={customerName} onChange={e => setCustomerName(e.target.value)} required />
+                                <FormInput label="Customer Company" id="customerCompany" value={customerCompany} onChange={e => setCustomerCompany(e.target.value)} isOptional />
+                                <div className="flex justify-end gap-4 pt-4">
                                     <button type="button" className="px-5 py-2 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors" onClick={() => setShowCustomerModal(false)}>Cancel</button>
                                     <button type="submit" className="px-5 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-semibold transition-colors shadow-sm">Submit & Save</button>
                                 </div>
