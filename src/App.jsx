@@ -4,7 +4,7 @@ const App = () => {
     // URL for the Cloudflare Worker for file uploads
     const WORKER_URL = "https://customerfontselection-worker.tom-4a9.workers.dev";
     const DEFAULT_TEXT_PLACEHOLDER = 'Type your text here...';
-    const MAX_SELECTED_FONTS = 3; // --- Font selection limit is now restored ---
+    // const MAX_SELECTED_FONTS = 3; // --- Font selection limit is now restored ---
 
     // --- FINAL REVISION: Font Structure with Exact PostScript Names ---
     // Using precise PostScript names ensures compatibility with design software like CorelDraw.
