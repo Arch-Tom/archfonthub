@@ -31,7 +31,10 @@ body {
     }
 }
 
-/* ----------- Font face rules for all available fonts ----------- */
+/* --- Corrected & Complete Font-Face Rules --- */
+/* This section ensures that the font-family names used in your React app */
+/* exactly match the CSS definitions. This is critical for SVG exports */
+/* to recognize the text as editable in programs like CorelDraw. */
 
 /* AMAZONE BT */
 @font-face {
@@ -42,7 +45,7 @@ body {
     font-display: swap;
 }
 
-/* ARIAL (Regular, Bold, Italic, BoldItalic) */
+/* ARIAL */
 @font-face {
     font-family: 'Arial';
     src: url('/fonts/ArialMT.woff2') format('woff2'), url('/fonts/ArialMT.woff') format('woff');
@@ -92,7 +95,7 @@ body {
     font-display: swap;
 }
 
-/* BENGUIAT (and ITC by BT) */
+/* BENGUIAT */
 @font-face {
     font-family: 'Benguiat';
     src: url('/fonts/Benguiat.woff2') format('woff2'), url('/fonts/Benguiat.woff') format('woff');
@@ -101,6 +104,7 @@ body {
     font-display: swap;
 }
 
+/* BENGUIAT ITC BY BT */
 @font-face {
     font-family: 'Benguiat ITC by BT';
     src: url('/fonts/BenguiatITCbyBT-Bold.woff2') format('woff2'), url('/fonts/BenguiatITCbyBT-Bold.woff') format('woff');
@@ -143,7 +147,7 @@ body {
     font-display: swap;
 }
 
-/* CALIBRI (Normal, Bold, Italic, BoldItalic) */
+/* CALIBRI */
 @font-face {
     font-family: 'Calibri';
     src: url('/fonts/Calibri.woff2') format('woff2'), url('/fonts/Calibri.woff') format('woff');
@@ -176,7 +180,7 @@ body {
     font-display: swap;
 }
 
-/* CENTURY GOTHIC (All known variants) */
+/* CENTURY GOTHIC */
 @font-face {
     font-family: 'Century Gothic';
     src: url('/fonts/CenturyGothicPaneuropean.woff2') format('woff2'), url('/fonts/CenturyGothicPaneuropean.woff') format('woff');
@@ -195,14 +199,6 @@ body {
 
 @font-face {
     font-family: 'Century Gothic';
-    src: url('/fonts/CenturyGothicPaneuropean-BoldItalic.woff2') format('woff2'), url('/fonts/CenturyGothicPaneuropean-BoldItalic.woff') format('woff');
-    font-weight: bold;
-    font-style: italic;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Century Gothic';
     src: url('/fonts/CenturyGothicPaneuropean-ItalicMT.woff2') format('woff2'), url('/fonts/CenturyGothicPaneuropean-ItalicMT.woff') format('woff');
     font-weight: normal;
     font-style: italic;
@@ -211,13 +207,13 @@ body {
 
 @font-face {
     font-family: 'Century Gothic';
-    src: url('/fonts/CenturyGothicPaneuropean-BoldItalicMT.woff2') format('woff2'), url('/fonts/CenturyGothicPaneuropean-BoldItalicMT.woff') format('woff');
+    src: url('/fonts/CenturyGothicPaneuropean-BoldItalic.woff2') format('woff2'), url('/fonts/CenturyGothicPaneuropean-BoldItalic.woff') format('woff');
     font-weight: bold;
     font-style: italic;
     font-display: swap;
 }
 
-/* CENTURY SCHOOLBOOK (add more if you have variants) */
+/* CENTURY SCHOOLBOOK */
 @font-face {
     font-family: 'Century Schoolbook';
     src: url('/fonts/CenturySchoolbook.woff2') format('woff2'), url('/fonts/CenturySchoolbook.woff') format('woff');
@@ -226,7 +222,7 @@ body {
     font-display: swap;
 }
 
-/* CHOCOLATE BOX */
+/* CHOCOLATEBOX */
 @font-face {
     font-family: 'ChocolateBox';
     src: url('/fonts/ChocolateBox.woff2') format('woff2'), url('/fonts/ChocolateBox.woff') format('woff');
@@ -239,7 +235,7 @@ body {
 @font-face {
     font-family: 'CollegiateBlackFLF';
     src: url('/fonts/CollegiateBlackFLF.woff2') format('woff2'), url('/fonts/CollegiateBlackFLF.woff') format('woff');
-    font-weight: 500;
+    font-weight: normal;
     font-style: normal;
     font-display: swap;
 }
@@ -247,12 +243,12 @@ body {
 @font-face {
     font-family: 'CollegiateOutlineFLF';
     src: url('/fonts/CollegiateOutlineFLF.woff2') format('woff2'), url('/fonts/CollegiateOutlineFLF.woff') format('woff');
-    font-weight: 500;
+    font-weight: normal;
     font-style: normal;
     font-display: swap;
 }
 
-/* COPPRPLGOTH BT / COPPERPLATE GOTHIC */
+/* COPPRPLGOTH BT */
 @font-face {
     font-family: 'CopprplGoth BT';
     src: url('/fonts/CopperplateGothicBT-Roman.woff2') format('woff2'), url('/fonts/CopperplateGothicBT-Roman.woff') format('woff');
@@ -314,7 +310,7 @@ body {
     font-display: swap;
 }
 
-/* TIMES NEW ROMAN (Regular, Bold, Italic, BoldItalic) */
+/* TIMES NEW ROMAN */
 @font-face {
     font-family: 'Times New Roman';
     src: url('/fonts/TimesNewRomanPSMT.woff2') format('woff2'), url('/fonts/TimesNewRomanPSMT.woff') format('woff');
@@ -356,7 +352,7 @@ body {
     font-display: swap;
 }
 
-/* ITC ZAPF CHANCERY, ZAPF HUMANIST */
+/* ITC ZAPF CHANCERY */
 @font-face {
     font-family: 'ITC Zapf Chancery';
     src: url('/fonts/ZapfChancery-Roman.woff2') format('woff2'), url('/fonts/ZapfChancery-Roman.woff') format('woff');
@@ -365,6 +361,7 @@ body {
     font-display: swap;
 }
 
+/* ZAPF HUMANIST */
 @font-face {
     font-family: 'Zapf Humanist';
     src: url('/fonts/ZHUM601D.woff2') format('woff2'), url('/fonts/ZHUM601D.woff') format('woff');
