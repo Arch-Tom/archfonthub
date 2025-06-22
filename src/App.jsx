@@ -42,8 +42,8 @@ const App = () => {
         ],
         'Script & Display': [
             { name: 'Amazone BT', styles: { regular: 'AmazonRg' } },
-            // REMOVED BlackChancery
-            // REMOVED ChocolateBox
+            { name: 'BlackChancery', styles: { regular: 'BlackChancery' } },
+            { name: 'ChocolateBox', styles: { regular: 'ChocolateBox' } },
             { name: 'Collegiate', styles: { black: 'CollegiateBlackFLF', outline: 'CollegiateOutlineFLF' } },
             { name: 'Great Vibes', styles: { regular: 'GreatVibes-Regular' } },
             { name: 'Honey Script', styles: { light: 'HONEYSCL', semiBold: 'HONEYSSB' } },

@@ -220,3 +220,17 @@ body {
     font-family: 'TinplateTitlingBlack';
     src: url('/fonts/TinplateTitlingBlack.ttf') format('truetype');
 }
+
+/* Black Chancery */
+@font-face {
+    font-family: 'BlackChancery';
+    src: url('/fonts/BlackChancery.woff2') format('woff2'), url('/fonts/BlackChancery.woff') format('woff');
+    font-display: swap;
+}
+
+/* Chocolate Box */
+@font-face {
+    font-family: 'ChocolateBox';
+    src: url('/fonts/ChocolateBox.woff2') format('woff2'), url('/fonts/ChocolateBox.woff') format('woff');
+    font-display: swap;
+}
