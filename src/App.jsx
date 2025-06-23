@@ -23,37 +23,34 @@ const App = () => {
     const WORKER_URL = "https://customerfontselection-worker.tom-4a9.workers.dev";
     const DEFAULT_TEXT_PLACEHOLDER = 'Type your text here...';
 
-    // --- FINAL, MOST ROBUST FONT STRUCTURE ---
-    // This structure maps a user-friendly style name (e.g., 'bold') to its exact
-    // PostScript name (e.g., 'Arial-BoldMT'), which is needed for CorelDraw & browser preview.
+    // This font library is for the browser preview ONLY.
+    // The worker will have its own logic for the final SVG export.
     const fontLibrary = {
         'Sans-serif': [
             { name: 'Arial', styles: { regular: 'ArialMT', bold: 'Arial-BoldMT', italic: 'Arial-ItalicMT', boldItalic: 'Arial-BoldItalicMT' } },
-            { name: 'Calibri', styles: { regular: 'Calibri', bold: 'Calibri-Bold', italic: 'Calibri-Italic', boldItalic: 'Calibri-BoldItalic' } },
-            { name: 'Century Gothic', styles: { regular: 'CenturyGothic', bold: 'CenturyGothic-Bold', italic: 'CenturyGothic-Italic', boldItalic: 'CenturyGothic-BoldItalic' } },
-            { name: 'Berlin Sans FB', styles: { regular: 'BerlinSansFB', bold: 'BerlinSansFB-Bold' } },
-            { name: 'Bebas Neue', styles: { regular: 'BebasNeue', bold: 'BebasNeue-Bold' } },
-            { name: 'Zapf Humanist', styles: { regular: 'ZapfHumanist', bold: 'ZapfHumanist601BT-Demi' } },
+            { name: 'Calibri', styles: { regular: 'Calibri', bold: 'Calibri-Bold', italic: 'Calibri-Italic' } },
+            { name: 'Century Gothic', styles: { regular: 'CenturyGothic', bold: 'CenturyGothic-Bold', boldItalic: 'CenturyGothic-BoldItalic' } },
+            { name: 'Berlin Sans FB', styles: { regular: 'BRLNSR', bold: 'BRLNSB' } },
+            { name: 'Bebas Neue', styles: { regular: 'BebasNeue-Regular', bold: 'BebasNeue-Bold' } },
+            { name: 'Zapf Humanist', styles: { demi: 'ZHUM601D' } },
         ],
         'Serif': [
             { name: 'Times New Roman', styles: { regular: 'TimesNewRomanPSMT', bold: 'TimesNewRomanPS-BoldMT', italic: 'TimesNewRomanPS-ItalicMT', boldItalic: 'TimesNewRomanPS-BoldItalicMT' } },
-            { name: 'Garamond', styles: { regular: 'Garamond' } },
-            { name: 'Benguiat', styles: { regular: 'Benguiat' } },
-            { name: 'Benguiat ITC by BT', styles: { bold: 'BenguiatITCbyBT-Bold', italic: 'BenguiatITCbyBT-BookItalic' } },
-            { name: 'Century Schoolbook', styles: { regular: 'CenturySchoolbook', bold: 'SCHLBKB' } },
-            { name: 'CopprplGoth BT', styles: { regular: 'CopperplateGothicBT-Roman' } },
+            { name: 'Garamond', styles: { regular: 'GARA' } },
+            { name: 'Benguiat', styles: { regular: 'Benguiat', bold: 'BENGUIAB', italic: 'BenguiatITCbyBT-BookItalic' } },
+            { name: 'Century Schoolbook', styles: { regular: 'CENSCBK', bold: 'SCHLBKB', boldItalic: 'SCHLBKBI' } },
+            { name: 'Copperplate Gothic', styles: { regular: 'Copperplate Gothic' } },
         ],
         'Script & Display': [
-            { name: 'Amazone BT', styles: { regular: 'AmazoneBT-Regular' } },
+            { name: 'Amazone BT', styles: { regular: 'AmazonRg' } },
             { name: 'BlackChancery', styles: { regular: 'BlackChancery' } },
             { name: 'ChocolateBox', styles: { regular: 'ChocolateBox' } },
-            { name: 'CollegiateBlackFLF', styles: { regular: 'CollegiateBlackFLF' } },
-            { name: 'CollegiateOutlineFLF', styles: { regular: 'CollegiateOutlineFLF' } },
+            { name: 'Collegiate', styles: { black: 'CollegiateBlackFLF', outline: 'CollegiateOutlineFLF' } },
             { name: 'Great Vibes', styles: { regular: 'GreatVibes-Regular' } },
-            { name: 'Honey Script', styles: { light: 'HoneyScript-Light', semiBold: 'HoneyScript-SemiBold' } },
+            { name: 'Honey Script', styles: { light: 'HONEYSCL', semiBold: 'HONEYSSB' } },
             { name: 'I Love Glitter', styles: { regular: 'ILoveGlitter' } },
             { name: 'ITC Zapf Chancery', styles: { regular: 'ZapfChancery-Roman' } },
-            { name: 'Murray Hill', styles: { regular: 'MurrayHill' } },
+            { name: 'Murray Hill', styles: { regular: 'MurrayHill-Regular' } },
             { name: 'Tinplate Titling Black', styles: { regular: 'TinplateTitlingBlack' } },
         ],
     };
@@ -69,7 +66,8 @@ const App = () => {
     const [customerName, setCustomerName] = useState('');
     const [customerCompany, setCustomerCompany] = useState('');
     const [orderNumber, setOrderNumber] = useState('');
-    const [pendingSvgContent, setPendingSvgContent] = useState(null);
+    // The pendingSvgContent state is no longer needed
+    // const [pendingSvgContent, setPendingSvgContent] = useState(null);
 
     const textInputRef = useRef(null);
 
@@ -116,57 +114,21 @@ const App = () => {
         const newText = text.substring(0, start) + glyph + text.substring(end);
         setCustomText(newText);
         textarea.focus();
-        // Move cursor after the inserted glyph
         setTimeout(() => {
             textarea.selectionStart = textarea.selectionEnd = start + glyph.length;
         }, 0);
     };
 
-    // Generates the SVG content and shows the customer info modal
+    // *** UPDATED: This function no longer generates the SVG. It just validates and opens the modal. ***
     const handleSaveSvg = () => {
         if (selectedFonts.length === 0 || customText.trim() === '') {
             showMessage('Please select at least one font and enter some text to save an SVG.');
             return;
         }
-        const lines = customText.split('\n').filter(line => line.trim() !== '');
-        if (lines.length === 0) {
-            showMessage('Please enter some text to save an SVG.');
-            return;
-        }
-
-        let svgTextElements = '';
-        const lineHeight = fontSize * 1.4;
-        const labelFontSize = 16;
-        const padding = 20;
-        let y = padding;
-
-        selectedFonts.forEach((font, fontIndex) => {
-            const activeFontFamily = font.styles[font.activeStyle];
-            const styleName = font.activeStyle.charAt(0).toUpperCase() + font.activeStyle.slice(1);
-
-            y += labelFontSize + 10;
-            svgTextElements += `< text x = "${padding}" y = "${y}" font - family="Arial" font - size="${labelFontSize}" fill = "#6b7280" font - weight="600" > ${ font.name } (${ styleName })</text >\n`;
-            y += lineHeight * 0.5;
-
-            lines.forEach((line) => {
-                const sanitizedLine = line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                y += lineHeight;
-                svgTextElements += `< text x = "${padding}" y = "${y}" font - family="${activeFontFamily}" font - size="${fontSize}" fill = "#181717" > ${ sanitizedLine }</text >\n`;
-            });
-
-            if (fontIndex < selectedFonts.length - 1) {
-                y += lineHeight * 0.75; // Add extra space between font previews
-            }
-        });
-
-        const svgWidth = 800;
-        const svgHeight = y + padding;
-        const fullSvg = `< svg xmlns = "http://www.w3.org/2000/svg" width = "${svgWidth}" height = "${svgHeight}" style = "background-color: #FFF;" >\n${ svgTextElements }</svg > `;
-        setPendingSvgContent(fullSvg);
         setShowCustomerModal(true);
     };
 
-    // Handles the submission of customer info, saves the SVG locally, and uploads it
+    // *** UPDATED: This function now sends all data to the worker and handles the download. ***
     const handleCustomerModalSubmit = async (e) => {
         e.preventDefault();
         if (!orderNumber.trim() || !customerName.trim()) {
@@ -181,41 +143,50 @@ const App = () => {
             customerCompany.trim() ? formatForFilename(customerCompany) : ''
         ].filter(Boolean).join('_') + '.svg';
 
-        // Local Save
-        try {
-            const blob = new Blob([pendingSvgContent], { type: 'image/svg+xml' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            showMessage('SVG saved locally!');
-        } catch (error) {
-            showMessage(`Could not save file locally: ${ error.message } `);
-        }
+        // This object contains all the data the worker needs to generate the proof.
+        const proofData = {
+            customText,
+            fontSize,
+            selectedFonts, // The full array of font objects with their active styles
+            filename,
+        };
 
-        // Upload to Worker
         try {
-            const response = await fetch(`${ WORKER_URL } /${filename}`, {
-method: 'PUT',
-    headers: { 'Content-Type': 'image/svg+xml' },
-body: pendingSvgContent
+            showMessage('Generating SVG proof... Please wait.');
+
+            const response = await fetch(`${ WORKER_URL } /generate-proof`, {
+method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify(proofData)
             });
-if (!response.ok) throw new Error(await response.text());
-showMessage('SVG uploaded successfully!');
+
+if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Worker responded with an error: ${errorText}`);
+}
+
+// The worker responds with the final SVG file blob.
+const blob = await response.blob();
+const url = URL.createObjectURL(blob);
+const a = document.createElement('a');
+a.href = url;
+a.download = filename;
+document.body.appendChild(a);
+a.click();
+document.body.removeChild(a);
+URL.revokeObjectURL(url);
+
+showMessage('SVG proof downloaded successfully!');
+
         } catch (error) {
-    console.error('Upload error:', error);
-    showMessage(`Error uploading SVG: ${error.message}`, 6000);
+    console.error('Failed to generate or download SVG:', error);
+    showMessage(`Error: ${error.message}`, 6000);
 }
 
 // Reset state
 setCustomerName('');
 setCustomerCompany('');
 setOrderNumber('');
-setPendingSvgContent(null);
     };
 
 // List of glyphs available for insertion
