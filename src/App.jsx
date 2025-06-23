@@ -20,10 +20,10 @@ const FormInput = ({ label, id, value, onChange, required = false, isOptional = 
 );
 
 const App = () => {
+    const WORKER_URL = "https://customerfontselection-worker.tom-4a9.workers.dev";
     const DEFAULT_TEXT_PLACEHOLDER = 'Type your text here...';
 
-    // This font library is for the browser preview ONLY.
-    // The worker will have its own logic for the final SVG export.
+    // --- UPDATED FONT LIBRARY WITHOUT BLACK CHANCERY OR CHOCOLATE BOX ---
     const fontLibrary = {
         'Sans-serif': [
             { name: 'Arial', styles: { regular: 'ArialMT', bold: 'Arial-BoldMT', italic: 'Arial-ItalicMT', boldItalic: 'Arial-BoldItalicMT' } },
@@ -65,6 +65,7 @@ const App = () => {
     const [customerName, setCustomerName] = useState('');
     const [customerCompany, setCustomerCompany] = useState('');
     const [orderNumber, setOrderNumber] = useState('');
+    const [pendingSvgContent, setPendingSvgContent] = useState(null);
 
     const textInputRef = useRef(null);
 
@@ -111,19 +112,57 @@ const App = () => {
         const newText = text.substring(0, start) + glyph + text.substring(end);
         setCustomText(newText);
         textarea.focus();
+        // Move cursor after the inserted glyph
         setTimeout(() => {
             textarea.selectionStart = textarea.selectionEnd = start + glyph.length;
         }, 0);
     };
 
+    // Generates the SVG content and shows the customer info modal
     const handleSaveSvg = () => {
         if (selectedFonts.length === 0 || customText.trim() === '') {
             showMessage('Please select at least one font and enter some text to save an SVG.');
             return;
         }
+        const lines = customText.split('\n').filter(line => line.trim() !== '');
+        if (lines.length === 0) {
+            showMessage('Please enter some text to save an SVG.');
+            return;
+        }
+
+        let svgTextElements = '';
+        const lineHeight = fontSize * 1.4;
+        const labelFontSize = 16;
+        const padding = 20;
+        let y = padding;
+
+        selectedFonts.forEach((font, fontIndex) => {
+            const activeFontFamily = font.styles[font.activeStyle];
+            const styleName = font.activeStyle.charAt(0).toUpperCase() + font.activeStyle.slice(1);
+
+            y += labelFontSize + 10;
+            svgTextElements += `<text x="${padding}" y="${y}" font-family="Arial" font-size="${labelFontSize}" fill="#6b7280" font-weight="600">${font.name} (${styleName})</text>\n`;
+            y += lineHeight * 0.5;
+
+            lines.forEach((line) => {
+                const sanitizedLine = line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                y += lineHeight;
+                svgTextElements += `<text x="${padding}" y="${y}" font-family="${activeFontFamily}" font-size="${fontSize}" fill="#181717">${sanitizedLine}</text>\n`;
+            });
+
+            if (fontIndex < selectedFonts.length - 1) {
+                y += lineHeight * 0.75; // Add extra space between font previews
+            }
+        });
+
+        const svgWidth = 800;
+        const svgHeight = y + padding;
+        const fullSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="${svgWidth}" height="${svgHeight}" style="background-color: #FFF;">\n${svgTextElements}</svg>`;
+        setPendingSvgContent(fullSvg);
         setShowCustomerModal(true);
     };
 
+    // Handles the submission of customer info, saves the SVG locally, and uploads it
     const handleCustomerModalSubmit = async (e) => {
         e.preventDefault();
         if (!orderNumber.trim() || !customerName.trim()) {
@@ -138,29 +177,9 @@ const App = () => {
             customerCompany.trim() ? formatForFilename(customerCompany) : ''
         ].filter(Boolean).join('_') + '.svg';
 
-        const proofData = {
-            customText,
-            fontSize,
-            selectedFonts,
-            filename,
-        };
-
+        // Local Save
         try {
-            showMessage('Generating SVG proof... Please wait.');
-
-            // *** UPDATED: The full URL is now hardcoded here to prevent any errors. ***
-            const response = await fetch(`https://customerfontselection-worker.tom-4a9.workers.dev/generate-proof`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(proofData)
-            });
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(`Worker responded with an error: ${errorText}`);
-            }
-
-            const blob = await response.blob();
+            const blob = new Blob([pendingSvgContent], { type: 'image/svg+xml' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
@@ -169,20 +188,33 @@ const App = () => {
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-
-            showMessage('SVG proof downloaded successfully!');
-
+            showMessage('SVG saved locally!');
         } catch (error) {
-            console.error('Failed to generate or download SVG:', error);
-            showMessage(`Error: ${error.message}`, 6000);
+            showMessage(`Could not save file locally: ${error.message}`);
+        }
+
+        // Upload to Worker
+        try {
+            const response = await fetch(`${WORKER_URL}/${filename}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'image/svg+xml' },
+                body: pendingSvgContent
+            });
+            if (!response.ok) throw new Error(await response.text());
+            showMessage('SVG uploaded successfully!');
+        } catch (error) {
+            console.error('Upload error:', error);
+            showMessage(`Error uploading SVG: ${error.message}`, 6000);
         }
 
         // Reset state
         setCustomerName('');
         setCustomerCompany('');
         setOrderNumber('');
+        setPendingSvgContent(null);
     };
 
+    // List of glyphs available for insertion
     const glyphs = ['©', '®', '™', '&', '#', '+', '–', '—', '…', '•', '°', '·', '♥', '♡', '♦', '♢', '♣', '♧', '♠', '♤', '★', '☆', '♪', '♫', '←', '→', '↑', '↓', '∞', '†', '✡\uFE0E', '✞', '✠', '±', '½', '¼', 'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ', 'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ρ', 'Σ', 'Τ', 'Υ', 'Φ', 'Χ', 'Ψ', 'Ω'];
 
     return (
@@ -334,3 +366,5 @@ const App = () => {
 };
 
 export default App;
+
+/* Commit to push to GitHub to save working version - - font issue on export -- all fonts export as normal */
