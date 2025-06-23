@@ -1,4 +1,7 @@
-﻿import React, { useState, useRef } from 'react';
+﻿Of course.Here is the complete, updated content for `src/App.jsx` with the corrected `fontLibrary` object placed in it.
+
+```jsx
+import React, { useState, useRef } from 'react';
 
 // This component remains outside the main App component for good practice.
 const FormInput = ({ label, id, value, onChange, required = false, isOptional = false }) => (
