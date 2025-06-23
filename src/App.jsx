@@ -38,7 +38,7 @@ const App = () => {
             { name: 'Garamond', styles: { regular: 'GARA' } },
             { name: 'Benguiat', styles: { regular: 'Benguiat', bold: 'BENGUIAB', italic: 'BenguiatITCbyBT-BookItalic' } },
             { name: 'Century Schoolbook', styles: { regular: 'CENSCBK', bold: 'SCHLBKB', boldItalic: 'SCHLBKBI' } },
-            { name: 'Copperplate Gothic', styles: { regular: 'Copperplate Gothic' } },
+            { name: 'CopprplGoth BT', styles: { regular: 'Copperplate Gothic' } },
         ],
         'Script & Display': [
             { name: 'Amazone BT', styles: { regular: 'AmazonRg' } },
