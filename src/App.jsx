@@ -19,16 +19,19 @@ const FormInput = ({ label, id, value, onChange, required = false, isOptional = 
     </div>
 );
 
+
 const App = () => {
     const WORKER_URL = "https://customerfontselection-worker.tom-4a9.workers.dev";
     const DEFAULT_TEXT_PLACEHOLDER = 'Type your text here...';
+    // const MAX_SELECTED_FONTS = 3; // Font selection limit remains disabled for testing.
 
-    // --- UPDATED FONT LIBRARY WITHOUT BLACK CHANCERY OR CHOCOLATE BOX ---
+    // --- UPDATED FONT LIBRARY WITH CORRECTED POSTSCRIPT NAMES ---
+    // The names for Benguiat Italic and Zapf Chancery have been fixed based on the CorelDraw error.
     const fontLibrary = {
         'Sans-serif': [
             { name: 'Arial', styles: { regular: 'ArialMT', bold: 'Arial-BoldMT', italic: 'Arial-ItalicMT', boldItalic: 'Arial-BoldItalicMT' } },
-            { name: 'Calibri', styles: { regular: 'Calibri', bold: 'Calibri-Bold', italic: 'Calibri-Italic' } },
-            { name: 'Century Gothic', styles: { regular: 'CenturyGothic', bold: 'CenturyGothic-Bold', boldItalic: 'CenturyGothic-BoldItalic' } },
+            { name: 'Calibri', styles: { regular: 'Calibri', bold: 'Calibri-Bold', italic: 'Calibri-Italic' } }, // Note: No Bold Italic file found
+            { name: 'Century Gothic', styles: { regular: 'CenturyGothic', bold: 'CenturyGothic-Bold', boldItalic: 'CenturyGothic-BoldItalic' } }, // Note: No Italic file found
             { name: 'Berlin Sans FB', styles: { regular: 'BRLNSR', bold: 'BRLNSB' } },
             { name: 'Bebas Neue', styles: { regular: 'BebasNeue-Regular', bold: 'BebasNeue-Bold' } },
             { name: 'Zapf Humanist', styles: { demi: 'ZHUM601D' } },
@@ -36,18 +39,20 @@ const App = () => {
         'Serif': [
             { name: 'Times New Roman', styles: { regular: 'TimesNewRomanPSMT', bold: 'TimesNewRomanPS-BoldMT', italic: 'TimesNewRomanPS-ItalicMT', boldItalic: 'TimesNewRomanPS-BoldItalicMT' } },
             { name: 'Garamond', styles: { regular: 'GARA' } },
+            // --- FIX: Consolidated Benguiat and corrected Italic PostScript name ---
             { name: 'Benguiat', styles: { regular: 'Benguiat', bold: 'BENGUIAB', italic: 'BenguiatITCbyBT-BookItalic' } },
             { name: 'Century Schoolbook', styles: { regular: 'CENSCBK', bold: 'SCHLBKB', boldItalic: 'SCHLBKBI' } },
-            { name: 'Copperplate Gothic', styles: { regular: 'Copperplate Gothic' } },
+            { name: 'CopprplGoth BT', styles: { regular: 'Copperplate Gothic' } },
         ],
         'Script & Display': [
             { name: 'Amazone BT', styles: { regular: 'AmazonRg' } },
-            { name: 'BlackChancery', styles: { regular: 'BlackChancery' } },
-            { name: 'ChocolateBox', styles: { regular: 'ChocolateBox' } },
+            { name: 'BlackChancery', styles: { regular: 'BLACKCHA' } },
+            { name: 'ChocolateBox', styles: { regular: 'C_BOX' } },
             { name: 'Collegiate', styles: { black: 'CollegiateBlackFLF', outline: 'CollegiateOutlineFLF' } },
             { name: 'Great Vibes', styles: { regular: 'GreatVibes-Regular' } },
             { name: 'Honey Script', styles: { light: 'HONEYSCL', semiBold: 'HONEYSSB' } },
             { name: 'I Love Glitter', styles: { regular: 'ILoveGlitter' } },
+            // --- FIX: Corrected Zapf Chancery PostScript name ---
             { name: 'ITC Zapf Chancery', styles: { regular: 'ZapfChancery-Roman' } },
             { name: 'Murray Hill', styles: { regular: 'MurrayHill-Regular' } },
             { name: 'Tinplate Titling Black', styles: { regular: 'TinplateTitlingBlack' } },
@@ -366,4 +371,3 @@ const App = () => {
 };
 
 export default App;
-
