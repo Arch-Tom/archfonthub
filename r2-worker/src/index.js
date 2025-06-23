@@ -104,9 +104,8 @@ async function createSvgWithEmbeddedFonts(data, env) {
 	const { customText, fontSize, selectedFonts } = data;
 
 	const fontFaceDeclarations = [];
-	const collectedFonts = new Map(); // Use a map to avoid duplicate font fetching
+	const collectedFonts = new Map();
 
-	// Collect all unique font styles that need to be fetched
 	for (const font of selectedFonts) {
 		const postscriptName = font.styles[font.activeStyle];
 		if (postscriptName && !collectedFonts.has(postscriptName)) {
@@ -117,13 +116,14 @@ async function createSvgWithEmbeddedFonts(data, env) {
 		}
 	}
 
-	// Fetch and encode each unique font
 	for (const [postscriptName, filename] of collectedFonts.entries()) {
 		const fontObject = await env.ARCH_FONT_UPLOADS.get(`fonts/${filename}`);
 		if (fontObject) {
 			const fontBuffer = await fontObject.arrayBuffer();
 			const base64Font = arrayBufferToBase64(fontBuffer);
-			const format = filename.endsWith('.otf') ? 'opentype' : 'truetype';
+
+			// *** UPDATED: Using more standard 'otf' and 'ttf' formats ***
+			const format = filename.toLowerCase().endsWith('.otf') ? 'otf' : 'ttf';
 
 			fontFaceDeclarations.push(`
                 @font-face {
@@ -134,7 +134,6 @@ async function createSvgWithEmbeddedFonts(data, env) {
 		}
 	}
 
-	// Build the SVG text elements
 	let svgTextElements = '';
 	const lines = customText.split('\n').filter(line => line.trim() !== '');
 	const lineHeight = fontSize * 1.4;
@@ -147,7 +146,7 @@ async function createSvgWithEmbeddedFonts(data, env) {
 		const styleName = font.activeStyle.charAt(0).toUpperCase() + font.activeStyle.slice(1);
 
 		y += labelFontSize + 10;
-		svgTextElements += `<text x="${padding}" y="${y}" font-family="Arial" font-size="${labelFontSize}" fill="#6b7280" font-weight="600">${font.name} (${styleName})</text>\n`;
+		svgTextElements += `<text x="${padding}" y="${y}" font-family="Arial, sans-serif" font-size="${labelFontSize}" fill="#6b7280" font-weight="600">${font.name} (${styleName})</text>\n`;
 		y += lineHeight * 0.5;
 
 		lines.forEach((line) => {
@@ -164,19 +163,16 @@ async function createSvgWithEmbeddedFonts(data, env) {
 	const svgWidth = 800;
 	const svgHeight = y + padding;
 
-	// Assemble the final SVG string
+	// *** UPDATED: Removed the CDATA wrapper for better compatibility ***
 	return `<svg xmlns="http://www.w3.org/2000/svg" width="${svgWidth}" height="${svgHeight}">
-        <defs>
-            <style type="text/css">
-                <![CDATA[
-                    ${fontFaceDeclarations.join('\n')}
-                ]]>
-            </style>
-        </defs>
+        <style>
+            ${fontFaceDeclarations.join('\n')}
+        </style>
         <rect width="100%" height="100%" fill="#FFF"/>
         ${svgTextElements}
     </svg>`;
 }
+
 
 // --- UTILITIES ---
 
@@ -202,18 +198,14 @@ function handleOptions(request) {
 		request.headers.get('Access-Control-Request-Method') !== null &&
 		request.headers.get('Access-Control-Request-Headers') !== null
 	) {
-		// Handle CORS preflight requests.
 		return new Response(null, { headers: corsHeaders });
 	} else {
-		// Handle standard OPTIONS requests.
 		return new Response(null, {
 			headers: { Allow: 'GET, POST, OPTIONS' },
 		});
 	}
 }
 
-// This map connects the PostScript name (used in SVGs) to the actual font filename in R2.
-// This is the critical piece that solves the font name mismatch problem.
 const FONT_MAP = {
 	'ArialMT': 'arial.ttf',
 	'Arial-BoldMT': 'arialbd.ttf',
@@ -222,16 +214,16 @@ const FONT_MAP = {
 	'Calibri': 'CALIBRI.TTF',
 	'Calibri-Bold': 'CALIBRIB_0.TTF',
 	'Calibri-Italic': 'CALIBRII.TTF',
-	'Calibri-BoldItalic': 'CALIBRIZ.TTF', // Assuming a filename for Bold Italic
+	'Calibri-BoldItalic': 'CALIBRIZ.TTF',
 	'CenturyGothic': 'CenturyGothicPaneuropeanRegular.ttf',
 	'CenturyGothic-Bold': 'CenturyGothicPaneuropeanBold.ttf',
-	'CenturyGothic-Italic': 'CenturyGothicPaneuropeanItalic.ttf', // Assuming filename
+	'CenturyGothic-Italic': 'CenturyGothicPaneuropeanItalic.ttf',
 	'CenturyGothic-BoldItalic': 'CenturyGothicPaneuropeanBoldItalic.ttf',
 	'BerlinSansFB': 'BRLNSR.TTF',
 	'BerlinSansFB-Bold': 'BRLNSB.TTF',
 	'BebasNeue': 'Bebas Neue Regular 400.ttf',
 	'BebasNeue-Bold': 'BebasNeue-Bold.otf',
-	'ZapfHumanist': 'ZHUM601D.TTF', // Note: your library has two Zapf, this one is likely the Demi
+	'ZapfHumanist': 'ZHUM601D.TTF',
 	'ZapfHumanist601BT-Demi': 'ZHUM601D.TTF',
 	'TimesNewRomanPSMT': 'TIMES.TTF',
 	'TimesNewRomanPS-BoldMT': 'timesbd.ttf',
