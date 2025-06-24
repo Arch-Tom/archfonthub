@@ -2,38 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
-/* --- Base Styles & Animations --- */
-:root {
-    --main-bg: #f8fafc;
-    --sidebar-bg: #0f172a;
-    --card-bg: #fff;
-    --accent: #2563eb;
-    --radius: 1.5rem;
-}
-
 body {
-    background: var(--main-bg);
+    background-color: #111827; /* Tailwind's bg-gray-900 */
+    font-family: 'Inter', sans-serif;
 }
 
-.animate-fade-in {
-    animation: fade-in 0.35s cubic-bezier(0.33, 1, 0.68, 1);
+/* Custom scrollbar for a modern dark theme */
+::-webkit-scrollbar {
+    width: 10px;
 }
 
-@keyframes fade-in {
-    from {
-        opacity: 0;
-        transform: translateY(32px) scale(0.98);
+::-webkit-scrollbar-track {
+    background: #1f2937; /* bg-gray-800 */
+}
+
+::-webkit-scrollbar-thumb {
+    background: #4b5563; /* bg-gray-600 */
+    border-radius: 10px;
+    border: 2px solid #1f2937; /* Add a border to match the track */
+}
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #6b7280; /* bg-gray-500 */
     }
 
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
+/* --- FONT-FACE RULES (Preserved from your original file) --- */
 
-/* ----------- CORRECTED AND COMPLETE FONT-FACE RULES ----------- */
-
-/* --- Sans-serif --- */
 @font-face {
     font-family: 'ArialMT';
     src: url('/fonts/arial.ttf');
@@ -330,5 +324,3 @@ body {
     font-family: 'TinplateTitlingBlack';
     src: url('/fonts/TinplateTitlingBlack.ttf');
 }
-
-/* Note: ChocolateBox is missing from the list and has been removed for now. */
