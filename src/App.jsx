@@ -1,6 +1,6 @@
 ﻿import React, { useState, useRef } from 'react';
 
-// This component remains outside the main App component for good practice.
+// Reusable component for form inputs
 const FormInput = ({ label, id, value, onChange, required = false, isOptional = false }) => (
     <div>
         <label htmlFor={id} className="block text-sm font-medium text-slate-700 mb-1">
@@ -19,12 +19,122 @@ const FormInput = ({ label, id, value, onChange, required = false, isOptional = 
     </div>
 );
 
+// Reusable component for buttons
+const ActionButton = ({ onClick, children, className = '' }) => (
+    <button
+        onClick={onClick}
+        className={`w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white font-bold py-5 px-8 rounded-2xl shadow-2xl hover:shadow-blue-200 hover:from-blue-700 hover:to-blue-600 transition-all duration-200 transform hover:scale-105 text-xl tracking-wide ${className}`}
+    >
+        {children}
+    </button>
+);
+
+// Sidebar component
+const Sidebar = () => (
+    <aside className="bg-gradient-to-b from-slate-800 to-slate-900 text-white w-full lg:w-80 lg:h-auto p-4 lg:p-8 flex-shrink-0 flex flex-col items-center justify-center lg:justify-start lg:pt-16 shadow-xl lg:rounded-r-3xl">
+        <div className="flex flex-row lg:flex-col items-center justify-center gap-4">
+            <div className="flex-shrink-0">
+                <img src="/images/Arch Vector Logo White.svg" alt="Arch Font Hub Logo" className="h-20 w-20 lg:h-40 lg:w-40 object-contain drop-shadow-lg" />
+            </div>
+            <div className="font-black text-2xl lg:text-3xl tracking-wide leading-tight text-white text-center">ARCH<br className="hidden lg:block" /> FONT HUB</div>
+        </div>
+        <p className="hidden lg:block mt-4 text-base text-slate-300 border-t border-slate-700 pt-6 text-center">Experiment with fonts and text display for customer proofs.</p>
+    </aside>
+);
+
+// Font selection component
+const FontSelector = ({ fontLibrary, selectedFonts, handleFontSelect }) => (
+    <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
+        <h2 className="text-2xl font-black text-slate-900 mb-6 tracking-tight">Font Selection</h2>
+        <div className="space-y-6">
+            {Object.entries(fontLibrary).map(([category, fonts]) => (
+                <div key={category}>
+                    <h3 className="text-md font-semibold text-slate-700 border-b-2 border-slate-200 pb-2 mb-3 tracking-wide">{category}</h3>
+                    <div className="flex flex-wrap gap-3">
+                        {fonts.map((font) => (
+                            <button
+                                key={font.name}
+                                onClick={() => handleFontSelect(font)}
+                                className={`px-4 py-2 rounded-xl text-base font-semibold border-2 transition-all duration-150 transform hover:scale-105 focus:outline-none
+                                    ${selectedFonts.some(f => f.name === font.name)
+                                        ? 'bg-blue-600 text-white border-blue-600 shadow-md'
+                                        : 'bg-white text-blue-900 border-blue-500 hover:bg-blue-50'
+                                    }`}
+                                style={{ fontFamily: font.styles[Object.keys(font.styles)[0]] }}
+                            >
+                                {font.name}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            ))}
+        </div>
+    </section>
+);
+
+// Text editor component
+const TextEditor = ({ customText, handleTextChange, textInputRef, setShowGlyphPalette, DEFAULT_TEXT_PLACEHOLDER }) => (
+    <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
+        <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-black text-slate-900 tracking-tight">Custom Text</h2>
+            <button onClick={() => setShowGlyphPalette(true)} className="px-4 py-2 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-sm">Ω Glyphs</button>
+        </div>
+        <textarea
+            ref={textInputRef}
+            className="w-full p-5 border-2 border-slate-200 rounded-xl shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 min-h-[120px] text-lg"
+            value={customText}
+            onChange={handleTextChange}
+            placeholder={DEFAULT_TEXT_PLACEHOLDER}
+        />
+    </section>
+);
+
+// Live preview component
+const LivePreview = ({ selectedFonts, customText, fontSize, handleFontSizeChange, handleStyleChange }) => (
+    <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
+        <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-black text-slate-900 tracking-tight">Live Preview</h2>
+            <div className="flex items-center gap-3">
+                <label htmlFor="fontSizeSlider" className="text-sm font-medium text-slate-600">Size</label>
+                <input id="fontSizeSlider" type="range" min="36" max="100" step="1" value={fontSize} onChange={handleFontSizeChange} className="w-32 lg:w-48 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600" />
+                <span className="text-sm font-medium text-slate-600 w-12 text-left">{fontSize}px</span>
+            </div>
+        </div>
+        <div className="bg-gradient-to-b from-slate-50 to-slate-200 p-6 rounded-xl min-h-[150px] space-y-10 border border-slate-100">
+            {selectedFonts.length > 0 && customText.trim() !== '' ? (
+                selectedFonts.map((font) => {
+                    const activeFontFamily = font.styles[font.activeStyle];
+                    return (
+                        <div key={`preview-${font.name}`} className="relative flex flex-col items-start gap-3">
+                            <div className="flex items-center gap-4 mb-2">
+                                <span className="bg-blue-600 text-white px-4 py-1 rounded-full text-xs font-bold shadow-sm z-10" style={{ fontFamily: 'Arial' }}>{font.name}</span>
+                                <div className="flex gap-1">
+                                    {Object.keys(font.styles).map(styleKey => (
+                                        <button
+                                            key={styleKey}
+                                            onClick={() => handleStyleChange(font.name, styleKey)}
+                                            className={`px-3 py-1 text-xs rounded-md border-2 transition-colors ${font.activeStyle === styleKey ? 'bg-slate-700 text-white border-slate-700' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-100'}`}
+                                        >
+                                            {styleKey.charAt(0).toUpperCase() + styleKey.slice(1)}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                            <p className="text-slate-800 break-words w-full" style={{ fontFamily: activeFontFamily, fontSize: `${fontSize}px`, lineHeight: 1.4 }}>{customText}</p>
+                        </div>
+                    )
+                })
+            ) : (
+                <div className="flex items-center justify-center h-full"><p className="text-slate-500 italic">Select fonts and enter text to see a live preview.</p></div>
+            )}
+        </div>
+    </section>
+);
 
 const App = () => {
     const WORKER_URL = "https://customerfontselection-worker.tom-4a9.workers.dev";
     const DEFAULT_TEXT_PLACEHOLDER = 'Type your text here...';
 
-    // --- FONT LIBRARY FULLY CORRECTED USING POSTSCRIPT NAMES ---
     const fontLibrary = {
         'Sans-serif': [
             { name: 'Arial', styles: { regular: 'ArialMT', bold: 'Arial-BoldMT', italic: 'Arial-ItalicMT', boldItalic: 'Arial-BoldItalicMT' } },
@@ -220,98 +330,18 @@ const App = () => {
 
     return (
         <div className="flex flex-col lg:flex-row min-h-screen bg-slate-100 font-sans">
-            <aside className="bg-gradient-to-b from-slate-800 to-slate-900 text-white w-full lg:w-80 lg:h-auto p-4 lg:p-8 flex-shrink-0 flex flex-col items-center justify-center lg:justify-start lg:pt-16 shadow-xl lg:rounded-r-3xl">
-                <div className="flex flex-row lg:flex-col items-center justify-center gap-4">
-                    <div className="flex-shrink-0">
-                        <img src="/images/Arch Vector Logo White.svg" alt="Arch Font Hub Logo" className="h-20 w-20 lg:h-40 lg:w-40 object-contain drop-shadow-lg" />
-                    </div>
-                    <div className="font-black text-2xl lg:text-3xl tracking-wide leading-tight text-white text-center">ARCH<br className="hidden lg:block" /> FONT HUB</div>
-                </div>
-                <p className="hidden lg:block mt-4 text-base text-slate-300 border-t border-slate-700 pt-6 text-center">Experiment with fonts and text display for customer proofs.</p>
-            </aside>
-
+            <Sidebar />
             <main className="flex-1 p-4 sm:p-8 lg:p-12">
                 <div className="max-w-7xl mx-auto">
                     <div className="space-y-10">
-                        <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
-                            <h2 className="text-2xl font-black text-slate-900 mb-6 tracking-tight">Font Selection</h2>
-                            <div className="space-y-6">
-                                {Object.entries(fontLibrary).map(([category, fonts]) => (
-                                    <div key={category}>
-                                        <h3 className="text-md font-semibold text-slate-700 border-b-2 border-slate-200 pb-2 mb-3 tracking-wide">{category}</h3>
-                                        <div className="flex flex-wrap gap-3">
-                                            {fonts.map((font) => (
-                                                <button
-                                                    key={font.name}
-                                                    onClick={() => handleFontSelect(font)}
-                                                    className={`px-4 py-2 rounded-xl text-base font-semibold border-2 transition-all duration-150 transform hover:scale-105 focus:outline-none
-                                                        ${selectedFonts.some(f => f.name === font.name)
-                                                            ? 'bg-blue-600 text-white border-blue-600 shadow-md'
-                                                            : 'bg-white text-blue-900 border-blue-500 hover:bg-blue-50'
-                                                        }`}
-                                                    style={{ fontFamily: font.styles[Object.keys(font.styles)[0]] }}
-                                                >
-                                                    {font.name}
-                                                </button>
-                                            ))}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </section>
-
-                        <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
-                            <div className="flex justify-between items-center mb-6">
-                                <h2 className="text-2xl font-black text-slate-900 tracking-tight">Custom Text</h2>
-                                <button onClick={() => setShowGlyphPalette(true)} className="px-4 py-2 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-sm">Ω Glyphs</button>
-                            </div>
-                            <textarea ref={textInputRef} className="w-full p-5 border-2 border-slate-200 rounded-xl shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 min-h-[120px] text-lg" value={customText} onChange={handleTextChange} placeholder={DEFAULT_TEXT_PLACEHOLDER} />
-                        </section>
-
-                        <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
-                            <div className="flex justify-between items-center mb-6">
-                                <h2 className="text-2xl font-black text-slate-900 tracking-tight">Live Preview</h2>
-                                <div className="flex items-center gap-3">
-                                    <label htmlFor="fontSizeSlider" className="text-sm font-medium text-slate-600">Size</label>
-                                    <input id="fontSizeSlider" type="range" min="36" max="100" step="1" value={fontSize} onChange={handleFontSizeChange} className="w-32 lg:w-48 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600" />
-                                    <span className="text-sm font-medium text-slate-600 w-12 text-left">{fontSize}px</span>
-                                </div>
-                            </div>
-                            <div className="bg-gradient-to-b from-slate-50 to-slate-200 p-6 rounded-xl min-h-[150px] space-y-10 border border-slate-100">
-                                {selectedFonts.length > 0 && customText.trim() !== '' ? (
-                                    selectedFonts.map((font) => {
-                                        const activeFontFamily = font.styles[font.activeStyle];
-                                        return (
-                                            <div key={`preview-${font.name}`} className="relative flex flex-col items-start gap-3">
-                                                <div className="flex items-center gap-4 mb-2">
-                                                    <span className="bg-blue-600 text-white px-4 py-1 rounded-full text-xs font-bold shadow-sm z-10" style={{ fontFamily: 'Arial' }}>{font.name}</span>
-                                                    <div className="flex gap-1">
-                                                        {Object.keys(font.styles).map(styleKey => (
-                                                            <button
-                                                                key={styleKey}
-                                                                onClick={() => handleStyleChange(font.name, styleKey)}
-                                                                className={`px-3 py-1 text-xs rounded-md border-2 transition-colors ${font.activeStyle === styleKey ? 'bg-slate-700 text-white border-slate-700' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-100'}`}
-                                                            >
-                                                                {styleKey.charAt(0).toUpperCase() + styleKey.slice(1)}
-                                                            </button>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                                <p className="text-slate-800 break-words w-full" style={{ fontFamily: activeFontFamily, fontSize: `${fontSize}px`, lineHeight: 1.4 }}>{customText}</p>
-                                            </div>
-                                        )
-                                    })
-                                ) : (
-                                    <div className="flex items-center justify-center h-full"><p className="text-slate-500 italic">Select fonts and enter text to see a live preview.</p></div>
-                                )}
-                            </div>
-                        </section>
+                        <FontSelector fontLibrary={fontLibrary} selectedFonts={selectedFonts} handleFontSelect={handleFontSelect} />
+                        <TextEditor customText={customText} handleTextChange={handleTextChange} textInputRef={textInputRef} setShowGlyphPalette={setShowGlyphPalette} DEFAULT_TEXT_PLACEHOLDER={DEFAULT_TEXT_PLACEHOLDER} />
+                        <LivePreview selectedFonts={selectedFonts} customText={customText} fontSize={fontSize} handleFontSizeChange={handleFontSizeChange} handleStyleChange={handleStyleChange} />
                     </div>
-
                     <div className="mt-12">
-                        <button className="w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white font-bold py-5 px-8 rounded-2xl shadow-2xl hover:shadow-blue-200 hover:from-blue-700 hover:to-blue-600 transition-all duration-200 transform hover:scale-105 text-xl tracking-wide" onClick={handleSaveSvg}>
+                        <ActionButton onClick={handleSaveSvg}>
                             Submit Fonts to Arch Engraving
-                        </button>
+                        </ActionButton>
                     </div>
                 </div>
             </main>
