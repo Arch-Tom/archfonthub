@@ -1,0 +1,239 @@
+Font Library Information
+========================
+
+Font Name:       Amazone BT
+PostScript Name: AmazoneBT-Regular
+File Name:       AmazonRg_0.ttf
+-------------------------
+Font Name:       Angelface
+PostScript Name: Angelface
+File Name:       Angelface.otf
+-------------------------
+Font Name:       Arial
+PostScript Name: ArialMT
+File Name:       arial.ttf
+-------------------------
+Font Name:       Arial
+PostScript Name: Arial-BoldMT
+File Name:       arialbd.ttf
+-------------------------
+Font Name:       Arial
+PostScript Name: Arial-BoldItalicMT
+File Name:       arialbi.ttf
+-------------------------
+Font Name:       Arial
+PostScript Name: Arial-ItalicMT
+File Name:       ariali.ttf
+-------------------------
+Font Name:       Bebas Neue
+PostScript Name: BebasNeue-Regular
+File Name:       Bebas Neue Regular 400.ttf
+-------------------------
+Font Name:       Bebas Neue
+PostScript Name: BebasNeue-Bold
+File Name:       BebasNeue-Bold.otf
+-------------------------
+Font Name:       Benguiat
+PostScript Name: Benguiat
+File Name:       Benguiat.ttf
+-------------------------
+Font Name:       Benguiat Bk BT
+PostScript Name: BenguiatITCbyBT-Bold
+File Name:       BENGUIAB.TTF
+-------------------------
+Font Name:       Benguiat Bk BT
+PostScript Name: BenguiatITCbyBT-BookItalic
+File Name:       benguini.ttf
+-------------------------
+Font Name:       Berlin Sans FB
+PostScript Name: BerlinSansFB-Bold
+File Name:       BRLNSB.TTF
+-------------------------
+Font Name:       Berlin Sans FB
+PostScript Name: BerlinSansFB-Reg
+File Name:       BRLNSR.TTF
+-------------------------
+Font Name:       Birds of Paradise  Personal use
+PostScript Name: BirdsofParadise-PersonaluseOnly
+File Name:       Birds of Paradise.ttf
+-------------------------
+Font Name:       BlackChancery
+PostScript Name: BlackChancery
+File Name:       BLKCHCRY.TTF
+-------------------------
+Font Name:       Calibri
+PostScript Name: Calibri
+File Name:       CALIBRI.TTF
+-------------------------
+Font Name:       Calibri
+PostScript Name: Calibri-Bold
+File Name:       CALIBRIB_0.TTF
+-------------------------
+Font Name:       Calibri
+PostScript Name: Calibri-Italic
+File Name:       CALIBRII.TTF
+-------------------------
+Font Name:       Century Gothic Paneuropean
+PostScript Name: CenturyGothicPaneuropean-Bold
+File Name:       CenturyGothicPaneuropeanBold.ttf
+-------------------------
+Font Name:       Century Gothic Paneuropean
+PostScript Name: CenturyGothicPaneuropean-BoldItalic
+File Name:       CenturyGothicPaneuropeanBoldItalic.ttf
+-------------------------
+Font Name:       Century Gothic Paneuropean
+PostScript Name: CenturyGothicPaneuropean
+File Name:       CenturyGothicPaneuropeanRegular.ttf
+-------------------------
+Font Name:       Century Schoolbook
+PostScript Name: CenturySchoolbook
+File Name:       CENSCBK.TTF
+-------------------------
+Font Name:       Century Schoolbook
+PostScript Name: CenturySchoolbook-Bold
+File Name:       SCHLBKB.TTF
+-------------------------
+Font Name:       Century Schoolbook
+PostScript Name: CenturySchoolbook-BoldItalic
+File Name:       SCHLBKBI.TTF
+-------------------------
+Font Name:       Clicker Script
+PostScript Name: ClickerScript-Regular
+File Name:       ClickerScript-Regular.ttf
+-------------------------
+Font Name:       CollegiateBlackFLF
+PostScript Name: CollegiateBlackFLF
+File Name:       CollegiateBlackFLF.ttf
+-------------------------
+Font Name:       CollegiateOutlineFLF
+PostScript Name: CollegiateOutlineFLF
+File Name:       CollegiateOutlineFLF.ttf
+-------------------------
+Font Name:       CopprplGoth BT
+PostScript Name: CopperplateGothicBT-Roman
+File Name:       Copperplate Gothic.ttf
+-------------------------
+Font Name:       Courgette
+PostScript Name: Courgette-Regular
+File Name:       Courgette-Regular.ttf
+-------------------------
+Font Name:       CowboyRodeoW01-Regular
+PostScript Name: CowboyRodeoW01-Regular
+File Name:       Cowboy Rodeo W01 Regular.ttf
+-------------------------
+Font Name:       Freebooter Script
+PostScript Name: FreebooterScript
+File Name:       freebooterscript.ttf
+-------------------------
+Font Name:       Garamond
+PostScript Name: Garamond
+File Name:       GARA.TTF
+-------------------------
+Font Name:       Garamond 3 LT Std
+PostScript Name: Garamond3LTStd-Bold
+File Name:       Garamond3LTStd-Bold.otf
+-------------------------
+Font Name:       Garamond 3 LT Std
+PostScript Name: Garamond3LTStd-BoldItalic
+File Name:       Garamond3LTStd-BoldItalic.otf
+-------------------------
+Font Name:       Garamond 3 LT Std
+PostScript Name: Garamond3LTStd-Italic
+File Name:       Garamond3LTStd-Italic.otf
+-------------------------
+Font Name:       Garamond 3 LT Std
+PostScript Name: Garamond3LTStd
+File Name:       Garamond3LTStd.otf
+-------------------------
+Font Name:       Graphik Medium
+PostScript Name: Graphik-Medium
+File Name:       Graphik-Medium.otf
+-------------------------
+Font Name:       Graphik Medium
+PostScript Name: Graphik-MediumItalic
+File Name:       Graphik-MediumItalic.otf
+-------------------------
+Font Name:       Graphik Regular
+PostScript Name: Graphik-Regular
+File Name:       Graphik-Regular.otf
+-------------------------
+Font Name:       Graphik Regular
+PostScript Name: Graphik-RegularItalic
+File Name:       Graphik-RegularItalic.otf
+-------------------------
+Font Name:       Graphik Semibold
+PostScript Name: Graphik-Semibold
+File Name:       Graphik-Semibold.otf
+-------------------------
+Font Name:       Graphik Thin
+PostScript Name: Graphik-Thin
+File Name:       Graphik-Thin.otf
+-------------------------
+Font Name:       Graphik Thin
+PostScript Name: Graphik-ThinItalic
+File Name:       Graphik-ThinItalic.otf
+-------------------------
+Font Name:       Great Vibes
+PostScript Name: GreatVibes-Regular
+File Name:       Great Vibes.ttf
+-------------------------
+Font Name:       Honey Script
+PostScript Name: HoneyScript-Light
+File Name:       HONEYSCL.TTF
+-------------------------
+Font Name:       Honey Script
+PostScript Name: HoneyScript-SemiBold
+File Name:       HONEYSSB.TTF
+-------------------------
+Font Name:       I Love Glitter
+PostScript Name: ILoveGlitter
+File Name:       I Love Glitter.ttf
+-------------------------
+Font Name:       ITC Zapf Chancery
+PostScript Name: ZapfChancery-Roman
+File Name:       Zapf Chancery Font.otf
+-------------------------
+Font Name:       Lisbon Script
+PostScript Name: LisbonScript-Regular
+File Name:       Lisbon-Script.otf
+-------------------------
+Font Name:       Machine BT
+PostScript Name: MachineITCbyBT-Regular
+File Name:       machinen.ttf
+-------------------------
+Font Name:       Murray Hill
+PostScript Name: MurrayHill
+File Name:       Murray Hill Regular.ttf
+-------------------------
+Font Name:       Old English Text MT
+PostScript Name: OldEnglishTextMT
+File Name:       OLDENGL.TTF
+-------------------------
+Font Name:       PlanscribeNFW01-Regular
+PostScript Name: PlanscribeNFW01-Regular
+File Name:       Planscribe NF W01 Regular.ttf
+-------------------------
+Font Name:       Times New Roman
+PostScript Name: TimesNewRomanPSMT
+File Name:       TIMES.TTF
+-------------------------
+Font Name:       Times New Roman
+PostScript Name: TimesNewRomanPS-BoldMT
+File Name:       timesbd.ttf
+-------------------------
+Font Name:       Times New Roman
+PostScript Name: TimesNewRomanPS-BoldItalicMT
+File Name:       timesbi.ttf
+-------------------------
+Font Name:       Times New Roman
+PostScript Name: TimesNewRomanPS-ItalicMT
+File Name:       timesi.ttf
+-------------------------
+Font Name:       TinplateTitlingBlack
+PostScript Name: TinplateTitlingBlack
+File Name:       TinplateTitlingBlack.ttf
+-------------------------
+Font Name:       ZapfHumnst Dm BT
+PostScript Name: ZapfHumanist601BT-Demi
+File Name:       ZHUM601D.TTF
+-------------------------
