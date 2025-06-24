@@ -24,46 +24,48 @@ const App = () => {
     const WORKER_URL = "https://customerfontselection-worker.tom-4a9.workers.dev";
     const DEFAULT_TEXT_PLACEHOLDER = 'Type your text here...';
 
-    // --- FONT LIBRARY SYNCHRONIZED WITH PostScriptFontList.txt ---
+    // --- FONT LIBRARY RE-CATEGORIZED AND SORTED ---
     const fontLibrary = {
         'Sans-serif': [
             { name: 'Arial', styles: { regular: 'ArialMT', bold: 'Arial-BoldMT', italic: 'Arial-ItalicMT', boldItalic: 'Arial-BoldItalicMT' } },
+            { name: 'Bebas Neue', styles: { regular: 'BebasNeue-Regular', bold: 'BebasNeue-Bold' } },
+            { name: 'Berlin Sans FB', styles: { regular: 'BerlinSansFB-Reg', bold: 'BerlinSansFB-Bold' } },
             { name: 'Calibri', styles: { regular: 'Calibri', bold: 'Calibri-Bold', italic: 'Calibri-Italic' } },
             { name: 'Century Gothic', styles: { regular: 'CenturyGothicPaneuropean', bold: 'CenturyGothicPaneuropean-Bold', boldItalic: 'CenturyGothicPaneuropean-BoldItalic' } },
-            { name: 'Berlin Sans FB', styles: { regular: 'BerlinSansFB-Reg', bold: 'BerlinSansFB-Bold' } },
-            { name: 'Bebas Neue', styles: { regular: 'BebasNeue-Regular', bold: 'BebasNeue-Bold' } },
-            { name: 'Zapf Humanist', styles: { demi: 'ZapfHumanist601BT-Demi' } },
             { name: 'Graphik', styles: { thin: 'Graphik-Thin', regular: 'Graphik-Regular', medium: 'Graphik-Medium', semibold: 'Graphik-Semibold' } },
+            { name: 'Zapf Humanist', styles: { demi: 'ZapfHumanist601BT-Demi' } },
         ],
         'Serif': [
-            { name: 'Times New Roman', styles: { regular: 'TimesNewRomanPSMT', bold: 'TimesNewRomanPS-BoldMT', italic: 'TimesNewRomanPS-ItalicMT', boldItalic: 'TimesNewRomanPS-BoldItalicMT' } },
-            { name: 'Garamond', styles: { regular: 'Garamond' } },
-            { name: 'Garamond 3 LT Std', styles: { regular: 'Garamond3LTStd', bold: 'Garamond3LTStd-Bold', italic: 'Garamond3LTStd-Italic', boldItalic: 'Garamond3LTStd-BoldItalic' } },
             { name: 'Benguiat', styles: { regular: 'Benguiat', bold: 'BenguiatITCbyBT-Bold', italic: 'BenguiatITCbyBT-BookItalic' } },
             { name: 'Century Schoolbook', styles: { regular: 'CenturySchoolbook', bold: 'CenturySchoolbook-Bold', boldItalic: 'CenturySchoolbook-BoldItalic' } },
             { name: 'CopprplGoth BT', styles: { regular: 'CopperplateGothicBT-Roman' } },
+            { name: 'Garamond', styles: { regular: 'Garamond' } },
+            { name: 'Garamond 3 LT Std', styles: { regular: 'Garamond3LTStd', bold: 'Garamond3LTStd-Bold', italic: 'Garamond3LTStd-Italic', boldItalic: 'Garamond3LTStd-BoldItalic' } },
+            { name: 'Times New Roman', styles: { regular: 'TimesNewRomanPSMT', bold: 'TimesNewRomanPS-BoldMT', italic: 'TimesNewRomanPS-ItalicMT', boldItalic: 'TimesNewRomanPS-BoldItalicMT' } },
         ],
-        'Script & Display': [
+        'Script': [
             { name: 'Amazone BT', styles: { regular: 'AmazoneBT-Regular' } },
             { name: 'Angelface', styles: { regular: 'Angelface' } },
             { name: 'Birds of Paradise', styles: { regular: 'BirdsofParadise-PersonaluseOnly' } },
-            { name: 'BlackChancery', styles: { regular: 'BlackChancery' } },
             { name: 'Clicker Script', styles: { regular: 'ClickerScript-Regular' } },
-            { name: 'Collegiate', styles: { black: 'CollegiateBlackFLF', outline: 'CollegiateOutlineFLF' } },
             { name: 'Courgette', styles: { regular: 'Courgette-Regular' } },
-            { name: 'Cowboy Rodeo', styles: { regular: 'CowboyRodeoW01-Regular' } },
             { name: 'Freebooter Script', styles: { regular: 'FreebooterScript' } },
             { name: 'Great Vibes', styles: { regular: 'GreatVibes-Regular' } },
             { name: 'Honey Script', styles: { light: 'HoneyScript-Light', semiBold: 'HoneyScript-SemiBold' } },
             { name: 'I Love Glitter', styles: { regular: 'ILoveGlitter' } },
             { name: 'ITC Zapf Chancery', styles: { regular: 'ZapfChancery-Roman' } },
             { name: 'Lisbon Script', styles: { regular: 'LisbonScript-Regular' } },
-            { name: 'Machine BT', styles: { regular: 'MachineITCbyBT-Regular' } },
             { name: 'Murray Hill', styles: { regular: 'MurrayHill' } },
+        ],
+        'Display': [
+            { name: 'BlackChancery', styles: { regular: 'BlackChancery' } },
+            { name: 'Collegiate', styles: { black: 'CollegiateBlackFLF', outline: 'CollegiateOutlineFLF' } },
+            { name: 'Cowboy Rodeo', styles: { regular: 'CowboyRodeoW01-Regular' } },
+            { name: 'Machine BT', styles: { regular: 'MachineITCbyBT-Regular' } },
             { name: 'Old English Text MT', styles: { regular: 'OldEnglishTextMT' } },
             { name: 'Planscribe', styles: { regular: 'PlanscribeNFW01-Regular' } },
             { name: 'Tinplate Titling Black', styles: { regular: 'TinplateTitlingBlack' } },
-        ],
+        ]
     };
 
     const [selectedFonts, setSelectedFonts] = useState([]);
