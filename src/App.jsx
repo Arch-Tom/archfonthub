@@ -91,7 +91,6 @@ const App = () => {
         ],
         'Script': [
             { name: 'Great Vibes', styles: { regular: 'GreatVibes-Regular' } },
-            { name: 'Honey Script', styles: { light: 'HoneyScript-Light', semiBold: 'HoneyScript-SemiBold' } },
             { name: 'I Love Glitter', styles: { regular: 'ILoveGlitter' } },
         ],
     };
