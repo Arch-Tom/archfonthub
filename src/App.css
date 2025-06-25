@@ -25,47 +25,36 @@ body {
     display: flex;
 }
 
-/* --- Sidebar (Desktop) --- */
-.sidebar {
-    background-color: var(--bg-card);
-    border-right: 1px solid var(--border-color);
-    width: 380px;
+/* --- Branding Sidebar (Desktop) --- */
+.branding-sidebar {
+    background-color: #343a40;
+    color: white;
+    width: 280px; /* Wider Sidebar */
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    padding: 2.5rem 1.5rem;
     height: 100vh;
     position: sticky;
     top: 0;
 }
 
-.sidebar-header {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1.25rem 1.5rem;
-    border-bottom: 1px solid var(--border-color);
-    background-color: #343a40;
-    color: white;
-}
-
 .sidebar-logo {
-    height: 50px;
+    height: 100px; /* Significantly Larger Logo */
+    margin-bottom: 1.5rem;
 }
 
-.sidebar-header h1 {
-    font-size: 1.5rem;
+.branding-sidebar h1 {
+    font-size: 2rem;
     font-weight: 800;
     margin: 0;
-}
-
-.sidebar-content {
-    padding: 0 0.5rem 1.5rem;
-    overflow-y: auto;
-    flex-grow: 1;
+    text-align: center;
+    line-height: 1.2;
 }
 
 /* --- Main Content --- */
-.main-content {
+.main-container {
     width: 100%;
     padding: 2rem;
     display: flex;
@@ -103,24 +92,22 @@ body {
 }
 
 /* --- Font Selection --- */
-.font-category {
-    padding: 0 1rem;
+.font-category h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin: 1.5rem 0 1rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
 }
 
-    .font-category h3 {
-        font-size: 1rem;
-        font-weight: 600;
-        color: var(--text-secondary);
-        margin: 1.5rem 0 1rem 0;
-    }
-
-    .font-category:first-child h3 {
-        margin-top: 0;
-    }
+.font-category:first-child h3 {
+    margin-top: 0;
+}
 
 .font-button-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 0.75rem;
 }
 
@@ -464,35 +451,35 @@ body {
         flex-direction: column;
     }
 
-    .sidebar {
+    .branding-sidebar {
         width: 100%;
         height: auto;
-        flex-direction: column;
-        position: static;
-        border-right: none;
-    }
-
-    .sidebar-header {
+        flex-direction: row;
         position: sticky;
         top: 0;
-        background-color: #343a40;
         z-index: 10;
-        width: 100%;
+        padding: 1rem 1.5rem;
     }
 
-    .main-content {
+        .branding-sidebar h1 {
+            font-size: 1.25rem; /* Adjust title size for mobile header */
+        }
+
+    .sidebar-logo {
+        height: 40px; /* Adjust logo size for mobile header */
+    }
+
+    .main-container {
         padding: 1.5rem;
     }
-
+    /* Compact, wrapping grid for mobile font buttons */
     .font-button-grid {
-        display: flex;
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        padding-bottom: 1rem;
-        scrollbar-width: thin;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 0.5rem;
     }
 
     .font-button {
-        flex-shrink: 0;
+        height: 50px;
+        font-size: 1rem;
     }
 }
