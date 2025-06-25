@@ -31,7 +31,7 @@ const App = () => {
     const WORKER_URL = "https://customerfontselection-worker.tom-4a9.workers.dev";
     const [selectedFonts, setSelectedFonts] = useState([]);
     const [customText, setCustomText] = useState('The quick brown fox jumps over the lazy dog.');
-    const [fontSize, setFontSize] = useState(48);
+    const [fontSize, setFontSize] = useState(36); // Default size set to 36
     const [toasts, setToasts] = useState([]);
     const [customerName, setCustomerName] = useState('');
     const [customerCompany, setCustomerCompany] = useState('');
