@@ -5,7 +5,6 @@
     --border-color: #475569; /* slate-600 */
     --text-primary: #f1f5f9; /* slate-100 */
     --text-secondary: #94a3b8; /* slate-400 */
-    --text-helper: #cbd5e1; /* slate-300 */
     --accent-color: #f59e0b; /* amber-500 */
     --accent-hover: #d97706; /* amber-600 */
     --accent-text: #1e293b;
@@ -29,7 +28,7 @@ body {
 /* --- Sidebar --- */
 .sidebar {
     width: 350px;
-    background: var(--bg-sidebar);
+    background-color: var(--bg-sidebar);
     display: flex;
     flex-direction: column;
     border-right: 1px solid var(--border-color);
@@ -82,7 +81,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: var(--bg-section);
+    background-color: var(--bg-section);
     color: var(--text-primary);
     border: 1px solid var(--border-color);
     border-radius: var(--radius);
@@ -94,11 +93,11 @@ body {
 }
 
     .font-button:hover {
-        background: #475569;
+        background-color: #475569;
     }
 
     .font-button.selected {
-        background: var(--accent-color);
+        background-color: var(--accent-color);
         color: var(--accent-text);
         border-color: var(--accent-hover);
         font-weight: 600;
@@ -119,7 +118,7 @@ body {
 }
 
 .section {
-    background: var(--bg-section);
+    background-color: var(--bg-section);
     border: 1px solid var(--border-color);
     border-radius: var(--radius);
     padding: 1.5rem;
@@ -127,7 +126,6 @@ body {
 
 .section-header {
     display: flex;
-    align-items: center;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
@@ -149,7 +147,7 @@ body {
     }
 
 .glyph-button-main {
-    background: var(--border-color);
+    background-color: var(--border-color);
     color: var(--text-primary);
     border: none;
     padding: 0.5rem 1rem;
@@ -160,15 +158,14 @@ body {
 }
 
     .glyph-button-main:hover {
-        background: var(--accent-color);
+        background-color: var(--accent-color);
         color: var(--accent-text);
     }
-
 
 .text-input {
     width: 100%;
     min-height: 120px;
-    background: var(--bg-main);
+    background-color: var(--bg-main);
     border: 1px solid var(--border-color);
     border-radius: var(--radius);
     padding: 1rem;
@@ -199,7 +196,7 @@ body {
     }
 
 .preview-area {
-    background: white;
+    background-color: white;
     color: #1a202c;
     border-radius: var(--radius);
     padding: 1rem;
@@ -264,4 +261,194 @@ body {
         }
 
         .style-selector button.active {
-            background
+            background-color: var(--bg-section);
+            color: white;
+            border-color: var(--bg-section);
+        }
+
+.submit-section {
+    margin-top: auto;
+    padding-top: 1.5rem;
+}
+
+.submit-button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    background-color: var(--accent-color);
+    color: var(--accent-text);
+    border: none;
+    border-radius: var(--radius);
+    padding: 1rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+    .submit-button:hover {
+        background-color: var(--accent-hover);
+    }
+
+    .submit-button img {
+        height: 24px;
+        filter: brightness(0) saturate(100%) invert(12%) sepia(21%) saturate(1451%) hue-rotate(178deg) brightness(94%) contrast(85%);
+    }
+
+/* --- Modals and Toasts --- */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-box {
+    background-color: var(--bg-section);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    width: 100%;
+    max-width: 500px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.modal-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.modal-close-button {
+    background-color: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+}
+
+.glyph-palette {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(45px, 1fr));
+    gap: 0.5rem;
+    padding: 1.5rem;
+}
+
+    .glyph-palette button {
+        height: 48px;
+        font-size: 1.5rem;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        background-color: var(--bg-main);
+        color: var(--text-primary);
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+
+        .glyph-palette button:hover {
+            background-color: var(--accent-color);
+            color: var(--accent-text);
+        }
+
+.customer-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.5rem;
+}
+
+.form-group label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.25rem;
+}
+
+.form-group input {
+    background-color: var(--bg-main);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding: 1.5rem;
+    border-top: 1px solid var(--border-color);
+    background-color: var(--bg-sidebar);
+}
+
+.button-primary {
+    background-color: var(--accent-color);
+    color: var(--accent-text);
+    border: none;
+    padding: 0.6rem 1.25rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: var(--radius);
+    cursor: pointer;
+}
+
+.button-secondary {
+    background-color: var(--border-color);
+    color: var(--text-primary);
+    border: none;
+    padding: 0.6rem 1.25rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: var(--radius);
+    cursor: pointer;
+}
+
+.toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 2000;
+}
+
+.toast {
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    color: white;
+    font-weight: 600;
+    margin-top: 0.5rem;
+}
+
+.toast-success {
+    background-color: var(--success);
+}
+
+.toast-error {
+    background-color: var(--danger);
+}
+
+/* --- Mobile Responsive --- */
+@media (max-width: 992px) {
+    .app-layout {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .main-content {
+        padding: 1rem;
+    }
+}
