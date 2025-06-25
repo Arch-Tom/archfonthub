@@ -29,7 +29,7 @@ const App = () => {
         'Sans-serif': [
             { name: 'Arial', styles: { regular: 'ArialMT', bold: 'Arial-BoldMT', italic: 'Arial-ItalicMT', boldItalic: 'Arial-BoldItalicMT' } },
             { name: 'Bebas Neue', styles: { regular: 'BebasNeue-Regular', bold: 'BebasNeue-Bold' } },
-            { name: 'Berlin Sans FB', styles: { regular: 'BerlinSansFB-Reg', bold: 'BerlinSansFB-Bold' } },
+            { name: 'Berlin Sans', styles: { regular: 'BerlinSansFB-Reg', bold: 'BerlinSansFB-Bold' } },
             { name: 'Calibri', styles: { regular: 'Calibri', bold: 'Calibri-Bold', italic: 'Calibri-Italic' } },
             { name: 'Century Gothic', styles: { regular: 'CenturyGothicPaneuropean', bold: 'CenturyGothicPaneuropean-Bold', boldItalic: 'CenturyGothicPaneuropean-BoldItalic' } },
             { name: 'Graphik', styles: { regular: 'Graphik-Regular', regularItalic: 'Graphik-RegularItalic', medium: 'Graphik-Medium', mediumItalic: 'Graphik-MediumItalic', semibold: 'Graphik-Semibold', thin: 'Graphik-Thin', thinItalic: 'Graphik-ThinItalic' } },
@@ -37,9 +37,9 @@ const App = () => {
         ],
         'Serif': [
             { name: 'Benguiat', styles: { regular: 'Benguiat', bold: 'BenguiatITCbyBT-Bold', italic: 'BenguiatITCbyBT-BookItalic' } },
-            { name: 'Bookman Old Style', styles: { bold: 'BookmanOldStyle-Bold', boldItalic: 'BookmanOldStyle-BoldItalic', italic: 'BookmanOldStyle-Italic' } },
+            { name: 'Bookman', styles: { bold: 'BookmanOldStyle-Bold', boldItalic: 'BookmanOldStyle-BoldItalic', italic: 'BookmanOldStyle-Italic' } },
             { name: 'Century Schoolbook', styles: { regular: 'CenturySchoolbook', bold: 'CenturySchoolbook-Bold', boldItalic: 'CenturySchoolbook-BoldItalic' } },
-            { name: 'Century725', styles: { roman: 'Century725BT-Roman', italic: 'Century725BT-Italic', bold: 'Century725BT-Bold', black: 'Century725BT-Black', condensed: 'Century725BT-RomanCondensed' } },
+            { name: 'Century', styles: { roman: 'Century725BT-Roman', italic: 'Century725BT-Italic', bold: 'Century725BT-Bold', black: 'Century725BT-Black', condensed: 'Century725BT-RomanCondensed' } },
             { name: 'Copperplate', styles: { regular: 'CopperplateGothicBT-Roman' } },
             // --- FIX: Combined DejaVu Serif and DejaVu Serif Condensed ---
             {
@@ -55,7 +55,7 @@ const App = () => {
                 }
             },
             { name: 'Garamond', styles: { regular: 'Garamond' } },
-            { name: 'Garamond 3 LT Std', styles: { regular: 'Garamond3LTStd', bold: 'Garamond3LTStd-Bold', italic: 'Garamond3LTStd-Italic', boldItalic: 'Garamond3LTStd-BoldItalic' } },
+            { name: 'Garamond', styles: { regular: 'Garamond3LTStd', bold: 'Garamond3LTStd-Bold', italic: 'Garamond3LTStd-Italic', boldItalic: 'Garamond3LTStd-BoldItalic' } },
             { name: 'Times New Roman', styles: { regular: 'TimesNewRomanPSMT', bold: 'TimesNewRomanPS-BoldMT', italic: 'TimesNewRomanPS-ItalicMT', boldItalic: 'TimesNewRomanPS-BoldItalicMT' } },
         ],
         'Script & Display': [
@@ -69,7 +69,7 @@ const App = () => {
             { name: 'Courgette', styles: { regular: 'Courgette-Regular' } },
             { name: 'Cowboy Rodeo', styles: { regular: 'CowboyRodeoW01-Regular' } },
             { name: 'Freebooter Script', styles: { regular: 'FreebooterScript' } },
-            { name: 'French Script MT', styles: { regular: 'FrenchScriptMT' } },
+            { name: 'French Script', styles: { regular: 'FrenchScriptMT' } },
             { name: 'Great Vibes', styles: { regular: 'GreatVibes-Regular' } },
             { name: 'Honey Script', styles: { light: 'HoneyScript-Light', semiBold: 'HoneyScript-SemiBold' } },
             { name: 'I Love Glitter', styles: { regular: 'ILoveGlitter' } },
@@ -77,7 +77,7 @@ const App = () => {
             { name: 'Lisbon Script', styles: { regular: 'LisbonScript-Regular' } },
             { name: 'Machine BT', styles: { regular: 'MachineITCbyBT-Regular' } },
             { name: 'Murray Hill', styles: { regular: 'MurrayHill' } },
-            { name: 'Old English Text MT', styles: { regular: 'OldEnglishTextMT' } },
+            { name: 'Old English', styles: { regular: 'OldEnglishTextMT' } },
             { name: 'Planscribe', styles: { regular: 'PlanscribeNFW01-Regular' } },
         ],
     };
