@@ -21,59 +21,35 @@ body {
     color: var(--text-primary);
 }
 
-/* --- Main Layout & Header --- */
+/* --- Header --- */
 .app-header {
     background-color: #343a40;
     color: white;
     display: flex;
-}
-
-/* --- Sidebar (Desktop) / Header (Mobile) --- */
-.sidebar {
-    background-color: var(--bg-card);
-    border-right: 1px solid var(--border-color);
-    width: 380px;
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    box-shadow: 0 2px 4px var(--shadow-color);
     position: sticky;
     top: 0;
+    z-index: 10;
 }
 
-.card {
-    background-color: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius);
-    box-shadow: 0 4px 12px var(--shadow-color);
-}
-
-.card-header {
-    padding: 1rem 1.5rem;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.sidebar-logo {
+.header-logo {
     height: 50px; /* Increased logo size */
 }
 
-.sidebar-header h1 {
+.app-header h1 {
     font-size: 1.5rem;
-    font-weight: 800;
+    font-weight: 700;
     margin: 0;
-    color: var(--text-primary);
 }
 
-.sidebar-content {
-    padding: 0 0.5rem 1.5rem;
-    overflow-y: auto;
-    flex-grow: 1;
-}
-
-/* --- Main Content --- */
-.main-content {
-    width: 100%;
-    padding: 2rem;
+/* --- Main Content Layout --- */
+.main-container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
     display: flex;
     flex-direction: column;
     gap: 2rem;
@@ -87,7 +63,7 @@ body {
 }
 
 .card-header {
-    padding: 1rem 1.5rem;
+    padding: 1.25rem 1.5rem;
     border-bottom: 1px solid var(--border-color);
     position: relative;
 }
@@ -113,14 +89,19 @@ body {
     font-size: 1rem;
     font-weight: 600;
     color: var(--text-secondary);
-    margin: 1.5rem 0 1rem 1rem;
+    margin: 1.5rem 0 1rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.font-category:first-child h3 {
+    margin-top: 0;
 }
 
 .font-button-grid {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 0.75rem;
-    padding: 0 1rem;
 }
 
 .font-button {
@@ -131,7 +112,7 @@ body {
     color: var(--text-primary);
     border: 2px solid var(--border-color);
     border-radius: var(--radius);
-    padding: 0 1.25rem;
+    padding: 0 1rem;
     height: 60px;
     font-size: 1.75rem;
     line-height: 1;
@@ -195,6 +176,7 @@ body {
     gap: 1rem;
     margin-bottom: 1.5rem;
     color: var(--text-secondary);
+    flex-wrap: wrap;
 }
 
     .preview-controls label {
@@ -208,7 +190,7 @@ body {
 
     .preview-controls input[type="range"] {
         width: 200px;
-        accent-color: var(--accent-blue);
+        accent-color: var(--accent-color);
     }
 
 .preview-area {
@@ -233,6 +215,7 @@ body {
     align-items: center;
     margin-bottom: 1rem;
     gap: 1rem;
+    flex-wrap: wrap;
 }
 
 .font-name-preview {
@@ -243,6 +226,7 @@ body {
 .style-selector {
     display: flex;
     gap: 0.5rem;
+    flex-wrap: wrap;
 }
 
     .style-selector button {
@@ -304,7 +288,7 @@ body {
 }
 
     .submit-button:hover {
-        background-color: var(--accent-blue-hover);
+        background-color: var(--accent-hover);
     }
 
 .submit-button-logo {
@@ -449,31 +433,4 @@ body {
 
 .toast-error {
     background-color: var(--danger);
-}
-
-/* --- Responsive Layout: Sidebar to Header --- */
-@media (max-width: 1024px) {
-    .app-layout {
-        flex-direction: column;
-    }
-
-    .sidebar {
-        width: 100%;
-        height: auto;
-        flex-direction: column;
-        position: static;
-        border-right: none;
-    }
-
-    .sidebar-header {
-        position: sticky;
-        top: 0;
-        background-color: var(--bg-card);
-        z-index: 10;
-        width: 100%;
-    }
-
-    .main-content {
-        padding: 1.5rem;
-    }
 }

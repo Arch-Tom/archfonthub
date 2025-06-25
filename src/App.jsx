@@ -2,7 +2,6 @@
 import './App.css';
 
 // --- Helper Icons ---
-const CheckIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5"><path fillRule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.052-.143z" clipRule="evenodd" /></svg>);
 const XIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5"><path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" /></svg>);
 
 // --- Font Library (Unchanged) ---
@@ -139,13 +138,14 @@ const App = () => {
     const glyphs = ['©', '®', '™', '&', '#', '+', '–', '—', '…', '•', '°', '·', '♥', '♡', '♦', '♢', '♣', '♧', '♠', '♤', '★', '☆', '♪', '♫', '←', '→', '↑', '↓', '∞', '†', '✡︎', '✞', '✠', '±', '½', '¼', 'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ', 'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ρ', 'Σ', 'Τ', 'Υ', 'Φ', 'Χ', 'Ψ', 'Ω'];
 
     return (
-        <div className="app-layout">
-            <aside className="sidebar">
-                <div className="sidebar-header">
-                    <img src="/images/Arch Vector Logo White.svg" alt="Arch Font Hub Logo" className="sidebar-logo" />
-                    <h1>ARCH FONT HUB</h1>
-                </div>
-                <div className="sidebar-content">
+        <>
+            <header className="app-header">
+                <img src="/images/Arch Vector Logo White.svg" alt="Arch Font Hub Logo" className="header-logo" />
+                <h1>ARCH FONT HUB</h1>
+            </header>
+
+            <main className="main-container">
+                <section className="card">
                     <div className="card-header">
                         <h2>Font Selection</h2>
                         <p>Click one or more fonts to add them to your proof.</p>
@@ -173,15 +173,13 @@ const App = () => {
                             </div>
                         ))}
                     </div>
-                </div>
-            </aside>
+                </section>
 
-            <main className="main-content">
                 <section className="card">
                     <div className="card-header">
                         <h2>Text to Preview</h2>
                         <p>Type your text here to see it in the selected fonts.</p>
-                        <button className="symbol-button" onClick={() => setIsGlyphModalOpen(false)}>Symbols</button>
+                        <button className="symbol-button" onClick={() => setIsGlyphModalOpen(true)}>Symbols</button>
                     </div>
                     <div className="card-content">
                         <textarea ref={textInputRef} className="text-input" value={customText} onChange={e => setCustomText(e.target.value)} />
@@ -222,12 +220,12 @@ const App = () => {
                     </div>
                 </section>
 
-                <div className="submit-section">
+                <section className="submit-section">
                     <button className="submit-button" onClick={handleInitiateSave}>
                         <img src="/images/Arch Vector Logo White.svg" alt="Logo" className="submit-button-logo" />
                         Submit your selection to Arch Engraving
                     </button>
-                </div>
+                </section>
             </main>
 
             <Modal isOpen={isGlyphModalOpen} onClose={() => setIsGlyphModalOpen(false)} title="Symbol Palette">
@@ -244,7 +242,7 @@ const App = () => {
             </Modal>
 
             <div className="toast-container">{toasts.map(t => (<div key={t.id} className={`toast toast-${t.type}`}>{t.message}</div>))}</div>
-        </div>
+        </>
     );
 };
 
