@@ -139,12 +139,13 @@ const App = () => {
 
     return (
         <div className="app-layout">
-            <aside className="sidebar">
-                <div className="sidebar-header">
-                    <img src="/images/Arch Vector Logo White.svg" alt="Arch Font Hub Logo" className="sidebar-logo" />
-                    <h1>ARCH FONT HUB</h1>
-                </div>
-                <div className="sidebar-content">
+            <aside className="branding-sidebar">
+                <img src="/images/Arch Vector Logo White.svg" alt="Arch Font Hub Logo" className="sidebar-logo" />
+                <h1>ARCH FONT HUB</h1>
+            </aside>
+
+            <main className="main-container">
+                <section className="card">
                     <div className="card-header">
                         <h2>Font Selection</h2>
                         <p>Click one or more fonts to add them to your proof.</p>
@@ -172,10 +173,8 @@ const App = () => {
                             </div>
                         ))}
                     </div>
-                </div>
-            </aside>
+                </section>
 
-            <main className="main-content">
                 <section className="card">
                     <div className="card-header">
                         <h2>Text to Preview</h2>
@@ -221,12 +220,12 @@ const App = () => {
                     </div>
                 </section>
 
-                <div className="submit-section">
+                <section className="submit-section">
                     <button className="submit-button" onClick={handleInitiateSave}>
                         <img src="/images/Arch Vector Logo White.svg" alt="Logo" className="submit-button-logo" />
                         Submit your selection to Arch Engraving
                     </button>
-                </div>
+                </section>
             </main>
 
             <Modal isOpen={isGlyphModalOpen} onClose={() => setIsGlyphModalOpen(false)} title="Symbol Palette">
