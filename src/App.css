@@ -29,20 +29,20 @@ body {
 .branding-sidebar {
     background-color: #343a40;
     color: white;
-    width: 410px; /* UPDATED: Wider to fit the logo */
+    width: 400px; /* UPDATED: Exact width of the logo */
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 2.5rem 0.5rem; /* UPDATED: Reduced side padding */
+    padding: 2.5rem 0; /* UPDATED: Removed side padding */
     height: 100vh;
     position: sticky;
     top: 0;
 }
 
 .sidebar-logo {
-    width: 400px !important; /* UPDATED: Increased size */
-    height: 400px !important; /* UPDATED: Increased size */
+    width: 400px !important;
+    height: 400px !important;
     object-fit: contain;
     margin-bottom: 1.5rem;
 }
@@ -53,6 +53,7 @@ body {
     margin: 0;
     text-align: center;
     line-height: 1.2;
+    max-width: 90%; /* UPDATED: Prevents heading from stretching the sidebar */
 }
 
 /* --- Main Content --- */
@@ -456,7 +457,7 @@ body {
 }
 
 /* --- Responsive Layout: Sidebar to Header --- */
-@media (max-width: 768px) { /* UPDATED: Breakpoint changed to 768px */
+@media (max-width: 768px) {
     .app-layout {
         flex-direction: column;
     }
@@ -465,7 +466,7 @@ body {
         width: 100%;
         height: auto;
         flex-direction: row;
-        position: relative; /* UPDATED: Changed from sticky to allow scrolling */
+        position: relative;
         top: 0;
         z-index: 10;
         padding: 0.75rem 1.5rem;
