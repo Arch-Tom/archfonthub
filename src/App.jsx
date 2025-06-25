@@ -173,8 +173,7 @@ const App = () => {
                             </div>
                         ))}
                     </div>
-                </div>
-            </aside>
+                </section>
 
             <main className="main-content">
                 <section className="card">
@@ -222,12 +221,12 @@ const App = () => {
                     </div>
                 </section>
 
-                <div className="submit-section">
+                <section className="submit-section">
                     <button className="submit-button" onClick={handleInitiateSave}>
                         <img src="/images/Arch Vector Logo White.svg" alt="Logo" className="submit-button-logo" />
                         Submit your selection to Arch Engraving
                     </button>
-                </div>
+                </section>
             </main>
 
             <Modal isOpen={isGlyphModalOpen} onClose={() => setIsGlyphModalOpen(false)} title="Symbol Palette">
@@ -244,7 +243,7 @@ const App = () => {
             </Modal>
 
             <div className="toast-container">{toasts.map(t => (<div key={t.id} className={`toast toast-${t.type}`}>{t.message}</div>))}</div>
-        </div>
+        </>
     );
 };
 
