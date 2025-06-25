@@ -21,7 +21,10 @@ body {
     color: var(--text-primary);
 }
 
-.app-layout {
+/* --- Main Layout & Header --- */
+.app-header {
+    background-color: #343a40;
+    color: white;
     display: flex;
 }
 
@@ -38,11 +41,15 @@ body {
     top: 0;
 }
 
-.sidebar-header {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1.25rem 1.5rem;
+.card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+.card-header {
+    padding: 1rem 1.5rem;
     border-bottom: 1px solid var(--border-color);
 }
 
@@ -201,7 +208,7 @@ body {
 
     .preview-controls input[type="range"] {
         width: 200px;
-        accent-color: var(--accent-color);
+        accent-color: var(--accent-blue);
     }
 
 .preview-area {
@@ -297,7 +304,7 @@ body {
 }
 
     .submit-button:hover {
-        background-color: var(--accent-hover);
+        background-color: var(--accent-blue-hover);
     }
 
 .submit-button-logo {

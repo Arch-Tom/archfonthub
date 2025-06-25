@@ -181,7 +181,7 @@ const App = () => {
                     <div className="card-header">
                         <h2>Text to Preview</h2>
                         <p>Type your text here to see it in the selected fonts.</p>
-                        <button className="symbol-button" onClick={() => setIsGlyphModalOpen(true)}>Symbols</button>
+                        <button className="symbol-button" onClick={() => setIsGlyphModalOpen(false)}>Symbols</button>
                     </div>
                     <div className="card-content">
                         <textarea ref={textInputRef} className="text-input" value={customText} onChange={e => setCustomText(e.target.value)} />
