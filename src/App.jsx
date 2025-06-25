@@ -40,7 +40,7 @@ const App = () => {
             { name: 'Bookman Old Style', styles: { bold: 'BookmanOldStyle-Bold', boldItalic: 'BookmanOldStyle-BoldItalic', italic: 'BookmanOldStyle-Italic' } },
             { name: 'Century Schoolbook', styles: { regular: 'CenturySchoolbook', bold: 'CenturySchoolbook-Bold', boldItalic: 'CenturySchoolbook-BoldItalic' } },
             { name: 'Century725', styles: { roman: 'Century725BT-Roman', italic: 'Century725BT-Italic', bold: 'Century725BT-Bold', black: 'Century725BT-Black', condensed: 'Century725BT-RomanCondensed' } },
-            { name: 'CopprplGoth BT', styles: { regular: 'CopperplateGothicBT-Roman' } },
+            { name: 'Copperplate', styles: { regular: 'CopperplateGothicBT-Roman' } },
             // --- FIX: Combined DejaVu Serif and DejaVu Serif Condensed ---
             {
                 name: 'DejaVu Serif', styles: {
