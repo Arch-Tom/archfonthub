@@ -25,7 +25,6 @@ const App = () => {
     const DEFAULT_TEXT_PLACEHOLDER = 'Type your text here...';
 
     // --- FINAL, CORRECTED FONT LIBRARY BASED ON THE PROVIDED LIST ---
-    // This structure ensures a 1:1 match between the UI, preview, and SVG export.
     const fontLibrary = {
         'Sans-serif': [
             { name: 'Arial', styles: { regular: 'ArialMT', bold: 'Arial-BoldMT', italic: 'Arial-ItalicMT', boldItalic: 'Arial-BoldItalicMT' } },
@@ -42,8 +41,19 @@ const App = () => {
             { name: 'Century Schoolbook', styles: { regular: 'CenturySchoolbook', bold: 'CenturySchoolbook-Bold', boldItalic: 'CenturySchoolbook-BoldItalic' } },
             { name: 'Century725', styles: { roman: 'Century725BT-Roman', italic: 'Century725BT-Italic', bold: 'Century725BT-Bold', black: 'Century725BT-Black', condensed: 'Century725BT-RomanCondensed' } },
             { name: 'CopprplGoth BT', styles: { regular: 'CopperplateGothicBT-Roman' } },
-            { name: 'DejaVu Serif', styles: { regular: 'DejaVuSerif', bold: 'DejaVuSerif-Bold', italic: 'DejaVuSerif-Italic', boldItalic: 'DejaVuSerif-BoldItalic' } },
-            { name: 'DejaVu Serif Condensed', styles: { regular: 'DejaVuSerifCondensed', bold: 'DejaVuSerifCondensed-Bold', italic: 'DejaVuSerifCondensed-Italic', boldItalic: 'DejaVuSerifCondensed-BoldItalic' } },
+            // --- FIX: Combined DejaVu Serif and DejaVu Serif Condensed ---
+            {
+                name: 'DejaVu Serif', styles: {
+                    regular: 'DejaVuSerif',
+                    bold: 'DejaVuSerif-Bold',
+                    italic: 'DejaVuSerif-Italic',
+                    boldItalic: 'DejaVuSerif-BoldItalic',
+                    condensed: 'DejaVuSerifCondensed',
+                    condensedBold: 'DejaVuSerifCondensed-Bold',
+                    condensedItalic: 'DejaVuSerifCondensed-Italic',
+                    condensedBoldItalic: 'DejaVuSerifCondensed-BoldItalic'
+                }
+            },
             { name: 'Garamond', styles: { regular: 'Garamond' } },
             { name: 'Garamond 3 LT Std', styles: { regular: 'Garamond3LTStd', bold: 'Garamond3LTStd-Bold', italic: 'Garamond3LTStd-Italic', boldItalic: 'Garamond3LTStd-BoldItalic' } },
             { name: 'Times New Roman', styles: { regular: 'TimesNewRomanPSMT', bold: 'TimesNewRomanPS-BoldMT', italic: 'TimesNewRomanPS-ItalicMT', boldItalic: 'TimesNewRomanPS-BoldItalicMT' } },
