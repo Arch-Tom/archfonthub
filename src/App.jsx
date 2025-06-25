@@ -139,28 +139,34 @@ const App = () => {
     const glyphs = ['©', '®', '™', '&', '#', '+', '–', '—', '…', '•', '°', '·', '♥', '♡', '♦', '♢', '♣', '♧', '♠', '♤', '★', '☆', '♪', '♫', '←', '→', '↑', '↓', '∞', '†', '✡︎', '✞', '✠', '±', '½', '¼', 'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ', 'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ρ', 'Σ', 'Τ', 'Υ', 'Φ', 'Χ', 'Ψ', 'Ω'];
 
     return (
-        <div className="app-layout">
-            <aside className="sidebar">
-                <div className="sidebar-header">
-                    <img src="/images/Arch Vector Logo White.svg" alt="Arch Font Hub Logo" />
-                    <h1>ARCH FONT HUB</h1>
-                </div>
-                <div className="sidebar-content">
-                    <div className="section">
-                        <div className="section-header">
-                            <h2>Font Selection</h2>
-                            <p>Click one or more fonts to add them to your proof.</p>
-                        </div>
+        <>
+            <header className="app-header">
+                <img src="/images/Arch Vector Logo White.svg" alt="Arch Font Hub Logo" />
+                <h1>ARCH FONT HUB</h1>
+            </header>
+
+            <main className="main-container">
+                <section className="card">
+                    <div className="card-header">
+                        <h2>Font Selection</h2>
+                        <p>Click one or more fonts to add them to your proof.</p>
+                    </div>
+                    <div className="card-content">
                         {Object.entries(fontLibrary).map(([category, fonts]) => (
                             <div key={category} className="font-category">
                                 <h3>{category}</h3>
                                 <div className="font-button-grid">
                                     {fonts.map(font => {
                                         const isSelected = selectedFonts.some(f => f.name === font.name);
+                                        const defaultStyle = font.styles[Object.keys(font.styles)[0]];
                                         return (
-                                            <button key={font.name} onClick={() => handleFontSelect(font)} className={`font-button ${isSelected ? 'selected' : ''}`}>
+                                            <button
+                                                key={font.name}
+                                                onClick={() => handleFontSelect(font)}
+                                                className={`font-button ${isSelected ? 'selected' : ''}`}
+                                                style={{ fontFamily: defaultStyle }}
+                                            >
                                                 {font.name}
-                                                {isSelected && <CheckIcon />}
                                             </button>
                                         );
                                     })}
@@ -168,57 +174,59 @@ const App = () => {
                             </div>
                         ))}
                     </div>
-                </div>
-            </aside>
+                </section>
 
-            <main className="main-content">
-                <div className="section">
-                    <div className="section-header">
+                <section className="card">
+                    <div className="card-header">
                         <h2>Text to Preview</h2>
                         <p>Type your text here to see it in the selected fonts.</p>
                         <button className="glyph-button-main" onClick={() => setIsGlyphModalOpen(true)}>Ω Glyphs</button>
                     </div>
-                    <textarea ref={textInputRef} className="text-input" value={customText} onChange={e => setCustomText(e.target.value)} />
-                </div>
+                    <div className="card-content">
+                        <textarea ref={textInputRef} className="text-input" value={customText} onChange={e => setCustomText(e.target.value)} />
+                    </div>
+                </section>
 
-                <div className="section">
-                    <div className="section-header">
+                <section className="card">
+                    <div className="card-header">
                         <h2>Live Preview</h2>
-                        <p>Adjust styles and font size for each selection.</p>
+                        <p>Adjust styles and font size for each selection below.</p>
                     </div>
-                    <div className="preview-controls">
-                        <label htmlFor="fontSize">Font Size: {fontSize}px</label>
-                        <input type="range" id="fontSize" min="20" max="150" value={fontSize} onChange={e => setFontSize(Number(e.target.value))} />
-                    </div>
-                    <div className="preview-area">
-                        {selectedFonts.length > 0 && customText.trim() ? (
-                            selectedFonts.map(font => (
-                                <div key={font.name} className="preview-item">
-                                    <div className="preview-item-header">
-                                        <span className="font-name-preview" style={{ fontFamily: font.styles.regular || font.styles[Object.keys(font.styles)[0]] }}>{font.name}</span>
-                                        <div className="style-selector">
-                                            {Object.keys(font.styles).map(styleKey => (
-                                                <button key={styleKey} onClick={() => handleStyleChange(font.name, styleKey)} className={font.activeStyle === styleKey ? 'active' : ''}>
-                                                    {styleKey}
-                                                </button>
-                                            ))}
+                    <div className="card-content">
+                        <div className="preview-controls">
+                            <label htmlFor="fontSize">Font Size: <span>{fontSize}px</span></label>
+                            <input type="range" id="fontSize" min="20" max="150" value={fontSize} onChange={e => setFontSize(Number(e.target.value))} />
+                        </div>
+                        <div className="preview-area">
+                            {selectedFonts.length > 0 && customText.trim() ? (
+                                selectedFonts.map(font => (
+                                    <div key={font.name} className="preview-item">
+                                        <div className="preview-item-header">
+                                            <span className="font-name-preview">{font.name}</span>
+                                            <div className="style-selector">
+                                                {Object.keys(font.styles).map(styleKey => (
+                                                    <button key={styleKey} onClick={() => handleStyleChange(font.name, styleKey)} className={font.activeStyle === styleKey ? 'active' : ''}>
+                                                        {styleKey}
+                                                    </button>
+                                                ))}
+                                            </div>
                                         </div>
+                                        <p className="preview-text" style={{ fontFamily: font.styles[font.activeStyle], fontSize: `${fontSize}px` }}>
+                                            {customText}
+                                        </p>
                                     </div>
-                                    <p className="preview-text" style={{ fontFamily: font.styles[font.activeStyle], fontSize: `${fontSize}px` }}>
-                                        {customText}
-                                    </p>
-                                </div>
-                            ))
-                        ) : <div className="preview-placeholder">Your selected fonts will be previewed here.</div>}
+                                ))
+                            ) : <div className="preview-placeholder">Your selected fonts will be previewed here.</div>}
+                        </div>
                     </div>
-                </div>
+                </section>
 
-                <div className="submit-section">
+                <section className="submit-section">
                     <button className="submit-button" onClick={handleInitiateSave}>
                         <img src="/images/Arch Vector Logo White.svg" alt="Logo" />
                         Submit your selection to Arch Engraving
                     </button>
-                </div>
+                </section>
             </main>
 
             <Modal isOpen={isGlyphModalOpen} onClose={() => setIsGlyphModalOpen(false)} title="Glyph Palette">
@@ -235,7 +243,7 @@ const App = () => {
             </Modal>
 
             <div className="toast-container">{toasts.map(t => (<div key={t.id} className={`toast toast-${t.type}`}>{t.message}</div>))}</div>
-        </div>
+        </>
     );
 };
 
