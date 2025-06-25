@@ -1,312 +1,384 @@
 ﻿import React, { useState, useRef } from 'react';
-import './App.css';
 
-// --- Helper Icons ---
-const XIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5"><path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" /></svg>);
+// This component remains outside the main App component for good practice.
+const FormInput = ({ label, id, value, onChange, required = false, isOptional = false }) => (
+    <div>
+        <label htmlFor={id} className="block text-sm font-medium text-slate-700 mb-1">
+            {label}
+            {required && <span className="text-red-500 ml-1">*</span>}
+            {isOptional && <span className="text-slate-500 text-xs ml-1">(Optional)</span>}
+        </label>
+        <input
+            id={id}
+            type="text"
+            value={value}
+            onChange={onChange}
+            required={required}
+            className="w-full px-3 py-2 border border-slate-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-400 text-base"
+        />
+    </div>
+);
 
-// --- Font Library (Updated) ---
-const fontLibrary = {
-    'Sans-serif': [
-        { name: 'Arial', styles: { regular: { fontFamily: 'ArialMT', fontWeight: 'normal', fontStyle: 'normal' }, bold: { fontFamily: 'Arial-BoldMT', fontWeight: 'bold', fontStyle: 'normal' }, italic: { fontFamily: 'Arial-ItalicMT', fontWeight: 'normal', fontStyle: 'italic' }, boldItalic: { fontFamily: 'Arial-BoldItalicMT', fontWeight: 'bold', fontStyle: 'italic' } } },
-        { name: 'Bebas Neue', styles: { regular: { fontFamily: 'BebasNeue-Regular', fontWeight: 'normal', fontStyle: 'normal' }, bold: { fontFamily: 'BebasNeue-Bold', fontWeight: 'bold', fontStyle: 'normal' } } },
-        { name: 'Berlin Sans FB', styles: { regular: { fontFamily: 'BerlinSansFB-Reg', fontWeight: 'normal', fontStyle: 'normal' }, bold: { fontFamily: 'BerlinSansFB-Bold', fontWeight: 'bold', fontStyle: 'normal' } } },
-        { name: 'Calibri', styles: { regular: { fontFamily: 'Calibri', fontWeight: 'normal', fontStyle: 'normal' }, bold: { fontFamily: 'Calibri-Bold', fontWeight: 'bold', fontStyle: 'normal' }, italic: { fontFamily: 'Calibri-Italic', fontWeight: 'normal', fontStyle: 'italic' } } },
-        { name: 'Century Gothic', styles: { regular: { fontFamily: 'CenturyGothicPaneuropean', fontWeight: 'normal', fontStyle: 'normal' }, bold: { fontFamily: 'CenturyGothicPaneuropean-Bold', fontWeight: 'bold', fontStyle: 'normal' }, boldItalic: { fontFamily: 'CenturyGothicPaneuropean-BoldItalic', fontWeight: 'bold', fontStyle: 'italic' } } },
-        { name: 'Graphik', styles: { thin: { fontFamily: 'Graphik-Thin', fontWeight: '100', fontStyle: 'normal' }, regular: { fontFamily: 'Graphik-Regular', fontWeight: 'normal', fontStyle: 'normal' }, medium: { fontFamily: 'Graphik-Medium', fontWeight: '500', fontStyle: 'normal' }, semibold: { fontFamily: 'Graphik-Semibold', fontWeight: '600', fontStyle: 'normal' }, thinItalic: { fontFamily: 'Graphik-ThinItalic', fontWeight: '100', fontStyle: 'italic' }, regularItalic: { fontFamily: 'Graphik-RegularItalic', fontWeight: 'normal', fontStyle: 'italic' }, mediumItalic: { fontFamily: 'Graphik-MediumItalic', fontWeight: '500', fontStyle: 'italic' } } },
-        { name: 'Zapf Humanist', styles: { demi: { fontFamily: 'ZapfHumanist601BT-Demi', fontWeight: '600', fontStyle: 'normal' } } },
-    ],
-    'Serif': [
-        { name: 'Benguiat', styles: { regular: { fontFamily: 'Benguiat', fontWeight: 'normal', fontStyle: 'normal' }, bold: { fontFamily: 'BenguiatITCbyBT-Bold', fontWeight: 'bold', fontStyle: 'normal' }, italic: { fontFamily: 'BenguiatITCbyBT-BookItalic', fontWeight: 'normal', fontStyle: 'italic' } } },
-        { name: 'Bookman Old Style', styles: { regular: { fontFamily: 'Bookman Old Style', fontWeight: 'normal', fontStyle: 'normal' }, bold: { fontFamily: 'Bookman Old Style', fontWeight: 'bold', fontStyle: 'normal' }, italic: { fontFamily: 'Bookman Old Style', fontWeight: 'normal', fontStyle: 'italic' }, boldItalic: { fontFamily: 'Bookman Old Style', fontWeight: 'bold', fontStyle: 'italic' } } },
-        { name: 'Century Schoolbook', styles: { regular: { fontFamily: 'CenturySchoolbook', fontWeight: 'normal', fontStyle: 'normal' }, bold: { fontFamily: 'CenturySchoolbook-Bold', fontWeight: 'bold', fontStyle: 'normal' }, boldItalic: { fontFamily: 'CenturySchoolbook-BoldItalic', fontWeight: 'bold', fontStyle: 'italic' } } },
-        { name: 'Century725 BT', styles: { regular: { fontFamily: 'Century725 BT', fontWeight: 'normal', fontStyle: 'normal' }, bold: { fontFamily: 'Century725 BT', fontWeight: 'bold', fontStyle: 'normal' }, italic: { fontFamily: 'Century725 BT', fontWeight: 'normal', fontStyle: 'italic' } } },
-        { name: 'CopprplGoth BT', styles: { regular: { fontFamily: 'CopperplateGothicBT-Roman', fontWeight: 'normal', fontStyle: 'normal' } } },
-        { name: 'DejaVu Serif', styles: { regular: { fontFamily: 'DejaVu Serif', fontWeight: 'normal', fontStyle: 'normal' }, bold: { fontFamily: 'DejaVu Serif', fontWeight: 'bold', fontStyle: 'normal' }, italic: { fontFamily: 'DejaVu Serif', fontWeight: 'normal', fontStyle: 'italic' }, boldItalic: { fontFamily: 'DejaVu Serif', fontWeight: 'bold', fontStyle: 'italic' } } },
-        { name: 'DejaVu Serif Condensed', styles: { regular: { fontFamily: 'DejaVu Serif Condensed', fontWeight: 'normal', fontStyle: 'normal' }, bold: { fontFamily: 'DejaVu Serif Condensed', fontWeight: 'bold', fontStyle: 'normal' }, italic: { fontFamily: 'DejaVu Serif Condensed', fontWeight: 'normal', fontStyle: 'italic' }, boldItalic: { fontFamily: 'DejaVu Serif Condensed', fontWeight: 'bold', fontStyle: 'italic' } } },
-        { name: 'Garamond 3 LT Std', styles: { regular: { fontFamily: 'Garamond3LTStd', fontWeight: 'normal', fontStyle: 'normal' }, bold: { fontFamily: 'Garamond3LTStd-Bold', fontWeight: 'bold', fontStyle: 'normal' }, italic: { fontFamily: 'Garamond3LTStd-Italic', fontWeight: 'normal', fontStyle: 'italic' }, boldItalic: { fontFamily: 'Garamond3LTStd-BoldItalic', fontWeight: 'bold', fontStyle: 'italic' } } },
-        { name: 'Times New Roman', styles: { regular: { fontFamily: 'TimesNewRomanPSMT', fontWeight: 'normal', fontStyle: 'normal' }, bold: { fontFamily: 'TimesNewRomanPS-BoldMT', fontWeight: 'bold', fontStyle: 'normal' }, italic: { fontFamily: 'TimesNewRomanPS-ItalicMT', fontWeight: 'normal', fontStyle: 'italic' }, boldItalic: { fontFamily: 'TimesNewRomanPS-BoldItalicMT', fontWeight: 'bold', fontStyle: 'italic' } } },
-    ],
-    'Script': [
-        { name: 'Amazone BT', styles: { regular: { fontFamily: 'AmazoneBT-Regular', fontWeight: 'normal', fontStyle: 'normal' } } },
-        { name: 'Angelface', styles: { regular: { fontFamily: 'Angelface', fontWeight: 'normal', fontStyle: 'normal' } } },
-        { name: 'Clicker Script', styles: { regular: { fontFamily: 'ClickerScript-Regular', fontWeight: 'normal', fontStyle: 'normal' } } },
-        { name: 'Concerto Pro', styles: { regular: { fontFamily: 'Concerto Pro', fontWeight: 'normal', fontStyle: 'italic' } } },
-        { name: 'Courgette', styles: { regular: { fontFamily: 'Courgette-Regular', fontWeight: 'normal', fontStyle: 'normal' } } },
-        { name: 'Freebooter Script', styles: { regular: { fontFamily: 'FreebooterScript', fontWeight: 'normal', fontStyle: 'normal' } } },
-        { name: 'French Script MT', styles: { regular: { fontFamily: 'French Script MT', fontWeight: 'normal', fontStyle: 'normal' } } },
-        { name: 'Great Vibes', styles: { regular: { fontFamily: 'GreatVibes-Regular', fontWeight: 'normal', fontStyle: 'normal' } } },
-        { name: 'Honey Script', styles: { light: { fontFamily: 'HoneyScript-Light', fontWeight: '300', fontStyle: 'normal' }, semiBold: { fontFamily: 'HoneyScript-SemiBold', fontWeight: '600', fontStyle: 'normal' } } },
-        { name: 'I Love Glitter', styles: { regular: { fontFamily: 'ILoveGlitter', fontWeight: 'normal', fontStyle: 'normal' } } },
-        { name: 'ITC Zapf Chancery', styles: { regular: { fontFamily: 'ZapfChancery-Roman', fontWeight: 'normal', fontStyle: 'normal' } } },
-        { name: 'Lisbon Script', styles: { regular: { fontFamily: 'LisbonScript-Regular', fontWeight: 'normal', fontStyle: 'normal' } } },
-        { name: 'Murray Hill', styles: { regular: { fontFamily: 'MurrayHill', fontWeight: 'normal', fontStyle: 'normal' } } },
-    ],
-    'Display': [
-        { name: 'American Pop Plain', styles: { regular: { fontFamily: 'American Pop Plain', fontWeight: 'normal', fontStyle: 'normal' } } },
-        { name: 'BlackChancery', styles: { regular: { fontFamily: 'BlackChancery', fontWeight: 'normal', fontStyle: 'normal' } } },
-        { name: 'Century725 Blk BT', styles: { black: { fontFamily: 'Century725 Blk BT', fontWeight: '900', fontStyle: 'normal' } } },
-        { name: 'Century725 Cn BT', styles: { regular: { fontFamily: 'Century725 Cn BT', fontWeight: 'normal', fontStyle: 'normal' } } },
-        { name: 'Collegiate', styles: { black: { fontFamily: 'CollegiateBlackFLF', fontWeight: '900', fontStyle: 'normal' }, outline: { fontFamily: 'CollegiateOutlineFLF', fontWeight: 'normal', fontStyle: 'normal' } } },
-        { name: 'Cowboy Rodeo', styles: { regular: { fontFamily: 'CowboyRodeoW01-Regular', fontWeight: 'normal', fontStyle: 'normal' } } },
-        { name: 'Machine BT', styles: { regular: { fontFamily: 'MachineITCbyBT-Regular', fontWeight: 'normal', fontStyle: 'normal' } } },
-        { name: 'Old English Text MT', styles: { regular: { fontFamily: 'OldEnglishTextMT', fontWeight: 'normal', fontStyle: 'normal' } } },
-        { name: 'Planscribe', styles: { regular: { fontFamily: 'PlanscribeNFW01-Regular', fontWeight: 'normal', fontStyle: 'normal' } } },
-    ]
-};
-
-
-const Modal = ({ isOpen, onClose, title, children }) => {
-    if (!isOpen) return null;
-    return (
-        <div className="modal-overlay" onClick={onClose}>
-            <div className="modal-box" onClick={e => e.stopPropagation()}>
-                <div className="modal-header">
-                    <h3 className="modal-title">{title}</h3>
-                    <button onClick={onClose} className="modal-close-button"><XIcon /></button>
-                </div>
-                {children}
-            </div>
-        </div>
-    );
-};
 
 const App = () => {
     const WORKER_URL = "https://customerfontselection-worker.tom-4a9.workers.dev";
-    const DEFAULT_PLACEHOLDER = 'The quick brown fox jumps over the lazy dog.';
+    const DEFAULT_TEXT_PLACEHOLDER = 'Type your text here...';
+
+    // --- FINAL, CORRECTED FONT LIBRARY BASED ON THE PROVIDED LIST ---
+    // This structure ensures a 1:1 match between the UI, preview, and SVG export.
+    const fontLibrary = {
+        'Sans-serif': [
+            { name: 'Arial', styles: { regular: 'ArialMT', bold: 'Arial-BoldMT', italic: 'Arial-ItalicMT', boldItalic: 'Arial-BoldItalicMT' } },
+            { name: 'Bebas Neue', styles: { regular: 'BebasNeue-Regular', bold: 'BebasNeue-Bold' } },
+            { name: 'Berlin Sans FB', styles: { regular: 'BerlinSansFB-Reg', bold: 'BerlinSansFB-Bold' } },
+            { name: 'Calibri', styles: { regular: 'Calibri', bold: 'Calibri-Bold', italic: 'Calibri-Italic' } },
+            { name: 'Century Gothic', styles: { regular: 'CenturyGothicPaneuropean', bold: 'CenturyGothicPaneuropean-Bold', boldItalic: 'CenturyGothicPaneuropean-BoldItalic' } },
+            { name: 'Graphik', styles: { regular: 'Graphik-Regular', regularItalic: 'Graphik-RegularItalic', medium: 'Graphik-Medium', mediumItalic: 'Graphik-MediumItalic', semibold: 'Graphik-Semibold', thin: 'Graphik-Thin', thinItalic: 'Graphik-ThinItalic' } },
+            { name: 'Zapf Humanist', styles: { demi: 'ZapfHumanist601BT-Demi' } },
+        ],
+        'Serif': [
+            { name: 'Benguiat', styles: { regular: 'Benguiat', bold: 'BenguiatITCbyBT-Bold', italic: 'BenguiatITCbyBT-BookItalic' } },
+            { name: 'Bookman Old Style', styles: { bold: 'BookmanOldStyle-Bold', boldItalic: 'BookmanOldStyle-BoldItalic', italic: 'BookmanOldStyle-Italic' } },
+            { name: 'Century Schoolbook', styles: { regular: 'CenturySchoolbook', bold: 'CenturySchoolbook-Bold', boldItalic: 'CenturySchoolbook-BoldItalic' } },
+            { name: 'Century725', styles: { roman: 'Century725BT-Roman', italic: 'Century725BT-Italic', bold: 'Century725BT-Bold', black: 'Century725BT-Black', condensed: 'Century725BT-RomanCondensed' } },
+            { name: 'CopprplGoth BT', styles: { regular: 'CopperplateGothicBT-Roman' } },
+            { name: 'DejaVu Serif', styles: { regular: 'DejaVuSerif', bold: 'DejaVuSerif-Bold', italic: 'DejaVuSerif-Italic', boldItalic: 'DejaVuSerif-BoldItalic' } },
+            { name: 'DejaVu Serif Condensed', styles: { regular: 'DejaVuSerifCondensed', bold: 'DejaVuSerifCondensed-Bold', italic: 'DejaVuSerifCondensed-Italic', boldItalic: 'DejaVuSerifCondensed-BoldItalic' } },
+            { name: 'Garamond', styles: { regular: 'Garamond' } },
+            { name: 'Garamond 3 LT Std', styles: { regular: 'Garamond3LTStd', bold: 'Garamond3LTStd-Bold', italic: 'Garamond3LTStd-Italic', boldItalic: 'Garamond3LTStd-BoldItalic' } },
+            { name: 'Times New Roman', styles: { regular: 'TimesNewRomanPSMT', bold: 'TimesNewRomanPS-BoldMT', italic: 'TimesNewRomanPS-ItalicMT', boldItalic: 'TimesNewRomanPS-BoldItalicMT' } },
+        ],
+        'Script & Display': [
+            { name: 'Amazone BT', styles: { regular: 'AmazoneBT-Regular' } },
+            { name: 'American Pop Plain', styles: { regular: 'American Pop Plain' } },
+            { name: 'Angelface', styles: { regular: 'Angelface' } },
+            { name: 'BlackChancery', styles: { regular: 'BlackChancery' } },
+            { name: 'Clicker Script', styles: { regular: 'ClickerScript-Regular' } },
+            { name: 'Collegiate', styles: { black: 'CollegiateBlackFLF', outline: 'CollegiateOutlineFLF' } },
+            { name: 'Concerto Pro', styles: { regular: 'ConcertoPro-Regular' } },
+            { name: 'Courgette', styles: { regular: 'Courgette-Regular' } },
+            { name: 'Cowboy Rodeo', styles: { regular: 'CowboyRodeoW01-Regular' } },
+            { name: 'Freebooter Script', styles: { regular: 'FreebooterScript' } },
+            { name: 'French Script MT', styles: { regular: 'FrenchScriptMT' } },
+            { name: 'Great Vibes', styles: { regular: 'GreatVibes-Regular' } },
+            { name: 'Honey Script', styles: { light: 'HoneyScript-Light', semiBold: 'HoneyScript-SemiBold' } },
+            { name: 'I Love Glitter', styles: { regular: 'ILoveGlitter' } },
+            { name: 'ITC Zapf Chancery', styles: { regular: 'ZapfChancery-Roman' } },
+            { name: 'Lisbon Script', styles: { regular: 'LisbonScript-Regular' } },
+            { name: 'Machine BT', styles: { regular: 'MachineITCbyBT-Regular' } },
+            { name: 'Murray Hill', styles: { regular: 'MurrayHill' } },
+            { name: 'Old English Text MT', styles: { regular: 'OldEnglishTextMT' } },
+            { name: 'Planscribe', styles: { regular: 'PlanscribeNFW01-Regular' } },
+        ],
+    };
+
+    // State hooks for managing the application's data and UI
     const [selectedFonts, setSelectedFonts] = useState([]);
-    const [customText, setCustomText] = useState(DEFAULT_PLACEHOLDER);
+    const [customText, setCustomText] = useState('');
     const [fontSize, setFontSize] = useState(36);
-    const [toasts, setToasts] = useState([]);
+    const [message, setMessage] = useState('');
+    const [showMessageBox, setShowMessageBox] = useState(false);
+    const [showCustomerModal, setShowCustomerModal] = useState(false);
+    const [showGlyphPalette, setShowGlyphPalette] = useState(false);
     const [customerName, setCustomerName] = useState('');
     const [customerCompany, setCustomerCompany] = useState('');
     const [orderNumber, setOrderNumber] = useState('');
     const [pendingSvgContent, setPendingSvgContent] = useState(null);
-    const [isCustomerModalOpen, setIsCustomerModalOpen] = useState(false);
-    const [isGlyphModalOpen, setIsGlyphModalOpen] = useState(false);
+
     const textInputRef = useRef(null);
 
-    const showToast = (message, type = 'success', duration = 4000) => {
-        const id = Date.now();
-        setToasts(prev => [...prev, { id, message, type }]);
-        setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), duration);
+    // Handles selecting or deselecting a font
+    const handleFontSelect = (font) => {
+        const isSelected = selectedFonts.some(f => f.name === font.name);
+        if (isSelected) {
+            setSelectedFonts(prev => prev.filter(f => f.name !== font.name));
+        } else {
+            const defaultStyleKey = Object.keys(font.styles)[0];
+            setSelectedFonts(prev => [...prev, { ...font, activeStyle: defaultStyleKey }]);
+        }
     };
 
-    const handleFontSelect = (font) => {
+    // Handles changing the style (e.g., bold, italic) of a selected font
+    const handleStyleChange = (fontName, newStyle) => {
         setSelectedFonts(prev =>
-            prev.some(f => f.name === font.name)
-                ? prev.filter(f => f.name !== font.name)
-                : [...prev, { ...font, activeStyle: Object.keys(font.styles)[0] }]
+            prev.map(font =>
+                font.name === fontName ? { ...font, activeStyle: newStyle } : font
+            )
         );
     };
 
-    const handleStyleChange = (fontName, newStyle) => {
-        setSelectedFonts(prev => prev.map(f => f.name === fontName ? { ...f, activeStyle: newStyle } : f));
+    const handleTextChange = (e) => setCustomText(e.target.value);
+    const handleFontSizeChange = (e) => setFontSize(Number(e.target.value));
+
+    // Displays a message box for a short duration
+    const showMessage = (msg, duration = 4000) => {
+        setMessage(msg);
+        setShowMessageBox(true);
+        setTimeout(() => setShowMessageBox(false), duration);
     };
 
+    // Formats a string to be filesystem-friendly
     const formatForFilename = (str) => str.trim().replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_-]/g, '');
 
+    // Inserts a glyph into the textarea at the current cursor position
     const handleGlyphInsert = (glyph) => {
-        const { current: textarea } = textInputRef;
+        const textarea = textInputRef.current;
         if (!textarea) return;
-        const { selectionStart, selectionEnd } = textarea;
-        const newText = customText.substring(0, selectionStart) + glyph + customText.substring(selectionEnd);
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const text = customText;
+        const newText = text.substring(0, start) + glyph + text.substring(end);
         setCustomText(newText);
         textarea.focus();
-        setTimeout(() => textarea.selectionStart = textarea.selectionEnd = selectionStart + glyph.length, 0);
+        // Move cursor after the inserted glyph
+        setTimeout(() => {
+            textarea.selectionStart = textarea.selectionEnd = start + glyph.length;
+        }, 0);
     };
 
-    const handleTextFocus = () => {
-        if (customText === DEFAULT_PLACEHOLDER) {
-            setCustomText('');
-        }
-    };
-
-    const handleTextBlur = () => {
-        if (customText.trim() === '') {
-            setCustomText(DEFAULT_PLACEHOLDER);
-        }
-    };
-
-    const handleInitiateSave = () => {
-        if (selectedFonts.length === 0 || !customText.trim()) {
-            showToast('Please select a font and enter some text.', 'error');
+    // Generates the SVG content and shows the customer info modal
+    const handleSaveSvg = () => {
+        if (selectedFonts.length === 0 || customText.trim() === '') {
+            showMessage('Please select at least one font and enter some text to save an SVG.');
             return;
         }
-        const lines = customText.split('\n').filter(line => line.trim());
+        const lines = customText.split('\n').filter(line => line.trim() !== '');
         if (lines.length === 0) {
-            showToast('Please enter some text to save.', 'error');
+            showMessage('Please enter some text to save an SVG.');
             return;
         }
 
         let svgTextElements = '';
-        const lineHeight = fontSize * 1.5;
-        const labelFontSize = 14;
-        const padding = 30;
+        const lineHeight = fontSize * 1.4;
+        const labelFontSize = 16;
+        const padding = 20;
         let y = padding;
 
         selectedFonts.forEach((font, fontIndex) => {
-            const activeFontStyle = font.styles[font.activeStyle];
+            const activeFontFamily = font.styles[font.activeStyle];
             const styleName = font.activeStyle.charAt(0).toUpperCase() + font.activeStyle.slice(1);
-            y += labelFontSize + 15;
-            svgTextElements += `<text x="${padding}" y="${y}" font-family="Inter, sans-serif" font-size="${labelFontSize}" fill="#4a5568" font-weight="600">${font.name} (${styleName})</text>\n`;
-            y += 5;
+
+            y += labelFontSize + 10;
+            svgTextElements += `<text x="${padding}" y="${y}" font-family="Arial" font-size="${labelFontSize}" fill="#6b7280" font-weight="600">${font.name} (${styleName})</text>\n`;
+            y += lineHeight * 0.5;
 
             lines.forEach((line) => {
                 const sanitizedLine = line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
                 y += lineHeight;
-                svgTextElements += `<text x="${padding}" y="${y}" font-family="${activeFontStyle.fontFamily}" font-size="${fontSize}" font-weight="${activeFontStyle.fontWeight}" font-style="${activeFontStyle.fontStyle}" fill="#1a202c">${sanitizedLine}</text>\n`;
+                svgTextElements += `<text x="${padding}" y="${y}" font-family="${activeFontFamily}" font-size="${fontSize}" fill="#181717">${sanitizedLine}</text>\n`;
             });
-            if (fontIndex < selectedFonts.length - 1) y += lineHeight * 0.5;
+
+            if (fontIndex < selectedFonts.length - 1) {
+                y += lineHeight * 0.75; // Add extra space between font previews
+            }
         });
 
+        const svgWidth = 800;
         const svgHeight = y + padding;
-        const svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="${svgHeight}" style="background-color: #ffffff;">\n${svgTextElements}</svg>`;
-        setPendingSvgContent(svgContent);
-        setIsCustomerModalOpen(true);
+        const fullSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="${svgWidth}" height="${svgHeight}" style="background-color: #FFF;">\n${svgTextElements}</svg>`;
+        setPendingSvgContent(fullSvg);
+        setShowCustomerModal(true);
     };
 
+    // Handles the submission of customer info, saves the SVG locally, and uploads it
     const handleCustomerModalSubmit = async (e) => {
         e.preventDefault();
         if (!orderNumber.trim() || !customerName.trim()) {
-            showToast('Order Number and Customer Name are required.', 'error'); return;
+            showMessage('Order Number and Customer Name are required.');
+            return;
         }
-        setIsCustomerModalOpen(false);
-        const filename = [formatForFilename(orderNumber), formatForFilename(customerName), customerCompany ? formatForFilename(customerCompany) : ''].filter(Boolean).join('_') + '.svg';
+
+        setShowCustomerModal(false);
+        const filename = [
+            formatForFilename(orderNumber),
+            formatForFilename(customerName),
+            customerCompany.trim() ? formatForFilename(customerCompany) : ''
+        ].filter(Boolean).join('_') + '.svg';
+
+        // Local Save
         try {
             const blob = new Blob([pendingSvgContent], { type: 'image/svg+xml' });
+            const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
+            a.href = url;
             a.download = filename;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
-            URL.revokeObjectURL(a.href);
-            showToast(`Saved ${filename} locally.`);
-        } catch (error) { showToast(`Error saving file: ${error.message}`, 'error'); }
+            URL.revokeObjectURL(url);
+            showMessage('SVG saved locally!');
+        } catch (error) {
+            showMessage(`Could not save file locally: ${error.message}`);
+        }
+
+        // Upload to Worker
         try {
-            const response = await fetch(`${WORKER_URL}/${filename}`, { method: 'PUT', headers: { 'Content-Type': 'image/svg+xml' }, body: pendingSvgContent });
-            if (!response.ok) throw new Error(`Server responded with ${response.status}`);
-            showToast('Proof uploaded successfully.');
-        } catch (error) { showToast(`Upload failed: ${error.message}`, 'error', 6000); }
-        setCustomerName(''); setCustomerCompany(''); setOrderNumber(''); setPendingSvgContent(null);
+            const response = await fetch(`${WORKER_URL}/${filename}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'image/svg+xml' },
+                body: pendingSvgContent
+            });
+            if (!response.ok) throw new Error(await response.text());
+            showMessage('SVG uploaded successfully!');
+        } catch (error) {
+            console.error('Upload error:', error);
+            showMessage(`Error uploading SVG: ${error.message}`, 6000);
+        }
+
+        // Reset state
+        setCustomerName('');
+        setCustomerCompany('');
+        setOrderNumber('');
+        setPendingSvgContent(null);
     };
 
-    const glyphs = ['©', '®', '™', '&', '#', '+', '–', '—', '…', '•', '°', '·', '♥', '♡', '♦', '♢', '♣', '♧', '♠', '♤', '★', '☆', '♪', '♫', '←', '→', '↑', '↓', '∞', '†', '✡︎', '✞', '✠', '±', '½', '¼', 'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ', 'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ρ', 'Σ', 'Τ', 'Υ', 'Φ', 'Χ', 'Ψ', 'Ω'];
+    // List of glyphs available for insertion
+    const glyphs = ['©', '®', '™', '&', '#', '+', '–', '—', '…', '•', '°', '·', '♥', '♡', '♦', '♢', '♣', '♧', '♠', '♤', '★', '☆', '♪', '♫', '←', '→', '↑', '↓', '∞', '†', '✡\uFE0E', '✞', '✠', '±', '½', '¼', 'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ', 'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ρ', 'Σ', 'Τ', 'Υ', 'Φ', 'Χ', 'Ψ', 'Ω'];
 
     return (
-        <div className="app-layout">
-            <aside className="branding-sidebar">
-                <img src="/images/Arch Vector Logo White.svg" alt="Arch Font Hub Logo" className="sidebar-logo" />
-                <h1>ARCH FONT HUB</h1>
+        <div className="flex flex-col lg:flex-row min-h-screen bg-slate-100 font-sans">
+            {/* Sidebar */}
+            <aside className="bg-gradient-to-b from-slate-800 to-slate-900 text-white w-full lg:w-80 lg:h-auto p-4 lg:p-8 flex-shrink-0 flex flex-col items-center justify-center lg:justify-start lg:pt-16 shadow-xl lg:rounded-r-3xl">
+                <div className="flex flex-row lg:flex-col items-center justify-center gap-4">
+                    <div className="flex-shrink-0">
+                        <img src="/images/Arch Vector Logo White.svg" alt="Arch Font Hub Logo" className="h-20 w-20 lg:h-40 lg:w-40 object-contain drop-shadow-lg" />
+                    </div>
+                    <div className="font-black text-2xl lg:text-3xl tracking-wide leading-tight text-white text-center">ARCH<br className="hidden lg:block" /> FONT HUB</div>
+                </div>
+                <p className="hidden lg:block mt-4 text-base text-slate-300 border-t border-slate-700 pt-6 text-center">Experiment with fonts and text display for customer proofs.</p>
             </aside>
 
-            <main className="main-container">
-                <section className="card">
-                    <div className="card-header">
-                        <h2>Font Selection</h2>
-                        <p>Click one or more fonts to add them to your proof.</p>
-                    </div>
-                    <div className="card-content">
-                        {Object.entries(fontLibrary).map(([category, fonts]) => (
-                            <div key={category} className="font-category">
-                                <h3>{category}</h3>
-                                <div className="font-button-grid">
-                                    {fonts.map(font => {
-                                        const isSelected = selectedFonts.some(f => f.name === font.name);
-                                        const defaultStyle = font.styles[Object.keys(font.styles)[0]];
-                                        return (
-                                            <button
-                                                key={font.name}
-                                                onClick={() => handleFontSelect(font)}
-                                                className={`font-button ${isSelected ? 'selected' : ''}`}
-                                                style={{ fontFamily: defaultStyle.fontFamily, fontWeight: defaultStyle.fontWeight, fontStyle: defaultStyle.fontStyle }}
-                                            >
-                                                {font.name}
-                                            </button>
-                                        );
-                                    })}
+            {/* Main Content */}
+            <main className="flex-1 p-4 sm:p-8 lg:p-12">
+                <div className="max-w-7xl mx-auto">
+                    <div className="space-y-10">
+
+                        {/* Font Selection Section */}
+                        <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
+                            <h2 className="text-2xl font-black text-slate-900 mb-6 tracking-tight">Font Selection</h2>
+                            <div className="space-y-6">
+                                {Object.entries(fontLibrary).map(([category, fonts]) => (
+                                    <div key={category}>
+                                        <h3 className="text-md font-semibold text-slate-700 border-b-2 border-slate-200 pb-2 mb-3 tracking-wide">{category}</h3>
+                                        <div className="flex flex-wrap gap-3">
+                                            {fonts.map((font) => (
+                                                <button
+                                                    key={font.name}
+                                                    onClick={() => handleFontSelect(font)}
+                                                    className={`px-4 py-2 rounded-xl text-base font-semibold border-2 transition-all duration-150 transform hover:scale-105 focus:outline-none
+                                                        ${selectedFonts.some(f => f.name === font.name)
+                                                            ? 'bg-blue-600 text-white border-blue-600 shadow-md'
+                                                            : 'bg-white text-blue-900 border-blue-500 hover:bg-blue-50'
+                                                        }`}
+                                                    style={{ fontFamily: font.styles[Object.keys(font.styles)[0]] }}
+                                                >
+                                                    {font.name}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+
+                        {/* Custom Text Section */}
+                        <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
+                            <div className="flex justify-between items-center mb-6">
+                                <h2 className="text-2xl font-black text-slate-900 tracking-tight">Custom Text</h2>
+                                <button onClick={() => setShowGlyphPalette(true)} className="px-4 py-2 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-sm">Ω Glyphs</button>
+                            </div>
+                            <textarea ref={textInputRef} className="w-full p-5 border-2 border-slate-200 rounded-xl shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 min-h-[120px] text-lg" value={customText} onChange={handleTextChange} placeholder={DEFAULT_TEXT_PLACEHOLDER} />
+                        </section>
+
+                        {/* Live Preview Section */}
+                        <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
+                            <div className="flex justify-between items-center mb-6">
+                                <h2 className="text-2xl font-black text-slate-900 tracking-tight">Live Preview</h2>
+                                <div className="flex items-center gap-3">
+                                    <label htmlFor="fontSizeSlider" className="text-sm font-medium text-slate-600">Size</label>
+                                    <input id="fontSizeSlider" type="range" min="36" max="100" step="1" value={fontSize} onChange={handleFontSizeChange} className="w-32 lg:w-48 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600" />
+                                    <span className="text-sm font-medium text-slate-600 w-12 text-left">{fontSize}px</span>
                                 </div>
                             </div>
-                        ))}
-                    </div>
-                </section>
-
-                <section className="card">
-                    <div className="card-header">
-                        <div className="header-text-content">
-                            <h2>Text to Preview</h2>
-                            <p>Type your text here to see it in the selected fonts.</p>
-                        </div>
-                        <button className="symbol-button" onClick={() => setIsGlyphModalOpen(true)}>Symbols</button>
-                    </div>
-                    <div className="card-content">
-                        <textarea
-                            ref={textInputRef}
-                            className="text-input"
-                            value={customText}
-                            onChange={e => setCustomText(e.target.value)}
-                            onFocus={handleTextFocus}
-                            onBlur={handleTextBlur}
-                        />
-                    </div>
-                </section>
-
-                <section className="card">
-                    <div className="card-header">
-                        <h2>Live Preview</h2>
-                        <p>Adjust styles and font size for each selection below.</p>
-                    </div>
-                    <div className="card-content">
-                        <div className="preview-controls">
-                            <label htmlFor="fontSize">Font Size: <span>{fontSize}px</span></label>
-                            <input type="range" id="fontSize" min="36" max="100" value={fontSize} onChange={e => setFontSize(Number(e.target.value))} />
-                        </div>
-                        <div className="preview-area">
-                            {selectedFonts.length > 0 && customText.trim() && customText !== DEFAULT_PLACEHOLDER ? (
-                                selectedFonts.map(font => (
-                                    <div key={font.name} className="preview-item">
-                                        <div className="preview-item-header">
-                                            <span className="font-name-preview">{font.name}</span>
-                                            <div className="style-selector">
-                                                {Object.keys(font.styles).map(styleKey => (
-                                                    <button key={styleKey} onClick={() => handleStyleChange(font.name, styleKey)} className={font.activeStyle === styleKey ? 'active' : ''}>
-                                                        {styleKey}
-                                                    </button>
-                                                ))}
+                            <div className="bg-gradient-to-b from-slate-50 to-slate-200 p-6 rounded-xl min-h-[150px] space-y-10 border border-slate-100">
+                                {selectedFonts.length > 0 && customText.trim() !== '' ? (
+                                    selectedFonts.map((font) => {
+                                        const activeFontFamily = font.styles[font.activeStyle];
+                                        return (
+                                            <div key={`preview-${font.name}`} className="relative flex flex-col items-start gap-3">
+                                                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-2">
+                                                    <span className="bg-blue-600 text-white px-4 py-1 rounded-full text-xs font-bold shadow-sm z-10" style={{ fontFamily: 'Arial' }}>{font.name}</span>
+                                                    <div className="flex flex-wrap gap-1">
+                                                        {Object.keys(font.styles).map(styleKey => (
+                                                            <button
+                                                                key={styleKey}
+                                                                onClick={() => handleStyleChange(font.name, styleKey)}
+                                                                className={`px-3 py-1 text-xs rounded-md border-2 transition-colors ${font.activeStyle === styleKey ? 'bg-slate-700 text-white border-slate-700' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-100'}`}
+                                                            >
+                                                                {styleKey.charAt(0).toUpperCase() + styleKey.slice(1)}
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                                <p className="text-slate-800 break-words w-full" style={{ fontFamily: activeFontFamily, fontSize: `${fontSize}px`, lineHeight: 1.4 }}>{customText}</p>
                                             </div>
-                                        </div>
-                                        <p className="preview-text" style={{ ...font.styles[font.activeStyle], fontSize: `${fontSize}px` }}>
-                                            {customText}
-                                        </p>
-                                    </div>
-                                ))
-                            ) : <div className="preview-placeholder">Your selected fonts will be previewed here.</div>}
-                        </div>
+                                        )
+                                    })
+                                ) : (
+                                    <div className="flex items-center justify-center h-full"><p className="text-slate-500 italic">Select fonts and enter text to see a live preview.</p></div>
+                                )}
+                            </div>
+                        </section>
                     </div>
-                </section>
 
-                <div className="submit-section">
-                    <button className="submit-button" onClick={handleInitiateSave}>
-                        <img src="/images/Arch Vector Logo White.svg" alt="Logo" className="submit-button-logo" />
-                        Submit your selection to Arch Engraving
-                    </button>
+                    {/* Submit Button */}
+                    <div className="mt-12">
+                        <button className="w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white font-bold py-5 px-8 rounded-2xl shadow-2xl hover:shadow-blue-200 hover:from-blue-700 hover:to-blue-600 transition-all duration-200 transform hover:scale-105 text-xl tracking-wide" onClick={handleSaveSvg}>
+                            Submit Fonts to Arch Engraving
+                        </button>
+                    </div>
                 </div>
             </main>
 
-            <Modal isOpen={isGlyphModalOpen} onClose={() => setIsGlyphModalOpen(false)} title="Symbol Palette">
-                <div className="glyph-palette">{glyphs.map(glyph => (<button key={glyph} onClick={() => handleGlyphInsert(glyph)}>{glyph}</button>))}</div>
-            </Modal>
-
-            <Modal isOpen={isCustomerModalOpen} onClose={() => setIsCustomerModalOpen(false)} title="Customer Information for SVG">
-                <form onSubmit={handleCustomerModalSubmit} className="customer-form">
-                    <div className="form-group"><label htmlFor="orderNumber">Order Number*</label><input id="orderNumber" type="text" value={orderNumber} onChange={e => setOrderNumber(e.target.value)} required /></div>
-                    <div className="form-group"><label htmlFor="customerName">Customer Name*</label><input id="customerName" type="text" value={customerName} onChange={e => setCustomerName(e.target.value)} required /></div>
-                    <div className="form-group"><label htmlFor="customerCompany">Company (Optional)</label><input id="customerCompany" type="text" value={customerCompany} onChange={e => setCustomerCompany(e.target.value)} /></div>
-                    <div className="modal-actions"><button type="button" className="button-secondary" onClick={() => setIsCustomerModalOpen(false)}>Cancel</button><button type="submit" className="button-primary">Submit & Save</button></div>
-                </form>
-            </Modal>
-
-            <div className="toast-container">{toasts.map(t => (<div key={t.id} className={`toast toast-${t.type}`}>{t.message}</div>))}</div>
+            {/* Modals Overlay */}
+            {(showCustomerModal || showMessageBox || showGlyphPalette) && (
+                <div className="fixed inset-0 bg-slate-900 bg-opacity-75 flex items-center justify-center p-4 z-50 transition-opacity animate-fade-in">
+                    <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-2xl animate-fade-in">
+                        {/* Glyph Palette Modal */}
+                        {showGlyphPalette && (
+                            <div className="space-y-6">
+                                <h3 className="text-2xl font-bold text-slate-900">Glyph Palette</h3>
+                                <div className="grid grid-cols-12 gap-2 bg-slate-100 p-4 rounded-lg">
+                                    {glyphs.map(glyph => (<button key={glyph} onClick={() => handleGlyphInsert(glyph)} className="flex items-center justify-center h-12 w-full bg-white rounded-lg shadow-sm text-2xl text-slate-700 hover:bg-blue-100 hover:text-blue-700 transition-colors" title={`Insert ${glyph}`}>{glyph}</button>))}
+                                </div>
+                                <div className="flex justify-end pt-2">
+                                    <button type="button" className="px-5 py-2 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors" onClick={() => setShowGlyphPalette(false)}>Close</button>
+                                </div>
+                            </div>
+                        )}
+                        {/* Customer Info Modal */}
+                        {showCustomerModal && (
+                            <form onSubmit={handleCustomerModalSubmit} className="space-y-8">
+                                <h3 className="text-2xl font-bold text-slate-900">Enter Customer Information to Save</h3>
+                                <FormInput label="Order Number" id="orderNumber" value={orderNumber} onChange={e => setOrderNumber(e.target.value)} required />
+                                <FormInput label="Customer Name" id="customerName" value={customerName} onChange={e => setCustomerName(e.target.value)} required />
+                                <FormInput label="Customer Company" id="customerCompany" value={customerCompany} onChange={e => setCustomerCompany(e.target.value)} isOptional />
+                                <div className="flex justify-end gap-4 pt-4">
+                                    <button type="button" className="px-5 py-2 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors" onClick={() => setShowCustomerModal(false)}>Cancel</button>
+                                    <button type="submit" className="px-5 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-semibold transition-colors shadow-sm">Submit & Save</button>
+                                </div>
+                            </form>
+                        )}
+                        {/* General Message Modal */}
+                        {showMessageBox && (
+                            <div className="text-center">
+                                <p className="text-slate-800 text-lg mb-8">{message}</p>
+                                <button onClick={() => setShowMessageBox(false)} className="px-10 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-semibold transition-colors shadow-sm">OK</button>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
