@@ -41,8 +41,8 @@ body {
 }
 
 .sidebar-logo {
-    width: 200px; /* Final Increased Size */
-    height: 200px; /* Final Increased Size */
+    width: 400px !important;
+    height: 400px !important;
     object-fit: contain;
     margin-bottom: 1.5rem;
 }
@@ -484,7 +484,7 @@ body {
         padding: 1.5rem;
         max-width: 100%;
     }
-
+    /* Compact, wrapping grid for mobile font buttons */
     .font-button-grid {
         grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
         gap: 0.5rem;
