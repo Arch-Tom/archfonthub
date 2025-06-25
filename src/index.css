@@ -321,3 +321,155 @@ body {
     font-family: 'TinplateTitlingBlack';
     src: url('/fonts/TinplateTitlingBlack.ttf');
 }
+
+@font-face {
+    font-family: 'Bookman Old Style';
+    src: url('BookmanOldStyle-Bold.woff2') format('woff2'), url('BookmanOldStyle-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Bookman Old Style';
+    src: url('BookmanOldStyle-BoldItalic.woff2') format('woff2'), url('BookmanOldStyle-BoldItalic.woff') format('woff');
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'American Pop Plain';
+    src: url('AmericanPopPlain.woff2') format('woff2'), url('AmericanPopPlain.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Century725 Cn BT';
+    src: url('Century725BT-RomanCondensed.woff2') format('woff2'), url('Century725BT-RomanCondensed.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Century725 Blk BT';
+    src: url('Century725BT-Black.woff2') format('woff2'), url('Century725BT-Black.woff') format('woff');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Bookman Old Style';
+    src: url('BookmanOldStyle-Italic.woff2') format('woff2'), url('BookmanOldStyle-Italic.woff') format('woff');
+    font-weight: 300;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Century725 BT';
+    src: url('Century725BT-Bold.woff2') format('woff2'), url('Century725BT-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Century725 BT';
+    src: url('Century725BT-Roman.woff2') format('woff2'), url('Century725BT-Roman.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Century725 BT';
+    src: url('Century725BT-Italic.woff2') format('woff2'), url('Century725BT-Italic.woff') format('woff');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Concerto Pro';
+    src: url('ConcertoPro-Regular.woff2') format('woff2'), url('ConcertoPro-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'DejaVu Serif';
+    src: url('DejaVuSerif.woff2') format('woff2'), url('DejaVuSerif.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'DejaVu Serif';
+    src: url('DejaVuSerif-Bold.woff2') format('woff2'), url('DejaVuSerif-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'DejaVu Serif';
+    src: url('DejaVuSerif-BoldItalic.woff2') format('woff2'), url('DejaVuSerif-BoldItalic.woff') format('woff');
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'DejaVu Serif Condensed';
+    src: url('DejaVuSerifCondensed.woff2') format('woff2'), url('DejaVuSerifCondensed.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'DejaVu Serif Condensed';
+    src: url('DejaVuSerifCondensed-Bold.woff2') format('woff2'), url('DejaVuSerifCondensed-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'DejaVu Serif Condensed';
+    src: url('DejaVuSerifCondensed-BoldItalic.woff2') format('woff2'), url('DejaVuSerifCondensed-BoldItalic.woff') format('woff');
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'French Script MT';
+    src: url('FrenchScriptMT.woff2') format('woff2'), url('FrenchScriptMT.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'DejaVu Serif Condensed';
+    src: url('DejaVuSerifCondensed-Italic.woff2') format('woff2'), url('DejaVuSerifCondensed-Italic.woff') format('woff');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'DejaVu Serif';
+    src: url('DejaVuSerif-Italic.woff2') format('woff2'), url('DejaVuSerif-Italic.woff') format('woff');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}

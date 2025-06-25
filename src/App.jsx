@@ -6,10 +6,52 @@ const XIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
 
 // --- Font Library (Updated to remove specific fonts) ---
 const fontLibrary = {
-    'Sans-serif': [{ name: 'Arial', styles: { regular: 'ArialMT', bold: 'Arial-BoldMT', italic: 'Arial-ItalicMT', boldItalic: 'Arial-BoldItalicMT' } }, { name: 'Bebas Neue', styles: { regular: 'BebasNeue-Regular', bold: 'BebasNeue-Bold' } }, { name: 'Berlin Sans FB', styles: { regular: 'BerlinSansFB-Reg', bold: 'BerlinSansFB-Bold' } }, { name: 'Calibri', styles: { regular: 'Calibri', bold: 'Calibri-Bold', italic: 'Calibri-Italic' } }, { name: 'Century Gothic', styles: { regular: 'CenturyGothicPaneuropean', bold: 'CenturyGothicPaneuropean-Bold', boldItalic: 'CenturyGothicPaneuropean-BoldItalic' } }, { name: 'Graphik', styles: { thin: 'Graphik-Thin', regular: 'Graphik-Regular', medium: 'Graphik-Medium', semibold: 'Graphik-Semibold', thinItalic: 'Graphik-ThinItalic', regularItalic: 'Graphik-RegularItalic', mediumItalic: 'Graphik-MediumItalic' } }, { name: 'Zapf Humanist', styles: { demi: 'ZapfHumanist601BT-Demi' } },],
-    'Serif': [{ name: 'Benguiat', styles: { regular: 'Benguiat', bold: 'BenguiatITCbyBT-Bold', italic: 'BenguiatITCbyBT-BookItalic' } }, { name: 'Century Schoolbook', styles: { regular: 'CenturySchoolbook', bold: 'CenturySchoolbook-Bold', boldItalic: 'CenturySchoolbook-BoldItalic' } }, { name: 'CopprplGoth BT', styles: { regular: 'CopperplateGothicBT-Roman' } }, { name: 'Garamond 3 LT Std', styles: { regular: 'Garamond3LTStd', bold: 'Garamond3LTStd-Bold', italic: 'Garamond3LTStd-Italic', boldItalic: 'Garamond3LTStd-BoldItalic' } }, { name: 'Times New Roman', styles: { regular: 'TimesNewRomanPSMT', bold: 'TimesNewRomanPS-BoldMT', italic: 'TimesNewRomanPS-ItalicMT', boldItalic: 'TimesNewRomanPS-BoldItalicMT' } },],
-    'Script': [{ name: 'Amazone BT', styles: { regular: 'AmazoneBT-Regular' } }, { name: 'Angelface', styles: { regular: 'Angelface' } }, { name: 'Clicker Script', styles: { regular: 'ClickerScript-Regular' } }, { name: 'Courgette', styles: { regular: 'Courgette-Regular' } }, { name: 'Freebooter Script', styles: { regular: 'FreebooterScript' } }, { name: 'Great Vibes', styles: { regular: 'GreatVibes-Regular' } }, { name: 'Honey Script', styles: { light: 'HoneyScript-Light', semiBold: 'HoneyScript-SemiBold' } }, { name: 'I Love Glitter', styles: { regular: 'ILoveGlitter' } }, { name: 'ITC Zapf Chancery', styles: { regular: 'ZapfChancery-Roman' } }, { name: 'Lisbon Script', styles: { regular: 'LisbonScript-Regular' } }, { name: 'Murray Hill', styles: { regular: 'MurrayHill' } },],
-    'Display': [{ name: 'BlackChancery', styles: { regular: 'BlackChancery' } }, { name: 'Collegiate', styles: { black: 'CollegiateBlackFLF', outline: 'CollegiateOutlineFLF' } }, { name: 'Cowboy Rodeo', styles: { regular: 'CowboyRodeoW01-Regular' } }, { name: 'Machine BT', styles: { regular: 'MachineITCbyBT-Regular' } }, { name: 'Old English Text MT', styles: { regular: 'OldEnglishTextMT' } }, { name: 'Planscribe', styles: { regular: 'PlanscribeNFW01-Regular' } },]
+    'Sans-serif': [
+        { name: 'Arial', styles: { regular: 'ArialMT', bold: 'Arial-BoldMT', italic: 'Arial-ItalicMT', boldItalic: 'Arial-BoldItalicMT' } },
+        { name: 'Bebas Neue', styles: { regular: 'BebasNeue-Regular', bold: 'BebasNeue-Bold' } },
+        { name: 'Berlin Sans FB', styles: { regular: 'BerlinSansFB-Reg', bold: 'BerlinSansFB-Bold' } },
+        { name: 'Calibri', styles: { regular: 'Calibri', bold: 'Calibri-Bold', italic: 'Calibri-Italic' } },
+        { name: 'Century Gothic', styles: { regular: 'CenturyGothicPaneuropean', bold: 'CenturyGothicPaneuropean-Bold', boldItalic: 'CenturyGothicPaneuropean-BoldItalic' } },
+        { name: 'Graphik', styles: { thin: 'Graphik-Thin', regular: 'Graphik-Regular', medium: 'Graphik-Medium', semibold: 'Graphik-Semibold', thinItalic: 'Graphik-ThinItalic', regularItalic: 'Graphik-RegularItalic', mediumItalic: 'Graphik-MediumItalic' } },
+        { name: 'Zapf Humanist', styles: { demi: 'ZapfHumanist601BT-Demi' } },
+    ],
+    'Serif': [
+        { name: 'Benguiat', styles: { regular: 'Benguiat', bold: 'BenguiatITCbyBT-Bold', italic: 'BenguiatITCbyBT-BookItalic' } },
+        { name: 'Bookman Old Style', styles: { regular: 'Bookman Old Style', bold: 'Bookman Old Style', italic: 'Bookman Old Style', boldItalic: 'Bookman Old Style' } },
+        { name: 'Century Schoolbook', styles: { regular: 'CenturySchoolbook', bold: 'CenturySchoolbook-Bold', boldItalic: 'CenturySchoolbook-BoldItalic' } },
+        { name: 'Century725 BT', styles: { regular: 'Century725 BT', bold: 'Century725 BT', italic: 'Century725 BT' } },
+        { name: 'CopprplGoth BT', styles: { regular: 'CopperplateGothicBT-Roman' } },
+        { name: 'DejaVu Serif', styles: { regular: 'DejaVu Serif', bold: 'DejaVu Serif', italic: 'DejaVu Serif', boldItalic: 'DejaVu Serif' } },
+        { name: 'DejaVu Serif Condensed', styles: { regular: 'DejaVu Serif Condensed', bold: 'DejaVu Serif Condensed', italic: 'DejaVu Serif Condensed', boldItalic: 'DejaVu Serif Condensed' } },
+        { name: 'Garamond 3 LT Std', styles: { regular: 'Garamond3LTStd', bold: 'Garamond3LTStd-Bold', italic: 'Garamond3LTStd-Italic', boldItalic: 'Garamond3LTStd-BoldItalic' } },
+        { name: 'Times New Roman', styles: { regular: 'TimesNewRomanPSMT', bold: 'TimesNewRomanPS-BoldMT', italic: 'TimesNewRomanPS-ItalicMT', boldItalic: 'TimesNewRomanPS-BoldItalicMT' } },
+    ],
+    'Script': [
+        { name: 'Amazone BT', styles: { regular: 'AmazoneBT-Regular' } },
+        { name: 'Angelface', styles: { regular: 'Angelface' } },
+        { name: 'Clicker Script', styles: { regular: 'ClickerScript-Regular' } },
+        { name: 'Concerto Pro', styles: { regular: 'Concerto Pro' } },
+        { name: 'Courgette', styles: { regular: 'Courgette-Regular' } },
+        { name: 'Freebooter Script', styles: { regular: 'FreebooterScript' } },
+        { name: 'French Script MT', styles: { regular: 'French Script MT' } },
+        { name: 'Great Vibes', styles: { regular: 'GreatVibes-Regular' } },
+        { name: 'Honey Script', styles: { light: 'HoneyScript-Light', semiBold: 'HoneyScript-SemiBold' } },
+        { name: 'I Love Glitter', styles: { regular: 'ILoveGlitter' } },
+        { name: 'ITC Zapf Chancery', styles: { regular: 'ZapfChancery-Roman' } },
+        { name: 'Lisbon Script', styles: { regular: 'LisbonScript-Regular' } },
+        { name: 'Murray Hill', styles: { regular: 'MurrayHill' } },
+    ],
+    'Display': [
+        { name: 'American Pop Plain', styles: { regular: 'American Pop Plain' } },
+        { name: 'BlackChancery', styles: { regular: 'BlackChancery' } },
+        { name: 'Century725 Blk BT', styles: { black: 'Century725 Blk BT' } },
+        { name: 'Century725 Cn BT', styles: { regular: 'Century725 Cn BT' } },
+        { name: 'Collegiate', styles: { black: 'CollegiateBlackFLF', outline: 'CollegiateOutlineFLF' } },
+        { name: 'Cowboy Rodeo', styles: { regular: 'CowboyRodeoW01-Regular' } },
+        { name: 'Machine BT', styles: { regular: 'MachineITCbyBT-Regular' } },
+        { name: 'Old English Text MT', styles: { regular: 'OldEnglishTextMT' } },
+        { name: 'Planscribe', styles: { regular: 'PlanscribeNFW01-Regular' } },
+    ]
 };
 
 
