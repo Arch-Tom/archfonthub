@@ -1,16 +1,17 @@
 :root {
-    --bg-main: #1e293b; /* slate-800 */
-    --bg-sidebar: #0f172a; /* slate-900 */
-    --bg-section: #334155; /* slate-700 */
-    --border-color: #475569; /* slate-600 */
-    --text-primary: #f1f5f9; /* slate-100 */
-    --text-secondary: #94a3b8; /* slate-400 */
-    --accent-color: #f59e0b; /* amber-500 */
-    --accent-hover: #d97706; /* amber-600 */
-    --accent-text: #1e293b;
-    --danger: #dc2626;
-    --success: #16a34a;
-    --radius: 8px;
+    --bg-main: #f8f9fa;
+    --bg-card: #ffffff;
+    --border-color: #e9ecef;
+    --shadow-color: rgba(45, 55, 72, 0.1);
+    --text-primary: #2d3748;
+    --text-secondary: #718096;
+    --accent-color: #38a169; /* Sage Green */
+    --accent-hover: #2f855a;
+    --accent-light: #e6f6f0;
+    --accent-text: #ffffff;
+    --danger: #e53e3e;
+    --success: #38a169;
+    --radius: 0.75rem;
 }
 
 body {
@@ -22,16 +23,19 @@ body {
 
 .app-layout {
     display: flex;
-    height: 100vh;
 }
 
-/* --- Sidebar --- */
+/* --- Sidebar (Desktop) / Header (Mobile) --- */
 .sidebar {
-    width: 350px;
-    background-color: var(--bg-sidebar);
+    background-color: var(--bg-card);
+    border-right: 1px solid var(--border-color);
+    width: 380px;
+    flex-shrink: 0;
     display: flex;
     flex-direction: column;
-    border-right: 1px solid var(--border-color);
+    height: 100vh;
+    position: sticky;
+    top: 0;
 }
 
 .sidebar-header {
@@ -42,124 +46,122 @@ body {
     border-bottom: 1px solid var(--border-color);
 }
 
-    .sidebar-header img {
-        height: 40px;
-    }
+.sidebar-logo {
+    height: 50px; /* Increased logo size */
+}
 
-    .sidebar-header h1 {
-        font-size: 1.25rem;
-        font-weight: 800;
-        margin: 0;
-    }
+.sidebar-header h1 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin: 0;
+    color: var(--text-primary);
+}
 
 .sidebar-content {
-    padding: 1.5rem;
+    padding: 0 0.5rem 1.5rem;
     overflow-y: auto;
     flex-grow: 1;
 }
 
-.font-category h3 {
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: var(--text-secondary);
-    margin: 1.5rem 0 0.75rem 0;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--border-color);
+/* --- Main Content --- */
+.main-content {
+    width: 100%;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
 }
 
-.font-category:first-child h3 {
-    margin-top: 0;
+.card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+.card-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    position: relative;
+}
+
+    .card-header h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 0 0 0.25rem 0;
+    }
+
+    .card-header p {
+        font-style: italic;
+        color: var(--text-secondary);
+        margin: 0;
+    }
+
+.card-content {
+    padding: 1.5rem;
+}
+
+/* --- Font Selection --- */
+.font-category h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin: 1.5rem 0 1rem 1rem;
 }
 
 .font-button-grid {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: 0.75rem;
+    padding: 0 1rem;
 }
 
 .font-button {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    background-color: var(--bg-section);
+    justify-content: center;
+    background-color: #fff;
     color: var(--text-primary);
-    border: 1px solid var(--border-color);
+    border: 2px solid var(--border-color);
     border-radius: var(--radius);
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
+    padding: 0 1.25rem;
+    height: 60px;
+    font-size: 1.75rem;
+    line-height: 1;
     cursor: pointer;
     transition: all 0.2s ease;
-    flex-grow: 1;
 }
 
     .font-button:hover {
-        background-color: #475569;
+        border-color: var(--accent-color);
+        background-color: var(--accent-light);
     }
 
     .font-button.selected {
         background-color: var(--accent-color);
         color: var(--accent-text);
         border-color: var(--accent-hover);
-        font-weight: 600;
     }
 
-        .font-button.selected svg {
-            margin-left: 0.5rem;
-        }
-
-/* --- Main Content --- */
-.main-content {
-    flex: 1;
-    padding: 1.5rem;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
-
-.section {
-    background-color: var(--bg-section);
-    border: 1px solid var(--border-color);
+/* --- Text Input --- */
+.symbol-button {
+    position: absolute;
+    top: 50%;
+    right: 1.5rem;
+    transform: translateY(-50%);
+    background-color: var(--accent-light);
+    color: var(--accent-color);
+    border: 1px solid var(--accent-color);
     border-radius: var(--radius);
-    padding: 1.5rem;
-}
-
-.section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-}
-
-    .section-header h2 {
-        font-size: 1.5rem;
-        font-weight: 800;
-        margin: 0;
-    }
-
-    .section-header p {
-        font-style: italic;
-        color: var(--text-secondary);
-        margin: 0;
-        flex-basis: 100%;
-    }
-
-.glyph-button-main {
-    background-color: var(--border-color);
-    color: var(--text-primary);
-    border: none;
     padding: 0.5rem 1rem;
-    border-radius: var(--radius);
-    cursor: pointer;
     font-weight: 600;
-    transition: background-color 0.2s;
+    cursor: pointer;
+    transition: all 0.2s;
 }
 
-    .glyph-button-main:hover {
+    .symbol-button:hover {
         background-color: var(--accent-color);
-        color: var(--accent-text);
+        color: white;
     }
 
 .text-input {
@@ -169,25 +171,32 @@ body {
     border: 1px solid var(--border-color);
     border-radius: var(--radius);
     padding: 1rem;
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     color: var(--text-primary);
     resize: vertical;
 }
 
     .text-input:focus {
-        outline: 1px solid var(--accent-color);
+        outline: 2px solid var(--accent-color);
+        border-color: var(--accent-color);
     }
 
+/* --- Live Preview --- */
 .preview-controls {
     display: flex;
     align-items: center;
     gap: 1rem;
     margin-bottom: 1.5rem;
+    color: var(--text-secondary);
 }
 
     .preview-controls label {
         font-weight: 600;
-        color: var(--text-secondary);
+    }
+
+    .preview-controls span {
+        color: var(--text-primary);
+        font-weight: 700;
     }
 
     .preview-controls input[type="range"] {
@@ -196,16 +205,15 @@ body {
     }
 
 .preview-area {
-    background-color: white;
-    color: #1a202c;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
     border-radius: var(--radius);
     padding: 1rem;
-    min-height: 200px;
 }
 
 .preview-item {
-    padding: 1rem;
-    border-bottom: 1px solid #e2e8f0;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
 }
 
     .preview-item:last-child {
@@ -217,25 +225,12 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
-    flex-wrap: wrap;
     gap: 1rem;
 }
 
 .font-name-preview {
     font-weight: 700;
     font-size: 1.25rem;
-    color: var(--bg-main);
-}
-
-.preview-text {
-    margin: 0;
-    line-height: 1.6;
-}
-
-.preview-placeholder {
-    padding: 2rem;
-    text-align: center;
-    color: var(--text-secondary);
 }
 
 .style-selector {
@@ -246,9 +241,9 @@ body {
     .style-selector button {
         padding: 0.25rem 0.75rem;
         font-size: 0.8rem;
-        border: 1px solid #cbd5e1;
-        background-color: transparent;
-        color: #475569;
+        border: 1px solid var(--border-color);
+        background-color: #fff;
+        color: var(--text-secondary);
         border-radius: 6px;
         cursor: pointer;
         transition: all 0.2s ease;
@@ -256,19 +251,32 @@ body {
     }
 
         .style-selector button:hover {
-            background-color: #f1f5f9;
-            border-color: #94a3b8;
+            border-color: var(--text-primary);
+            color: var(--text-primary);
         }
 
         .style-selector button.active {
-            background-color: var(--bg-section);
-            color: white;
-            border-color: var(--bg-section);
+            background-color: var(--text-primary);
+            color: var(--bg-card);
+            border-color: var(--text-primary);
+            font-weight: 600;
         }
 
+.preview-text {
+    margin: 0;
+    line-height: 1.6;
+    word-break: break-word;
+}
+
+.preview-placeholder {
+    padding: 2rem;
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+/* --- Submit Button --- */
 .submit-section {
-    margin-top: auto;
-    padding-top: 1.5rem;
+    margin-top: 1rem;
 }
 
 .submit-button {
@@ -278,42 +286,44 @@ body {
     justify-content: center;
     gap: 1rem;
     background-color: var(--accent-color);
-    color: var(--accent-text);
+    color: white;
     border: none;
     border-radius: var(--radius);
-    padding: 1rem;
+    padding: 1.25rem;
     font-size: 1.25rem;
     font-weight: 700;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: background-color 0.2s;
 }
 
     .submit-button:hover {
         background-color: var(--accent-hover);
     }
 
-    .submit-button img {
-        height: 24px;
-        filter: brightness(0) saturate(100%) invert(12%) sepia(21%) saturate(1451%) hue-rotate(178deg) brightness(94%) contrast(85%);
-    }
+.submit-button-logo {
+    height: 36px;
+}
+/* Increased logo size */
 
 /* --- Modals and Toasts --- */
 .modal-overlay {
     position: fixed;
     inset: 0;
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 1000;
+    padding: 1rem;
 }
 
 .modal-box {
-    background-color: var(--bg-section);
+    background-color: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: var(--radius);
     width: 100%;
     max-width: 500px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 
 .modal-header {
@@ -347,16 +357,15 @@ body {
         height: 48px;
         font-size: 1.5rem;
         border: 1px solid var(--border-color);
-        border-radius: 8px;
+        border-radius: var(--radius);
         background-color: var(--bg-main);
         color: var(--text-primary);
         cursor: pointer;
-        transition: background-color 0.2s;
     }
 
         .glyph-palette button:hover {
             background-color: var(--accent-color);
-            color: var(--accent-text);
+            color: white;
         }
 
 .customer-form {
@@ -379,6 +388,7 @@ body {
     color: var(--text-primary);
     padding: 0.75rem 1rem;
     border-radius: var(--radius);
+    font-size: 1rem;
 }
 
 .modal-actions {
@@ -387,26 +397,24 @@ body {
     gap: 0.75rem;
     padding: 1.5rem;
     border-top: 1px solid var(--border-color);
-    background-color: var(--bg-sidebar);
+    background-color: var(--bg-main);
 }
 
 .button-primary {
     background-color: var(--accent-color);
-    color: var(--accent-text);
+    color: white;
     border: none;
     padding: 0.6rem 1.25rem;
-    font-size: 1rem;
     font-weight: 600;
     border-radius: var(--radius);
     cursor: pointer;
 }
 
 .button-secondary {
-    background-color: var(--border-color);
-    color: var(--text-primary);
+    background-color: var(--text-secondary);
+    color: white;
     border: none;
     padding: 0.6rem 1.25rem;
-    font-size: 1rem;
     font-weight: 600;
     border-radius: var(--radius);
     cursor: pointer;
@@ -421,10 +429,11 @@ body {
 
 .toast {
     padding: 1rem 1.5rem;
-    border-radius: 8px;
+    border-radius: var(--radius);
     color: white;
     font-weight: 600;
     margin-top: 0.5rem;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
 .toast-success {
@@ -435,8 +444,8 @@ body {
     background-color: var(--danger);
 }
 
-/* --- Mobile Responsive --- */
-@media (max-width: 992px) {
+/* --- Responsive Layout: Sidebar to Header --- */
+@media (max-width: 1024px) {
     .app-layout {
         flex-direction: column;
     }
@@ -444,11 +453,20 @@ body {
     .sidebar {
         width: 100%;
         height: auto;
+        flex-direction: column;
+        position: static;
         border-right: none;
-        border-bottom: 1px solid var(--border-color);
+    }
+
+    .sidebar-header {
+        position: sticky;
+        top: 0;
+        background-color: var(--bg-card);
+        z-index: 10;
+        width: 100%;
     }
 
     .main-content {
-        padding: 1rem;
+        padding: 1.5rem;
     }
 }

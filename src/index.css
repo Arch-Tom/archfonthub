@@ -7,27 +7,26 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom scrollbar for the new theme */
+/* Custom scrollbar for the new light theme */
 ::-webkit-scrollbar {
-    width: 10px;
+    width: 12px;
 }
 
 ::-webkit-scrollbar-track {
-    background: #0f172a; /* sidebar bg */
+    background: var(--bg-main);
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: #475569; /* border color */
+    background-color: #adb5bd;
     border-radius: 20px;
-    border: 3px solid #0f172a; /* sidebar bg */
+    border: 3px solid var(--bg-main);
 }
 
     ::-webkit-scrollbar-thumb:hover {
-        background-color: #64748b;
+        background-color: #6c757d;
     }
 
-/* --- ALL FONT-FACE RULES --- */
-/* This section remains the same as before. */
+/* --- ALL FONT-FACE RULES (Unchanged) --- */
 @font-face {
     font-family: 'ArialMT';
     src: url('/fonts/arial.ttf');
