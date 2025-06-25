@@ -2,34 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Using a modern CSS reset approach */
 body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
 }
 
-/* Custom scrollbar for a modern look */
+/* Custom scrollbar for a modern dark theme */
 ::-webkit-scrollbar {
     width: 10px;
 }
 
 ::-webkit-scrollbar-track {
-    background: #e9ecef;
+    background: #1f2937; /* bg-gray-800 */
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #adb5bd;
+    background: #4b5563; /* bg-gray-600 */
     border-radius: 10px;
-    border: 2px solid #e9ecef;
+    border: 2px solid #1f2937; /* Add a border to match the track */
 }
 
     ::-webkit-scrollbar-thumb:hover {
-        background: #6c757d;
+        background: #6b7280; /* bg-gray-500 */
     }
 
-/* --- FONT-FACE RULES (Sourced from your original files) --- */
-/* This ensures all fonts are available for the preview */
+/* --- FONT-FACE RULES (Preserved from your original file) --- */
 @font-face {
     font-family: 'ArialMT';
     src: url('/fonts/arial.ttf');
