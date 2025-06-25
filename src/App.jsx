@@ -177,8 +177,10 @@ const App = () => {
 
                 <section className="card">
                     <div className="card-header">
-                        <h2>Text to Preview</h2>
-                        <p>Type your text here to see it in the selected fonts.</p>
+                        <div className="header-text-content">
+                            <h2>Text to Preview</h2>
+                            <p>Type your text here to see it in the selected fonts.</p>
+                        </div>
                         <button className="symbol-button" onClick={() => setIsGlyphModalOpen(true)}>Symbols</button>
                     </div>
                     <div className="card-content">
@@ -194,7 +196,7 @@ const App = () => {
                     <div className="card-content">
                         <div className="preview-controls">
                             <label htmlFor="fontSize">Font Size: <span>{fontSize}px</span></label>
-                            <input type="range" id="fontSize" min="20" max="150" value={fontSize} onChange={e => setFontSize(Number(e.target.value))} />
+                            <input type="range" id="fontSize" min="36" max="100" value={fontSize} onChange={e => setFontSize(Number(e.target.value))} />
                         </div>
                         <div className="preview-area">
                             {selectedFonts.length > 0 && customText.trim() ? (
@@ -220,12 +222,12 @@ const App = () => {
                     </div>
                 </section>
 
-                <section className="submit-section">
+                <div className="submit-section">
                     <button className="submit-button" onClick={handleInitiateSave}>
                         <img src="/images/Arch Vector Logo White.svg" alt="Logo" className="submit-button-logo" />
                         Submit your selection to Arch Engraving
                     </button>
-                </section>
+                </div>
             </main>
 
             <Modal isOpen={isGlyphModalOpen} onClose={() => setIsGlyphModalOpen(false)} title="Symbol Palette">

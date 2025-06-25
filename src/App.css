@@ -29,7 +29,7 @@ body {
 .branding-sidebar {
     background-color: #343a40;
     color: white;
-    width: 280px; /* Wider Sidebar */
+    width: 260px; /* Wider Sidebar */
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
@@ -46,7 +46,7 @@ body {
 }
 
 .branding-sidebar h1 {
-    font-size: 2rem;
+    font-size: 1.75rem; /* Adjusted title size for new width */
     font-weight: 800;
     margin: 0;
     text-align: center;
@@ -56,6 +56,8 @@ body {
 /* --- Main Content --- */
 .main-container {
     width: 100%;
+    max-width: 840px; /* Reduced max-width for cards */
+    margin: 0 auto;
     padding: 2rem;
     display: flex;
     flex-direction: column;
@@ -73,19 +75,27 @@ body {
     padding: 1.25rem 1.5rem;
     border-bottom: 1px solid var(--border-color);
     position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
 }
 
-    .card-header h2 {
-        font-size: 1.5rem;
-        font-weight: 700;
-        margin: 0 0 0.25rem 0;
-    }
+.header-text-content {
+    flex: 1;
+}
 
-    .card-header p {
-        font-style: italic;
-        color: var(--text-secondary);
-        margin: 0;
-    }
+.card-header h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 0 0.25rem 0;
+}
+
+.card-header p {
+    font-style: italic;
+    color: var(--text-secondary);
+    margin: 0;
+}
 
 .card-content {
     padding: 1.5rem;
@@ -142,10 +152,6 @@ body {
 
 /* --- Text Input --- */
 .symbol-button {
-    position: absolute;
-    top: 50%;
-    right: 1.5rem;
-    transform: translateY(-50%);
     background-color: var(--accent-light);
     color: var(--accent-color);
     border: 1px solid var(--accent-color);
@@ -154,6 +160,7 @@ body {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
+    flex-shrink: 0;
 }
 
     .symbol-button:hover {
@@ -458,19 +465,20 @@ body {
         position: sticky;
         top: 0;
         z-index: 10;
-        padding: 1rem 1.5rem;
+        padding: 0.75rem 1.5rem;
     }
 
         .branding-sidebar h1 {
-            font-size: 1.25rem; /* Adjust title size for mobile header */
+            font-size: 1.25rem;
         }
 
     .sidebar-logo {
-        height: 40px; /* Adjust logo size for mobile header */
+        height: 40px;
     }
 
     .main-container {
         padding: 1.5rem;
+        max-width: 100%;
     }
     /* Compact, wrapping grid for mobile font buttons */
     .font-button-grid {
@@ -481,5 +489,6 @@ body {
     .font-button {
         height: 50px;
         font-size: 1rem;
+        padding: 0 0.5rem;
     }
 }
