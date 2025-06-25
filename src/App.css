@@ -41,8 +41,8 @@ body {
 }
 
 .sidebar-logo {
-    height: 200px; /* Doubled Logo Size */
-    width: 200px; /* Doubled Logo Size */
+    width: 200px; /* Final Increased Size */
+    height: 200px; /* Final Increased Size */
     object-fit: contain;
     margin-bottom: 1.5rem;
 }
@@ -58,7 +58,7 @@ body {
 /* --- Main Content --- */
 .main-container {
     width: 100%;
-    max-width: 840px;
+    max-width: 1200px; /* Wider content area */
     margin: 0 auto;
     padding: 2rem;
     display: flex;
