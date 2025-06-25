@@ -61,6 +61,8 @@ const App = () => {
 
     const handleStyleChange = (fontName, newStyle) => {
         setSelectedFonts(prev => prev.map(f => f.name === fontName ? { ...f, activeStyle: newStyle } : f));
+    const handleStyleChange = (fontName, newStyle) => {
+        setSelectedFonts(prev => prev.map(f => f.name === fontName ? { ...f, activeStyle: newStyle } : f));
     };
 
     const formatForFilename = (str) => str.trim().replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_-]/g, '');
