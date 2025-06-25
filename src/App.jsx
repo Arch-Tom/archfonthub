@@ -24,6 +24,13 @@ const App = () => {
     const WORKER_URL = "https://customerfontselection-worker.tom-4a9.workers.dev";
     const DEFAULT_TEXT_PLACEHOLDER = 'Type your text here...';
 
+    // This array lists script-style fonts that need a larger font size on their buttons for readability.
+    const scriptFontsToAdjust = [
+        'Amazone BT', 'Angelface', 'Clicker Script', 'Concerto Pro', 'Courgette',
+        'Cowboy Rodeo', 'Freebooter Script', 'French Script', 'Great Vibes',
+        'Honey Script', 'I Love Glitter', 'Lisbon Script'
+    ];
+
     // --- FINAL, CORRECTED FONT LIBRARY BASED ON THE PROVIDED LIST ---
     const fontLibrary = {
         'Sans-serif': [
@@ -58,7 +65,7 @@ const App = () => {
             { name: 'Times New Roman', styles: { regular: 'TimesNewRomanPSMT', bold: 'TimesNewRomanPS-BoldMT', italic: 'TimesNewRomanPS-ItalicMT', boldItalic: 'TimesNewRomanPS-BoldItalicMT' } },
         ],
         'Script & Display': [
-            { name: 'Amazone BT', styles: { regular: 'AmazoneBT-Regular' } },
+            { name: 'Amazone', styles: { regular: 'AmazoneBT-Regular' } },
             { name: 'American Pop Plain', styles: { regular: 'American Pop Plain' } },
             { name: 'Angelface', styles: { regular: 'Angelface' } },
             { name: 'BlackChancery', styles: { regular: 'BlackChancery' } },
@@ -253,21 +260,24 @@ const App = () => {
                                     <div key={category}>
                                         <h3 className="text-md font-semibold text-slate-700 border-b-2 border-slate-200 pb-2 mb-3 tracking-wide">{category}</h3>
                                         <div className="flex flex-wrap gap-3">
-                                            {fonts.map((font) => (
-                                                <button
-                                                    key={font.name}
-                                                    onClick={() => handleFontSelect(font)}
-                                                    // --- UPDATE: Increased font size and padding ---
-                                                    className={`px-5 py-3 rounded-xl text-lg font-semibold border-2 transition-all duration-150 transform hover:scale-105 focus:outline-none
-                                                        ${selectedFonts.some(f => f.name === font.name)
-                                                            ? 'bg-blue-600 text-white border-blue-600 shadow-md'
-                                                            : 'bg-white text-blue-900 border-blue-500 hover:bg-blue-50'
-                                                        }`}
-                                                    style={{ fontFamily: font.styles[Object.keys(font.styles)[0]] }}
-                                                >
-                                                    {font.name}
-                                                </button>
-                                            ))}
+                                            {fonts.map((font) => {
+                                                const isScriptFont = scriptFontsToAdjust.includes(font.name);
+                                                const fontSizeClass = isScriptFont ? 'text-2xl' : 'text-lg';
+                                                return (
+                                                    <button
+                                                        key={font.name}
+                                                        onClick={() => handleFontSelect(font)}
+                                                        className={`px-5 py-3 rounded-xl font-semibold border-2 transition-all duration-150 transform hover:scale-105 focus:outline-none ${fontSizeClass}
+                                                            ${selectedFonts.some(f => f.name === font.name)
+                                                                ? 'bg-blue-600 text-white border-blue-600 shadow-md'
+                                                                : 'bg-white text-blue-900 border-blue-500 hover:bg-blue-50'
+                                                            }`}
+                                                        style={{ fontFamily: font.styles[Object.keys(font.styles)[0]] }}
+                                                    >
+                                                        {font.name}
+                                                    </button>
+                                                )
+                                            })}
                                         </div>
                                     </div>
                                 ))}
@@ -277,7 +287,6 @@ const App = () => {
                         <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
                             <div className="flex justify-between items-center mb-6">
                                 <h2 className="text-2xl font-black text-slate-900 tracking-tight">Custom Text</h2>
-                                {/* --- UPDATE: Increased font size and padding --- */}
                                 <button onClick={() => setShowGlyphPalette(true)} className="px-5 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base">Ω Glyphs</button>
                             </div>
                             <textarea ref={textInputRef} className="w-full p-5 border-2 border-slate-200 rounded-xl shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 min-h-[120px] text-xl" value={customText} onChange={handleTextChange} placeholder={DEFAULT_TEXT_PLACEHOLDER} />
@@ -305,7 +314,6 @@ const App = () => {
                                                             <button
                                                                 key={styleKey}
                                                                 onClick={() => handleStyleChange(font.name, styleKey)}
-                                                                // --- UPDATE: Increased font size and padding ---
                                                                 className={`px-4 py-2 text-sm rounded-md border-2 transition-colors ${font.activeStyle === styleKey ? 'bg-slate-700 text-white border-slate-700' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-100'}`}
                                                             >
                                                                 {styleKey.charAt(0).toUpperCase() + styleKey.slice(1)}
@@ -325,7 +333,6 @@ const App = () => {
                     </div>
 
                     <div className="mt-12">
-                        {/* --- UPDATE: Increased font size and padding --- */}
                         <button className="w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white font-bold py-6 px-8 rounded-2xl shadow-2xl hover:shadow-blue-200 hover:from-blue-700 hover:to-blue-600 transition-all duration-200 transform hover:scale-105 text-2xl tracking-wide" onClick={handleSaveSvg}>
                             Submit Fonts to Arch Engraving
                         </button>
@@ -343,7 +350,6 @@ const App = () => {
                                     {glyphs.map(glyph => (<button key={glyph} onClick={() => handleGlyphInsert(glyph)} className="flex items-center justify-center h-12 w-full bg-white rounded-lg shadow-sm text-2xl text-slate-700 hover:bg-blue-100 hover:text-blue-700 transition-colors" title={`Insert ${glyph}`}>{glyph}</button>))}
                                 </div>
                                 <div className="flex justify-end pt-2">
-                                    {/* --- UPDATE: Increased font size and padding --- */}
                                     <button type="button" className="px-6 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base" onClick={() => setShowGlyphPalette(false)}>Close</button>
                                 </div>
                             </div>
@@ -355,7 +361,6 @@ const App = () => {
                                 <FormInput label="Customer Name" id="customerName" value={customerName} onChange={e => setCustomerName(e.target.value)} required />
                                 <FormInput label="Customer Company" id="customerCompany" value={customerCompany} onChange={e => setCustomerCompany(e.target.value)} isOptional />
                                 <div className="flex justify-end gap-4 pt-4">
-                                    {/* --- UPDATE: Increased font size and padding --- */}
                                     <button type="button" className="px-6 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base" onClick={() => setShowCustomerModal(false)}>Cancel</button>
                                     <button type="submit" className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-semibold transition-colors shadow-sm text-base">Submit & Save</button>
                                 </div>
@@ -364,7 +369,6 @@ const App = () => {
                         {showMessageBox && (
                             <div className="text-center">
                                 <p className="text-slate-800 text-lg mb-8">{message}</p>
-                                {/* --- UPDATE: Increased font size and padding --- */}
                                 <button onClick={() => setShowMessageBox(false)} className="px-12 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-semibold transition-colors shadow-sm text-base">OK</button>
                             </div>
                         )}
