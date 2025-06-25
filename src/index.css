@@ -2,38 +2,34 @@
 @tailwind components;
 @tailwind utilities;
 
-/* --- Base Styles & Animations --- */
-:root {
-    --main-bg: #f8fafc;
-    --sidebar-bg: #0f172a;
-    --card-bg: #fff;
-    --accent: #2563eb;
-    --radius: 1.5rem;
-}
-
+/* Using a modern CSS reset approach */
 body {
-    background: var(--main-bg);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
 }
 
-.animate-fade-in {
-    animation: fade-in 0.35s cubic-bezier(0.33, 1, 0.68, 1);
+/* Custom scrollbar for a modern look */
+::-webkit-scrollbar {
+    width: 10px;
 }
 
-@keyframes fade-in {
-    from {
-        opacity: 0;
-        transform: translateY(32px) scale(0.98);
+::-webkit-scrollbar-track {
+    background: #e9ecef;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #adb5bd;
+    border-radius: 10px;
+    border: 2px solid #e9ecef;
+}
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #6c757d;
     }
 
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-/* ----------- CORRECTED AND COMPLETE FONT-FACE RULES ----------- */
-
-/* --- Sans-serif --- */
+/* --- FONT-FACE RULES (Sourced from your original files) --- */
+/* This ensures all fonts are available for the preview */
 @font-face {
     font-family: 'ArialMT';
     src: url('/fonts/arial.ttf');
@@ -144,7 +140,6 @@ body {
     src: url('/fonts/Graphik-ThinItalic.otf');
 }
 
-/* --- Serif --- */
 @font-face {
     font-family: 'TimesNewRomanPSMT';
     src: url('/fonts/TIMES.TTF');
@@ -225,7 +220,6 @@ body {
     src: url('/fonts/Copperplate Gothic.ttf');
 }
 
-/* --- Script & Display --- */
 @font-face {
     font-family: 'AmazoneBT-Regular';
     src: url('/fonts/AmazonRg_0.ttf');
@@ -330,5 +324,3 @@ body {
     font-family: 'TinplateTitlingBlack';
     src: url('/fonts/TinplateTitlingBlack.ttf');
 }
-
-/* Note: ChocolateBox is missing from the list and has been removed for now. */

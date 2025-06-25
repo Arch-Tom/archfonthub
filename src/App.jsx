@@ -1,86 +1,115 @@
 ﻿import React, { useState, useRef } from 'react';
+import './App.css'; // We will create this new CSS file next
 
-// This component remains outside the main App component for good practice.
-const FormInput = ({ label, id, value, onChange, required = false, isOptional = false }) => (
-    <div>
-        <label htmlFor={id} className="block text-sm font-medium text-slate-700 mb-1">
-            {label}
-            {required && <span className="text-red-500 ml-1">*</span>}
-            {isOptional && <span className="text-slate-500 text-xs ml-1">(Optional)</span>}
-        </label>
-        <input
-            id={id}
-            type="text"
-            value={value}
-            onChange={onChange}
-            required={required}
-            className="w-full px-3 py-2 border border-slate-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-400 text-base"
-        />
-    </div>
+// --- HELPER ICONS (for a cleaner look) ---
+const XIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+        <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+    </svg>
+);
+
+const PlusIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+        <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+    </svg>
 );
 
 
-const App = () => {
-    const WORKER_URL = "https://customerfontselection-worker.tom-4a9.workers.dev";
-    const DEFAULT_TEXT_PLACEHOLDER = 'Type your text here...';
+// --- FONT LIBRARY (Unchanged from your original file) ---
+const fontLibrary = {
+    'Sans-serif': [
+        { name: 'Arial', styles: { regular: 'ArialMT', bold: 'Arial-BoldMT', italic: 'Arial-ItalicMT', boldItalic: 'Arial-BoldItalicMT' } },
+        { name: 'Bebas Neue', styles: { regular: 'BebasNeue-Regular', bold: 'BebasNeue-Bold' } },
+        { name: 'Berlin Sans FB', styles: { regular: 'BerlinSansFB-Reg', bold: 'BerlinSansFB-Bold' } },
+        { name: 'Calibri', styles: { regular: 'Calibri', bold: 'Calibri-Bold', italic: 'Calibri-Italic' } },
+        { name: 'Century Gothic', styles: { regular: 'CenturyGothicPaneuropean', bold: 'CenturyGothicPaneuropean-Bold', boldItalic: 'CenturyGothicPaneuropean-BoldItalic' } },
+        { name: 'Graphik', styles: { thin: 'Graphik-Thin', regular: 'Graphik-Regular', medium: 'Graphik-Medium', semibold: 'Graphik-Semibold', thinItalic: 'Graphik-ThinItalic', regularItalic: 'Graphik-RegularItalic', mediumItalic: 'Graphik-MediumItalic' } },
+        { name: 'Zapf Humanist', styles: { demi: 'ZapfHumanist601BT-Demi' } },
+    ],
+    'Serif': [
+        { name: 'Benguiat', styles: { regular: 'Benguiat', bold: 'BenguiatITCbyBT-Bold', italic: 'BenguiatITCbyBT-BookItalic' } },
+        { name: 'Century Schoolbook', styles: { regular: 'CenturySchoolbook', bold: 'CenturySchoolbook-Bold', boldItalic: 'CenturySchoolbook-BoldItalic' } },
+        { name: 'CopprplGoth BT', styles: { regular: 'CopperplateGothicBT-Roman' } },
+        { name: 'Garamond', styles: { regular: 'Garamond' } },
+        { name: 'Garamond 3 LT Std', styles: { regular: 'Garamond3LTStd', bold: 'Garamond3LTStd-Bold', italic: 'Garamond3LTStd-Italic', boldItalic: 'Garamond3LTStd-BoldItalic' } },
+        { name: 'Times New Roman', styles: { regular: 'TimesNewRomanPSMT', bold: 'TimesNewRomanPS-BoldMT', italic: 'TimesNewRomanPS-ItalicMT', boldItalic: 'TimesNewRomanPS-BoldItalicMT' } },
+    ],
+    'Script': [
+        { name: 'Amazone BT', styles: { regular: 'AmazoneBT-Regular' } },
+        { name: 'Angelface', styles: { regular: 'Angelface' } },
+        { name: 'Birds of Paradise', styles: { regular: 'BirdsofParadise-PersonaluseOnly' } },
+        { name: 'Clicker Script', styles: { regular: 'ClickerScript-Regular' } },
+        { name: 'Courgette', styles: { regular: 'Courgette-Regular' } },
+        { name: 'Freebooter Script', styles: { regular: 'FreebooterScript' } },
+        { name: 'Great Vibes', styles: { regular: 'GreatVibes-Regular' } },
+        { name: 'Honey Script', styles: { light: 'HoneyScript-Light', semiBold: 'HoneyScript-SemiBold' } },
+        { name: 'I Love Glitter', styles: { regular: 'ILoveGlitter' } },
+        { name: 'ITC Zapf Chancery', styles: { regular: 'ZapfChancery-Roman' } },
+        { name: 'Lisbon Script', styles: { regular: 'LisbonScript-Regular' } },
+        { name: 'Murray Hill', styles: { regular: 'MurrayHill' } },
+    ],
+    'Display': [
+        { name: 'BlackChancery', styles: { regular: 'BlackChancery' } },
+        { name: 'Collegiate', styles: { black: 'CollegiateBlackFLF', outline: 'CollegiateOutlineFLF' } },
+        { name: 'Cowboy Rodeo', styles: { regular: 'CowboyRodeoW01-Regular' } },
+        { name: 'Machine BT', styles: { regular: 'MachineITCbyBT-Regular' } },
+        { name: 'Old English Text MT', styles: { regular: 'OldEnglishTextMT' } },
+        { name: 'Planscribe', styles: { regular: 'PlanscribeNFW01-Regular' } },
+        { name: 'Tinplate Titling Black', styles: { regular: 'TinplateTitlingBlack' } },
+    ]
+};
 
-    // --- FONT LIBRARY FULLY CORRECTED USING POSTSCRIPT NAMES ---
-    const fontLibrary = {
-        'Sans-serif': [
-            { name: 'Arial', styles: { regular: 'ArialMT', bold: 'Arial-BoldMT', italic: 'Arial-ItalicMT', boldItalic: 'Arial-BoldItalicMT' } },
-            { name: 'Bebas Neue', styles: { regular: 'BebasNeue-Regular', bold: 'BebasNeue-Bold' } },
-            { name: 'Berlin Sans FB', styles: { regular: 'BerlinSansFB-Reg', bold: 'BerlinSansFB-Bold' } },
-            { name: 'Calibri', styles: { regular: 'Calibri', bold: 'Calibri-Bold', italic: 'Calibri-Italic' } },
-            { name: 'Century Gothic', styles: { regular: 'CenturyGothicPaneuropean', bold: 'CenturyGothicPaneuropean-Bold', boldItalic: 'CenturyGothicPaneuropean-BoldItalic' } },
-            { name: 'Graphik', styles: { thin: 'Graphik-Thin', regular: 'Graphik-Regular', medium: 'Graphik-Medium', semibold: 'Graphik-Semibold', thinItalic: 'Graphik-ThinItalic', regularItalic: 'Graphik-RegularItalic', mediumItalic: 'Graphik-MediumItalic' } },
-            { name: 'Zapf Humanist', styles: { demi: 'ZapfHumanist601BT-Demi' } },
-        ],
-        'Serif': [
-            { name: 'Benguiat', styles: { regular: 'Benguiat', bold: 'BenguiatITCbyBT-Bold', italic: 'BenguiatITCbyBT-BookItalic' } },
-            { name: 'Century Schoolbook', styles: { regular: 'CenturySchoolbook', bold: 'CenturySchoolbook-Bold', boldItalic: 'CenturySchoolbook-BoldItalic' } },
-            { name: 'CopprplGoth BT', styles: { regular: 'CopperplateGothicBT-Roman' } },
-            { name: 'Garamond', styles: { regular: 'Garamond' } },
-            { name: 'Garamond 3 LT Std', styles: { regular: 'Garamond3LTStd', bold: 'Garamond3LTStd-Bold', italic: 'Garamond3LTStd-Italic', boldItalic: 'Garamond3LTStd-BoldItalic' } },
-            { name: 'Times New Roman', styles: { regular: 'TimesNewRomanPSMT', bold: 'TimesNewRomanPS-BoldMT', italic: 'TimesNewRomanPS-ItalicMT', boldItalic: 'TimesNewRomanPS-BoldItalicMT' } },
-        ],
-        'Script': [
-            { name: 'Amazone BT', styles: { regular: 'AmazoneBT-Regular' } },
-            { name: 'Angelface', styles: { regular: 'Angelface' } },
-            { name: 'Birds of Paradise', styles: { regular: 'BirdsofParadise-PersonaluseOnly' } },
-            { name: 'Clicker Script', styles: { regular: 'ClickerScript-Regular' } },
-            { name: 'Courgette', styles: { regular: 'Courgette-Regular' } },
-            { name: 'Freebooter Script', styles: { regular: 'FreebooterScript' } },
-            { name: 'Great Vibes', styles: { regular: 'GreatVibes-Regular' } },
-            { name: 'Honey Script', styles: { light: 'HoneyScript-Light', semiBold: 'HoneyScript-SemiBold' } },
-            { name: 'I Love Glitter', styles: { regular: 'ILoveGlitter' } },
-            { name: 'ITC Zapf Chancery', styles: { regular: 'ZapfChancery-Roman' } },
-            { name: 'Lisbon Script', styles: { regular: 'LisbonScript-Regular' } },
-            { name: 'Murray Hill', styles: { regular: 'MurrayHill' } },
-        ],
-        'Display': [
-            { name: 'BlackChancery', styles: { regular: 'BlackChancery' } },
-            { name: 'Collegiate', styles: { black: 'CollegiateBlackFLF', outline: 'CollegiateOutlineFLF' } },
-            { name: 'Cowboy Rodeo', styles: { regular: 'CowboyRodeoW01-Regular' } },
-            { name: 'Machine BT', styles: { regular: 'MachineITCbyBT-Regular' } },
-            { name: 'Old English Text MT', styles: { regular: 'OldEnglishTextMT' } },
-            { name: 'Planscribe', styles: { regular: 'PlanscribeNFW01-Regular' } },
-            { name: 'Tinplate Titling Black', styles: { regular: 'TinplateTitlingBlack' } },
-        ]
-    };
+// --- Reusable Modal Component ---
+const Modal = ({ isOpen, onClose, title, children }) => {
+    if (!isOpen) return null;
+
+    return (
+        <div className="modal-overlay" onClick={onClose}>
+            <div className="modal-content" onClick={e => e.stopPropagation()}>
+                <div className="modal-header">
+                    <h3 className="modal-title">{title}</h3>
+                    <button onClick={onClose} className="modal-close-button">
+                        <XIcon />
+                    </button>
+                </div>
+                <div className="modal-body">
+                    {children}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+
+const App = () => {
+    // --- STATE MANAGEMENT (All original state is preserved) ---
+    const WORKER_URL = "https://customerfontselection-worker.tom-4a9.workers.dev";
+    const DEFAULT_TEXT_PLACEHOLDER = 'The quick brown fox jumps over the lazy dog.';
 
     const [selectedFonts, setSelectedFonts] = useState([]);
-    const [customText, setCustomText] = useState('');
-    const [fontSize, setFontSize] = useState(36);
-    const [message, setMessage] = useState('');
-    const [showMessageBox, setShowMessageBox] = useState(false);
-    const [showCustomerModal, setShowCustomerModal] = useState(false);
-    const [showGlyphPalette, setShowGlyphPalette] = useState(false);
+    const [customText, setCustomText] = useState(DEFAULT_TEXT_PLACEHOLDER);
+    const [fontSize, setFontSize] = useState(48);
+    const [toasts, setToasts] = useState([]);
     const [customerName, setCustomerName] = useState('');
     const [customerCompany, setCustomerCompany] = useState('');
     const [orderNumber, setOrderNumber] = useState('');
     const [pendingSvgContent, setPendingSvgContent] = useState(null);
 
+    // Modal visibility states
+    const [isCustomerModalOpen, setIsCustomerModalOpen] = useState(false);
+    const [isGlyphModalOpen, setIsGlyphModalOpen] = useState(false);
+
     const textInputRef = useRef(null);
+
+    // --- CORE FUNCTIONS (All original logic is preserved and enhanced) ---
+
+    const showToast = (message, type = 'success', duration = 4000) => {
+        const id = Date.now();
+        setToasts(prev => [...prev, { id, message, type }]);
+        setTimeout(() => {
+            setToasts(prev => prev.filter(toast => toast.id !== id));
+        }, duration);
+    };
 
     const handleFontSelect = (font) => {
         const isSelected = selectedFonts.some(f => f.name === font.name);
@@ -100,257 +129,274 @@ const App = () => {
         );
     };
 
-    const handleTextChange = (e) => setCustomText(e.target.value);
-    const handleFontSizeChange = (e) => setFontSize(Number(e.target.value));
-
-    const showMessage = (msg, duration = 4000) => {
-        setMessage(msg);
-        setShowMessageBox(true);
-        setTimeout(() => setShowMessageBox(false), duration);
-    };
-
     const formatForFilename = (str) => str.trim().replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_-]/g, '');
 
     const handleGlyphInsert = (glyph) => {
         const textarea = textInputRef.current;
         if (!textarea) return;
-        const start = textarea.selectionStart;
-        const end = textarea.selectionEnd;
-        const text = customText;
-        const newText = text.substring(0, start) + glyph + text.substring(end);
+        const { selectionStart, selectionEnd } = textarea;
+        const newText = customText.substring(0, selectionStart) + glyph + customText.substring(selectionEnd);
         setCustomText(newText);
         textarea.focus();
         setTimeout(() => {
-            textarea.selectionStart = textarea.selectionEnd = start + glyph.length;
+            textarea.selectionStart = textarea.selectionEnd = selectionStart + glyph.length;
         }, 0);
     };
 
     const handleSaveSvg = () => {
         if (selectedFonts.length === 0 || customText.trim() === '') {
-            showMessage('Please select at least one font and enter some text to save an SVG.');
+            showToast('Please select a font and enter text.', 'error');
             return;
         }
         const lines = customText.split('\n').filter(line => line.trim() !== '');
         if (lines.length === 0) {
-            showMessage('Please enter some text to save an SVG.');
+            showToast('Please enter some text to save.', 'error');
             return;
         }
 
         let svgTextElements = '';
         const lineHeight = fontSize * 1.4;
-        const labelFontSize = 16;
-        const padding = 20;
+        const labelFontSize = 14;
+        const padding = 25;
         let y = padding;
 
         selectedFonts.forEach((font, fontIndex) => {
             const activeFontFamily = font.styles[font.activeStyle];
             const styleName = font.activeStyle.charAt(0).toUpperCase() + font.activeStyle.slice(1);
-
-            y += labelFontSize + 10;
-            svgTextElements += `<text x="${padding}" y="${y}" font-family="Arial" font-size="${labelFontSize}" fill="#6b7280" font-weight="600">${font.name} (${styleName})</text>\n`;
-            y += lineHeight * 0.5;
+            y += labelFontSize + 12;
+            svgTextElements += `<text x="${padding}" y="${y}" font-family="Arial, sans-serif" font-size="${labelFontSize}" fill="#4b5563">${font.name} — ${styleName}</text>\n`;
+            y += 5;
 
             lines.forEach((line) => {
                 const sanitizedLine = line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
                 y += lineHeight;
-                svgTextElements += `<text x="${padding}" y="${y}" font-family="${activeFontFamily}" font-size="${fontSize}" fill="#181717">${sanitizedLine}</text>\n`;
+                svgTextElements += `<text x="${padding}" y="${y}" font-family="${activeFontFamily}" font-size="${fontSize}" fill="#111827">${sanitizedLine}</text>\n`;
             });
-
-            if (fontIndex < selectedFonts.length - 1) {
-                y += lineHeight * 0.75;
-            }
+            if (fontIndex < selectedFonts.length - 1) y += lineHeight * 0.5;
         });
 
-        const svgWidth = 800;
         const svgHeight = y + padding;
-        const fullSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="${svgWidth}" height="${svgHeight}" style="background-color: #FFF;">\n${svgTextElements}</svg>`;
+        const fullSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="${svgHeight}" style="background-color: #ffffff;">\n${svgTextElements}</svg>`;
+
         setPendingSvgContent(fullSvg);
-        setShowCustomerModal(true);
+        setIsCustomerModalOpen(true);
     };
 
     const handleCustomerModalSubmit = async (e) => {
         e.preventDefault();
         if (!orderNumber.trim() || !customerName.trim()) {
-            showMessage('Order Number and Customer Name are required.');
+            showToast('Order Number and Customer Name are required.', 'error');
             return;
         }
+        setIsCustomerModalOpen(false);
 
-        setShowCustomerModal(false);
         const filename = [
             formatForFilename(orderNumber),
             formatForFilename(customerName),
             customerCompany.trim() ? formatForFilename(customerCompany) : ''
         ].filter(Boolean).join('_') + '.svg';
 
+        // Local Download
         try {
             const blob = new Blob([pendingSvgContent], { type: 'image/svg+xml' });
-            const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.href = url;
+            a.href = URL.createObjectURL(blob);
             a.download = filename;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            showMessage('SVG saved locally!');
+            URL.revokeObjectURL(a.href);
+            showToast(`Saved ${filename} locally.`);
         } catch (error) {
-            showMessage(`Could not save file locally: ${error.message}`);
+            showToast(`Error saving file: ${error.message}`, 'error');
         }
 
+        // R2 Upload
         try {
             const response = await fetch(`${WORKER_URL}/${filename}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'image/svg+xml' },
                 body: pendingSvgContent
             });
-            if (!response.ok) throw new Error(await response.text());
-            showMessage('SVG uploaded successfully!');
+            if (!response.ok) throw new Error(`Server responded with ${response.status}`);
+            showToast('Proof uploaded successfully.');
         } catch (error) {
             console.error('Upload error:', error);
-            showMessage(`Error uploading SVG: ${error.message}`, 6000);
+            showToast(`Upload failed: ${error.message}`, 'error', 6000);
         }
 
+        // Reset form
         setCustomerName('');
         setCustomerCompany('');
         setOrderNumber('');
         setPendingSvgContent(null);
     };
 
-    const glyphs = ['©', '®', '™', '&', '#', '+', '–', '—', '…', '•', '°', '·', '♥', '♡', '♦', '♢', '♣', '♧', '♠', '♤', '★', '☆', '♪', '♫', '←', '→', '↑', '↓', '∞', '†', '✡\uFE0E', '✞', '✠', '±', '½', '¼', 'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ', 'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ρ', 'Σ', 'Τ', 'Υ', 'Φ', 'Χ', 'Ψ', 'Ω'];
+    const glyphs = ['©', '®', '™', '&', '#', '+', '–', '—', '…', '•', '°', '·', '♥', '♡', '♦', '♢', '♣', '♧', '♠', '♤', '★', '☆', '♪', '♫', '←', '→', '↑', '↓', '∞', '†', '✡︎', '✞', '✠', '±', '½', '¼', 'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ', 'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ρ', 'Σ', 'Τ', 'Υ', 'Φ', 'Χ', 'Ψ', 'Ω'];
 
     return (
-        <div className="flex flex-col lg:flex-row min-h-screen bg-slate-100 font-sans">
-            <aside className="bg-gradient-to-b from-slate-800 to-slate-900 text-white w-full lg:w-80 lg:h-auto p-4 lg:p-8 flex-shrink-0 flex flex-col items-center justify-center lg:justify-start lg:pt-16 shadow-xl lg:rounded-r-3xl">
-                <div className="flex flex-row lg:flex-col items-center justify-center gap-4">
-                    <div className="flex-shrink-0">
-                        <img src="/images/Arch Vector Logo White.svg" alt="Arch Font Hub Logo" className="h-20 w-20 lg:h-40 lg:w-40 object-contain drop-shadow-lg" />
+        <div className="app-container">
+            {/* --- TOAST NOTIFICATIONS --- */}
+            <div className="toast-container">
+                {toasts.map(toast => (
+                    <div key={toast.id} className={`toast toast-${toast.type}`}>
+                        {toast.message}
                     </div>
-                    <div className="font-black text-2xl lg:text-3xl tracking-wide leading-tight text-white text-center">ARCH<br className="hidden lg:block" /> FONT HUB</div>
-                </div>
-                <p className="hidden lg:block mt-4 text-base text-slate-300 border-t border-slate-700 pt-6 text-center">Experiment with fonts and text display for customer proofs.</p>
-            </aside>
+                ))}
+            </div>
 
-            <main className="flex-1 p-4 sm:p-8 lg:p-12">
-                <div className="max-w-7xl mx-auto">
-                    <div className="space-y-10">
-                        <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
-                            <h2 className="text-2xl font-black text-slate-900 mb-6 tracking-tight">Font Selection</h2>
-                            <div className="space-y-6">
-                                {Object.entries(fontLibrary).map(([category, fonts]) => (
-                                    <div key={category}>
-                                        <h3 className="text-md font-semibold text-slate-700 border-b-2 border-slate-200 pb-2 mb-3 tracking-wide">{category}</h3>
-                                        <div className="flex flex-wrap gap-3">
-                                            {fonts.map((font) => (
+            {/* --- MODALS --- */}
+            <Modal isOpen={isGlyphModalOpen} onClose={() => setIsGlyphModalOpen(false)} title="Glyph Palette">
+                <div className="glyph-palette">
+                    {glyphs.map(glyph => (
+                        <button key={glyph} onClick={() => handleGlyphInsert(glyph)} className="glyph-button" title={`Insert ${glyph}`}>
+                            {glyph}
+                        </button>
+                    ))}
+                </div>
+            </Modal>
+
+            <Modal isOpen={isCustomerModalOpen} onClose={() => setIsCustomerModalOpen(false)} title="Enter Customer Information">
+                <form onSubmit={handleCustomerModalSubmit} className="customer-form">
+                    <div className="form-group">
+                        <label htmlFor="orderNumber">Order Number*</label>
+                        <input id="orderNumber" type="text" value={orderNumber} onChange={e => setOrderNumber(e.target.value)} required />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="customerName">Customer Name*</label>
+                        <input id="customerName" type="text" value={customerName} onChange={e => setCustomerName(e.target.value)} required />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="customerCompany">Company (Optional)</label>
+                        <input id="customerCompany" type="text" value={customerCompany} onChange={e => setCustomerCompany(e.target.value)} />
+                    </div>
+                    <div className="form-actions">
+                        <button type="button" className="button-secondary" onClick={() => setIsCustomerModalOpen(false)}>Cancel</button>
+                        <button type="submit" className="button-primary">Submit & Save</button>
+                    </div>
+                </form>
+            </Modal>
+
+            {/* --- HEADER --- */}
+            <header className="app-header">
+                <img src="/images/Arch Vector Logo White.svg" alt="Arch Font Hub Logo" className="logo" />
+                <h1>ARCH FONT HUB</h1>
+            </header>
+
+            {/* --- MAIN LAYOUT GRID --- */}
+            <div className="main-grid">
+
+                {/* --- LEFT PANEL: FONT LIBRARY --- */}
+                <aside className="panel font-library">
+                    <h2 className="panel-title">Font Library</h2>
+                    <div className="font-categories">
+                        {Object.entries(fontLibrary).map(([category, fonts]) => (
+                            <div key={category} className="font-category">
+                                <h3>{category}</h3>
+                                <div className="font-list">
+                                    {fonts.map(font => {
+                                        const isSelected = selectedFonts.some(f => f.name === font.name);
+                                        return (
+                                            <button
+                                                key={font.name}
+                                                className={`font-item ${isSelected ? 'selected' : ''}`}
+                                                onClick={() => handleFontSelect(font)}
+                                                style={{ fontFamily: font.styles[Object.keys(font.styles)[0]] }}
+                                            >
+                                                {font.name}
+                                                <div className="font-item-icon">
+                                                    {isSelected ? <XIcon /> : <PlusIcon />}
+                                                </div>
+                                            </button>
+                                        )
+                                    })}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </aside>
+
+                {/* --- CENTER PANEL: WORKSPACE & PREVIEW --- */}
+                <main className="panel workspace">
+                    <div className="text-input-section">
+                        <div className="panel-header">
+                            <h2 className="panel-title">Text to Preview</h2>
+                            <button className="button-tertiary" onClick={() => setIsGlyphModalOpen(true)}>Ω Glyphs</button>
+                        </div>
+                        <textarea
+                            ref={textInputRef}
+                            className="text-input"
+                            value={customText}
+                            onChange={e => setCustomText(e.target.value)}
+                            placeholder="Type your text here..."
+                        />
+                    </div>
+                    <div className="preview-section">
+                        <h2 className="panel-title">Live Preview</h2>
+                        <div className="preview-area">
+                            {selectedFonts.length > 0 && customText.trim() !== '' ? (
+                                selectedFonts.map(font => {
+                                    const activeFontFamily = font.styles[font.activeStyle];
+                                    return (
+                                        <p key={`preview-${font.name}`} className="preview-text" style={{ fontFamily: activeFontFamily, fontSize: `${fontSize}px` }}>
+                                            {customText}
+                                        </p>
+                                    )
+                                })
+                            ) : (
+                                <div className="preview-placeholder">
+                                    <p>Select a font and type to see a preview</p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </main>
+
+                {/* --- RIGHT PANEL: SELECTIONS & CONTROLS --- */}
+                <aside className="panel controls-panel">
+                    <h2 className="panel-title">Selections & Controls</h2>
+                    <div className="controls-content">
+                        <div className="font-size-control">
+                            <label htmlFor="fontSizeSlider">Font Size: <span>{fontSize}px</span></label>
+                            <input id="fontSizeSlider" type="range" min="24" max="120" step="1" value={fontSize} onChange={e => setFontSize(Number(e.target.value))} />
+                        </div>
+
+                        <div className="selected-fonts-list">
+                            {selectedFonts.length > 0 ? (
+                                selectedFonts.map(font => (
+                                    <div key={font.name} className="selected-font-card">
+                                        <div className="selected-font-header">
+                                            <span style={{ fontFamily: font.styles.regular || font.styles[Object.keys(font.styles)[0]] }}>{font.name}</span>
+                                            <button onClick={() => handleFontSelect(font)}><XIcon /></button>
+                                        </div>
+                                        <div className="style-selector">
+                                            {Object.keys(font.styles).map(styleKey => (
                                                 <button
-                                                    key={font.name}
-                                                    onClick={() => handleFontSelect(font)}
-                                                    className={`px-4 py-2 rounded-xl text-base font-semibold border-2 transition-all duration-150 transform hover:scale-105 focus:outline-none
-                                                        ${selectedFonts.some(f => f.name === font.name)
-                                                            ? 'bg-blue-600 text-white border-blue-600 shadow-md'
-                                                            : 'bg-white text-blue-900 border-blue-500 hover:bg-blue-50'
-                                                        }`}
-                                                    style={{ fontFamily: font.styles[Object.keys(font.styles)[0]] }}
+                                                    key={styleKey}
+                                                    onClick={() => handleStyleChange(font.name, styleKey)}
+                                                    className={font.activeStyle === styleKey ? 'active' : ''}
                                                 >
-                                                    {font.name}
+                                                    {styleKey}
                                                 </button>
                                             ))}
                                         </div>
                                     </div>
-                                ))}
-                            </div>
-                        </section>
-
-                        <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
-                            <div className="flex justify-between items-center mb-6">
-                                <h2 className="text-2xl font-black text-slate-900 tracking-tight">Custom Text</h2>
-                                <button onClick={() => setShowGlyphPalette(true)} className="px-4 py-2 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-sm">Ω Glyphs</button>
-                            </div>
-                            <textarea ref={textInputRef} className="w-full p-5 border-2 border-slate-200 rounded-xl shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 min-h-[120px] text-lg" value={customText} onChange={handleTextChange} placeholder={DEFAULT_TEXT_PLACEHOLDER} />
-                        </section>
-
-                        <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
-                            <div className="flex justify-between items-center mb-6">
-                                <h2 className="text-2xl font-black text-slate-900 tracking-tight">Live Preview</h2>
-                                <div className="flex items-center gap-3">
-                                    <label htmlFor="fontSizeSlider" className="text-sm font-medium text-slate-600">Size</label>
-                                    <input id="fontSizeSlider" type="range" min="36" max="100" step="1" value={fontSize} onChange={handleFontSizeChange} className="w-32 lg:w-48 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600" />
-                                    <span className="text-sm font-medium text-slate-600 w-12 text-left">{fontSize}px</span>
+                                ))
+                            ) : (
+                                <div className="no-selection-placeholder">
+                                    <p>No fonts selected.</p>
+                                    <span>Click a font from the library to add it.</span>
                                 </div>
-                            </div>
-                            <div className="bg-gradient-to-b from-slate-50 to-slate-200 p-6 rounded-xl min-h-[150px] space-y-10 border border-slate-100">
-                                {selectedFonts.length > 0 && customText.trim() !== '' ? (
-                                    selectedFonts.map((font) => {
-                                        const activeFontFamily = font.styles[font.activeStyle];
-                                        return (
-                                            <div key={`preview-${font.name}`} className="relative flex flex-col items-start gap-3">
-                                                <div className="flex items-center gap-4 mb-2">
-                                                    <span className="bg-blue-600 text-white px-4 py-1 rounded-full text-xs font-bold shadow-sm z-10" style={{ fontFamily: 'Arial' }}>{font.name}</span>
-                                                    <div className="flex gap-1">
-                                                        {Object.keys(font.styles).map(styleKey => (
-                                                            <button
-                                                                key={styleKey}
-                                                                onClick={() => handleStyleChange(font.name, styleKey)}
-                                                                className={`px-3 py-1 text-xs rounded-md border-2 transition-colors ${font.activeStyle === styleKey ? 'bg-slate-700 text-white border-slate-700' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-100'}`}
-                                                            >
-                                                                {styleKey.charAt(0).toUpperCase() + styleKey.slice(1)}
-                                                            </button>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                                <p className="text-slate-800 break-words w-full" style={{ fontFamily: activeFontFamily, fontSize: `${fontSize}px`, lineHeight: 1.4 }}>{customText}</p>
-                                            </div>
-                                        )
-                                    })
-                                ) : (
-                                    <div className="flex items-center justify-center h-full"><p className="text-slate-500 italic">Select fonts and enter text to see a live preview.</p></div>
-                                )}
-                            </div>
-                        </section>
-                    </div>
+                            )}
+                        </div>
 
-                    <div className="mt-12">
-                        <button className="w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white font-bold py-5 px-8 rounded-2xl shadow-2xl hover:shadow-blue-200 hover:from-blue-700 hover:to-blue-600 transition-all duration-200 transform hover:scale-105 text-xl tracking-wide" onClick={handleSaveSvg}>
-                            Submit Fonts to Arch Engraving
+                        <button className="button-primary save-button" onClick={handleSaveSvg} disabled={selectedFonts.length === 0 || customText.trim() === ''}>
+                            Generate Proof & Save SVG
                         </button>
                     </div>
-                </div>
-            </main>
+                </aside>
 
-            {(showCustomerModal || showMessageBox || showGlyphPalette) && (
-                <div className="fixed inset-0 bg-slate-900 bg-opacity-75 flex items-center justify-center p-4 z-50 transition-opacity animate-fade-in">
-                    <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-2xl animate-fade-in">
-                        {showGlyphPalette && (
-                            <div className="space-y-6">
-                                <h3 className="text-2xl font-bold text-slate-900">Glyph Palette</h3>
-                                <div className="grid grid-cols-12 gap-2 bg-slate-100 p-4 rounded-lg">
-                                    {glyphs.map(glyph => (<button key={glyph} onClick={() => handleGlyphInsert(glyph)} className="flex items-center justify-center h-12 w-full bg-white rounded-lg shadow-sm text-2xl text-slate-700 hover:bg-blue-100 hover:text-blue-700 transition-colors" title={`Insert ${glyph}`}>{glyph}</button>))}
-                                </div>
-                                <div className="flex justify-end pt-2">
-                                    <button type="button" className="px-5 py-2 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors" onClick={() => setShowGlyphPalette(false)}>Close</button>
-                                </div>
-                            </div>
-                        )}
-                        {showCustomerModal && (
-                            <form onSubmit={handleCustomerModalSubmit} className="space-y-8">
-                                <h3 className="text-2xl font-bold text-slate-900">Enter Customer Information to Save</h3>
-                                <FormInput label="Order Number" id="orderNumber" value={orderNumber} onChange={e => setOrderNumber(e.target.value)} required />
-                                <FormInput label="Customer Name" id="customerName" value={customerName} onChange={e => setCustomerName(e.target.value)} required />
-                                <FormInput label="Customer Company" id="customerCompany" value={customerCompany} onChange={e => setCustomerCompany(e.target.value)} isOptional />
-                                <div className="flex justify-end gap-4 pt-4">
-                                    <button type="button" className="px-5 py-2 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors" onClick={() => setShowCustomerModal(false)}>Cancel</button>
-                                    <button type="submit" className="px-5 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-semibold transition-colors shadow-sm">Submit & Save</button>
-                                </div>
-                            </form>
-                        )}
-                        {showMessageBox && (
-                            <div className="text-center">
-                                <p className="text-slate-800 text-lg mb-8">{message}</p>
-                                <button onClick={() => setShowMessageBox(false)} className="px-10 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-semibold transition-colors shadow-sm">OK</button>
-                            </div>
-                        )}
-                    </div>
-                </div>
-            )}
+            </div>
         </div>
     );
 };
