@@ -30,8 +30,9 @@ const Modal = ({ isOpen, onClose, title, children }) => {
 
 const App = () => {
     const WORKER_URL = "https://customerfontselection-worker.tom-4a9.workers.dev";
+    const DEFAULT_PLACEHOLDER = 'The quick brown fox jumps over the lazy dog.';
     const [selectedFonts, setSelectedFonts] = useState([]);
-    const [customText, setCustomText] = useState('The quick brown fox jumps over the lazy dog.');
+    const [customText, setCustomText] = useState(DEFAULT_PLACEHOLDER);
     const [fontSize, setFontSize] = useState(36);
     const [toasts, setToasts] = useState([]);
     const [customerName, setCustomerName] = useState('');
@@ -70,6 +71,18 @@ const App = () => {
         setCustomText(newText);
         textarea.focus();
         setTimeout(() => textarea.selectionStart = textarea.selectionEnd = selectionStart + glyph.length, 0);
+    };
+
+    const handleTextFocus = () => {
+        if (customText === DEFAULT_PLACEHOLDER) {
+            setCustomText('');
+        }
+    };
+
+    const handleTextBlur = () => {
+        if (customText.trim() === '') {
+            setCustomText(DEFAULT_PLACEHOLDER);
+        }
     };
 
     const handleInitiateSave = () => {
@@ -185,7 +198,14 @@ const App = () => {
                         <button className="symbol-button" onClick={() => setIsGlyphModalOpen(true)}>Symbols</button>
                     </div>
                     <div className="card-content">
-                        <textarea ref={textInputRef} className="text-input" value={customText} onChange={e => setCustomText(e.target.value)} />
+                        <textarea
+                            ref={textInputRef}
+                            className="text-input"
+                            value={customText}
+                            onChange={e => setCustomText(e.target.value)}
+                            onFocus={handleTextFocus}
+                            onBlur={handleTextBlur}
+                        />
                     </div>
                 </section>
 
@@ -200,7 +220,7 @@ const App = () => {
                             <input type="range" id="fontSize" min="36" max="100" value={fontSize} onChange={e => setFontSize(Number(e.target.value))} />
                         </div>
                         <div className="preview-area">
-                            {selectedFonts.length > 0 && customText.trim() ? (
+                            {selectedFonts.length > 0 && customText.trim() && customText !== DEFAULT_PLACEHOLDER ? (
                                 selectedFonts.map(font => (
                                     <div key={font.name} className="preview-item">
                                         <div className="preview-item-header">
