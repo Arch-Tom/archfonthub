@@ -6,6 +6,7 @@ const XIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
         <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
     </svg>
+
 );
 
 const PlusIcon = () => (
@@ -90,9 +91,13 @@ const App = () => {
     const [customText, setCustomText] = useState(DEFAULT_TEXT_PLACEHOLDER);
     const [fontSize, setFontSize] = useState(48);
     const [toasts, setToasts] = useState([]);
+
     const [customerName, setCustomerName] = useState('');
+
     const [customerCompany, setCustomerCompany] = useState('');
+
     const [orderNumber, setOrderNumber] = useState('');
+
     const [pendingSvgContent, setPendingSvgContent] = useState(null);
 
     // Modal visibility states
@@ -112,127 +117,209 @@ const App = () => {
     };
 
     const handleFontSelect = (font) => {
+
         const isSelected = selectedFonts.some(f => f.name === font.name);
+
         if (isSelected) {
+
             setSelectedFonts(prev => prev.filter(f => f.name !== font.name));
+
         } else {
+
             const defaultStyleKey = Object.keys(font.styles)[0];
+
             setSelectedFonts(prev => [...prev, { ...font, activeStyle: defaultStyleKey }]);
+
         }
+
     };
 
+
+
     const handleStyleChange = (fontName, newStyle) => {
+
         setSelectedFonts(prev =>
+
             prev.map(font =>
+
                 font.name === fontName ? { ...font, activeStyle: newStyle } : font
+
             )
+
         );
+
     };
 
     const formatForFilename = (str) => str.trim().replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_-]/g, '');
 
+
+
     const handleGlyphInsert = (glyph) => {
+
         const textarea = textInputRef.current;
+
         if (!textarea) return;
         const { selectionStart, selectionEnd } = textarea;
         const newText = customText.substring(0, selectionStart) + glyph + customText.substring(selectionEnd);
+
         setCustomText(newText);
+
         textarea.focus();
+
         setTimeout(() => {
             textarea.selectionStart = textarea.selectionEnd = selectionStart + glyph.length;
+
         }, 0);
+
     };
 
+
+
     const handleSaveSvg = () => {
+
         if (selectedFonts.length === 0 || customText.trim() === '') {
             showToast('Please select a font and enter text.', 'error');
+
             return;
-        }
-        const lines = customText.split('\n').filter(line => line.trim() !== '');
-        if (lines.length === 0) {
-            showToast('Please enter some text to save.', 'error');
-            return;
+
         }
 
+        const lines = customText.split('\n').filter(line => line.trim() !== '');
+
+        if (lines.length === 0) {
+            showToast('Please enter some text to save.', 'error');
+
+            return;
+
+        }
+
+
+
         let svgTextElements = '';
+
         const lineHeight = fontSize * 1.4;
         const labelFontSize = 14;
         const padding = 25;
+
         let y = padding;
 
+
+
         selectedFonts.forEach((font, fontIndex) => {
+
             const activeFontFamily = font.styles[font.activeStyle];
+
             const styleName = font.activeStyle.charAt(0).toUpperCase() + font.activeStyle.slice(1);
             y += labelFontSize + 12;
             svgTextElements += `<text x="${padding}" y="${y}" font-family="Arial, sans-serif" font-size="${labelFontSize}" fill="#4b5563">${font.name} — ${styleName}</text>\n`;
             y += 5;
 
             lines.forEach((line) => {
+
                 const sanitizedLine = line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
                 y += lineHeight;
                 svgTextElements += `<text x="${padding}" y="${y}" font-family="${activeFontFamily}" font-size="${fontSize}" fill="#111827">${sanitizedLine}</text>\n`;
+
             });
             if (fontIndex < selectedFonts.length - 1) y += lineHeight * 0.5;
+
         });
+
 
         const svgHeight = y + padding;
         const fullSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="${svgHeight}" style="background-color: #ffffff;">\n${svgTextElements}</svg>`;
 
+
         setPendingSvgContent(fullSvg);
         setIsCustomerModalOpen(true);
+
     };
 
+
+
     const handleCustomerModalSubmit = async (e) => {
+
         e.preventDefault();
+
         if (!orderNumber.trim() || !customerName.trim()) {
             showToast('Order Number and Customer Name are required.', 'error');
+
             return;
+
         }
         setIsCustomerModalOpen(false);
 
+
         const filename = [
+
             formatForFilename(orderNumber),
+
             formatForFilename(customerName),
+
             customerCompany.trim() ? formatForFilename(customerCompany) : ''
+
         ].filter(Boolean).join('_') + '.svg';
 
         // Local Download
         try {
+
             const blob = new Blob([pendingSvgContent], { type: 'image/svg+xml' });
+
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
+
             a.download = filename;
+
             document.body.appendChild(a);
+
             a.click();
+
             document.body.removeChild(a);
             URL.revokeObjectURL(a.href);
             showToast(`Saved ${filename} locally.`);
+
         } catch (error) {
             showToast(`Error saving file: ${error.message}`, 'error');
+
         }
 
         // R2 Upload
         try {
+
             const response = await fetch(`${WORKER_URL}/${filename}`, {
+
                 method: 'PUT',
+
                 headers: { 'Content-Type': 'image/svg+xml' },
+
                 body: pendingSvgContent
+
             });
             if (!response.ok) throw new Error(`Server responded with ${response.status}`);
             showToast('Proof uploaded successfully.');
+
         } catch (error) {
+
             console.error('Upload error:', error);
             showToast(`Upload failed: ${error.message}`, 'error', 6000);
+
         }
 
         // Reset form
         setCustomerName('');
+
         setCustomerCompany('');
+
         setOrderNumber('');
+
         setPendingSvgContent(null);
+
     };
 
     const glyphs = ['©', '®', '™', '&', '#', '+', '–', '—', '…', '•', '°', '·', '♥', '♡', '♦', '♢', '♣', '♧', '♠', '♤', '★', '☆', '♪', '♫', '←', '→', '↑', '↓', '∞', '†', '✡︎', '✞', '✠', '±', '½', '¼', 'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ', 'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ρ', 'Σ', 'Τ', 'Υ', 'Φ', 'Χ', 'Ψ', 'Ω'];
+
+
 
     return (
         <div className="app-container">
@@ -269,6 +356,7 @@ const App = () => {
                     <div className="form-group">
                         <label htmlFor="customerCompany">Company (Optional)</label>
                         <input id="customerCompany" type="text" value={customerCompany} onChange={e => setCustomerCompany(e.target.value)} />
+
                     </div>
                     <div className="form-actions">
                         <button type="button" className="button-secondary" onClick={() => setIsCustomerModalOpen(false)}>Cancel</button>
@@ -392,13 +480,19 @@ const App = () => {
 
                         <button className="button-primary save-button" onClick={handleSaveSvg} disabled={selectedFonts.length === 0 || customText.trim() === ''}>
                             Generate Proof & Save SVG
+
                         </button>
+
                     </div>
                 </aside>
 
             </div>
         </div>
+
     );
+
 };
+
+
 
 export default App;
