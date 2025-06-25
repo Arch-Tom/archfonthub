@@ -26,450 +26,463 @@ body {
         background-color: #6c757d;
     }
 
-/* --- ALL FONT-FACE RULES (Unchanged) --- */
+/* --- FONT-FACE RULES --- */
+
+/* Arial */
 @font-face {
-    font-family: 'ArialMT';
+    font-family: 'Arial';
     src: url('/fonts/arial.ttf');
+    font-weight: normal;
+    font-style: normal;
 }
 
 @font-face {
-    font-family: 'Arial-BoldMT';
+    font-family: 'Arial';
     src: url('/fonts/arialbd.ttf');
+    font-weight: bold;
+    font-style: normal;
 }
 
 @font-face {
-    font-family: 'Arial-ItalicMT';
+    font-family: 'Arial';
     src: url('/fonts/ariali.ttf');
+    font-weight: normal;
+    font-style: italic;
 }
 
 @font-face {
-    font-family: 'Arial-BoldItalicMT';
+    font-family: 'Arial';
     src: url('/fonts/arialbi.ttf');
+    font-weight: bold;
+    font-style: italic;
+}
+
+/* Calibri */
+@font-face {
+    font-family: 'Calibri';
+    src: url('/fonts/CALIBRI.TTF');
+    font-weight: normal;
+    font-style: normal;
 }
 
 @font-face {
     font-family: 'Calibri';
-    src: url('/fonts/CALIBRI.TTF');
-}
-
-@font-face {
-    font-family: 'Calibri-Bold';
     src: url('/fonts/CALIBRIB_0.TTF');
+    font-weight: bold;
+    font-style: normal;
 }
 
 @font-face {
-    font-family: 'Calibri-Italic';
+    font-family: 'Calibri';
     src: url('/fonts/CALIBRII.TTF');
+    font-weight: normal;
+    font-style: italic;
 }
 
+/* Century Gothic */
 @font-face {
-    font-family: 'CenturyGothicPaneuropean';
+    font-family: 'Century Gothic';
     src: url('/fonts/CenturyGothicPaneuropeanRegular.ttf');
+    font-weight: normal;
+    font-style: normal;
 }
 
 @font-face {
-    font-family: 'CenturyGothicPaneuropean-Bold';
+    font-family: 'Century Gothic';
     src: url('/fonts/CenturyGothicPaneuropeanBold.ttf');
+    font-weight: bold;
+    font-style: normal;
 }
 
 @font-face {
-    font-family: 'CenturyGothicPaneuropean-BoldItalic';
+    font-family: 'Century Gothic';
     src: url('/fonts/CenturyGothicPaneuropeanBoldItalic.ttf');
+    font-weight: bold;
+    font-style: italic;
 }
 
+/* Berlin Sans FB */
 @font-face {
-    font-family: 'BerlinSansFB-Reg';
+    font-family: 'Berlin Sans FB';
     src: url('/fonts/BRLNSR.TTF');
+    font-weight: normal;
+    font-style: normal;
 }
 
 @font-face {
-    font-family: 'BerlinSansFB-Bold';
+    font-family: 'Berlin Sans FB';
     src: url('/fonts/BRLNSB.TTF');
+    font-weight: bold;
+    font-style: normal;
 }
 
+/* Bebas Neue */
 @font-face {
-    font-family: 'BebasNeue-Regular';
+    font-family: 'Bebas Neue';
     src: url('/fonts/Bebas Neue Regular 400.ttf');
+    font-weight: normal;
+    font-style: normal;
 }
 
 @font-face {
-    font-family: 'BebasNeue-Bold';
+    font-family: 'Bebas Neue';
     src: url('/fonts/BebasNeue-Bold.otf');
+    font-weight: bold;
+    font-style: normal;
 }
 
+/* Zapf Humanist 601 */
 @font-face {
-    font-family: 'ZapfHumanist601BT-Demi';
+    font-family: 'Zapf Humanist 601';
     src: url('/fonts/ZHUM601D.TTF');
+    font-weight: 600; /* Demi is typically around 600 */
+    font-style: normal;
 }
 
+/* Graphik */
 @font-face {
-    font-family: 'Graphik-Medium';
-    src: url('/fonts/Graphik-Medium.otf');
-}
-
-@font-face {
-    font-family: 'Graphik-MediumItalic';
-    src: url('/fonts/Graphik-MediumItalic.otf');
-}
-
-@font-face {
-    font-family: 'Graphik-Regular';
-    src: url('/fonts/Graphik-Regular.otf');
-}
-
-@font-face {
-    font-family: 'Graphik-RegularItalic';
-    src: url('/fonts/Graphik-RegularItalic.otf');
-}
-
-@font-face {
-    font-family: 'Graphik-Semibold';
-    src: url('/fonts/Graphik-Semibold.otf');
-}
-
-@font-face {
-    font-family: 'Graphik-Thin';
+    font-family: 'Graphik';
     src: url('/fonts/Graphik-Thin.otf');
+    font-weight: 100;
+    font-style: normal;
 }
 
 @font-face {
-    font-family: 'Graphik-ThinItalic';
+    font-family: 'Graphik';
+    src: url('/fonts/Graphik-Regular.otf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Graphik';
+    src: url('/fonts/Graphik-Medium.otf');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Graphik';
+    src: url('/fonts/Graphik-Semibold.otf');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Graphik';
     src: url('/fonts/Graphik-ThinItalic.otf');
+    font-weight: 100;
+    font-style: italic;
 }
 
 @font-face {
-    font-family: 'TimesNewRomanPSMT';
+    font-family: 'Graphik';
+    src: url('/fonts/Graphik-RegularItalic.otf');
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Graphik';
+    src: url('/fonts/Graphik-MediumItalic.otf');
+    font-weight: 500;
+    font-style: italic;
+}
+
+
+/* Times New Roman */
+@font-face {
+    font-family: 'Times New Roman';
     src: url('/fonts/TIMES.TTF');
+    font-weight: normal;
+    font-style: normal;
 }
 
 @font-face {
-    font-family: 'TimesNewRomanPS-BoldMT';
+    font-family: 'Times New Roman';
     src: url('/fonts/timesbd.ttf');
+    font-weight: bold;
+    font-style: normal;
 }
 
 @font-face {
-    font-family: 'TimesNewRomanPS-ItalicMT';
+    font-family: 'Times New Roman';
     src: url('/fonts/timesi.ttf');
+    font-weight: normal;
+    font-style: italic;
 }
 
 @font-face {
-    font-family: 'TimesNewRomanPS-BoldItalicMT';
+    font-family: 'Times New Roman';
     src: url('/fonts/timesbi.ttf');
+    font-weight: bold;
+    font-style: italic;
 }
 
+/* Garamond */
 @font-face {
     font-family: 'Garamond';
     src: url('/fonts/GARA.TTF');
+    font-weight: normal;
+    font-style: normal;
 }
 
 @font-face {
-    font-family: 'Garamond3LTStd';
+    font-family: 'Garamond 3 LT Std';
     src: url('/fonts/Garamond3LTStd.otf');
+    font-weight: normal;
+    font-style: normal;
 }
 
 @font-face {
-    font-family: 'Garamond3LTStd-Bold';
+    font-family: 'Garamond 3 LT Std';
     src: url('/fonts/Garamond3LTStd-Bold.otf');
+    font-weight: bold;
+    font-style: normal;
 }
 
 @font-face {
-    font-family: 'Garamond3LTStd-Italic';
+    font-family: 'Garamond 3 LT Std';
     src: url('/fonts/Garamond3LTStd-Italic.otf');
+    font-weight: normal;
+    font-style: italic;
 }
 
 @font-face {
-    font-family: 'Garamond3LTStd-BoldItalic';
+    font-family: 'Garamond 3 LT Std';
     src: url('/fonts/Garamond3LTStd-BoldItalic.otf');
+    font-weight: bold;
+    font-style: italic;
+}
+
+
+/* Benguiat */
+@font-face {
+    font-family: 'Benguiat';
+    src: url('/fonts/Benguiat.ttf');
+    font-weight: normal;
+    font-style: normal;
 }
 
 @font-face {
     font-family: 'Benguiat';
-    src: url('/fonts/Benguiat.ttf');
-}
-
-@font-face {
-    font-family: 'BenguiatITCbyBT-Bold';
     src: url('/fonts/BENGUIAB.TTF');
+    font-weight: bold;
+    font-style: normal;
 }
 
 @font-face {
-    font-family: 'BenguiatITCbyBT-BookItalic';
+    font-family: 'Benguiat';
     src: url('/fonts/benguini.ttf');
+    font-weight: normal;
+    font-style: italic;
 }
 
+
+/* Century Schoolbook */
 @font-face {
-    font-family: 'CenturySchoolbook';
+    font-family: 'Century Schoolbook';
     src: url('/fonts/CENSCBK.TTF');
+    font-weight: normal;
+    font-style: normal;
 }
 
 @font-face {
-    font-family: 'CenturySchoolbook-Bold';
+    font-family: 'Century Schoolbook';
     src: url('/fonts/SCHLBKB.TTF');
+    font-weight: bold;
+    font-style: normal;
 }
 
 @font-face {
-    font-family: 'CenturySchoolbook-BoldItalic';
+    font-family: 'Century Schoolbook';
     src: url('/fonts/SCHLBKBI.TTF');
+    font-weight: bold;
+    font-style: italic;
 }
 
+/* Copperplate Gothic BT */
 @font-face {
-    font-family: 'CopperplateGothicBT-Roman';
+    font-family: 'Copperplate Gothic BT';
     src: url('/fonts/Copperplate Gothic.ttf');
+    font-weight: normal;
+    font-style: normal;
 }
 
+
+/* Amazone BT */
 @font-face {
-    font-family: 'AmazoneBT-Regular';
+    font-family: 'Amazone BT';
     src: url('/fonts/AmazonRg_0.ttf');
+    font-weight: normal;
+    font-style: normal;
 }
 
+
+/* Angelface */
 @font-face {
     font-family: 'Angelface';
     src: url('/fonts/Angelface.otf');
+    font-weight: normal;
+    font-style: normal;
 }
 
+
+/* Birds of Paradise */
 @font-face {
-    font-family: 'BirdsofParadise-PersonaluseOnly';
+    font-family: 'Birds of Paradise';
     src: url('/fonts/Birds of Paradise.ttf');
+    font-weight: normal;
+    font-style: normal;
 }
 
+/* BlackChancery */
 @font-face {
     font-family: 'BlackChancery';
     src: url('/fonts/BLKCHCRY.TTF');
+    font-weight: normal;
+    font-style: normal;
 }
 
+
+/* Clicker Script */
 @font-face {
-    font-family: 'ClickerScript-Regular';
+    font-family: 'Clicker Script';
     src: url('/fonts/ClickerScript-Regular.ttf');
+    font-weight: normal;
+    font-style: normal;
 }
 
+
+/* Collegiate */
 @font-face {
-    font-family: 'CollegiateBlackFLF';
+    font-family: 'Collegiate';
     src: url('/fonts/CollegiateBlackFLF.ttf');
-}
-
-@font-face {
-    font-family: 'CollegiateOutlineFLF';
-    src: url('/fonts/CollegiateOutlineFLF.ttf');
-}
-
-@font-face {
-    font-family: 'Courgette-Regular';
-    src: url('/fonts/Courgette-Regular.ttf');
-}
-
-@font-face {
-    font-family: 'CowboyRodeoW01-Regular';
-    src: url('/fonts/Cowboy Rodeo W01 Regular.ttf');
-}
-
-@font-face {
-    font-family: 'FreebooterScript';
-    src: url('/fonts/freebooterscript.ttf');
-}
-
-@font-face {
-    font-family: 'GreatVibes-Regular';
-    src: url('/fonts/Great Vibes.ttf');
-}
-
-@font-face {
-    font-family: 'HoneyScript-Light';
-    src: url('/fonts/HONEYSCL.TTF');
-}
-
-@font-face {
-    font-family: 'HoneyScript-SemiBold';
-    src: url('/fonts/HONEYSSB.TTF');
-}
-
-@font-face {
-    font-family: 'ILoveGlitter';
-    src: url('/fonts/I Love Glitter.ttf');
-}
-
-@font-face {
-    font-family: 'ZapfChancery-Roman';
-    src: url('/fonts/Zapf Chancery Font.otf');
-}
-
-@font-face {
-    font-family: 'LisbonScript-Regular';
-    src: url('/fonts/Lisbon-Script.otf');
-}
-
-@font-face {
-    font-family: 'MachineITCbyBT-Regular';
-    src: url('/fonts/machinen.ttf');
-}
-
-@font-face {
-    font-family: 'MurrayHill';
-    src: url('/fonts/Murray Hill Regular.ttf');
-}
-
-@font-face {
-    font-family: 'OldEnglishTextMT';
-    src: url('/fonts/OLDENGL.TTF');
-}
-
-@font-face {
-    font-family: 'PlanscribeNFW01-Regular';
-    src: url('/fonts/Planscribe NF W01 Regular.ttf');
-}
-
-@font-face {
-    font-family: 'TinplateTitlingBlack';
-    src: url('/fonts/TinplateTitlingBlack.ttf');
-}
-
-@font-face {
-    font-family: 'Bookman Old Style';
-    src: url('BookmanOldStyle-Bold.woff2') format('woff2'), url('BookmanOldStyle-Bold.woff') format('woff');
-    font-weight: bold;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Bookman Old Style';
-    src: url('BookmanOldStyle-BoldItalic.woff2') format('woff2'), url('BookmanOldStyle-BoldItalic.woff') format('woff');
-    font-weight: bold;
-    font-style: italic;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'American Pop Plain';
-    src: url('AmericanPopPlain.woff2') format('woff2'), url('AmericanPopPlain.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Century725 Cn BT';
-    src: url('Century725BT-RomanCondensed.woff2') format('woff2'), url('Century725BT-RomanCondensed.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Century725 Blk BT';
-    src: url('Century725BT-Black.woff2') format('woff2'), url('Century725BT-Black.woff') format('woff');
     font-weight: 900;
     font-style: normal;
-    font-display: swap;
 }
 
 @font-face {
-    font-family: 'Bookman Old Style';
-    src: url('BookmanOldStyle-Italic.woff2') format('woff2'), url('BookmanOldStyle-Italic.woff') format('woff');
+    font-family: 'Collegiate';
+    src: url('/fonts/CollegiateOutlineFLF.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Courgette */
+@font-face {
+    font-family: 'Courgette';
+    src: url('/fonts/Courgette-Regular.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Cowboy Rodeo */
+@font-face {
+    font-family: 'Cowboy Rodeo';
+    src: url('/fonts/Cowboy Rodeo W01 Regular.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Freebooter Script */
+@font-face {
+    font-family: 'Freebooter Script';
+    src: url('/fonts/freebooterscript.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Great Vibes */
+@font-face {
+    font-family: 'Great Vibes';
+    src: url('/fonts/Great Vibes.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+/* Honey Script */
+@font-face {
+    font-family: 'Honey Script';
+    src: url('/fonts/HONEYSCL.TTF');
     font-weight: 300;
-    font-style: italic;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Century725 BT';
-    src: url('Century725BT-Bold.woff2') format('woff2'), url('Century725BT-Bold.woff') format('woff');
-    font-weight: bold;
     font-style: normal;
-    font-display: swap;
 }
 
 @font-face {
-    font-family: 'Century725 BT';
-    src: url('Century725BT-Roman.woff2') format('woff2'), url('Century725BT-Roman.woff') format('woff');
-    font-weight: normal;
+    font-family: 'Honey Script';
+    src: url('/fonts/HONEYSSB.TTF');
+    font-weight: 600;
     font-style: normal;
-    font-display: swap;
 }
 
-@font-face {
-    font-family: 'Century725 BT';
-    src: url('Century725BT-Italic.woff2') format('woff2'), url('Century725BT-Italic.woff') format('woff');
-    font-weight: normal;
-    font-style: italic;
-    font-display: swap;
-}
 
+/* I Love Glitter */
 @font-face {
-    font-family: 'Concerto Pro';
-    src: url('ConcertoPro-Regular.woff2') format('woff2'), url('ConcertoPro-Regular.woff') format('woff');
-    font-weight: normal;
-    font-style: italic;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'DejaVu Serif';
-    src: url('DejaVuSerif.woff2') format('woff2'), url('DejaVuSerif.woff') format('woff');
+    font-family: 'I Love Glitter';
+    src: url('/fonts/I Love Glitter.ttf');
     font-weight: normal;
     font-style: normal;
-    font-display: swap;
 }
 
-@font-face {
-    font-family: 'DejaVu Serif';
-    src: url('DejaVuSerif-Bold.woff2') format('woff2'), url('DejaVuSerif-Bold.woff') format('woff');
-    font-weight: bold;
-    font-style: normal;
-    font-display: swap;
-}
 
+/* ITC Zapf Chancery */
 @font-face {
-    font-family: 'DejaVu Serif';
-    src: url('DejaVuSerif-BoldItalic.woff2') format('woff2'), url('DejaVuSerif-BoldItalic.woff') format('woff');
-    font-weight: bold;
-    font-style: italic;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'DejaVu Serif Condensed';
-    src: url('DejaVuSerifCondensed.woff2') format('woff2'), url('DejaVuSerifCondensed.woff') format('woff');
+    font-family: 'ITC Zapf Chancery';
+    src: url('/fonts/Zapf Chancery Font.otf');
     font-weight: normal;
     font-style: normal;
-    font-display: swap;
 }
 
+/* Lisbon Script */
 @font-face {
-    font-family: 'DejaVu Serif Condensed';
-    src: url('DejaVuSerifCondensed-Bold.woff2') format('woff2'), url('DejaVuSerifCondensed-Bold.woff') format('woff');
-    font-weight: bold;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'DejaVu Serif Condensed';
-    src: url('DejaVuSerifCondensed-BoldItalic.woff2') format('woff2'), url('DejaVuSerifCondensed-BoldItalic.woff') format('woff');
-    font-weight: bold;
-    font-style: italic;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'French Script MT';
-    src: url('FrenchScriptMT.woff2') format('woff2'), url('FrenchScriptMT.woff') format('woff');
+    font-family: 'Lisbon Script';
+    src: url('/fonts/Lisbon-Script.otf');
     font-weight: normal;
     font-style: normal;
-    font-display: swap;
 }
 
+
+/* Machine BT */
 @font-face {
-    font-family: 'DejaVu Serif Condensed';
-    src: url('DejaVuSerifCondensed-Italic.woff2') format('woff2'), url('DejaVuSerifCondensed-Italic.woff') format('woff');
+    font-family: 'Machine BT';
+    src: url('/fonts/machinen.ttf');
     font-weight: normal;
-    font-style: italic;
-    font-display: swap;
+    font-style: normal;
 }
 
+
+/* Murray Hill */
 @font-face {
-    font-family: 'DejaVu Serif';
-    src: url('DejaVuSerif-Italic.woff2') format('woff2'), url('DejaVuSerif-Italic.woff') format('woff');
+    font-family: 'Murray Hill';
+    src: url('/fonts/Murray Hill Regular.ttf');
     font-weight: normal;
-    font-style: italic;
-    font-display: swap;
+    font-style: normal;
+}
+
+/* Old English Text MT */
+@font-face {
+    font-family: 'Old English Text MT';
+    src: url('/fonts/OLDENGL.TTF');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+/* Planscribe NF */
+@font-face {
+    font-family: 'Planscribe NF';
+    src: url('/fonts/Planscribe NF W01 Regular.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+/* Tinplate Titling */
+@font-face {
+    font-family: 'Tinplate Titling';
+    src: url('/fonts/TinplateTitlingBlack.ttf');
+    font-weight: 900;
+    font-style: normal;
 }

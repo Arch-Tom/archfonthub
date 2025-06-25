@@ -4,53 +4,53 @@ import './App.css';
 // --- Helper Icons ---
 const XIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5"><path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" /></svg>);
 
-// --- Font Library (Updated to remove specific fonts) ---
+// --- Font Library (Updated) ---
 const fontLibrary = {
     'Sans-serif': [
-        { name: 'Arial', styles: { regular: 'ArialMT', bold: 'Arial-BoldMT', italic: 'Arial-ItalicMT', boldItalic: 'Arial-BoldItalicMT' } },
-        { name: 'Bebas Neue', styles: { regular: 'BebasNeue-Regular', bold: 'BebasNeue-Bold' } },
-        { name: 'Berlin Sans FB', styles: { regular: 'BerlinSansFB-Reg', bold: 'BerlinSansFB-Bold' } },
-        { name: 'Calibri', styles: { regular: 'Calibri', bold: 'Calibri-Bold', italic: 'Calibri-Italic' } },
-        { name: 'Century Gothic', styles: { regular: 'CenturyGothicPaneuropean', bold: 'CenturyGothicPaneuropean-Bold', boldItalic: 'CenturyGothicPaneuropean-BoldItalic' } },
-        { name: 'Graphik', styles: { thin: 'Graphik-Thin', regular: 'Graphik-Regular', medium: 'Graphik-Medium', semibold: 'Graphik-Semibold', thinItalic: 'Graphik-ThinItalic', regularItalic: 'Graphik-RegularItalic', mediumItalic: 'Graphik-MediumItalic' } },
-        { name: 'Zapf Humanist', styles: { demi: 'ZapfHumanist601BT-Demi' } },
+        { name: 'Arial', styles: { regular: { fontFamily: 'ArialMT', fontWeight: 'normal', fontStyle: 'normal' }, bold: { fontFamily: 'Arial-BoldMT', fontWeight: 'bold', fontStyle: 'normal' }, italic: { fontFamily: 'Arial-ItalicMT', fontWeight: 'normal', fontStyle: 'italic' }, boldItalic: { fontFamily: 'Arial-BoldItalicMT', fontWeight: 'bold', fontStyle: 'italic' } } },
+        { name: 'Bebas Neue', styles: { regular: { fontFamily: 'BebasNeue-Regular', fontWeight: 'normal', fontStyle: 'normal' }, bold: { fontFamily: 'BebasNeue-Bold', fontWeight: 'bold', fontStyle: 'normal' } } },
+        { name: 'Berlin Sans FB', styles: { regular: { fontFamily: 'BerlinSansFB-Reg', fontWeight: 'normal', fontStyle: 'normal' }, bold: { fontFamily: 'BerlinSansFB-Bold', fontWeight: 'bold', fontStyle: 'normal' } } },
+        { name: 'Calibri', styles: { regular: { fontFamily: 'Calibri', fontWeight: 'normal', fontStyle: 'normal' }, bold: { fontFamily: 'Calibri-Bold', fontWeight: 'bold', fontStyle: 'normal' }, italic: { fontFamily: 'Calibri-Italic', fontWeight: 'normal', fontStyle: 'italic' } } },
+        { name: 'Century Gothic', styles: { regular: { fontFamily: 'CenturyGothicPaneuropean', fontWeight: 'normal', fontStyle: 'normal' }, bold: { fontFamily: 'CenturyGothicPaneuropean-Bold', fontWeight: 'bold', fontStyle: 'normal' }, boldItalic: { fontFamily: 'CenturyGothicPaneuropean-BoldItalic', fontWeight: 'bold', fontStyle: 'italic' } } },
+        { name: 'Graphik', styles: { thin: { fontFamily: 'Graphik-Thin', fontWeight: '100', fontStyle: 'normal' }, regular: { fontFamily: 'Graphik-Regular', fontWeight: 'normal', fontStyle: 'normal' }, medium: { fontFamily: 'Graphik-Medium', fontWeight: '500', fontStyle: 'normal' }, semibold: { fontFamily: 'Graphik-Semibold', fontWeight: '600', fontStyle: 'normal' }, thinItalic: { fontFamily: 'Graphik-ThinItalic', fontWeight: '100', fontStyle: 'italic' }, regularItalic: { fontFamily: 'Graphik-RegularItalic', fontWeight: 'normal', fontStyle: 'italic' }, mediumItalic: { fontFamily: 'Graphik-MediumItalic', fontWeight: '500', fontStyle: 'italic' } } },
+        { name: 'Zapf Humanist', styles: { demi: { fontFamily: 'ZapfHumanist601BT-Demi', fontWeight: '600', fontStyle: 'normal' } } },
     ],
     'Serif': [
-        { name: 'Benguiat', styles: { regular: 'Benguiat', bold: 'BenguiatITCbyBT-Bold', italic: 'BenguiatITCbyBT-BookItalic' } },
-        { name: 'Bookman Old Style', styles: { regular: 'Bookman Old Style', bold: 'Bookman Old Style', italic: 'Bookman Old Style', boldItalic: 'Bookman Old Style' } },
-        { name: 'Century Schoolbook', styles: { regular: 'CenturySchoolbook', bold: 'CenturySchoolbook-Bold', boldItalic: 'CenturySchoolbook-BoldItalic' } },
-        { name: 'Century725 BT', styles: { regular: 'Century725 BT', bold: 'Century725 BT', italic: 'Century725 BT' } },
-        { name: 'CopprplGoth BT', styles: { regular: 'CopperplateGothicBT-Roman' } },
-        { name: 'DejaVu Serif', styles: { regular: 'DejaVu Serif', bold: 'DejaVu Serif', italic: 'DejaVu Serif', boldItalic: 'DejaVu Serif' } },
-        { name: 'DejaVu Serif Condensed', styles: { regular: 'DejaVu Serif Condensed', bold: 'DejaVu Serif Condensed', italic: 'DejaVu Serif Condensed', boldItalic: 'DejaVu Serif Condensed' } },
-        { name: 'Garamond 3 LT Std', styles: { regular: 'Garamond3LTStd', bold: 'Garamond3LTStd-Bold', italic: 'Garamond3LTStd-Italic', boldItalic: 'Garamond3LTStd-BoldItalic' } },
-        { name: 'Times New Roman', styles: { regular: 'TimesNewRomanPSMT', bold: 'TimesNewRomanPS-BoldMT', italic: 'TimesNewRomanPS-ItalicMT', boldItalic: 'TimesNewRomanPS-BoldItalicMT' } },
+        { name: 'Benguiat', styles: { regular: { fontFamily: 'Benguiat', fontWeight: 'normal', fontStyle: 'normal' }, bold: { fontFamily: 'BenguiatITCbyBT-Bold', fontWeight: 'bold', fontStyle: 'normal' }, italic: { fontFamily: 'BenguiatITCbyBT-BookItalic', fontWeight: 'normal', fontStyle: 'italic' } } },
+        { name: 'Bookman Old Style', styles: { regular: { fontFamily: 'Bookman Old Style', fontWeight: 'normal', fontStyle: 'normal' }, bold: { fontFamily: 'Bookman Old Style', fontWeight: 'bold', fontStyle: 'normal' }, italic: { fontFamily: 'Bookman Old Style', fontWeight: 'normal', fontStyle: 'italic' }, boldItalic: { fontFamily: 'Bookman Old Style', fontWeight: 'bold', fontStyle: 'italic' } } },
+        { name: 'Century Schoolbook', styles: { regular: { fontFamily: 'CenturySchoolbook', fontWeight: 'normal', fontStyle: 'normal' }, bold: { fontFamily: 'CenturySchoolbook-Bold', fontWeight: 'bold', fontStyle: 'normal' }, boldItalic: { fontFamily: 'CenturySchoolbook-BoldItalic', fontWeight: 'bold', fontStyle: 'italic' } } },
+        { name: 'Century725 BT', styles: { regular: { fontFamily: 'Century725 BT', fontWeight: 'normal', fontStyle: 'normal' }, bold: { fontFamily: 'Century725 BT', fontWeight: 'bold', fontStyle: 'normal' }, italic: { fontFamily: 'Century725 BT', fontWeight: 'normal', fontStyle: 'italic' } } },
+        { name: 'CopprplGoth BT', styles: { regular: { fontFamily: 'CopperplateGothicBT-Roman', fontWeight: 'normal', fontStyle: 'normal' } } },
+        { name: 'DejaVu Serif', styles: { regular: { fontFamily: 'DejaVu Serif', fontWeight: 'normal', fontStyle: 'normal' }, bold: { fontFamily: 'DejaVu Serif', fontWeight: 'bold', fontStyle: 'normal' }, italic: { fontFamily: 'DejaVu Serif', fontWeight: 'normal', fontStyle: 'italic' }, boldItalic: { fontFamily: 'DejaVu Serif', fontWeight: 'bold', fontStyle: 'italic' } } },
+        { name: 'DejaVu Serif Condensed', styles: { regular: { fontFamily: 'DejaVu Serif Condensed', fontWeight: 'normal', fontStyle: 'normal' }, bold: { fontFamily: 'DejaVu Serif Condensed', fontWeight: 'bold', fontStyle: 'normal' }, italic: { fontFamily: 'DejaVu Serif Condensed', fontWeight: 'normal', fontStyle: 'italic' }, boldItalic: { fontFamily: 'DejaVu Serif Condensed', fontWeight: 'bold', fontStyle: 'italic' } } },
+        { name: 'Garamond 3 LT Std', styles: { regular: { fontFamily: 'Garamond3LTStd', fontWeight: 'normal', fontStyle: 'normal' }, bold: { fontFamily: 'Garamond3LTStd-Bold', fontWeight: 'bold', fontStyle: 'normal' }, italic: { fontFamily: 'Garamond3LTStd-Italic', fontWeight: 'normal', fontStyle: 'italic' }, boldItalic: { fontFamily: 'Garamond3LTStd-BoldItalic', fontWeight: 'bold', fontStyle: 'italic' } } },
+        { name: 'Times New Roman', styles: { regular: { fontFamily: 'TimesNewRomanPSMT', fontWeight: 'normal', fontStyle: 'normal' }, bold: { fontFamily: 'TimesNewRomanPS-BoldMT', fontWeight: 'bold', fontStyle: 'normal' }, italic: { fontFamily: 'TimesNewRomanPS-ItalicMT', fontWeight: 'normal', fontStyle: 'italic' }, boldItalic: { fontFamily: 'TimesNewRomanPS-BoldItalicMT', fontWeight: 'bold', fontStyle: 'italic' } } },
     ],
     'Script': [
-        { name: 'Amazone BT', styles: { regular: 'AmazoneBT-Regular' } },
-        { name: 'Angelface', styles: { regular: 'Angelface' } },
-        { name: 'Clicker Script', styles: { regular: 'ClickerScript-Regular' } },
-        { name: 'Concerto Pro', styles: { regular: 'Concerto Pro' } },
-        { name: 'Courgette', styles: { regular: 'Courgette-Regular' } },
-        { name: 'Freebooter Script', styles: { regular: 'FreebooterScript' } },
-        { name: 'French Script MT', styles: { regular: 'French Script MT' } },
-        { name: 'Great Vibes', styles: { regular: 'GreatVibes-Regular' } },
-        { name: 'Honey Script', styles: { light: 'HoneyScript-Light', semiBold: 'HoneyScript-SemiBold' } },
-        { name: 'I Love Glitter', styles: { regular: 'ILoveGlitter' } },
-        { name: 'ITC Zapf Chancery', styles: { regular: 'ZapfChancery-Roman' } },
-        { name: 'Lisbon Script', styles: { regular: 'LisbonScript-Regular' } },
-        { name: 'Murray Hill', styles: { regular: 'MurrayHill' } },
+        { name: 'Amazone BT', styles: { regular: { fontFamily: 'AmazoneBT-Regular', fontWeight: 'normal', fontStyle: 'normal' } } },
+        { name: 'Angelface', styles: { regular: { fontFamily: 'Angelface', fontWeight: 'normal', fontStyle: 'normal' } } },
+        { name: 'Clicker Script', styles: { regular: { fontFamily: 'ClickerScript-Regular', fontWeight: 'normal', fontStyle: 'normal' } } },
+        { name: 'Concerto Pro', styles: { regular: { fontFamily: 'Concerto Pro', fontWeight: 'normal', fontStyle: 'italic' } } },
+        { name: 'Courgette', styles: { regular: { fontFamily: 'Courgette-Regular', fontWeight: 'normal', fontStyle: 'normal' } } },
+        { name: 'Freebooter Script', styles: { regular: { fontFamily: 'FreebooterScript', fontWeight: 'normal', fontStyle: 'normal' } } },
+        { name: 'French Script MT', styles: { regular: { fontFamily: 'French Script MT', fontWeight: 'normal', fontStyle: 'normal' } } },
+        { name: 'Great Vibes', styles: { regular: { fontFamily: 'GreatVibes-Regular', fontWeight: 'normal', fontStyle: 'normal' } } },
+        { name: 'Honey Script', styles: { light: { fontFamily: 'HoneyScript-Light', fontWeight: '300', fontStyle: 'normal' }, semiBold: { fontFamily: 'HoneyScript-SemiBold', fontWeight: '600', fontStyle: 'normal' } } },
+        { name: 'I Love Glitter', styles: { regular: { fontFamily: 'ILoveGlitter', fontWeight: 'normal', fontStyle: 'normal' } } },
+        { name: 'ITC Zapf Chancery', styles: { regular: { fontFamily: 'ZapfChancery-Roman', fontWeight: 'normal', fontStyle: 'normal' } } },
+        { name: 'Lisbon Script', styles: { regular: { fontFamily: 'LisbonScript-Regular', fontWeight: 'normal', fontStyle: 'normal' } } },
+        { name: 'Murray Hill', styles: { regular: { fontFamily: 'MurrayHill', fontWeight: 'normal', fontStyle: 'normal' } } },
     ],
     'Display': [
-        { name: 'American Pop Plain', styles: { regular: 'American Pop Plain' } },
-        { name: 'BlackChancery', styles: { regular: 'BlackChancery' } },
-        { name: 'Century725 Blk BT', styles: { black: 'Century725 Blk BT' } },
-        { name: 'Century725 Cn BT', styles: { regular: 'Century725 Cn BT' } },
-        { name: 'Collegiate', styles: { black: 'CollegiateBlackFLF', outline: 'CollegiateOutlineFLF' } },
-        { name: 'Cowboy Rodeo', styles: { regular: 'CowboyRodeoW01-Regular' } },
-        { name: 'Machine BT', styles: { regular: 'MachineITCbyBT-Regular' } },
-        { name: 'Old English Text MT', styles: { regular: 'OldEnglishTextMT' } },
-        { name: 'Planscribe', styles: { regular: 'PlanscribeNFW01-Regular' } },
+        { name: 'American Pop Plain', styles: { regular: { fontFamily: 'American Pop Plain', fontWeight: 'normal', fontStyle: 'normal' } } },
+        { name: 'BlackChancery', styles: { regular: { fontFamily: 'BlackChancery', fontWeight: 'normal', fontStyle: 'normal' } } },
+        { name: 'Century725 Blk BT', styles: { black: { fontFamily: 'Century725 Blk BT', fontWeight: '900', fontStyle: 'normal' } } },
+        { name: 'Century725 Cn BT', styles: { regular: { fontFamily: 'Century725 Cn BT', fontWeight: 'normal', fontStyle: 'normal' } } },
+        { name: 'Collegiate', styles: { black: { fontFamily: 'CollegiateBlackFLF', fontWeight: '900', fontStyle: 'normal' }, outline: { fontFamily: 'CollegiateOutlineFLF', fontWeight: 'normal', fontStyle: 'normal' } } },
+        { name: 'Cowboy Rodeo', styles: { regular: { fontFamily: 'CowboyRodeoW01-Regular', fontWeight: 'normal', fontStyle: 'normal' } } },
+        { name: 'Machine BT', styles: { regular: { fontFamily: 'MachineITCbyBT-Regular', fontWeight: 'normal', fontStyle: 'normal' } } },
+        { name: 'Old English Text MT', styles: { regular: { fontFamily: 'OldEnglishTextMT', fontWeight: 'normal', fontStyle: 'normal' } } },
+        { name: 'Planscribe', styles: { regular: { fontFamily: 'PlanscribeNFW01-Regular', fontWeight: 'normal', fontStyle: 'normal' } } },
     ]
 };
 
@@ -145,7 +145,7 @@ const App = () => {
         let y = padding;
 
         selectedFonts.forEach((font, fontIndex) => {
-            const activeFontFamily = font.styles[font.activeStyle];
+            const activeFontStyle = font.styles[font.activeStyle];
             const styleName = font.activeStyle.charAt(0).toUpperCase() + font.activeStyle.slice(1);
             y += labelFontSize + 15;
             svgTextElements += `<text x="${padding}" y="${y}" font-family="Inter, sans-serif" font-size="${labelFontSize}" fill="#4a5568" font-weight="600">${font.name} (${styleName})</text>\n`;
@@ -154,7 +154,7 @@ const App = () => {
             lines.forEach((line) => {
                 const sanitizedLine = line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
                 y += lineHeight;
-                svgTextElements += `<text x="${padding}" y="${y}" font-family="${activeFontFamily}" font-size="${fontSize}" fill="#1a202c">${sanitizedLine}</text>\n`;
+                svgTextElements += `<text x="${padding}" y="${y}" font-family="${activeFontStyle.fontFamily}" font-size="${fontSize}" font-weight="${activeFontStyle.fontWeight}" font-style="${activeFontStyle.fontStyle}" fill="#1a202c">${sanitizedLine}</text>\n`;
             });
             if (fontIndex < selectedFonts.length - 1) y += lineHeight * 0.5;
         });
@@ -219,7 +219,7 @@ const App = () => {
                                                 key={font.name}
                                                 onClick={() => handleFontSelect(font)}
                                                 className={`font-button ${isSelected ? 'selected' : ''}`}
-                                                style={{ fontFamily: defaultStyle }}
+                                                style={{ fontFamily: defaultStyle.fontFamily, fontWeight: defaultStyle.fontWeight, fontStyle: defaultStyle.fontStyle }}
                                             >
                                                 {font.name}
                                             </button>
@@ -275,7 +275,7 @@ const App = () => {
                                                 ))}
                                             </div>
                                         </div>
-                                        <p className="preview-text" style={{ fontFamily: font.styles[font.activeStyle], fontSize: `${fontSize}px` }}>
+                                        <p className="preview-text" style={{ ...font.styles[font.activeStyle], fontSize: `${fontSize}px` }}>
                                             {customText}
                                         </p>
                                     </div>
