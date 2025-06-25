@@ -106,3 +106,142 @@ const App = () => {
             });
             if (fontIndex < selectedFonts.length - 1) y += lineHeight * 0.5;
         });
+
+        const svgHeight = y + padding;
+        const svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="${svgHeight}" style="background-color: #ffffff;">\n${svgTextElements}</svg>`;
+        setPendingSvgContent(svgContent);
+        setIsCustomerModalOpen(true);
+    };
+
+    const handleCustomerModalSubmit = async (e) => {
+        e.preventDefault();
+        if (!orderNumber.trim() || !customerName.trim()) {
+            showToast('Order Number and Customer Name are required.', 'error'); return;
+        }
+        setIsCustomerModalOpen(false);
+        const filename = [formatForFilename(orderNumber), formatForFilename(customerName), customerCompany ? formatForFilename(customerCompany) : ''].filter(Boolean).join('_') + '.svg';
+        try {
+            const blob = new Blob([pendingSvgContent], { type: 'image/svg+xml' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(a.href);
+            showToast(`Saved ${filename} locally.`);
+        } catch (error) { showToast(`Error saving file: ${error.message}`, 'error'); }
+        try {
+            const response = await fetch(`${WORKER_URL}/${filename}`, { method: 'PUT', headers: { 'Content-Type': 'image/svg+xml' }, body: pendingSvgContent });
+            if (!response.ok) throw new Error(`Server responded with ${response.status}`);
+            showToast('Proof uploaded successfully.');
+        } catch (error) { showToast(`Upload failed: ${error.message}`, 'error', 6000); }
+        setCustomerName(''); setCustomerCompany(''); setOrderNumber(''); setPendingSvgContent(null);
+    };
+
+    const glyphs = ['©', '®', '™', '&', '#', '+', '–', '—', '…', '•', '°', '·', '♥', '♡', '♦', '♢', '♣', '♧', '♠', '♤', '★', '☆', '♪', '♫', '←', '→', '↑', '↓', '∞', '†', '✡︎', '✞', '✠', '±', '½', '¼', 'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ', 'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ρ', 'Σ', 'Τ', 'Υ', 'Φ', 'Χ', 'Ψ', 'Ω'];
+
+
+    return (
+        <div className="app-layout">
+            <aside className="sidebar">
+                <div className="sidebar-header">
+                    <img src="/images/Arch Vector Logo White.svg" alt="Arch Font Hub Logo" />
+                    <h1>ARCH FONT HUB</h1>
+                </div>
+                <div className="sidebar-content">
+                    <div className="section">
+                        <div className="section-header">
+                            <h2>Font Selection</h2>
+                            <p>Click one or more fonts to add them to your proof.</p>
+                        </div>
+                        {Object.entries(fontLibrary).map(([category, fonts]) => (
+                            <div key={category} className="font-category">
+                                <h3>{category}</h3>
+                                <div className="font-button-grid">
+                                    {fonts.map(font => {
+                                        const isSelected = selectedFonts.some(f => f.name === font.name);
+                                        return (
+                                            <button key={font.name} onClick={() => handleFontSelect(font)} className={`font-button ${isSelected ? 'selected' : ''}`}>
+                                                {font.name}
+                                                {isSelected && <CheckIcon />}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </aside>
+
+            <main className="main-content">
+                <div className="section">
+                    <div className="section-header">
+                        <h2>Text to Preview</h2>
+                        <p>Type your text here to see it in the selected fonts.</p>
+                        <button className="glyph-button-main" onClick={() => setIsGlyphModalOpen(true)}>Ω Glyphs</button>
+                    </div>
+                    <textarea ref={textInputRef} className="text-input" value={customText} onChange={e => setCustomText(e.target.value)} />
+                </div>
+
+                <div className="section">
+                    <div className="section-header">
+                        <h2>Live Preview</h2>
+                        <p>Adjust styles and font size for each selection.</p>
+                    </div>
+                    <div className="preview-controls">
+                        <label htmlFor="fontSize">Font Size: {fontSize}px</label>
+                        <input type="range" id="fontSize" min="20" max="150" value={fontSize} onChange={e => setFontSize(Number(e.target.value))} />
+                    </div>
+                    <div className="preview-area">
+                        {selectedFonts.length > 0 && customText.trim() ? (
+                            selectedFonts.map(font => (
+                                <div key={font.name} className="preview-item">
+                                    <div className="preview-item-header">
+                                        <span className="font-name-preview" style={{ fontFamily: font.styles.regular || font.styles[Object.keys(font.styles)[0]] }}>{font.name}</span>
+                                        <div className="style-selector">
+                                            {Object.keys(font.styles).map(styleKey => (
+                                                <button key={styleKey} onClick={() => handleStyleChange(font.name, styleKey)} className={font.activeStyle === styleKey ? 'active' : ''}>
+                                                    {styleKey}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                    <p className="preview-text" style={{ fontFamily: font.styles[font.activeStyle], fontSize: `${fontSize}px` }}>
+                                        {customText}
+                                    </p>
+                                </div>
+                            ))
+                        ) : <div className="preview-placeholder">Your selected fonts will be previewed here.</div>}
+                    </div>
+                </div>
+
+                <div className="submit-section">
+                    <button className="submit-button" onClick={handleInitiateSave}>
+                        <img src="/images/Arch Vector Logo White.svg" alt="Logo" />
+                        Submit your selection to Arch Engraving
+                    </button>
+                </div>
+            </main>
+
+            <Modal isOpen={isGlyphModalOpen} onClose={() => setIsGlyphModalOpen(false)} title="Glyph Palette">
+                <div className="glyph-palette">{glyphs.map(glyph => (<button key={glyph} onClick={() => handleGlyphInsert(glyph)}>{glyph}</button>))}</div>
+            </Modal>
+
+            <Modal isOpen={isCustomerModalOpen} onClose={() => setIsCustomerModalOpen(false)} title="Customer Information for SVG">
+                <form onSubmit={handleCustomerModalSubmit} className="customer-form">
+                    <div className="form-group"><label htmlFor="orderNumber">Order Number*</label><input id="orderNumber" type="text" value={orderNumber} onChange={e => setOrderNumber(e.target.value)} required /></div>
+                    <div className="form-group"><label htmlFor="customerName">Customer Name*</label><input id="customerName" type="text" value={customerName} onChange={e => setCustomerName(e.target.value)} required /></div>
+                    <div className="form-group"><label htmlFor="customerCompany">Company (Optional)</label><input id="customerCompany" type="text" value={customerCompany} onChange={e => setCustomerCompany(e.target.value)} /></div>
+                    <div className="modal-actions"><button type="button" className="button-secondary" onClick={() => setIsCustomerModalOpen(false)}>Cancel</button><button type="submit" className="button-primary">Submit & Save</button></div>
+                </form>
+            </Modal>
+
+            <div className="toast-container">{toasts.map(t => (<div key={t.id} className={`toast toast-${t.type}`}>{t.message}</div>))}</div>
+
+        </div>
+    );
+};
+
+export default App;
