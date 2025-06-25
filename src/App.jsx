@@ -13,7 +13,6 @@ const fontLibrary = {
     'Display': [{ name: 'BlackChancery', styles: { regular: 'BlackChancery' } }, { name: 'Collegiate', styles: { black: 'CollegiateBlackFLF', outline: 'CollegiateOutlineFLF' } }, { name: 'Cowboy Rodeo', styles: { regular: 'CowboyRodeoW01-Regular' } }, { name: 'Machine BT', styles: { regular: 'MachineITCbyBT-Regular' } }, { name: 'Old English Text MT', styles: { regular: 'OldEnglishTextMT' } }, { name: 'Planscribe', styles: { regular: 'PlanscribeNFW01-Regular' } }, { name: 'Tinplate Titling Black', styles: { regular: 'TinplateTitlingBlack' } },]
 };
 
-
 const Modal = ({ isOpen, onClose, title, children }) => {
     if (!isOpen) return null;
     return (
@@ -30,7 +29,6 @@ const Modal = ({ isOpen, onClose, title, children }) => {
 };
 
 const App = () => {
-    // --- State and Refs (Unchanged) ---
     const WORKER_URL = "https://customerfontselection-worker.tom-4a9.workers.dev";
     const [selectedFonts, setSelectedFonts] = useState([]);
     const [customText, setCustomText] = useState('The quick brown fox jumps over the lazy dog.');
@@ -44,7 +42,6 @@ const App = () => {
     const [isGlyphModalOpen, setIsGlyphModalOpen] = useState(false);
     const textInputRef = useRef(null);
 
-    // --- Core Functions (Unchanged) ---
     const showToast = (message, type = 'success', duration = 4000) => {
         const id = Date.now();
         setToasts(prev => [...prev, { id, message, type }]);
@@ -140,7 +137,6 @@ const App = () => {
     };
 
     const glyphs = ['©', '®', '™', '&', '#', '+', '–', '—', '…', '•', '°', '·', '♥', '♡', '♦', '♢', '♣', '♧', '♠', '♤', '★', '☆', '♪', '♫', '←', '→', '↑', '↓', '∞', '†', '✡︎', '✞', '✠', '±', '½', '¼', 'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ', 'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ρ', 'Σ', 'Τ', 'Υ', 'Φ', 'Χ', 'Ψ', 'Ω'];
-
 
     return (
         <div className="app-layout">
@@ -239,7 +235,6 @@ const App = () => {
             </Modal>
 
             <div className="toast-container">{toasts.map(t => (<div key={t.id} className={`toast toast-${t.type}`}>{t.message}</div>))}</div>
-
         </div>
     );
 };
