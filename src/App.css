@@ -5,12 +5,12 @@
     --shadow-color: rgba(45, 55, 72, 0.1);
     --text-primary: #2d3748;
     --text-secondary: #718096;
-    --accent-color: #38a169; /* Sage Green */
-    --accent-hover: #2f855a;
-    --accent-light: #e6f6f0;
+    --accent-color: #0d6efd; /* Blue Accent */
+    --accent-hover: #0b5ed7;
+    --accent-light: #e7f1ff;
     --accent-text: #ffffff;
     --danger: #e53e3e;
-    --success: #38a169;
+    --success: #198754;
     --radius: 0.75rem;
 }
 
@@ -21,38 +21,56 @@ body {
     color: var(--text-primary);
 }
 
-/* --- Header --- */
-.app-header {
-    background-color: #343a40;
-    color: white;
+.app-layout {
+    display: flex;
+}
+
+/* --- Sidebar (Desktop) --- */
+.sidebar {
+    background-color: var(--bg-card);
+    border-right: 1px solid var(--border-color);
+    width: 380px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+}
+
+.sidebar-header {
     display: flex;
     align-items: center;
     gap: 1rem;
-    padding: 1rem 1.5rem;
-    box-shadow: 0 2px 4px var(--shadow-color);
-    position: sticky;
-    top: 0;
-    z-index: 10;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    background-color: #343a40;
+    color: white;
 }
 
-.header-logo {
-    height: 50px; /* Increased logo size */
+.sidebar-logo {
+    height: 50px;
 }
 
-.app-header h1 {
+.sidebar-header h1 {
     font-size: 1.5rem;
-    font-weight: 700;
+    font-weight: 800;
     margin: 0;
 }
 
-/* --- Main Content Layout --- */
-.main-container {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 2rem 1.5rem;
+.sidebar-content {
+    padding: 0 0.5rem 1.5rem;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+/* --- Main Content --- */
+.main-content {
+    width: 100%;
+    padding: 2rem;
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1.5rem;
 }
 
 .card {
@@ -85,22 +103,24 @@ body {
 }
 
 /* --- Font Selection --- */
-.font-category h3 {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--text-secondary);
-    margin: 1.5rem 0 1rem 0;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--border-color);
+.font-category {
+    padding: 0 1rem;
 }
 
-.font-category:first-child h3 {
-    margin-top: 0;
-}
+    .font-category h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        margin: 1.5rem 0 1rem 0;
+    }
+
+    .font-category:first-child h3 {
+        margin-top: 0;
+    }
 
 .font-button-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 0.75rem;
 }
 
@@ -113,11 +133,13 @@ body {
     border: 2px solid var(--border-color);
     border-radius: var(--radius);
     padding: 0 1rem;
-    height: 60px;
-    font-size: 1.75rem;
+    height: 55px;
+    font-size: 1.25rem;
     line-height: 1;
     cursor: pointer;
     transition: all 0.2s ease;
+    overflow: hidden;
+    text-align: center;
 }
 
     .font-button:hover {
@@ -168,6 +190,7 @@ body {
         outline: 2px solid var(--accent-color);
         border-color: var(--accent-color);
     }
+
 
 /* --- Live Preview --- */
 .preview-controls {
@@ -293,8 +316,8 @@ body {
 
 .submit-button-logo {
     height: 36px;
+    filter: brightness(0) invert(1);
 }
-/* Increased logo size */
 
 /* --- Modals and Toasts --- */
 .modal-overlay {
@@ -433,4 +456,43 @@ body {
 
 .toast-error {
     background-color: var(--danger);
+}
+
+/* --- Responsive Layout: Sidebar to Header --- */
+@media (max-width: 1024px) {
+    .app-layout {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        flex-direction: column;
+        position: static;
+        border-right: none;
+    }
+
+    .sidebar-header {
+        position: sticky;
+        top: 0;
+        background-color: #343a40;
+        z-index: 10;
+        width: 100%;
+    }
+
+    .main-content {
+        padding: 1.5rem;
+    }
+
+    .font-button-grid {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 1rem;
+        scrollbar-width: thin;
+    }
+
+    .font-button {
+        flex-shrink: 0;
+    }
 }

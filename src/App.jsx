@@ -138,14 +138,13 @@ const App = () => {
     const glyphs = ['©', '®', '™', '&', '#', '+', '–', '—', '…', '•', '°', '·', '♥', '♡', '♦', '♢', '♣', '♧', '♠', '♤', '★', '☆', '♪', '♫', '←', '→', '↑', '↓', '∞', '†', '✡︎', '✞', '✠', '±', '½', '¼', 'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ', 'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ρ', 'Σ', 'Τ', 'Υ', 'Φ', 'Χ', 'Ψ', 'Ω'];
 
     return (
-        <>
-            <header className="app-header">
-                <img src="/images/Arch Vector Logo White.svg" alt="Arch Font Hub Logo" className="header-logo" />
-                <h1>ARCH FONT HUB</h1>
-            </header>
-
-            <main className="main-container">
-                <section className="card">
+        <div className="app-layout">
+            <aside className="sidebar">
+                <div className="sidebar-header">
+                    <img src="/images/Arch Vector Logo White.svg" alt="Arch Font Hub Logo" className="sidebar-logo" />
+                    <h1>ARCH FONT HUB</h1>
+                </div>
+                <div className="sidebar-content">
                     <div className="card-header">
                         <h2>Font Selection</h2>
                         <p>Click one or more fonts to add them to your proof.</p>
@@ -173,8 +172,10 @@ const App = () => {
                             </div>
                         ))}
                     </div>
-                </section>
+                </div>
+            </aside>
 
+            <main className="main-content">
                 <section className="card">
                     <div className="card-header">
                         <h2>Text to Preview</h2>
@@ -220,12 +221,12 @@ const App = () => {
                     </div>
                 </section>
 
-                <section className="submit-section">
+                <div className="submit-section">
                     <button className="submit-button" onClick={handleInitiateSave}>
                         <img src="/images/Arch Vector Logo White.svg" alt="Logo" className="submit-button-logo" />
                         Submit your selection to Arch Engraving
                     </button>
-                </section>
+                </div>
             </main>
 
             <Modal isOpen={isGlyphModalOpen} onClose={() => setIsGlyphModalOpen(false)} title="Symbol Palette">
@@ -242,7 +243,7 @@ const App = () => {
             </Modal>
 
             <div className="toast-container">{toasts.map(t => (<div key={t.id} className={`toast toast-${t.type}`}>{t.message}</div>))}</div>
-        </>
+        </div>
     );
 };
 
