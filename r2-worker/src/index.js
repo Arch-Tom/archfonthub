@@ -3,7 +3,6 @@ export default {
 		const { pathname } = new URL(request.url);
 		const key = pathname.slice(1);
 
-		// Handle CORS preflight requests
 		if (request.method === 'OPTIONS') {
 			return handleOptions(request);
 		}
@@ -13,10 +12,22 @@ export default {
 				if (!key) {
 					return new Response('Missing filename', { status: 400, headers: corsHeaders });
 				}
+
+				// **NEW**: Check if the file already exists before writing
+				const existing = await env.ARCH_FONT_UPLOADS.head(key);
+				if (existing !== null) {
+					// Object with this key already exists.
+					return new Response('Duplicate filename. This order has likely already been submitted.', {
+						status: 409, // 409 Conflict is the appropriate status code
+						headers: corsHeaders
+					});
+				}
+
+				// If it doesn't exist, proceed with the upload
 				await env.ARCH_FONT_UPLOADS.put(key, request.body, {
 					httpMetadata: { contentType: 'image/svg+xml' },
 				});
-				// *** FIX: Added the required CORS headers to the response ***
+
 				return new Response(`Successfully uploaded ${key}`, { headers: corsHeaders });
 
 			case 'GET':
@@ -50,11 +61,9 @@ export default {
 	}
 };
 
-// --- UTILITIES ---
-
 const corsHeaders = {
 	'Access-Control-Allow-Origin': '*',
-	'Access-Control-Allow-Methods': 'GET, POST, PUT, OPTIONS', // Added PUT
+	'Access-Control-Allow-Methods': 'GET, POST, PUT, OPTIONS',
 	'Access-Control-Allow-Headers': 'Content-Type',
 };
 
@@ -67,7 +76,7 @@ function handleOptions(request) {
 		return new Response(null, { headers: corsHeaders });
 	} else {
 		return new Response(null, {
-			headers: { Allow: 'GET, POST, PUT, OPTIONS' }, // Added PUT
+			headers: { Allow: 'GET, POST, PUT, OPTIONS' },
 		});
 	}
 }
