@@ -79,9 +79,9 @@ const App = () => {
             { name: 'Great Vibes', styles: { regular: 'GreatVibes-Regular' } },
             { name: 'Honey Script', styles: { light: 'HoneyScript-Light', semiBold: 'HoneyScript-SemiBold' } },
             { name: 'I Love Glitter', styles: { regular: 'ILoveGlitter' } },
-            { name: 'Zapf Chancery', styles: { regular: 'ZapfChancery-Roman' } },
+            { name: 'ITC Zapf Chancery', styles: { regular: 'ZapfChancery-Roman' } },
             { name: 'Lisbon Script', styles: { regular: 'LisbonScript-Regular' } },
-            { name: 'Machine', styles: { regular: 'MachineITCbyBT-Regular' } },
+            { name: 'Machine BT', styles: { regular: 'MachineITCbyBT-Regular' } },
             { name: 'Murray Hill', styles: { regular: 'MurrayHill' } },
             { name: 'Old English', styles: { regular: 'OldEnglishTextMT' } },
             { name: 'Planscribe', styles: { regular: 'PlanscribeNFW01-Regular' } },
@@ -147,12 +147,12 @@ const App = () => {
 
     const handleSaveSvg = () => {
         if (selectedFonts.length === 0 || customText.trim() === '') {
-            showMessage('Please select at least one font and enter text to submit.');
+            showMessage('Please select at least one font and enter some text to save an SVG.');
             return;
         }
         const lines = customText.split('\n').filter(line => line.trim() !== '');
         if (lines.length === 0) {
-            showMessage('Please enter some text to submit.');
+            showMessage('Please enter some text to save an SVG.');
             return;
         }
 
@@ -243,7 +243,7 @@ const App = () => {
             <aside className="bg-gradient-to-b from-slate-800 to-slate-900 text-white w-full lg:w-80 lg:h-auto p-4 lg:p-8 flex-shrink-0 flex flex-col items-center justify-center lg:justify-start lg:pt-16 shadow-xl lg:rounded-r-3xl">
                 <div className="flex flex-row lg:flex-col items-center justify-center gap-4">
                     <div className="flex-shrink-0">
-                        <img src="/images/Arch Vector Logo White.svg" alt="Arch Font Hub Logo" className="sidebar-logo object-contain drop-shadow-lg" />
+                        <img src="/images/Arch Vector Logo White.svg" alt="Arch Font Hub Logo" className="h-40 w-40 lg:h-80 lg:w-80 object-contain drop-shadow-lg" />
                     </div>
                     <div className="font-black text-2xl lg:text-3xl tracking-wide leading-tight text-white text-center">ARCH<br className="hidden lg:block" /> FONT HUB</div>
                 </div>
