@@ -15,7 +15,7 @@ const FormInput = ({ label, id, value, onChange, required = false, isOptional = 
             onChange={onChange}
             required={required}
             disabled={disabled}
-            className={`w-full px-3 py-2 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-400 text-base ${disabled ? 'bg-slate-100 text-slate-500' : 'border-slate-300'}`}
+            className={`w-full px-3 py-2 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-400 text-base ${disabled ? 'bg-slate-100 text-slate-500 cursor-not-allowed' : 'border-slate-300'}`}
         />
     </div>
 );
@@ -25,7 +25,6 @@ const App = () => {
     const WORKER_URL = "https://customerfontselection-worker.tom-4a9.workers.dev";
     const DEFAULT_TEXT_PLACEHOLDER = 'Type your text here...';
 
-    // This array lists script-style fonts that need a larger font size on their buttons for readability.
     const scriptFontsToAdjust = [
         'Amazone', 'Angelface', 'Clicker Script', 'Concerto Pro', 'Courgette',
         'Cowboy Rodeo', 'Freebooter Script', 'French Script', 'Great Vibes',
@@ -99,7 +98,7 @@ const App = () => {
     const [orderNumber, setOrderNumber] = useState('');
     const [pendingSvgContent, setPendingSvgContent] = useState(null);
     const [isDataPrefilled, setIsDataPrefilled] = useState(false);
-    const [isSubmitting, setIsSubmitting] = useState(false); // **NEW**: State to track submission status
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const textInputRef = useRef(null);
 
@@ -220,7 +219,7 @@ const App = () => {
             return;
         }
 
-        setIsSubmitting(true); // **NEW**: Disable buttons
+        setIsSubmitting(true);
         setShowCustomerModal(false);
         const filename = [
             formatForFilename(orderNumber),
@@ -228,7 +227,6 @@ const App = () => {
             customerCompany.trim() ? formatForFilename(customerCompany) : ''
         ].filter(Boolean).join('_') + '.svg';
 
-        // Local save remains unchanged
         try {
             const blob = new Blob([svgContent], { type: 'image/svg+xml' });
             const url = URL.createObjectURL(blob);
@@ -250,7 +248,6 @@ const App = () => {
                 body: svgContent
             });
 
-            // **UPDATED**: Handle the new 409 Conflict status from the worker
             if (response.status === 409) {
                 throw new Error('A submission for this order already exists.');
             }
@@ -262,7 +259,7 @@ const App = () => {
             console.error('Upload error:', error);
             showMessage(`Error uploading SVG: ${error.message}`, 6000);
         } finally {
-            setIsSubmitting(false); // **NEW**: Re-enable buttons
+            setIsSubmitting(false);
         }
 
         if (!isDataPrefilled) {
@@ -293,11 +290,105 @@ const App = () => {
             <main className="flex-1 p-4 sm:p-8 lg:p-12">
                 <div className="max-w-7xl mx-auto">
                     <div className="space-y-10">
-                        {/* Font Selection, Custom Text, and Live Preview sections remain the same... */}
+                        {/* **THIS IS THE PART THAT WAS MISSING** */}
+                        <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
+                            <h2
+                                className="text-3xl font-bold text-slate-900 mb-6 tracking-normal"
+                                style={{ fontFamily: 'BebasNeue-Bold' }}
+                            >
+                                Font Selection
+                            </h2>
+                            <div className="space-y-6">
+                                {Object.entries(fontLibrary).map(([category, fonts]) => (
+                                    <div key={category}>
+                                        <h3 className="text-md font-semibold text-slate-700 border-b-2 border-slate-200 pb-2 mb-3 tracking-wide">{category}</h3>
+                                        <div className="flex flex-wrap gap-3">
+                                            {fonts.map((font) => {
+                                                const isScriptFont = scriptFontsToAdjust.includes(font.name);
+                                                let fontSizeClass = isScriptFont ? 'text-2xl' : 'text-lg';
+                                                if (font.name === 'Concerto Pro') {
+                                                    fontSizeClass = 'text-4xl';
+                                                }
+                                                return (
+                                                    <button
+                                                        key={font.name}
+                                                        onClick={() => handleFontSelect(font)}
+                                                        className={`px-5 py-3 rounded-xl font-semibold border-2 transition-all duration-150 transform hover:scale-105 focus:outline-none ${fontSizeClass}
+                                                            ${selectedFonts.some(f => f.name === font.name)
+                                                                ? 'bg-blue-600 text-white border-blue-600 shadow-md'
+                                                                : 'bg-white text-blue-900 border-blue-500 hover:bg-blue-50'
+                                                            }`}
+                                                        style={{ fontFamily: font.styles[Object.keys(font.styles)[0]] }}
+                                                    >
+                                                        {font.name}
+                                                    </button>
+                                                )
+                                            })}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+
+                        <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
+                            <div className="flex justify-between items-center mb-6">
+                                <h2
+                                    className="text-3xl font-bold text-slate-900 tracking-normal"
+                                    style={{ fontFamily: 'BebasNeue-Bold' }}
+                                >
+                                    Custom Text
+                                </h2>
+                                <button onClick={() => setShowGlyphPalette(true)} className="px-5 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base">Ω Glyphs</button>
+                            </div>
+                            <textarea ref={textInputRef} className="w-full p-5 border-2 border-slate-200 rounded-xl shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 min-h-[120px] text-xl" value={customText} onChange={handleTextChange} placeholder={DEFAULT_TEXT_PLACEHOLDER} />
+                        </section>
+
+                        <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
+                            <div className="flex justify-between items-center mb-6">
+                                <h2
+                                    className="text-3xl font-bold text-slate-900 tracking-normal"
+                                    style={{ fontFamily: 'BebasNeue-Bold' }}
+                                >
+                                    Live Preview
+                                </h2>
+                                <div className="flex items-center gap-3">
+                                    <label htmlFor="fontSizeSlider" className="text-sm font-medium text-slate-600">Size</label>
+                                    <input id="fontSizeSlider" type="range" min="36" max="100" step="1" value={fontSize} onChange={handleFontSizeChange} className="w-32 lg:w-48 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600" />
+                                    <span className="text-sm font-medium text-slate-600 w-12 text-left">{fontSize}px</span>
+                                </div>
+                            </div>
+                            <div className="bg-gradient-to-b from-slate-50 to-slate-200 p-6 rounded-xl min-h-[150px] space-y-10 border border-slate-100">
+                                {selectedFonts.length > 0 && customText.trim() !== '' ? (
+                                    selectedFonts.map((font) => {
+                                        const activeFontFamily = font.styles[font.activeStyle];
+                                        return (
+                                            <div key={`preview-${font.name}`} className="relative flex flex-col items-start gap-3">
+                                                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-2">
+                                                    <span className="bg-blue-600 text-white px-4 py-1 rounded-full text-sm font-bold shadow-sm z-10" style={{ fontFamily: 'Arial' }}>{font.name}</span>
+                                                    <div className="flex flex-wrap gap-1">
+                                                        {Object.keys(font.styles).map(styleKey => (
+                                                            <button
+                                                                key={styleKey}
+                                                                onClick={() => handleStyleChange(font.name, styleKey)}
+                                                                className={`px-4 py-2 text-sm rounded-md border-2 transition-colors ${font.activeStyle === styleKey ? 'bg-slate-700 text-white border-slate-700' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-100'}`}
+                                                            >
+                                                                {styleKey.charAt(0).toUpperCase() + styleKey.slice(1)}
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                                <p className="text-slate-800 break-words w-full" style={{ fontFamily: activeFontFamily, fontSize: `${fontSize}px`, lineHeight: 1.4 }}>{customText}</p>
+                                            </div>
+                                        )
+                                    })
+                                ) : (
+                                    <div className="flex items-center justify-center h-full"><p className="text-slate-500 italic">Select fonts and enter text to see a live preview.</p></div>
+                                )}
+                            </div>
+                        </section>
                     </div>
 
                     <div className="mt-12">
-                        {/* **UPDATED**: Button is now disabled and shows different text when submitting */}
                         <button
                             className="w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white font-bold py-6 px-8 rounded-2xl shadow-2xl hover:shadow-blue-200 hover:from-blue-700 hover:to-blue-600 transition-all duration-200 transform hover:scale-105 text-2xl tracking-wide disabled:opacity-75 disabled:cursor-not-allowed"
                             onClick={handleSubmitClick}
@@ -312,7 +403,17 @@ const App = () => {
             {(showCustomerModal || showMessageBox || showGlyphPalette) && (
                 <div className="fixed inset-0 bg-slate-900 bg-opacity-75 flex items-center justify-center p-4 z-50 transition-opacity animate-fade-in">
                     <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-2xl animate-fade-in">
-                        {/* Glyph Palette remains the same... */}
+                        {showGlyphPalette && (
+                            <div className="space-y-6">
+                                <h3 className="text-2xl font-bold text-slate-900">Glyph Palette</h3>
+                                <div className="grid grid-cols-12 gap-2 bg-slate-100 p-4 rounded-lg">
+                                    {glyphs.map(glyph => (<button key={glyph} onClick={() => handleGlyphInsert(glyph)} className="flex items-center justify-center h-12 w-full bg-white rounded-lg shadow-sm text-2xl text-slate-700 hover:bg-blue-100 hover:text-blue-700 transition-colors" title={`Insert ${glyph}`}>{glyph}</button>))}
+                                </div>
+                                <div className="flex justify-end pt-2">
+                                    <button type="button" className="px-6 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base" onClick={() => setShowGlyphPalette(false)}>Close</button>
+                                </div>
+                            </div>
+                        )}
                         {showCustomerModal && (
                             <form onSubmit={handleCustomerModalSubmit} className="space-y-8">
                                 <h3 className="text-2xl font-bold text-slate-900">Enter Customer Information to Save</h3>
@@ -327,7 +428,12 @@ const App = () => {
                                 </div>
                             </form>
                         )}
-                        {/* Message box remains the same... */}
+                        {showMessageBox && (
+                            <div className="text-center">
+                                <p className="text-slate-800 text-lg mb-8">{message}</p>
+                                <button onClick={() => setShowMessageBox(false)} className="px-12 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-semibold transition-colors shadow-sm text-base">OK</button>
+                            </div>
+                        )}
                     </div>
                 </div>
             )}
