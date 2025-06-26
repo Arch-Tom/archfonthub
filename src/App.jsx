@@ -243,7 +243,7 @@ const App = () => {
             <aside className="bg-gradient-to-b from-slate-800 to-slate-900 text-white w-full lg:w-[600px] lg:h-auto p-4 flex-shrink-0 flex flex-col items-center justify-center lg:justify-start lg:pt-16 shadow-xl lg:rounded-r-3xl">
                 <div className="flex flex-row lg:flex-col items-center justify-center gap-4">
                     <div className="flex-shrink-0">
-                        <img src="/images/Arch Vector Logo White.svg" alt="Arch Font Hub Logo" className="object-contain drop-shadow-lg" style={{ width: '260px', height: '260px' }} />
+                        <img src="/images/Arch Vector Logo White.svg" alt="Arch Font Hub Logo" className="object-contain drop-shadow-lg" style={{ width: '400px', height: '400px' }} />
                     </div>
                     <div className="font-black text-2xl lg:text-3xl tracking-wide leading-tight text-white text-center">ARCH<br className="hidden lg:block" /> FONT HUB</div>
                 </div>
