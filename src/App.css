@@ -29,12 +29,12 @@ body {
 .branding-sidebar {
     background-color: #343a40;
     color: white;
-    width: 400px; /* UPDATED: Exact width of the logo */
+    width: 600px; /* UPDATED: Wider to accommodate 520px logo with padding */
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 2.5rem 0; /* UPDATED: Removed side padding */
+    padding: 2.5rem 2rem; /* UPDATED: Added horizontal padding for nice spacing */
     height: 100vh;
     position: sticky;
     top: 0;
