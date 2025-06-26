@@ -40,21 +40,14 @@ body {
     top: 0;
 }
 
-.sidebar-logo {
-    width: 1000px !important;
-    height: 1000px !important;
-    object-fit: contain;
-    margin-bottom: 1.5rem;
-}
-
-.branding-sidebar h1 {
-    font-size: 1.75rem;
-    font-weight: 800;
-    margin: 0;
-    text-align: center;
-    line-height: 1.2;
-    max-width: 90%; /* UPDATED: Prevents heading from stretching the sidebar */
-}
+    .branding-sidebar h1 {
+        font-size: 1.75rem;
+        font-weight: 800;
+        margin: 0;
+        text-align: center;
+        line-height: 1.2;
+        max-width: 90%; /* UPDATED: Prevents heading from stretching the sidebar */
+    }
 
 /* --- Main Content --- */
 .main-container {
@@ -475,11 +468,6 @@ body {
         .branding-sidebar h1 {
             font-size: 1.25rem;
         }
-
-    .sidebar-logo {
-        height: 100px;
-        width: 100px;
-    }
 
     .main-container {
         padding: 1.5rem;
