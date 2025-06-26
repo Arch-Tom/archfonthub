@@ -252,7 +252,12 @@ const App = () => {
                 <div className="max-w-7xl mx-auto">
                     <div className="space-y-10">
                         <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
-                            <h2 className="text-2xl font-black text-slate-900 mb-6 tracking-tight">Font Selection</h2>
+                            <h2
+                                className="text-3xl font-bold text-slate-900 mb-6 tracking-normal"
+                                style={{ fontFamily: 'BebasNeue-Bold' }}
+                            >
+                                Font Selection
+                            </h2>
                             <div className="space-y-6">
                                 {Object.entries(fontLibrary).map(([category, fonts]) => (
                                     <div key={category}>
@@ -287,7 +292,12 @@ const App = () => {
 
                         <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
                             <div className="flex justify-between items-center mb-6">
-                                <h2 className="text-2xl font-black text-slate-900 tracking-tight">Custom Text</h2>
+                                <h2
+                                    className="text-3xl font-bold text-slate-900 tracking-normal"
+                                    style={{ fontFamily: 'BebasNeue-Bold' }}
+                                >
+                                    Custom Text
+                                </h2>
                                 <button onClick={() => setShowGlyphPalette(true)} className="px-5 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base">Ω Glyphs</button>
                             </div>
                             <textarea ref={textInputRef} className="w-full p-5 border-2 border-slate-200 rounded-xl shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 min-h-[120px] text-xl" value={customText} onChange={handleTextChange} placeholder={DEFAULT_TEXT_PLACEHOLDER} />
@@ -295,7 +305,12 @@ const App = () => {
 
                         <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
                             <div className="flex justify-between items-center mb-6">
-                                <h2 className="text-2xl font-black text-slate-900 tracking-tight">Live Preview</h2>
+                                <h2
+                                    className="text-3xl font-bold text-slate-900 tracking-normal"
+                                    style={{ fontFamily: 'BebasNeue-Bold' }}
+                                >
+                                    Live Preview
+                                </h2>
                                 <div className="flex items-center gap-3">
                                     <label htmlFor="fontSizeSlider" className="text-sm font-medium text-slate-600">Size</label>
                                     <input id="fontSizeSlider" type="range" min="36" max="100" step="1" value={fontSize} onChange={handleFontSizeChange} className="w-32 lg:w-48 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600" />
