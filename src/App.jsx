@@ -245,9 +245,7 @@ const App = () => {
                     <div className="flex-shrink-0">
                         <img src="/images/Arch Vector Logo White.svg" alt="Arch Font Hub Logo" className="object-contain drop-shadow-lg" style={{ width: '400px', height: '400px' }} />
                     </div>
-                    <div className="font-black text-2xl lg:text-3xl tracking-wide leading-tight text-white text-center">ARCH<br className="hidden lg:block" /> FONT HUB</div>
                 </div>
-                <p className="hidden lg:block mt-4 text-base text-slate-300 border-t border-slate-700 pt-6 text-center">Experiment with fonts and text display for customer proofs.</p>
             </aside>
 
             <main className="flex-1 p-4 sm:p-8 lg:p-12">
