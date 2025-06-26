@@ -61,7 +61,7 @@ const App = () => {
                 }
             },
             // --- FIX: Combined both Garamond fonts into one family ---
-            { name: 'Garamond', styles: { regular: 'Garamond', v3: 'Garamond3LTStd', v3_bold: 'Garamond3LTStd-Bold', v3_italic: 'Garamond3LTStd-Italic', v3_boldItalic: 'Garamond3LTStd-BoldItalic' } },
+            { name: 'Garamond', styles: { v3: 'Garamond3LTStd', v3_bold: 'Garamond3LTStd-Bold', v3_italic: 'Garamond3LTStd-Italic', v3_boldItalic: 'Garamond3LTStd-BoldItalic' } },
             { name: 'Times New Roman', styles: { regular: 'TimesNewRomanPSMT', bold: 'TimesNewRomanPS-BoldMT', italic: 'TimesNewRomanPS-ItalicMT', boldItalic: 'TimesNewRomanPS-BoldItalicMT' } },
         ],
         'Script & Display': [
@@ -79,9 +79,9 @@ const App = () => {
             { name: 'Great Vibes', styles: { regular: 'GreatVibes-Regular' } },
             { name: 'Honey Script', styles: { light: 'HoneyScript-Light', semiBold: 'HoneyScript-SemiBold' } },
             { name: 'I Love Glitter', styles: { regular: 'ILoveGlitter' } },
-            { name: 'ITC Zapf Chancery', styles: { regular: 'ZapfChancery-Roman' } },
+            { name: 'Zapf Chancery', styles: { regular: 'ZapfChancery-Roman' } },
             { name: 'Lisbon Script', styles: { regular: 'LisbonScript-Regular' } },
-            { name: 'Machine BT', styles: { regular: 'MachineITCbyBT-Regular' } },
+            { name: 'Machine', styles: { regular: 'MachineITCbyBT-Regular' } },
             { name: 'Murray Hill', styles: { regular: 'MurrayHill' } },
             { name: 'Old English', styles: { regular: 'OldEnglishTextMT' } },
             { name: 'Planscribe', styles: { regular: 'PlanscribeNFW01-Regular' } },
@@ -147,12 +147,12 @@ const App = () => {
 
     const handleSaveSvg = () => {
         if (selectedFonts.length === 0 || customText.trim() === '') {
-            showMessage('Please select at least one font and enter some text to save an SVG.');
+            showMessage('Please select at least one font and enter text to submit.');
             return;
         }
         const lines = customText.split('\n').filter(line => line.trim() !== '');
         if (lines.length === 0) {
-            showMessage('Please enter some text to save an SVG.');
+            showMessage('Please enter some text to submit.');
             return;
         }
 
