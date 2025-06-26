@@ -28,7 +28,7 @@ const App = () => {
     const scriptFontsToAdjust = [
         'Amazone', 'Angelface', 'Clicker Script', 'Concerto Pro', 'Courgette',
         'Cowboy Rodeo', 'Freebooter Script', 'French Script', 'Great Vibes',
-        'Honey Script', 'I Love Glitter', 'Lisbon Script', 'Murray Hill'
+        'Honey Script', 'I Love Glitter', 'Lisbon Script', 'Murray Hill', 'Machine BT'
     ];
 
     // --- FINAL, CORRECTED FONT LIBRARY BASED ON THE PROVIDED LIST ---
@@ -61,7 +61,7 @@ const App = () => {
                 }
             },
             // --- FIX: Combined both Garamond fonts into one family ---
-            { name: 'Garamond', styles: { regular: 'Garamond', v3: 'Garamond3LTStd', v3_bold: 'Garamond3LTStd-Bold', v3_italic: 'Garamond3LTStd-Italic', v3_boldItalic: 'Garamond3LTStd-BoldItalic' } },
+            { name: 'Garamond', styles: { v3: 'Garamond3LTStd', v3_bold: 'Garamond3LTStd-Bold', v3_italic: 'Garamond3LTStd-Italic', v3_boldItalic: 'Garamond3LTStd-BoldItalic' } },
             { name: 'Times New Roman', styles: { regular: 'TimesNewRomanPSMT', bold: 'TimesNewRomanPS-BoldMT', italic: 'TimesNewRomanPS-ItalicMT', boldItalic: 'TimesNewRomanPS-BoldItalicMT' } },
         ],
         'Script & Display': [
@@ -262,7 +262,10 @@ const App = () => {
                                         <div className="flex flex-wrap gap-3">
                                             {fonts.map((font) => {
                                                 const isScriptFont = scriptFontsToAdjust.includes(font.name);
-                                                const fontSizeClass = isScriptFont ? 'text-2xl' : 'text-lg';
+                                                let fontSizeClass = isScriptFont ? 'text-2xl' : 'text-lg';
+                                                if (font.name === 'Concerto Pro') {
+                                                    fontSizeClass = 'text-4xl';
+                                                }
                                                 return (
                                                     <button
                                                         key={font.name}
