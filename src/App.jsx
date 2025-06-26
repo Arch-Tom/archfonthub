@@ -26,9 +26,9 @@ const App = () => {
 
     // This array lists script-style fonts that need a larger font size on their buttons for readability.
     const scriptFontsToAdjust = [
-        'Amazone BT', 'Angelface', 'Clicker Script', 'Concerto Pro', 'Courgette',
+        'Amazone', 'Angelface', 'Clicker Script', 'Concerto Pro', 'Courgette',
         'Cowboy Rodeo', 'Freebooter Script', 'French Script', 'Great Vibes',
-        'Honey Script', 'I Love Glitter', 'Lisbon Script'
+        'Honey Script', 'I Love Glitter', 'Lisbon Script', 'Murray Hill'
     ];
 
     // --- FINAL, CORRECTED FONT LIBRARY BASED ON THE PROVIDED LIST ---
@@ -243,7 +243,7 @@ const App = () => {
             <aside className="bg-gradient-to-b from-slate-800 to-slate-900 text-white w-full lg:w-80 lg:h-auto p-4 lg:p-8 flex-shrink-0 flex flex-col items-center justify-center lg:justify-start lg:pt-16 shadow-xl lg:rounded-r-3xl">
                 <div className="flex flex-row lg:flex-col items-center justify-center gap-4">
                     <div className="flex-shrink-0">
-                        <img src="/images/Arch Vector Logo White.svg" alt="Arch Font Hub Logo" className="h-20 w-20 lg:h-40 lg:w-40 object-contain drop-shadow-lg" />
+                        <img src="/images/Arch Vector Logo White.svg" alt="Arch Font Hub Logo" className="sidebar-logo object-contain drop-shadow-lg" />
                     </div>
                     <div className="font-black text-2xl lg:text-3xl tracking-wide leading-tight text-white text-center">ARCH<br className="hidden lg:block" /> FONT HUB</div>
                 </div>

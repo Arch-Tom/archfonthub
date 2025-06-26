@@ -41,8 +41,8 @@ body {
 }
 
 .sidebar-logo {
-    width: 400px !important;
-    height: 400px !important;
+    width: 1000px !important;
+    height: 1000px !important;
     object-fit: contain;
     margin-bottom: 1.5rem;
 }
@@ -477,8 +477,8 @@ body {
         }
 
     .sidebar-logo {
-        height: 40px;
-        width: 40px;
+        height: 100px;
+        width: 100px;
     }
 
     .main-container {
