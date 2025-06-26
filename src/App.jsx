@@ -1,7 +1,7 @@
-﻿import React, { useState, useRef } from 'react';
+﻿import React, { useState, useRef, useEffect } from 'react';
 
 // This component remains outside the main App component for good practice.
-const FormInput = ({ label, id, value, onChange, required = false, isOptional = false }) => (
+const FormInput = ({ label, id, value, onChange, required = false, isOptional = false, disabled = false }) => (
     <div>
         <label htmlFor={id} className="block text-sm font-medium text-slate-700 mb-1">
             {label}
@@ -14,7 +14,8 @@ const FormInput = ({ label, id, value, onChange, required = false, isOptional = 
             value={value}
             onChange={onChange}
             required={required}
-            className="w-full px-3 py-2 border border-slate-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-400 text-base"
+            disabled={disabled}
+            className={`w-full px-3 py-2 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-400 text-base ${disabled ? 'bg-slate-100 text-slate-500' : 'border-slate-300'}`}
         />
     </div>
 );
@@ -60,7 +61,6 @@ const App = () => {
                     condensedBoldItalic: 'DejaVuSerifCondensed-BoldItalic'
                 }
             },
-            // --- FIX: Combined both Garamond fonts into one family ---
             { name: 'Garamond', styles: { v3: 'Garamond3LTStd', v3_bold: 'Garamond3LTStd-Bold', v3_italic: 'Garamond3LTStd-Italic', v3_boldItalic: 'Garamond3LTStd-BoldItalic' } },
             { name: 'Times New Roman', styles: { regular: 'TimesNewRomanPSMT', bold: 'TimesNewRomanPS-BoldMT', italic: 'TimesNewRomanPS-ItalicMT', boldItalic: 'TimesNewRomanPS-BoldItalicMT' } },
         ],
@@ -99,8 +99,24 @@ const App = () => {
     const [customerCompany, setCustomerCompany] = useState('');
     const [orderNumber, setOrderNumber] = useState('');
     const [pendingSvgContent, setPendingSvgContent] = useState(null);
+    const [isDataPrefilled, setIsDataPrefilled] = useState(false);
 
     const textInputRef = useRef(null);
+
+    // **NEW**: useEffect to read URL parameters on component load
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const urlOrderId = params.get('orderId');
+        const urlName = params.get('name');
+        const urlCompany = params.get('company');
+
+        if (urlOrderId && urlName) {
+            setOrderNumber(urlOrderId);
+            setCustomerName(urlName);
+            setCustomerCompany(urlCompany || ''); // Company is optional
+            setIsDataPrefilled(true);
+        }
+    }, []); // Empty dependency array ensures this runs only once
 
     const handleFontSelect = (font) => {
         const isSelected = selectedFonts.some(f => f.name === font.name);
@@ -145,15 +161,15 @@ const App = () => {
         }, 0);
     };
 
-    const handleSaveSvg = () => {
+    const generateSvgContent = () => {
         if (selectedFonts.length === 0 || customText.trim() === '') {
             showMessage('Please select at least one font and enter some text to save an SVG.');
-            return;
+            return null;
         }
         const lines = customText.split('\n').filter(line => line.trim() !== '');
         if (lines.length === 0) {
             showMessage('Please enter some text to save an SVG.');
-            return;
+            return null;
         }
 
         let svgTextElements = '';
@@ -183,13 +199,27 @@ const App = () => {
 
         const svgWidth = 800;
         const svgHeight = y + padding;
-        const fullSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="${svgWidth}" height="${svgHeight}" style="background-color: #FFF;">\n${svgTextElements}</svg>`;
-        setPendingSvgContent(fullSvg);
-        setShowCustomerModal(true);
+        return `<svg xmlns="http://www.w3.org/2000/svg" width="${svgWidth}" height="${svgHeight}" style="background-color: #FFF;">\n${svgTextElements}</svg>`;
     };
 
-    const handleCustomerModalSubmit = async (e) => {
-        e.preventDefault();
+    // **UPDATED**: This function now decides whether to show the modal or submit directly
+    const handleSubmitClick = () => {
+        const svgContent = generateSvgContent();
+        if (!svgContent) return; // generateSvgContent will show a message if there's an issue
+
+        setPendingSvgContent(svgContent);
+
+        if (isDataPrefilled) {
+            // If data is pre-filled, bypass the modal and submit directly
+            handleFinalSubmit(svgContent);
+        } else {
+            // Otherwise, show the customer info modal
+            setShowCustomerModal(true);
+        }
+    };
+
+    // **NEW**: Extracted the final submission logic into its own function
+    const handleFinalSubmit = async (svgContent) => {
         if (!orderNumber.trim() || !customerName.trim()) {
             showMessage('Order Number and Customer Name are required.');
             return;
@@ -203,7 +233,7 @@ const App = () => {
         ].filter(Boolean).join('_') + '.svg';
 
         try {
-            const blob = new Blob([pendingSvgContent], { type: 'image/svg+xml' });
+            const blob = new Blob([svgContent], { type: 'image/svg+xml' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
@@ -221,7 +251,7 @@ const App = () => {
             const response = await fetch(`${WORKER_URL}/${filename}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'image/svg+xml' },
-                body: pendingSvgContent
+                body: svgContent
             });
             if (!response.ok) throw new Error(await response.text());
             showMessage('SVG uploaded successfully!');
@@ -230,10 +260,19 @@ const App = () => {
             showMessage(`Error uploading SVG: ${error.message}`, 6000);
         }
 
-        setCustomerName('');
-        setCustomerCompany('');
-        setOrderNumber('');
+        // Reset form fields only if they were not pre-filled
+        if (!isDataPrefilled) {
+            setCustomerName('');
+            setCustomerCompany('');
+            setOrderNumber('');
+        }
         setPendingSvgContent(null);
+    };
+
+    // **UPDATED**: This now calls the new handleFinalSubmit function
+    const handleCustomerModalSubmit = (e) => {
+        e.preventDefault();
+        handleFinalSubmit(pendingSvgContent);
     };
 
     const glyphs = ['©', '®', '™', '&', '#', '+', '–', '—', '…', '•', '°', '·', '♥', '♡', '♦', '♢', '♣', '♧', '♠', '♤', '★', '☆', '♪', '♫', '←', '→', '↑', '↓', '∞', '†', '✡\uFE0E', '✞', '✠', '±', '½', '¼', 'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ', 'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ρ', 'Σ', 'Τ', 'Υ', 'Φ', 'Χ', 'Ψ', 'Ω'];
@@ -349,7 +388,8 @@ const App = () => {
                     </div>
 
                     <div className="mt-12">
-                        <button className="w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white font-bold py-6 px-8 rounded-2xl shadow-2xl hover:shadow-blue-200 hover:from-blue-700 hover:to-blue-600 transition-all duration-200 transform hover:scale-105 text-2xl tracking-wide" onClick={handleSaveSvg}>
+                        {/* UPDATED: onClick handler changed */}
+                        <button className="w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white font-bold py-6 px-8 rounded-2xl shadow-2xl hover:shadow-blue-200 hover:from-blue-700 hover:to-blue-600 transition-all duration-200 transform hover:scale-105 text-2xl tracking-wide" onClick={handleSubmitClick}>
                             Submit Fonts to Arch Engraving
                         </button>
                     </div>
@@ -373,9 +413,10 @@ const App = () => {
                         {showCustomerModal && (
                             <form onSubmit={handleCustomerModalSubmit} className="space-y-8">
                                 <h3 className="text-2xl font-bold text-slate-900">Enter Customer Information to Save</h3>
-                                <FormInput label="Order Number" id="orderNumber" value={orderNumber} onChange={e => setOrderNumber(e.target.value)} required />
-                                <FormInput label="Customer Name" id="customerName" value={customerName} onChange={e => setCustomerName(e.target.value)} required />
-                                <FormInput label="Customer Company" id="customerCompany" value={customerCompany} onChange={e => setCustomerCompany(e.target.value)} isOptional />
+                                {/* UPDATED: Added 'disabled' prop */}
+                                <FormInput label="Order Number" id="orderNumber" value={orderNumber} onChange={e => setOrderNumber(e.target.value)} required disabled={isDataPrefilled} />
+                                <FormInput label="Customer Name" id="customerName" value={customerName} onChange={e => setCustomerName(e.target.value)} required disabled={isDataPrefilled} />
+                                <FormInput label="Customer Company" id="customerCompany" value={customerCompany} onChange={e => setCustomerCompany(e.target.value)} isOptional disabled={isDataPrefilled} />
                                 <div className="flex justify-end gap-4 pt-4">
                                     <button type="button" className="px-6 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base" onClick={() => setShowCustomerModal(false)}>Cancel</button>
                                     <button type="submit" className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-semibold transition-colors shadow-sm text-base">Submit & Save</button>
