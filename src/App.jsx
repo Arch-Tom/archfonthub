@@ -95,6 +95,8 @@ const App = () => {
     const [showGlyphPalette, setShowGlyphPalette] = useState(false);
     const [showAccentPalette, setShowAccentPalette] = useState(false);
     const [showHebrewPalette, setShowHebrewPalette] = useState(false);
+    // --- NEW STATE for the interactive Hebrew palette ---
+    const [selectedHebrewBase, setSelectedHebrewBase] = useState(null);
     const [customerName, setCustomerName] = useState('');
     const [customerCompany, setCustomerCompany] = useState('');
     const [orderNumber, setOrderNumber] = useState('');
@@ -147,16 +149,23 @@ const App = () => {
 
     const formatForFilename = (str) => str.trim().replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_-]/g, '');
 
-    const handleGlyphInsert = (glyph) => {
+    // --- MODIFIED FUNCTION to handle replacing characters ---
+    const handleGlyphInsert = (glyph, replaceLength = 0) => {
         const textarea = textInputRef.current;
         if (!textarea) return;
-        const start = textarea.selectionStart;
+
         const end = textarea.selectionEnd;
         const text = customText;
+
+        // When replacing, we adjust the start position. Otherwise, it's just the cursor position.
+        const start = end - replaceLength;
+
         const newText = text.substring(0, start) + glyph + text.substring(end);
         setCustomText(newText);
+
         textarea.focus();
         setTimeout(() => {
+            // Move cursor to the end of the inserted glyph
             textarea.selectionStart = textarea.selectionEnd = start + glyph.length;
         }, 0);
     };
@@ -294,25 +303,22 @@ const App = () => {
 
     const hebrewCharacters = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ', 'ך', 'ל', 'מ', 'ם', 'נ', 'ן', 'ס', 'ע', 'פ', 'ף', 'צ', 'ץ', 'ק', 'ר', 'ש', 'ת'];
 
-    // --- NEW DATA FOR HEBREW NIKUD (VOWELS) ---
-    // The `display` shows the nikud on a dotted circle for clarity in the UI.
-    // The `insert` is the actual combining character that gets added to the text.
     const hebrewNikud = [
-        { display: '◌ַ', insert: 'ַ', name: 'Patah' },
-        { display: '◌ָ', insert: 'ָ', name: 'Qamats' },
-        { display: '◌ֶ', insert: 'ֶ', name: 'Segol' },
-        { display: '◌ֵ', insert: 'ֵ', name: 'Tsere' },
-        { display: '◌ִ', insert: 'ִ', name: 'Hiriq' },
-        { display: '◌ֹ', insert: 'ֹ', name: 'Holam' },
-        { display: '◌ֻ', insert: 'ֻ', name: 'Qubuts' },
-        { display: '◌ּ', insert: 'ּ', name: 'Dagesh or Shuruk' },
-        { display: '◌ְ', insert: 'ְ', name: 'Shva' },
-        { display: '◌ֲ', insert: 'ֲ', name: 'Hataf Patah' },
-        { display: '◌ֳ', insert: 'ֳ', name: 'Hataf Qamats' },
-        { display: '◌ֱ', insert: 'ֱ', name: 'Hataf Segol' },
-        { display: '◌ׂ', insert: 'ׂ', name: 'Sin Dot' },
-        { display: '◌ׁ', insert: 'ׁ', name: 'Shin Dot' },
-        { display: '◌ֿ', insert: 'ֿ', name: 'Rafe' },
+        { insert: 'ַ', name: 'Patah' },
+        { insert: 'ָ', name: 'Qamats' },
+        { insert: 'ֶ', name: 'Segol' },
+        { insert: 'ֵ', name: 'Tsere' },
+        { insert: 'ִ', name: 'Hiriq' },
+        { insert: 'ֹ', name: 'Holam' },
+        { insert: 'ֻ', name: 'Qubuts' },
+        { insert: 'ּ', name: 'Dagesh or Shuruk' },
+        { insert: 'ְ', name: 'Shva' },
+        { insert: 'ֲ', name: 'Hataf Patah' },
+        { insert: 'ֳ', name: 'Hataf Qamats' },
+        { insert: 'ֱ', name: 'Hataf Segol' },
+        { insert: 'ׂ', name: 'Sin Dot' },
+        { insert: 'ׁ', name: 'Shin Dot' },
+        { insert: 'ֿ', name: 'Rafe' },
     ];
 
 
@@ -445,19 +451,22 @@ const App = () => {
             {(showCustomerModal || showMessageBox || showGlyphPalette || showAccentPalette || showHebrewPalette) && (
                 <div className="fixed inset-0 bg-slate-900 bg-opacity-75 flex items-center justify-center p-4 z-50 transition-opacity animate-fade-in">
                     <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-2xl animate-fade-in">
-                        {/* --- MODIFIED HEBREW PALETTE WITH NIKUD SECTION --- */}
+                        {/* --- NEW INTERACTIVE HEBREW PALETTE --- */}
                         {showHebrewPalette && (
                             <div className="space-y-6">
                                 <h3 className="text-2xl font-bold text-slate-900">Hebrew Character Palette</h3>
                                 <div className="space-y-4 bg-slate-50 p-4 rounded-lg max-h-[60vh] overflow-y-auto">
                                     <div>
-                                        <h4 className="font-semibold text-lg text-slate-800 mb-2">Letters</h4>
+                                        <h4 className="font-semibold text-lg text-slate-800 mb-2">1. Select a Base Letter</h4>
                                         <div className="grid grid-cols-8 gap-2">
                                             {hebrewCharacters.map(char => (
                                                 <button
                                                     key={char}
-                                                    onClick={() => handleGlyphInsert(char)}
-                                                    className="flex items-center justify-center h-12 w-full bg-white rounded-lg shadow-sm text-2xl text-slate-700 hover:bg-blue-100 hover:text-blue-700 transition-colors"
+                                                    onClick={() => {
+                                                        handleGlyphInsert(char);
+                                                        setSelectedHebrewBase(char);
+                                                    }}
+                                                    className={`flex items-center justify-center h-12 w-full bg-white rounded-lg shadow-sm text-2xl transition-colors ${selectedHebrewBase === char ? 'ring-2 ring-blue-500' : 'text-slate-700 hover:bg-blue-100 hover:text-blue-700'}`}
                                                     title={`Insert ${char}`}
                                                 >
                                                     {char}
@@ -465,25 +474,40 @@ const App = () => {
                                             ))}
                                         </div>
                                     </div>
-                                    <div>
-                                        <h4 className="font-semibold text-lg text-slate-800 mt-4 mb-2">Nikud (Vowels & Diacritics)</h4>
-                                        <div className="grid grid-cols-8 gap-2">
-                                            {hebrewNikud.map(nikud => (
-                                                <button
-                                                    key={nikud.name}
-                                                    onClick={() => handleGlyphInsert(nikud.insert)}
-                                                    className="flex items-center justify-center h-12 w-full bg-white rounded-lg shadow-sm text-2xl text-slate-700 hover:bg-blue-100 hover:text-blue-700 transition-colors"
-                                                    title={nikud.name}
-                                                >
-                                                    {nikud.display}
-                                                </button>
-                                            ))}
+
+                                    {/* This section appears only after a base letter is selected */}
+                                    {selectedHebrewBase && (
+                                        <div>
+                                            <div className='flex justify-between items-center mt-4 mb-2'>
+                                                <h4 className="font-semibold text-lg text-slate-800">2. Choose a Vowel Option for {selectedHebrewBase}</h4>
+                                                <button onClick={() => setSelectedHebrewBase(null)} className="text-sm text-blue-600 hover:underline">Clear</button>
+                                            </div>
+                                            <div className="grid grid-cols-8 gap-2">
+                                                {hebrewNikud.map(nikud => {
+                                                    const pointedLetter = selectedHebrewBase + nikud.insert;
+                                                    return (
+                                                        <button
+                                                            key={nikud.name}
+                                                            onClick={() => {
+                                                                // Replace the base letter with the pointed version
+                                                                handleGlyphInsert(pointedLetter, selectedHebrewBase.length);
+                                                                // Deselect to allow typing the next letter
+                                                                setSelectedHebrewBase(null);
+                                                            }}
+                                                            className="flex items-center justify-center h-12 w-full bg-white rounded-lg shadow-sm text-2xl text-slate-700 hover:bg-blue-100 hover:text-blue-700 transition-colors"
+                                                            title={nikud.name}
+                                                        >
+                                                            {pointedLetter}
+                                                        </button>
+                                                    );
+                                                })}
+                                            </div>
                                         </div>
-                                    </div>
+                                    )}
                                 </div>
                                 <div className="flex justify-between items-center pt-4">
                                     <p className="text-sm text-slate-600 pr-4">Note: Character support varies by font. Please confirm the appearance in the live preview.</p>
-                                    <button type="button" className="px-6 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base flex-shrink-0" onClick={() => setShowHebrewPalette(false)}>Close</button>
+                                    <button type="button" className="px-6 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base flex-shrink-0" onClick={() => { setShowHebrewPalette(false); setSelectedHebrewBase(null); }}>Close</button>
                                 </div>
                             </div>
                         )}
