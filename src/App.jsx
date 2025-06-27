@@ -94,7 +94,6 @@ const App = () => {
     const [showCustomerModal, setShowCustomerModal] = useState(false);
     const [showGlyphPalette, setShowGlyphPalette] = useState(false);
     const [showAccentPalette, setShowAccentPalette] = useState(false);
-    // --- NEW STATE FOR HEBREW PALETTE ---
     const [showHebrewPalette, setShowHebrewPalette] = useState(false);
     const [customerName, setCustomerName] = useState('');
     const [customerCompany, setCustomerCompany] = useState('');
@@ -293,8 +292,28 @@ const App = () => {
         'Z': ['Ž', 'ž']
     };
 
-    // --- NEW DATA FOR HEBREW CHARACTERS (INCLUDING FINAL FORMS) ---
     const hebrewCharacters = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ', 'ך', 'ל', 'מ', 'ם', 'נ', 'ן', 'ס', 'ע', 'פ', 'ף', 'צ', 'ץ', 'ק', 'ר', 'ש', 'ת'];
+
+    // --- NEW DATA FOR HEBREW NIKUD (VOWELS) ---
+    // The `display` shows the nikud on a dotted circle for clarity in the UI.
+    // The `insert` is the actual combining character that gets added to the text.
+    const hebrewNikud = [
+        { display: '◌ַ', insert: 'ַ', name: 'Patah' },
+        { display: '◌ָ', insert: 'ָ', name: 'Qamats' },
+        { display: '◌ֶ', insert: 'ֶ', name: 'Segol' },
+        { display: '◌ֵ', insert: 'ֵ', name: 'Tsere' },
+        { display: '◌ִ', insert: 'ִ', name: 'Hiriq' },
+        { display: '◌ֹ', insert: 'ֹ', name: 'Holam' },
+        { display: '◌ֻ', insert: 'ֻ', name: 'Qubuts' },
+        { display: '◌ּ', insert: 'ּ', name: 'Dagesh or Shuruk' },
+        { display: '◌ְ', insert: 'ְ', name: 'Shva' },
+        { display: '◌ֲ', insert: 'ֲ', name: 'Hataf Patah' },
+        { display: '◌ֳ', insert: 'ֳ', name: 'Hataf Qamats' },
+        { display: '◌ֱ', insert: 'ֱ', name: 'Hataf Segol' },
+        { display: '◌ׂ', insert: 'ׂ', name: 'Sin Dot' },
+        { display: '◌ׁ', insert: 'ׁ', name: 'Shin Dot' },
+        { display: '◌ֿ', insert: 'ֿ', name: 'Rafe' },
+    ];
 
 
     return (
@@ -357,14 +376,12 @@ const App = () => {
                                 >
                                     Custom Text
                                 </h2>
-                                {/* --- ADDED HEBREW BUTTON --- */}
                                 <div className="flex items-center gap-2">
                                     <button onClick={() => setShowHebrewPalette(true)} className="px-5 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base">Hebrew</button>
                                     <button onClick={() => setShowAccentPalette(true)} className="px-5 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base">Accented Characters</button>
                                     <button onClick={() => setShowGlyphPalette(true)} className="px-5 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base">Symbols</button>
                                 </div>
                             </div>
-                            {/* --- ADDED dir="auto" FOR RTL SUPPORT --- */}
                             <textarea ref={textInputRef} className="w-full p-5 border-2 border-slate-200 rounded-xl shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 min-h-[120px] text-xl" value={customText} onChange={handleTextChange} placeholder={DEFAULT_TEXT_PLACEHOLDER} dir="auto" />
                         </section>
 
@@ -402,7 +419,6 @@ const App = () => {
                                                         ))}
                                                     </div>
                                                 </div>
-                                                {/* --- ADDED dir="auto" FOR RTL SUPPORT --- */}
                                                 <p className="text-slate-800 break-words w-full" style={{ fontFamily: activeFontFamily, fontSize: `${fontSize}px`, lineHeight: 1.4 }} dir="auto">{customText}</p>
                                             </div>
                                         )
@@ -426,25 +442,44 @@ const App = () => {
                 </div>
             </main>
 
-            {/* --- UPDATED MODAL VISIBILITY CONDITION --- */}
             {(showCustomerModal || showMessageBox || showGlyphPalette || showAccentPalette || showHebrewPalette) && (
                 <div className="fixed inset-0 bg-slate-900 bg-opacity-75 flex items-center justify-center p-4 z-50 transition-opacity animate-fade-in">
                     <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-2xl animate-fade-in">
-                        {/* --- NEW HEBREW PALETTE MODAL --- */}
+                        {/* --- MODIFIED HEBREW PALETTE WITH NIKUD SECTION --- */}
                         {showHebrewPalette && (
                             <div className="space-y-6">
                                 <h3 className="text-2xl font-bold text-slate-900">Hebrew Character Palette</h3>
-                                <div className="grid grid-cols-8 gap-2 bg-slate-100 p-4 rounded-lg">
-                                    {hebrewCharacters.map(char => (
-                                        <button
-                                            key={char}
-                                            onClick={() => handleGlyphInsert(char)}
-                                            className="flex items-center justify-center h-12 w-full bg-white rounded-lg shadow-sm text-2xl text-slate-700 hover:bg-blue-100 hover:text-blue-700 transition-colors"
-                                            title={`Insert ${char}`}
-                                        >
-                                            {char}
-                                        </button>
-                                    ))}
+                                <div className="space-y-4 bg-slate-50 p-4 rounded-lg max-h-[60vh] overflow-y-auto">
+                                    <div>
+                                        <h4 className="font-semibold text-lg text-slate-800 mb-2">Letters</h4>
+                                        <div className="grid grid-cols-8 gap-2">
+                                            {hebrewCharacters.map(char => (
+                                                <button
+                                                    key={char}
+                                                    onClick={() => handleGlyphInsert(char)}
+                                                    className="flex items-center justify-center h-12 w-full bg-white rounded-lg shadow-sm text-2xl text-slate-700 hover:bg-blue-100 hover:text-blue-700 transition-colors"
+                                                    title={`Insert ${char}`}
+                                                >
+                                                    {char}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h4 className="font-semibold text-lg text-slate-800 mt-4 mb-2">Nikud (Vowels & Diacritics)</h4>
+                                        <div className="grid grid-cols-8 gap-2">
+                                            {hebrewNikud.map(nikud => (
+                                                <button
+                                                    key={nikud.name}
+                                                    onClick={() => handleGlyphInsert(nikud.insert)}
+                                                    className="flex items-center justify-center h-12 w-full bg-white rounded-lg shadow-sm text-2xl text-slate-700 hover:bg-blue-100 hover:text-blue-700 transition-colors"
+                                                    title={nikud.name}
+                                                >
+                                                    {nikud.display}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
                                 </div>
                                 <div className="flex justify-between items-center pt-4">
                                     <p className="text-sm text-slate-600 pr-4">Note: Character support varies by font. Please confirm the appearance in the live preview.</p>
