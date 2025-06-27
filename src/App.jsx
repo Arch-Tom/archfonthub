@@ -94,6 +94,8 @@ const App = () => {
     const [showCustomerModal, setShowCustomerModal] = useState(false);
     const [showGlyphPalette, setShowGlyphPalette] = useState(false);
     const [showAccentPalette, setShowAccentPalette] = useState(false);
+    // --- NEW STATE FOR HEBREW PALETTE ---
+    const [showHebrewPalette, setShowHebrewPalette] = useState(false);
     const [customerName, setCustomerName] = useState('');
     const [customerCompany, setCustomerCompany] = useState('');
     const [orderNumber, setOrderNumber] = useState('');
@@ -291,6 +293,10 @@ const App = () => {
         'Z': ['Ž', 'ž']
     };
 
+    // --- NEW DATA FOR HEBREW CHARACTERS (INCLUDING FINAL FORMS) ---
+    const hebrewCharacters = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ', 'ך', 'ל', 'מ', 'ם', 'נ', 'ן', 'ס', 'ע', 'פ', 'ף', 'צ', 'ץ', 'ק', 'ר', 'ש', 'ת'];
+
+
     return (
         <div className="flex flex-col lg:flex-row min-h-screen bg-slate-100 font-sans">
             <aside className="bg-gradient-to-b from-slate-800 to-slate-900 text-white w-full lg:w-[400px] lg:h-auto p-4 flex-shrink-0 flex flex-col items-center justify-center lg:justify-start lg:pt-16 shadow-xl lg:rounded-r-3xl">
@@ -351,12 +357,15 @@ const App = () => {
                                 >
                                     Custom Text
                                 </h2>
+                                {/* --- ADDED HEBREW BUTTON --- */}
                                 <div className="flex items-center gap-2">
+                                    <button onClick={() => setShowHebrewPalette(true)} className="px-5 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base">Hebrew</button>
                                     <button onClick={() => setShowAccentPalette(true)} className="px-5 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base">Accented Characters</button>
                                     <button onClick={() => setShowGlyphPalette(true)} className="px-5 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base">Symbols</button>
                                 </div>
                             </div>
-                            <textarea ref={textInputRef} className="w-full p-5 border-2 border-slate-200 rounded-xl shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 min-h-[120px] text-xl" value={customText} onChange={handleTextChange} placeholder={DEFAULT_TEXT_PLACEHOLDER} />
+                            {/* --- ADDED dir="auto" FOR RTL SUPPORT --- */}
+                            <textarea ref={textInputRef} className="w-full p-5 border-2 border-slate-200 rounded-xl shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 min-h-[120px] text-xl" value={customText} onChange={handleTextChange} placeholder={DEFAULT_TEXT_PLACEHOLDER} dir="auto" />
                         </section>
 
                         <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
@@ -393,7 +402,8 @@ const App = () => {
                                                         ))}
                                                     </div>
                                                 </div>
-                                                <p className="text-slate-800 break-words w-full" style={{ fontFamily: activeFontFamily, fontSize: `${fontSize}px`, lineHeight: 1.4 }}>{customText}</p>
+                                                {/* --- ADDED dir="auto" FOR RTL SUPPORT --- */}
+                                                <p className="text-slate-800 break-words w-full" style={{ fontFamily: activeFontFamily, fontSize: `${fontSize}px`, lineHeight: 1.4 }} dir="auto">{customText}</p>
                                             </div>
                                         )
                                     })
@@ -416,9 +426,32 @@ const App = () => {
                 </div>
             </main>
 
-            {(showCustomerModal || showMessageBox || showGlyphPalette || showAccentPalette) && (
+            {/* --- UPDATED MODAL VISIBILITY CONDITION --- */}
+            {(showCustomerModal || showMessageBox || showGlyphPalette || showAccentPalette || showHebrewPalette) && (
                 <div className="fixed inset-0 bg-slate-900 bg-opacity-75 flex items-center justify-center p-4 z-50 transition-opacity animate-fade-in">
                     <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-2xl animate-fade-in">
+                        {/* --- NEW HEBREW PALETTE MODAL --- */}
+                        {showHebrewPalette && (
+                            <div className="space-y-6">
+                                <h3 className="text-2xl font-bold text-slate-900">Hebrew Character Palette</h3>
+                                <div className="grid grid-cols-8 gap-2 bg-slate-100 p-4 rounded-lg">
+                                    {hebrewCharacters.map(char => (
+                                        <button
+                                            key={char}
+                                            onClick={() => handleGlyphInsert(char)}
+                                            className="flex items-center justify-center h-12 w-full bg-white rounded-lg shadow-sm text-2xl text-slate-700 hover:bg-blue-100 hover:text-blue-700 transition-colors"
+                                            title={`Insert ${char}`}
+                                        >
+                                            {char}
+                                        </button>
+                                    ))}
+                                </div>
+                                <div className="flex justify-between items-center pt-4">
+                                    <p className="text-sm text-slate-600 pr-4">Note: Character support varies by font. Please confirm the appearance in the live preview.</p>
+                                    <button type="button" className="px-6 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base flex-shrink-0" onClick={() => setShowHebrewPalette(false)}>Close</button>
+                                </div>
+                            </div>
+                        )}
                         {showAccentPalette && (
                             <div className="space-y-6">
                                 <h3 className="text-2xl font-bold text-slate-900">Accented Character Palette</h3>
@@ -441,7 +474,6 @@ const App = () => {
                                         </div>
                                     ))}
                                 </div>
-                                {/* --- UPDATED FOOTER FOR ACCENT PALETTE --- */}
                                 <div className="flex justify-between items-center pt-4">
                                     <p className="text-sm text-slate-600 pr-4">Note: Character support varies by font. Please confirm the appearance in the live preview.</p>
                                     <button type="button" className="px-6 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base flex-shrink-0" onClick={() => setShowAccentPalette(false)}>Close</button>
@@ -450,11 +482,10 @@ const App = () => {
                         )}
                         {showGlyphPalette && (
                             <div className="space-y-6">
-                                <h3 className="text-2xl font-bold text-slate-900">Glyph Palette</h3>
+                                <h3 className="text-2xl font-bold text-slate-900">Symbol Palette</h3>
                                 <div className="grid grid-cols-12 gap-2 bg-slate-100 p-4 rounded-lg">
                                     {glyphs.map(glyph => (<button key={glyph} onClick={() => handleGlyphInsert(glyph)} className="flex items-center justify-center h-12 w-full bg-white rounded-lg shadow-sm text-2xl text-slate-700 hover:bg-blue-100 hover:text-blue-700 transition-colors" title={`Insert ${glyph}`}>{glyph}</button>))}
                                 </div>
-                                {/* --- UPDATED FOOTER FOR GLYPH PALETTE --- */}
                                 <div className="flex justify-between items-center pt-4">
                                     <p className="text-sm text-slate-600 pr-4">Note: Character support varies by font. Please confirm the appearance in the live preview.</p>
                                     <button type="button" className="px-6 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base flex-shrink-0" onClick={() => setShowGlyphPalette(false)}>Close</button>
