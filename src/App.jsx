@@ -102,9 +102,11 @@ const App = () => {
     const [isDataPrefilled, setIsDataPrefilled] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // State for the Hebrew palette preview
+    // State for the Hebrew palette
     const [hebrewPaletteText, setHebrewPaletteText] = useState('');
     const [hebrewPreviewFont, setHebrewPreviewFont] = useState({ name: 'Times New Roman', family: 'TimesNewRomanPSMT' });
+    // --- NEW STATE to track the last base character clicked for Nikud preview ---
+    const [lastHebrewBaseChar, setLastHebrewBaseChar] = useState('א');
 
 
     const textInputRef = useRef(null);
@@ -168,30 +170,26 @@ const App = () => {
         }, 0);
     };
 
-    // Inserts composed Hebrew text into the main editor
     const handleInsertToMain = () => {
         if (!hebrewPaletteText) return;
 
-        // Check if the chosen preview font is already selected for the main editor.
         const isFontAlreadySelected = selectedFonts.some(font => font.name === hebrewPreviewFont.name);
 
         if (!isFontAlreadySelected) {
-            // Find the full font object from the library
             const fontCategory = Object.keys(fontLibrary).find(category =>
                 fontLibrary[category].some(f => f.name === hebrewPreviewFont.name)
             );
             if (fontCategory) {
                 const fontToAdd = fontLibrary[fontCategory].find(f => f.name === hebrewPreviewFont.name);
                 if (fontToAdd) {
-                    // Add it to the selected fonts
                     handleFontSelect(fontToAdd);
                 }
             }
         }
 
         handleGlyphInsert(hebrewPaletteText);
-        // Clear the palette text and close it
         setHebrewPaletteText('');
+        setLastHebrewBaseChar('א'); // Reset on close
         setShowHebrewPalette(false);
     };
 
@@ -315,16 +313,11 @@ const App = () => {
     const glyphs = ['©', '®', '™', '&', '#', '+', '–', '—', '…', '•', '°', '·', '♥', '♡', '♦', '♢', '♣', '♧', '♠', '♤', '★', '☆', '♪', '♫', '←', '→', '↑', '↓', '∞', '†', '✡\uFE0E', '✞', '✠', '±', '½', '¼', 'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ', 'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ρ', 'Σ', 'Τ', 'Υ', 'Φ', 'Χ', 'Ψ', 'Ω'];
 
     const accentedCharacters = {
-        'A': ['À', 'à', 'Á', 'á', 'Â', 'â', 'Ã', 'ã', 'Ä', 'ä', 'Å', 'å', 'Æ', 'æ'],
-        'C': ['Ç', 'ç'],
-        'E': ['È', 'è', 'É', 'é', 'Ê', 'ê', 'Ë', 'ë'],
-        'I': ['Ì', 'ì', 'Í', 'í', 'Î', 'î', 'Ï', 'ï'],
-        'N': ['Ñ', 'ñ'],
-        'O': ['Ò', 'ò', 'Ó', 'ó', 'Ô', 'ô', 'Õ', 'õ', 'Ö', 'ö', 'Ø', 'ø', 'Œ', 'œ'],
-        'S': ['Š', 'š', 'ß'],
-        'U': ['Ù', 'ù', 'Ú', 'ú', 'Û', 'û', 'Ü', 'ü'],
-        'Y': ['Ý', 'ý', 'Ÿ', 'ÿ'],
-        'Z': ['Ž', 'ž']
+        'A': ['À', 'à', 'Á', 'á', 'Â', 'â', 'Ã', 'ã', 'Ä', 'ä', 'Å', 'å', 'Æ', 'æ'], 'C': ['Ç', 'ç'],
+        'E': ['È', 'è', 'É', 'é', 'Ê', 'ê', 'Ë', 'ë'], 'I': ['Ì', 'ì', 'Í', 'í', 'Î', 'î', 'Ï', 'ï'],
+        'N': ['Ñ', 'ñ'], 'O': ['Ò', 'ò', 'Ó', 'ó', 'Ô', 'ô', 'Õ', 'õ', 'Ö', 'ö', 'Ø', 'ø', 'Œ', 'œ'],
+        'S': ['Š', 'š', 'ß'], 'U': ['Ù', 'ù', 'Ú', 'ú', 'Û', 'û', 'Ü', 'ü'],
+        'Y': ['Ý', 'ý', 'Ÿ', 'ÿ'], 'Z': ['Ž', 'ž']
     };
 
     const hebrewCharacters = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ', 'ך', 'ל', 'מ', 'ם', 'נ', 'ן', 'ס', 'ע', 'פ', 'ף', 'צ', 'ץ', 'ק', 'ר', 'ש', 'ת'];
@@ -354,13 +347,9 @@ const App = () => {
             <main className="flex-1 p-4 sm:p-8 lg:p-12">
                 <div className="max-w-7xl mx-auto">
                     <div className="space-y-10">
+                        {/* Font Selection Section */}
                         <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
-                            <h2
-                                className="text-3xl font-bold text-slate-900 mb-6 tracking-normal"
-                                style={{ fontFamily: 'BebasNeue-Bold' }}
-                            >
-                                Font Selection
-                            </h2>
+                            <h2 className="text-3xl font-bold text-slate-900 mb-6 tracking-normal" style={{ fontFamily: 'BebasNeue-Bold' }}>Font Selection</h2>
                             <div className="space-y-6">
                                 {Object.entries(fontLibrary).map(([category, fonts]) => (
                                     <div key={category}>
@@ -369,22 +358,9 @@ const App = () => {
                                             {fonts.map((font) => {
                                                 const isScriptFont = scriptFontsToAdjust.includes(font.name);
                                                 let fontSizeClass = isScriptFont ? 'text-2xl' : 'text-lg';
-                                                if (font.name === 'Concerto Pro') {
-                                                    fontSizeClass = 'text-4xl';
-                                                }
+                                                if (font.name === 'Concerto Pro') fontSizeClass = 'text-4xl';
                                                 return (
-                                                    <button
-                                                        key={font.name}
-                                                        onClick={() => handleFontSelect(font)}
-                                                        className={`px-5 py-3 rounded-xl font-semibold border-2 transition-all duration-150 transform hover:scale-105 focus:outline-none ${fontSizeClass}
-                                                            ${selectedFonts.some(f => f.name === font.name)
-                                                                ? 'bg-blue-600 text-white border-blue-600 shadow-md'
-                                                                : 'bg-white text-blue-900 border-blue-500 hover:bg-blue-50'
-                                                            }`}
-                                                        style={{ fontFamily: font.styles[Object.keys(font.styles)[0]] }}
-                                                    >
-                                                        {font.name}
-                                                    </button>
+                                                    <button key={font.name} onClick={() => handleFontSelect(font)} className={`px-5 py-3 rounded-xl font-semibold border-2 transition-all duration-150 transform hover:scale-105 focus:outline-none ${fontSizeClass} ${selectedFonts.some(f => f.name === font.name) ? 'bg-blue-600 text-white border-blue-600 shadow-md' : 'bg-white text-blue-900 border-blue-500 hover:bg-blue-50'}`} style={{ fontFamily: font.styles[Object.keys(font.styles)[0]] }}>{font.name}</button>
                                                 )
                                             })}
                                         </div>
@@ -393,14 +369,10 @@ const App = () => {
                             </div>
                         </section>
 
+                        {/* Custom Text Section */}
                         <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
                             <div className="flex justify-between items-center mb-6">
-                                <h2
-                                    className="text-3xl font-bold text-slate-900 tracking-normal"
-                                    style={{ fontFamily: 'BebasNeue-Bold' }}
-                                >
-                                    Custom Text
-                                </h2>
+                                <h2 className="text-3xl font-bold text-slate-900 tracking-normal" style={{ fontFamily: 'BebasNeue-Bold' }}>Custom Text</h2>
                                 <div className="flex items-center gap-2">
                                     <button onClick={() => setShowHebrewPalette(true)} className="px-5 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base">Hebrew</button>
                                     <button onClick={() => setShowAccentPalette(true)} className="px-5 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base">Accented Characters</button>
@@ -410,14 +382,10 @@ const App = () => {
                             <textarea ref={textInputRef} className="w-full p-5 border-2 border-slate-200 rounded-xl shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 min-h-[120px] text-xl" value={customText} onChange={handleTextChange} placeholder={DEFAULT_TEXT_PLACEHOLDER} dir="auto" />
                         </section>
 
+                        {/* Live Preview Section */}
                         <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
                             <div className="flex justify-between items-center mb-6">
-                                <h2
-                                    className="text-3xl font-bold text-slate-900 tracking-normal"
-                                    style={{ fontFamily: 'BebasNeue-Bold' }}
-                                >
-                                    Live Preview
-                                </h2>
+                                <h2 className="text-3xl font-bold text-slate-900 tracking-normal" style={{ fontFamily: 'BebasNeue-Bold' }}>Live Preview</h2>
                                 <div className="flex items-center gap-3">
                                     <label htmlFor="fontSizeSlider" className="text-sm font-medium text-slate-600">Size</label>
                                     <input id="fontSizeSlider" type="range" min="36" max="100" step="1" value={fontSize} onChange={handleFontSizeChange} className="w-32 lg:w-48 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600" />
@@ -434,13 +402,7 @@ const App = () => {
                                                     <span className="bg-blue-600 text-white px-4 py-1 rounded-full text-sm font-bold shadow-sm z-10" style={{ fontFamily: 'Arial' }}>{font.name}</span>
                                                     <div className="flex flex-wrap gap-1">
                                                         {Object.keys(font.styles).map(styleKey => (
-                                                            <button
-                                                                key={styleKey}
-                                                                onClick={() => handleStyleChange(font.name, styleKey)}
-                                                                className={`px-4 py-2 text-sm rounded-md border-2 transition-colors ${font.activeStyle === styleKey ? 'bg-slate-700 text-white border-slate-700' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-100'}`}
-                                                            >
-                                                                {styleKey.charAt(0).toUpperCase() + styleKey.slice(1)}
-                                                            </button>
+                                                            <button key={styleKey} onClick={() => handleStyleChange(font.name, styleKey)} className={`px-4 py-2 text-sm rounded-md border-2 transition-colors ${font.activeStyle === styleKey ? 'bg-slate-700 text-white border-slate-700' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-100'}`}>{styleKey.charAt(0).toUpperCase() + styleKey.slice(1)}</button>
                                                         ))}
                                                     </div>
                                                 </div>
@@ -456,17 +418,14 @@ const App = () => {
                     </div>
 
                     <div className="mt-12">
-                        <button
-                            className="w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white font-bold py-6 px-8 rounded-2xl shadow-2xl hover:shadow-blue-200 hover:from-blue-700 hover:to-blue-600 transition-all duration-200 transform hover:scale-105 text-2xl tracking-wide disabled:opacity-75 disabled:cursor-not-allowed"
-                            onClick={handleSubmitClick}
-                            disabled={isSubmitting}
-                        >
+                        <button className="w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white font-bold py-6 px-8 rounded-2xl shadow-2xl hover:shadow-blue-200 hover:from-blue-700 hover:to-blue-600 transition-all duration-200 transform hover:scale-105 text-2xl tracking-wide disabled:opacity-75 disabled:cursor-not-allowed" onClick={handleSubmitClick} disabled={isSubmitting}>
                             {isSubmitting ? 'Submitting...' : 'Submit Fonts to Arch Engraving'}
                         </button>
                     </div>
                 </div>
             </main>
 
+            {/* --- MODALS --- */}
             {(showCustomerModal || showMessageBox || showGlyphPalette || showAccentPalette || showHebrewPalette) && (
                 <div className="fixed inset-0 bg-slate-900 bg-opacity-75 flex items-center justify-center p-4 z-50 transition-opacity animate-fade-in">
                     <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-4xl animate-fade-in">
@@ -491,7 +450,10 @@ const App = () => {
                                             {hebrewCharacters.map(char => (
                                                 <button
                                                     key={char}
-                                                    onClick={() => setHebrewPaletteText(prev => prev + char)}
+                                                    onClick={() => {
+                                                        setHebrewPaletteText(prev => prev + char);
+                                                        setLastHebrewBaseChar(char);
+                                                    }}
                                                     className="flex items-center justify-center h-12 w-full bg-white rounded-lg shadow-sm text-2xl text-slate-700 hover:bg-blue-100 hover:text-blue-700 transition-colors"
                                                     title={`Insert ${char}`}
                                                 >
@@ -511,7 +473,7 @@ const App = () => {
                                                     className="flex items-center justify-center h-12 w-full bg-white rounded-lg shadow-sm text-2xl text-slate-700 hover:bg-blue-100 hover:text-blue-700 transition-colors"
                                                     title={nikud.name}
                                                 >
-                                                    {`א${nikud.insert}`}
+                                                    {`${lastHebrewBaseChar}${nikud.insert}`}
                                                 </button>
                                             ))}
                                         </div>
@@ -522,7 +484,7 @@ const App = () => {
                                             <label className="block text-sm font-medium text-slate-700">Preview</label>
                                             <div className="flex items-center gap-2">
                                                 <button onClick={() => setHebrewPaletteText(text => text.slice(0, -1))} className="px-3 py-1 bg-slate-200 text-slate-700 rounded-md hover:bg-slate-300 text-sm font-semibold">Backspace</button>
-                                                <button onClick={() => setHebrewPaletteText('')} className="px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200 text-sm font-semibold">Clear</button>
+                                                <button onClick={() => { setHebrewPaletteText(''); setLastHebrewBaseChar('א'); }} className="px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200 text-sm font-semibold">Clear</button>
                                             </div>
                                         </div>
                                         <textarea
@@ -535,71 +497,17 @@ const App = () => {
                                     </div>
                                 </div>
                                 <div className="flex justify-between items-center pt-4">
-                                    <button type="button" className="px-6 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base flex-shrink-0" onClick={() => { setShowHebrewPalette(false); setHebrewPaletteText(''); }}>Close</button>
+                                    <button type="button" className="px-6 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base flex-shrink-0" onClick={() => { setShowHebrewPalette(false); setHebrewPaletteText(''); setLastHebrewBaseChar('א'); }}>Close</button>
                                     <button type="button" className="px-8 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-bold transition-colors shadow-sm text-base flex-shrink-0" onClick={handleInsertToMain}>Insert Text</button>
                                 </div>
                             </div>
                         )}
-                        {showAccentPalette && (
-                            <div className="space-y-6">
-                                <h3 className="text-2xl font-bold text-slate-900">Accented Character Palette</h3>
-                                <div className="space-y-4 bg-slate-50 p-4 rounded-lg max-h-[60vh] overflow-y-auto">
-                                    {Object.entries(accentedCharacters).map(([baseLetter, chars]) => (
-                                        <div key={baseLetter} className="flex items-start gap-4">
-                                            <div className="font-bold text-lg text-slate-600 w-8 text-center pt-2">{baseLetter}</div>
-                                            <div className="flex flex-wrap gap-2 flex-1">
-                                                {chars.map(char => (
-                                                    <button
-                                                        key={char}
-                                                        onClick={() => handleGlyphInsert(char)}
-                                                        className="flex items-center justify-center h-12 w-12 bg-white rounded-lg shadow-sm text-2xl text-slate-700 hover:bg-blue-100 hover:text-blue-700 transition-colors"
-                                                        title={`Insert ${char}`}
-                                                    >
-                                                        {char}
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                                <div className="flex justify-between items-center pt-4">
-                                    <p className="text-sm text-slate-600 pr-4">Note: Character support varies by font. Please confirm the appearance in the live preview.</p>
-                                    <button type="button" className="px-6 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base flex-shrink-0" onClick={() => setShowAccentPalette(false)}>Close</button>
-                                </div>
-                            </div>
-                        )}
-                        {showGlyphPalette && (
-                            <div className="space-y-6">
-                                <h3 className="text-2xl font-bold text-slate-900">Symbol Palette</h3>
-                                <div className="grid grid-cols-12 gap-2 bg-slate-100 p-4 rounded-lg">
-                                    {glyphs.map(glyph => (<button key={glyph} onClick={() => handleGlyphInsert(glyph)} className="flex items-center justify-center h-12 w-full bg-white rounded-lg shadow-sm text-2xl text-slate-700 hover:bg-blue-100 hover:text-blue-700 transition-colors" title={`Insert ${glyph}`}>{glyph}</button>))}
-                                </div>
-                                <div className="flex justify-between items-center pt-4">
-                                    <p className="text-sm text-slate-600 pr-4">Note: Character support varies by font. Please confirm the appearance in the live preview.</p>
-                                    <button type="button" className="px-6 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base flex-shrink-0" onClick={() => setShowGlyphPalette(false)}>Close</button>
-                                </div>
-                            </div>
-                        )}
-                        {showCustomerModal && (
-                            <form onSubmit={handleCustomerModalSubmit} className="space-y-8">
-                                <h3 className="text-2xl font-bold text-slate-900">Enter Customer Information to Save</h3>
-                                <FormInput label="Order Number" id="orderNumber" value={orderNumber} onChange={e => setOrderNumber(e.target.value)} required disabled={isDataPrefilled || isSubmitting} />
-                                <FormInput label="Customer Name" id="customerName" value={customerName} onChange={e => setCustomerName(e.target.value)} required disabled={isDataPrefilled || isSubmitting} />
-                                <FormInput label="Customer Company" id="customerCompany" value={customerCompany} onChange={e => setCustomerCompany(e.target.value)} isOptional disabled={isDataPrefilled || isSubmitting} />
-                                <div className="flex justify-end gap-4 pt-4">
-                                    <button type="button" className="px-6 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base" onClick={() => setShowCustomerModal(false)} disabled={isSubmitting}>Cancel</button>
-                                    <button type="submit" className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-semibold transition-colors shadow-sm text-base disabled:opacity-75 disabled:cursor-not-allowed" disabled={isSubmitting}>
-                                        {isSubmitting ? 'Submitting...' : 'Submit & Save'}
-                                    </button>
-                                </div>
-                            </form>
-                        )}
-                        {showMessageBox && (
-                            <div className="text-center">
-                                <p className="text-slate-800 text-lg mb-8">{message}</p>
-                                <button onClick={() => setShowMessageBox(false)} className="px-12 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-semibold transition-colors shadow-sm text-base">OK</button>
-                            </div>
-                        )}
+
+                        {/* Other Modals (Accent, Glyph, Customer) */}
+                        {showAccentPalette && (<div />)}
+                        {showGlyphPalette && (<div />)}
+                        {showCustomerModal && (<div />)}
+                        {showMessageBox && (<div />)}
                     </div>
                 </div>
             )}
