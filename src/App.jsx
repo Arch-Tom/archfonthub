@@ -93,7 +93,6 @@ const App = () => {
     const [showMessageBox, setShowMessageBox] = useState(false);
     const [showCustomerModal, setShowCustomerModal] = useState(false);
     const [showGlyphPalette, setShowGlyphPalette] = useState(false);
-    // --- NEW STATE FOR ACCENT PALETTE ---
     const [showAccentPalette, setShowAccentPalette] = useState(false);
     const [customerName, setCustomerName] = useState('');
     const [customerCompany, setCustomerCompany] = useState('');
@@ -279,7 +278,6 @@ const App = () => {
 
     const glyphs = ['©', '®', '™', '&', '#', '+', '–', '—', '…', '•', '°', '·', '♥', '♡', '♦', '♢', '♣', '♧', '♠', '♤', '★', '☆', '♪', '♫', '←', '→', '↑', '↓', '∞', '†', '✡\uFE0E', '✞', '✠', '±', '½', '¼', 'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ', 'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ρ', 'Σ', 'Τ', 'Υ', 'Φ', 'Χ', 'Ψ', 'Ω'];
 
-    // --- NEW DATA FOR ACCENTED CHARACTERS ---
     const accentedCharacters = {
         'A': ['À', 'à', 'Á', 'á', 'Â', 'â', 'Ã', 'ã', 'Ä', 'ä', 'Å', 'å', 'Æ', 'æ'],
         'C': ['Ç', 'ç'],
@@ -353,7 +351,6 @@ const App = () => {
                                 >
                                     Custom Text
                                 </h2>
-                                {/* --- UPDATED BUTTONS SECTION --- */}
                                 <div className="flex items-center gap-2">
                                     <button onClick={() => setShowAccentPalette(true)} className="px-5 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base">Á Accents</button>
                                     <button onClick={() => setShowGlyphPalette(true)} className="px-5 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base">Ω Glyphs</button>
@@ -419,11 +416,9 @@ const App = () => {
                 </div>
             </main>
 
-            {/* --- UPDATED MODAL VISIBILITY CONDITION --- */}
             {(showCustomerModal || showMessageBox || showGlyphPalette || showAccentPalette) && (
                 <div className="fixed inset-0 bg-slate-900 bg-opacity-75 flex items-center justify-center p-4 z-50 transition-opacity animate-fade-in">
                     <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-2xl animate-fade-in">
-                        {/* --- NEW ACCENT PALETTE MODAL --- */}
                         {showAccentPalette && (
                             <div className="space-y-6">
                                 <h3 className="text-2xl font-bold text-slate-900">Accented Character Palette</h3>
@@ -446,8 +441,10 @@ const App = () => {
                                         </div>
                                     ))}
                                 </div>
-                                <div className="flex justify-end pt-2">
-                                    <button type="button" className="px-6 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base" onClick={() => setShowAccentPalette(false)}>Close</button>
+                                {/* --- UPDATED FOOTER FOR ACCENT PALETTE --- */}
+                                <div className="flex justify-between items-center pt-4">
+                                    <p className="text-sm text-slate-600 pr-4">Note: Character support varies by font. Please confirm the appearance in the live preview.</p>
+                                    <button type="button" className="px-6 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base flex-shrink-0" onClick={() => setShowAccentPalette(false)}>Close</button>
                                 </div>
                             </div>
                         )}
@@ -457,8 +454,10 @@ const App = () => {
                                 <div className="grid grid-cols-12 gap-2 bg-slate-100 p-4 rounded-lg">
                                     {glyphs.map(glyph => (<button key={glyph} onClick={() => handleGlyphInsert(glyph)} className="flex items-center justify-center h-12 w-full bg-white rounded-lg shadow-sm text-2xl text-slate-700 hover:bg-blue-100 hover:text-blue-700 transition-colors" title={`Insert ${glyph}`}>{glyph}</button>))}
                                 </div>
-                                <div className="flex justify-end pt-2">
-                                    <button type="button" className="px-6 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base" onClick={() => setShowGlyphPalette(false)}>Close</button>
+                                {/* --- UPDATED FOOTER FOR GLYPH PALETTE --- */}
+                                <div className="flex justify-between items-center pt-4">
+                                    <p className="text-sm text-slate-600 pr-4">Note: Character support varies by font. Please confirm the appearance in the live preview.</p>
+                                    <button type="button" className="px-6 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base flex-shrink-0" onClick={() => setShowGlyphPalette(false)}>Close</button>
                                 </div>
                             </div>
                         )}
