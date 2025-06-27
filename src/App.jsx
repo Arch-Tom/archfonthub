@@ -93,6 +93,8 @@ const App = () => {
     const [showMessageBox, setShowMessageBox] = useState(false);
     const [showCustomerModal, setShowCustomerModal] = useState(false);
     const [showGlyphPalette, setShowGlyphPalette] = useState(false);
+    // --- NEW STATE FOR ACCENT PALETTE ---
+    const [showAccentPalette, setShowAccentPalette] = useState(false);
     const [customerName, setCustomerName] = useState('');
     const [customerCompany, setCustomerCompany] = useState('');
     const [orderNumber, setOrderNumber] = useState('');
@@ -277,6 +279,20 @@ const App = () => {
 
     const glyphs = ['©', '®', '™', '&', '#', '+', '–', '—', '…', '•', '°', '·', '♥', '♡', '♦', '♢', '♣', '♧', '♠', '♤', '★', '☆', '♪', '♫', '←', '→', '↑', '↓', '∞', '†', '✡\uFE0E', '✞', '✠', '±', '½', '¼', 'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ', 'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ρ', 'Σ', 'Τ', 'Υ', 'Φ', 'Χ', 'Ψ', 'Ω'];
 
+    // --- NEW DATA FOR ACCENTED CHARACTERS ---
+    const accentedCharacters = {
+        'A': ['À', 'à', 'Á', 'á', 'Â', 'â', 'Ã', 'ã', 'Ä', 'ä', 'Å', 'å', 'Æ', 'æ'],
+        'C': ['Ç', 'ç'],
+        'E': ['È', 'è', 'É', 'é', 'Ê', 'ê', 'Ë', 'ë'],
+        'I': ['Ì', 'ì', 'Í', 'í', 'Î', 'î', 'Ï', 'ï'],
+        'N': ['Ñ', 'ñ'],
+        'O': ['Ò', 'ò', 'Ó', 'ó', 'Ô', 'ô', 'Õ', 'õ', 'Ö', 'ö', 'Ø', 'ø', 'Œ', 'œ'],
+        'S': ['Š', 'š', 'ß'],
+        'U': ['Ù', 'ù', 'Ú', 'ú', 'Û', 'û', 'Ü', 'ü'],
+        'Y': ['Ý', 'ý', 'Ÿ', 'ÿ'],
+        'Z': ['Ž', 'ž']
+    };
+
     return (
         <div className="flex flex-col lg:flex-row min-h-screen bg-slate-100 font-sans">
             <aside className="bg-gradient-to-b from-slate-800 to-slate-900 text-white w-full lg:w-[400px] lg:h-auto p-4 flex-shrink-0 flex flex-col items-center justify-center lg:justify-start lg:pt-16 shadow-xl lg:rounded-r-3xl">
@@ -290,7 +306,6 @@ const App = () => {
             <main className="flex-1 p-4 sm:p-8 lg:p-12">
                 <div className="max-w-7xl mx-auto">
                     <div className="space-y-10">
-                        {/* **THIS IS THE PART THAT WAS MISSING** */}
                         <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
                             <h2
                                 className="text-3xl font-bold text-slate-900 mb-6 tracking-normal"
@@ -338,7 +353,11 @@ const App = () => {
                                 >
                                     Custom Text
                                 </h2>
-                                <button onClick={() => setShowGlyphPalette(true)} className="px-5 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base">Ω Glyphs</button>
+                                {/* --- UPDATED BUTTONS SECTION --- */}
+                                <div className="flex items-center gap-2">
+                                    <button onClick={() => setShowAccentPalette(true)} className="px-5 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base">Á Accents</button>
+                                    <button onClick={() => setShowGlyphPalette(true)} className="px-5 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base">Ω Glyphs</button>
+                                </div>
                             </div>
                             <textarea ref={textInputRef} className="w-full p-5 border-2 border-slate-200 rounded-xl shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 min-h-[120px] text-xl" value={customText} onChange={handleTextChange} placeholder={DEFAULT_TEXT_PLACEHOLDER} />
                         </section>
@@ -400,9 +419,38 @@ const App = () => {
                 </div>
             </main>
 
-            {(showCustomerModal || showMessageBox || showGlyphPalette) && (
+            {/* --- UPDATED MODAL VISIBILITY CONDITION --- */}
+            {(showCustomerModal || showMessageBox || showGlyphPalette || showAccentPalette) && (
                 <div className="fixed inset-0 bg-slate-900 bg-opacity-75 flex items-center justify-center p-4 z-50 transition-opacity animate-fade-in">
                     <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-2xl animate-fade-in">
+                        {/* --- NEW ACCENT PALETTE MODAL --- */}
+                        {showAccentPalette && (
+                            <div className="space-y-6">
+                                <h3 className="text-2xl font-bold text-slate-900">Accented Character Palette</h3>
+                                <div className="space-y-4 bg-slate-50 p-4 rounded-lg max-h-[60vh] overflow-y-auto">
+                                    {Object.entries(accentedCharacters).map(([baseLetter, chars]) => (
+                                        <div key={baseLetter} className="flex items-start gap-4">
+                                            <div className="font-bold text-lg text-slate-600 w-8 text-center pt-2">{baseLetter}</div>
+                                            <div className="flex flex-wrap gap-2 flex-1">
+                                                {chars.map(char => (
+                                                    <button
+                                                        key={char}
+                                                        onClick={() => handleGlyphInsert(char)}
+                                                        className="flex items-center justify-center h-12 w-12 bg-white rounded-lg shadow-sm text-2xl text-slate-700 hover:bg-blue-100 hover:text-blue-700 transition-colors"
+                                                        title={`Insert ${char}`}
+                                                    >
+                                                        {char}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                                <div className="flex justify-end pt-2">
+                                    <button type="button" className="px-6 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base" onClick={() => setShowAccentPalette(false)}>Close</button>
+                                </div>
+                            </div>
+                        )}
                         {showGlyphPalette && (
                             <div className="space-y-6">
                                 <h3 className="text-2xl font-bold text-slate-900">Glyph Palette</h3>
