@@ -95,7 +95,6 @@ const App = () => {
     const [showGlyphPalette, setShowGlyphPalette] = useState(false);
     const [showAccentPalette, setShowAccentPalette] = useState(false);
     const [showHebrewPalette, setShowHebrewPalette] = useState(false);
-    // --- NEW STATE for the interactive Hebrew palette ---
     const [selectedHebrewBase, setSelectedHebrewBase] = useState(null);
     const [customerName, setCustomerName] = useState('');
     const [customerCompany, setCustomerCompany] = useState('');
@@ -104,7 +103,15 @@ const App = () => {
     const [isDataPrefilled, setIsDataPrefilled] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    // --- NEW STATE for the Hebrew palette preview ---
+    const [hebrewPaletteText, setHebrewPaletteText] = useState('');
+    const [hebrewPreviewFont, setHebrewPreviewFont] = useState({ name: 'Times New Roman', family: 'TimesNewRomanPSMT' });
+
+
     const textInputRef = useRef(null);
+    // --- NEW REF for the Hebrew palette textarea ---
+    const hebrewTextInputRef = useRef(null);
+
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
@@ -149,26 +156,68 @@ const App = () => {
 
     const formatForFilename = (str) => str.trim().replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_-]/g, '');
 
-    // --- MODIFIED FUNCTION to handle replacing characters ---
     const handleGlyphInsert = (glyph, replaceLength = 0) => {
         const textarea = textInputRef.current;
         if (!textarea) return;
 
         const end = textarea.selectionEnd;
         const text = customText;
-
-        // When replacing, we adjust the start position. Otherwise, it's just the cursor position.
         const start = end - replaceLength;
-
         const newText = text.substring(0, start) + glyph + text.substring(end);
         setCustomText(newText);
 
         textarea.focus();
         setTimeout(() => {
-            // Move cursor to the end of the inserted glyph
             textarea.selectionStart = textarea.selectionEnd = start + glyph.length;
         }, 0);
     };
+
+    // --- NEW FUNCTION to handle inserting text into the Hebrew palette preview ---
+    const handleHebrewPaletteInsert = (glyph, replaceLength = 0) => {
+        const textarea = hebrewTextInputRef.current;
+        if (!textarea) return;
+
+        const end = textarea.selectionEnd;
+        const text = hebrewPaletteText;
+        const start = end - replaceLength;
+
+        const newText = text.substring(0, start) + glyph + text.substring(end);
+        setHebrewPaletteText(newText);
+
+        textarea.focus();
+        setTimeout(() => {
+            textarea.selectionStart = textarea.selectionEnd = start + glyph.length;
+        }, 0);
+    };
+
+    // --- NEW FUNCTION to insert composed Hebrew text into the main editor ---
+    const handleInsertToMain = () => {
+        if (!hebrewPaletteText) return;
+
+        // Check if the chosen preview font is already selected for the main editor.
+        const isFontAlreadySelected = selectedFonts.some(font => font.name === hebrewPreviewFont.name);
+
+        if (!isFontAlreadySelected) {
+            // Find the full font object from the library
+            const fontCategory = Object.keys(fontLibrary).find(category =>
+                fontLibrary[category].some(f => f.name === hebrewPreviewFont.name)
+            );
+            if (fontCategory) {
+                const fontToAdd = fontLibrary[fontCategory].find(f => f.name === hebrewPreviewFont.name);
+                if (fontToAdd) {
+                    // Add it to the selected fonts
+                    handleFontSelect(fontToAdd);
+                }
+            }
+        }
+
+        handleGlyphInsert(hebrewPaletteText);
+        // Clear the palette text and close it
+        setHebrewPaletteText('');
+        setShowHebrewPalette(false);
+        setSelectedHebrewBase(null);
+    };
+
 
     const generateSvgContent = () => {
         if (selectedFonts.length === 0 || customText.trim() === '') {
@@ -450,20 +499,41 @@ const App = () => {
 
             {(showCustomerModal || showMessageBox || showGlyphPalette || showAccentPalette || showHebrewPalette) && (
                 <div className="fixed inset-0 bg-slate-900 bg-opacity-75 flex items-center justify-center p-4 z-50 transition-opacity animate-fade-in">
-                    <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-2xl animate-fade-in">
-                        {/* --- NEW INTERACTIVE HEBREW PALETTE --- */}
+                    <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-4xl animate-fade-in"> {/* Increased max-width */}
                         {showHebrewPalette && (
-                            <div className="space-y-6">
+                            <div className="space-y-4">
                                 <h3 className="text-2xl font-bold text-slate-900">Hebrew Character Palette</h3>
-                                <div className="space-y-4 bg-slate-50 p-4 rounded-lg max-h-[60vh] overflow-y-auto">
+
+                                <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800">
+                                    Please note: Full Hebrew character support, including nikud (vowels), is currently optimized for the <strong>Times New Roman</strong> and <strong>Arial</strong> font families. Appearance may vary in other fonts.
+                                </div>
+
+                                <div className="p-4 bg-slate-50 rounded-lg space-y-4">
                                     <div>
-                                        <h4 className="font-semibold text-lg text-slate-800 mb-2">1. Select a Base Letter</h4>
-                                        <div className="grid grid-cols-8 gap-2">
+                                        <label className="block text-sm font-medium text-slate-700 mb-2">1. Choose Preview Font & Compose Text</label>
+                                        <div className="flex items-center gap-2 mb-2">
+                                            <button onClick={() => setHebrewPreviewFont({ name: 'Times New Roman', family: 'TimesNewRomanPSMT' })} className={`px-4 py-2 text-sm rounded-md border-2 ${hebrewPreviewFont.name === 'Times New Roman' ? 'bg-slate-700 text-white border-slate-700' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-100'}`}>Times New Roman</button>
+                                            <button onClick={() => setHebrewPreviewFont({ name: 'Arial', family: 'ArialMT' })} className={`px-4 py-2 text-sm rounded-md border-2 ${hebrewPreviewFont.name === 'Arial' ? 'bg-slate-700 text-white border-slate-700' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-100'}`}>Arial</button>
+                                        </div>
+                                        <textarea
+                                            ref={hebrewTextInputRef}
+                                            className="w-full p-3 border-2 border-slate-200 rounded-xl shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 min-h-[100px] text-2xl"
+                                            value={hebrewPaletteText}
+                                            onChange={(e) => setHebrewPaletteText(e.target.value)}
+                                            placeholder="Compose Hebrew text here..."
+                                            dir="rtl"
+                                            style={{ fontFamily: hebrewPreviewFont.family }}
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <h4 className="font-semibold text-lg text-slate-800 mb-2">2. Select a Base Letter</h4>
+                                        <div className="grid grid-cols-8 lg:grid-cols-10 gap-2">
                                             {hebrewCharacters.map(char => (
                                                 <button
                                                     key={char}
                                                     onClick={() => {
-                                                        handleGlyphInsert(char);
+                                                        handleHebrewPaletteInsert(char);
                                                         setSelectedHebrewBase(char);
                                                     }}
                                                     className={`flex items-center justify-center h-12 w-full bg-white rounded-lg shadow-sm text-2xl transition-colors ${selectedHebrewBase === char ? 'ring-2 ring-blue-500' : 'text-slate-700 hover:bg-blue-100 hover:text-blue-700'}`}
@@ -475,23 +545,20 @@ const App = () => {
                                         </div>
                                     </div>
 
-                                    {/* This section appears only after a base letter is selected */}
                                     {selectedHebrewBase && (
                                         <div>
                                             <div className='flex justify-between items-center mt-4 mb-2'>
-                                                <h4 className="font-semibold text-lg text-slate-800">2. Choose a Vowel Option for {selectedHebrewBase}</h4>
+                                                <h4 className="font-semibold text-lg text-slate-800">3. Choose a Vowel Option for {selectedHebrewBase}</h4>
                                                 <button onClick={() => setSelectedHebrewBase(null)} className="text-sm text-blue-600 hover:underline">Clear</button>
                                             </div>
-                                            <div className="grid grid-cols-8 gap-2">
+                                            <div className="grid grid-cols-8 lg:grid-cols-10 gap-2">
                                                 {hebrewNikud.map(nikud => {
                                                     const pointedLetter = selectedHebrewBase + nikud.insert;
                                                     return (
                                                         <button
                                                             key={nikud.name}
                                                             onClick={() => {
-                                                                // Replace the base letter with the pointed version
-                                                                handleGlyphInsert(pointedLetter, selectedHebrewBase.length);
-                                                                // Deselect to allow typing the next letter
+                                                                handleHebrewPaletteInsert(nikud.insert);
                                                                 setSelectedHebrewBase(null);
                                                             }}
                                                             className="flex items-center justify-center h-12 w-full bg-white rounded-lg shadow-sm text-2xl text-slate-700 hover:bg-blue-100 hover:text-blue-700 transition-colors"
@@ -506,8 +573,8 @@ const App = () => {
                                     )}
                                 </div>
                                 <div className="flex justify-between items-center pt-4">
-                                    <p className="text-sm text-slate-600 pr-4">Note: Character support varies by font. Please confirm the appearance in the live preview.</p>
-                                    <button type="button" className="px-6 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base flex-shrink-0" onClick={() => { setShowHebrewPalette(false); setSelectedHebrewBase(null); }}>Close</button>
+                                    <button type="button" className="px-6 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base flex-shrink-0" onClick={() => { setShowHebrewPalette(false); setHebrewPaletteText(''); setSelectedHebrewBase(null); }}>Close</button>
+                                    <button type="button" className="px-8 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-bold transition-colors shadow-sm text-base flex-shrink-0" onClick={handleInsertToMain}>Insert Text</button>
                                 </div>
                             </div>
                         )}
