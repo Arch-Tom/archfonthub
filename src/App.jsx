@@ -105,7 +105,6 @@ const App = () => {
     // State for the Hebrew palette
     const [hebrewPaletteText, setHebrewPaletteText] = useState('');
     const [hebrewPreviewFont, setHebrewPreviewFont] = useState({ name: 'Times New Roman', family: 'TimesNewRomanPSMT' });
-    // --- NEW STATE to track the last base character clicked for Nikud preview ---
     const [lastHebrewBaseChar, setLastHebrewBaseChar] = useState('א');
 
 
@@ -503,11 +502,67 @@ const App = () => {
                             </div>
                         )}
 
-                        {/* Other Modals (Accent, Glyph, Customer) */}
-                        {showAccentPalette && (<div />)}
-                        {showGlyphPalette && (<div />)}
-                        {showCustomerModal && (<div />)}
-                        {showMessageBox && (<div />)}
+                        {/* --- RESTORED MODAL CODE --- */}
+                        {showAccentPalette && (
+                            <div className="space-y-6">
+                                <h3 className="text-2xl font-bold text-slate-900">Accented Character Palette</h3>
+                                <div className="space-y-4 bg-slate-50 p-4 rounded-lg max-h-[60vh] overflow-y-auto">
+                                    {Object.entries(accentedCharacters).map(([baseLetter, chars]) => (
+                                        <div key={baseLetter} className="flex items-start gap-4">
+                                            <div className="font-bold text-lg text-slate-600 w-8 text-center pt-2">{baseLetter}</div>
+                                            <div className="flex flex-wrap gap-2 flex-1">
+                                                {chars.map(char => (
+                                                    <button
+                                                        key={char}
+                                                        onClick={() => handleGlyphInsert(char)}
+                                                        className="flex items-center justify-center h-12 w-12 bg-white rounded-lg shadow-sm text-2xl text-slate-700 hover:bg-blue-100 hover:text-blue-700 transition-colors"
+                                                        title={`Insert ${char}`}
+                                                    >
+                                                        {char}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                                <div className="flex justify-between items-center pt-4">
+                                    <p className="text-sm text-slate-600 pr-4">Note: Character support varies by font. Please confirm the appearance in the live preview.</p>
+                                    <button type="button" className="px-6 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base flex-shrink-0" onClick={() => setShowAccentPalette(false)}>Close</button>
+                                </div>
+                            </div>
+                        )}
+                        {showGlyphPalette && (
+                            <div className="space-y-6">
+                                <h3 className="text-2xl font-bold text-slate-900">Symbol Palette</h3>
+                                <div className="grid grid-cols-12 gap-2 bg-slate-100 p-4 rounded-lg">
+                                    {glyphs.map(glyph => (<button key={glyph} onClick={() => handleGlyphInsert(glyph)} className="flex items-center justify-center h-12 w-full bg-white rounded-lg shadow-sm text-2xl text-slate-700 hover:bg-blue-100 hover:text-blue-700 transition-colors" title={`Insert ${glyph}`}>{glyph}</button>))}
+                                </div>
+                                <div className="flex justify-between items-center pt-4">
+                                    <p className="text-sm text-slate-600 pr-4">Note: Character support varies by font. Please confirm the appearance in the live preview.</p>
+                                    <button type="button" className="px-6 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base flex-shrink-0" onClick={() => setShowGlyphPalette(false)}>Close</button>
+                                </div>
+                            </div>
+                        )}
+                        {showCustomerModal && (
+                            <form onSubmit={handleCustomerModalSubmit} className="space-y-8">
+                                <h3 className="text-2xl font-bold text-slate-900">Enter Customer Information to Save</h3>
+                                <FormInput label="Order Number" id="orderNumber" value={orderNumber} onChange={e => setOrderNumber(e.target.value)} required disabled={isDataPrefilled || isSubmitting} />
+                                <FormInput label="Customer Name" id="customerName" value={customerName} onChange={e => setCustomerName(e.target.value)} required disabled={isDataPrefilled || isSubmitting} />
+                                <FormInput label="Customer Company" id="customerCompany" value={customerCompany} onChange={e => setCustomerCompany(e.target.value)} isOptional disabled={isDataPrefilled || isSubmitting} />
+                                <div className="flex justify-end gap-4 pt-4">
+                                    <button type="button" className="px-6 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base" onClick={() => setShowCustomerModal(false)} disabled={isSubmitting}>Cancel</button>
+                                    <button type="submit" className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-semibold transition-colors shadow-sm text-base disabled:opacity-75 disabled:cursor-not-allowed" disabled={isSubmitting}>
+                                        {isSubmitting ? 'Submitting...' : 'Submit & Save'}
+                                    </button>
+                                </div>
+                            </form>
+                        )}
+                        {showMessageBox && (
+                            <div className="text-center">
+                                <p className="text-slate-800 text-lg mb-8">{message}</p>
+                                <button onClick={() => setShowMessageBox(false)} className="px-12 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-semibold transition-colors shadow-sm text-base">OK</button>
+                            </div>
+                        )}
                     </div>
                 </div>
             )}
