@@ -349,7 +349,7 @@ const App = () => {
         { insert: 'ֻ', name: 'Qubuts' }, { insert: 'ּ', name: 'Dagesh or Shuruk' },
         { insert: 'ְ', name: 'Shva' }, { insert: 'ֲ', name: 'Hataf Patah' },
         { insert: 'ֳ', name: 'Hataf Qamats' }, { insert: 'ֱ', name: 'Hataf Segol' },
-        { insert: 'ׂ', name: 'Sin Dot' }, { insert: 'ׁ', 'Shin Dot' },
+        { insert: 'ׂ', name: 'Sin Dot' }, { insert: 'ׁ', name: 'Shin Dot' },
         { insert: 'ֿ', name: 'Rafe' },
     ];
 
@@ -483,9 +483,7 @@ const App = () => {
                                                     }}
                                                     className="flex items-center justify-center h-12 w-full bg-white rounded-lg shadow-sm text-2xl text-slate-700 hover:bg-blue-100 hover:text-blue-700 transition-colors"
                                                     title={`Insert ${char}`}
-                                                    // *** MODIFICATION START: Apply selected font to button ***
                                                     style={{ fontFamily: hebrewPreviewFont.family }}
-                                                // *** MODIFICATION END ***
                                                 >
                                                     {char}
                                                 </button>
@@ -504,9 +502,7 @@ const App = () => {
                                                     }}
                                                     className="flex items-center justify-center h-12 w-full bg-white rounded-lg shadow-sm text-2xl text-slate-700 hover:bg-blue-100 hover:text-blue-700 transition-colors"
                                                     title={nikud.name}
-                                                    // *** MODIFICATION START: Apply selected font to button ***
                                                     style={{ fontFamily: hebrewPreviewFont.family }}
-                                                // *** MODIFICATION END ***
                                                 >
                                                     {`${lastHebrewBaseChar}${nikud.insert}`}
                                                 </button>
