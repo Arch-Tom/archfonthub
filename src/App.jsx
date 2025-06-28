@@ -190,6 +190,30 @@ const App = () => {
         setShowHebrewPalette(false);
     };
 
+    const handleHebrewBackspace = () => {
+        if (hebrewPaletteText.length === 0) return;
+
+        const segmenter = new Intl.Segmenter('he', { granularity: 'grapheme' });
+        const graphemes = Array.from(segmenter.segment(hebrewPaletteText)).map(s => s.segment);
+
+        graphemes.pop();
+        const newText = graphemes.join('');
+
+        setHebrewPaletteText(newText);
+
+        if (newText.length === 0) {
+            setLastHebrewBaseChar('א');
+        } else {
+            const hebrewBaseRegex = /[אבגדהוזחטיכךלמםנןסעפףצץקרשת]/g;
+            const baseCharsInNewText = newText.match(hebrewBaseRegex);
+            if (baseCharsInNewText) {
+                setLastHebrewBaseChar(baseCharsInNewText[baseCharsInNewText.length - 1]);
+            } else {
+                setLastHebrewBaseChar('א');
+            }
+        }
+    };
+
     const generateSvgContent = () => {
         if (selectedFonts.length === 0 || customText.trim() === '') {
             showMessage('Please select at least one font and enter some text to save an SVG.');
@@ -325,7 +349,7 @@ const App = () => {
         { insert: 'ֻ', name: 'Qubuts' }, { insert: 'ּ', name: 'Dagesh or Shuruk' },
         { insert: 'ְ', name: 'Shva' }, { insert: 'ֲ', name: 'Hataf Patah' },
         { insert: 'ֳ', name: 'Hataf Qamats' }, { insert: 'ֱ', name: 'Hataf Segol' },
-        { insert: 'ׂ', name: 'Sin Dot' }, { insert: 'ׁ', name: 'Shin Dot' },
+        { insert: 'ׂ', name: 'Sin Dot' }, { insert: 'ׁ', 'Shin Dot' },
         { insert: 'ֿ', name: 'Rafe' },
     ];
 
@@ -459,6 +483,9 @@ const App = () => {
                                                     }}
                                                     className="flex items-center justify-center h-12 w-full bg-white rounded-lg shadow-sm text-2xl text-slate-700 hover:bg-blue-100 hover:text-blue-700 transition-colors"
                                                     title={`Insert ${char}`}
+                                                    // *** MODIFICATION START: Apply selected font to button ***
+                                                    style={{ fontFamily: hebrewPreviewFont.family }}
+                                                // *** MODIFICATION END ***
                                                 >
                                                     {char}
                                                 </button>
@@ -473,32 +500,13 @@ const App = () => {
                                                 <button
                                                     key={nikud.name}
                                                     onClick={() => {
-                                                        setHebrewPaletteText(prev => {
-                                                            // Find the last base Hebrew character
-                                                            const hebrewBaseRegex = /[אבגדהוזחטיכךלמםנןסעפףצץקרשת]/g;
-                                                            let lastBaseIndex = -1;
-                                                            let match;
-                                                            while ((match = hebrewBaseRegex.exec(prev)) !== null) {
-                                                                lastBaseIndex = match.index;
-                                                            }
-                                                            if (lastBaseIndex === -1) {
-                                                                // No base found, just append at end
-                                                                return prev + nikud.insert;
-                                                            }
-                                                            // Insert after the last base letter + any Nikud already present
-                                                            let insertPos = lastBaseIndex + 1;
-                                                            while (
-                                                                insertPos < prev.length &&
-                                                                /[\u0591-\u05C7]/.test(prev[insertPos])
-                                                            ) {
-                                                                insertPos++;
-                                                            }
-                                                            // Insert nikud at insertPos
-                                                            return prev.slice(0, insertPos) + nikud.insert + prev.slice(insertPos);
-                                                        });
+                                                        setHebrewPaletteText(prev => prev + nikud.insert);
                                                     }}
                                                     className="flex items-center justify-center h-12 w-full bg-white rounded-lg shadow-sm text-2xl text-slate-700 hover:bg-blue-100 hover:text-blue-700 transition-colors"
                                                     title={nikud.name}
+                                                    // *** MODIFICATION START: Apply selected font to button ***
+                                                    style={{ fontFamily: hebrewPreviewFont.family }}
+                                                // *** MODIFICATION END ***
                                                 >
                                                     {`${lastHebrewBaseChar}${nikud.insert}`}
                                                 </button>
@@ -510,7 +518,7 @@ const App = () => {
                                         <div className="flex justify-between items-center mb-2">
                                             <label className="block text-sm font-medium text-slate-700">Preview</label>
                                             <div className="flex items-center gap-2">
-                                                <button onClick={() => setHebrewPaletteText(text => text.slice(0, -1))} className="px-3 py-1 bg-slate-200 text-slate-700 rounded-md hover:bg-slate-300 text-sm font-semibold">Backspace</button>
+                                                <button onClick={handleHebrewBackspace} className="px-3 py-1 bg-slate-200 text-slate-700 rounded-md hover:bg-slate-300 text-sm font-semibold">Backspace</button>
                                                 <button onClick={() => { setHebrewPaletteText(''); setLastHebrewBaseChar('א'); }} className="px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200 text-sm font-semibold">Clear</button>
                                             </div>
                                         </div>
