@@ -335,11 +335,12 @@ const App = () => {
 
     return (
         <div className="flex flex-col lg:flex-row min-h-screen bg-slate-100 font-sans">
-            <aside className="bg-gradient-to-b from-slate-800 to-slate-900 text-white w-full lg:w-[400px] lg:h-auto p-4 flex-shrink-0 flex flex-col items-center justify-center lg:justify-start lg:pt-16 shadow-xl lg:rounded-r-3xl">
+            <aside className="bg-gradient-to-b from-slate-800 to-slate-900 text-white w-full lg:w-[400px] p-4 flex-shrink-0 flex flex-row lg:flex-col items-center justify-start shadow-xl lg:rounded-r-3xl">
                 <div className="flex flex-row lg:flex-col items-center justify-center gap-4">
                     <div className="flex-shrink-0">
-                        <img src="/images/Arch Vector Logo White.svg" alt="Arch Font Hub Logo" className="object-contain drop-shadow-lg" style={{ width: '400px', height: '400px' }} />
+                        <img src="/images/Arch Vector Logo White.svg" alt="Arch Font Hub Logo" className="object-contain drop-shadow-lg h-16 w-16 lg:h-[400px] lg:w-[400px]" />
                     </div>
+                    <h1 className="text-xl font-bold lg:hidden">Arch Font Hub</h1>
                 </div>
             </aside>
 
@@ -370,7 +371,7 @@ const App = () => {
 
                         {/* Custom Text Section */}
                         <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
-                            <div className="flex justify-between items-center mb-6">
+                            <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center mb-6 gap-4">
                                 <h2 className="text-3xl font-bold text-slate-900 tracking-normal" style={{ fontFamily: 'BebasNeue-Bold' }}>Custom Text</h2>
                                 <div className="flex flex-wrap items-center justify-end gap-2">
                                     <button onClick={() => setShowHebrewPalette(true)} className="px-5 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base">Hebrew</button>
@@ -383,7 +384,7 @@ const App = () => {
 
                         {/* Live Preview Section */}
                         <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
-                            <div className="flex justify-between items-center mb-6">
+                            <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center mb-6 gap-4">
                                 <h2 className="text-3xl font-bold text-slate-900 tracking-normal" style={{ fontFamily: 'BebasNeue-Bold' }}>Live Preview</h2>
                                 <div className="flex items-center gap-3">
                                     <label htmlFor="fontSizeSlider" className="text-sm font-medium text-slate-600">Size</label>
@@ -534,7 +535,7 @@ const App = () => {
                         {showGlyphPalette && (
                             <div className="space-y-6">
                                 <h3 className="text-2xl font-bold text-slate-900">Symbol Palette</h3>
-                                <div className="grid grid-cols-12 gap-2 bg-slate-100 p-4 rounded-lg">
+                                <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-12 gap-2 bg-slate-100 p-4 rounded-lg">
                                     {glyphs.map(glyph => (<button key={glyph} onClick={() => handleGlyphInsert(glyph)} className="flex items-center justify-center h-12 w-full bg-white rounded-lg shadow-sm text-2xl text-slate-700 hover:bg-blue-100 hover:text-blue-700 transition-colors" title={`Insert ${glyph}`}>{glyph}</button>))}
                                 </div>
                                 <div className="flex justify-between items-center pt-4">
