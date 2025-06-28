@@ -433,7 +433,7 @@ const App = () => {
                                 <h3 className="text-2xl font-bold text-slate-900">Hebrew Character Palette</h3>
 
                                 <div className="p-4 bg-slate-50 rounded-lg space-y-4 max-h-[60vh] overflow-y-auto">
-                                    <div className="flex items-center gap-2">
+                                    <div className="flex flex-wrap items-center gap-2">
                                         <label className="block text-sm font-medium text-slate-700">Preview Font:</label>
                                         <button onClick={() => setHebrewPreviewFont({ name: 'Times New Roman', family: 'TimesNewRomanPSMT' })} className={`px-4 py-2 text-sm rounded-md border-2 ${hebrewPreviewFont.name === 'Times New Roman' ? 'bg-slate-700 text-white border-slate-700' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-100'}`}>Times New Roman</button>
                                         <button onClick={() => setHebrewPreviewFont({ name: 'Arial', family: 'ArialMT' })} className={`px-4 py-2 text-sm rounded-md border-2 ${hebrewPreviewFont.name === 'Arial' ? 'bg-slate-700 text-white border-slate-700' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-100'}`}>Arial</button>
