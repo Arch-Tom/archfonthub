@@ -169,6 +169,21 @@ const App = () => {
         }, 0);
     };
 
+    const hebrewNikudChars = hebrewNikud.map(n => n.insert);
+
+    const handleNikudClick = (nikud) => {
+        setHebrewPaletteText(prev => {
+            if (prev.length === 0) return prev; // Don't add if empty
+
+            const lastChar = prev.slice(-1);
+            // If last char is a Nikud, replace it. Otherwise, append.
+            if (hebrewNikudChars.includes(lastChar)) {
+                return prev.slice(0, -1) + nikud;
+            }
+            return prev + nikud;
+        });
+    };
+
     const handleInsertToMain = () => {
         if (!hebrewPaletteText) return;
 
@@ -476,7 +491,7 @@ const App = () => {
                                             {hebrewNikud.map(nikud => (
                                                 <button
                                                     key={nikud.name}
-                                                    onClick={() => setHebrewPaletteText(prev => prev + nikud.insert)}
+                                                    onClick={() => handleNikudClick(nikud.insert)}
                                                     className="flex items-center justify-center h-12 w-full bg-white rounded-lg shadow-sm text-2xl text-slate-700 hover:bg-blue-100 hover:text-blue-700 transition-colors"
                                                     title={nikud.name}
                                                 >
