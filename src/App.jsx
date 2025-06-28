@@ -402,7 +402,7 @@ const App = () => {
                                         <br />
                                         No need to type out all of your order wording. Our designers will typeset your text in the fonts you select.</p>
                                 </div>
-                                <div className="flex flex-wrap items-center justify-end gap-2">
+                                <div className="flex flex-wrap items-center justify-center sm:justify-end gap-2">
                                     <button onClick={() => setShowHebrewPalette(true)} className="px-5 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base">Hebrew</button>
                                     <button onClick={() => setShowAccentPalette(true)} className="px-5 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base">Accented Characters</button>
                                     <button onClick={() => setShowGlyphPalette(true)} className="px-5 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base">Symbols</button>
