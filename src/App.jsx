@@ -364,8 +364,7 @@ const App = () => {
                     <div className="space-y-10">
                         {/* Font Selection Section */}
                         <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
-                            <h2 className="text-3xl font-bold text-slate-900 mb-2 tracking-normal" style={{ fontFamily: 'BebasNeue-Bold' }}>Font Selection</h2>
-                            <p className="text-slate-500 mb-6">First, pick your players! Choose one or more fonts to see how they look.</p>
+                            <h2 className="text-3xl font-bold text-slate-900 mb-6 tracking-normal" style={{ fontFamily: 'BebasNeue-Bold' }}>Font Selection</h2>
                             <div className="space-y-6">
                                 {Object.entries(fontLibrary).map(([category, fonts]) => (
                                     <div key={category}>
@@ -388,10 +387,7 @@ const App = () => {
                         {/* Custom Text Section */}
                         <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
                             <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center mb-6 gap-4">
-                                <div>
-                                    <h2 className="text-3xl font-bold text-slate-900 tracking-normal" style={{ fontFamily: 'BebasNeue-Bold' }}>Custom Text</h2>
-                                    <p className="text-slate-500 mt-1">Now, what do you want to say? Type your masterpiece here.</p>
-                                </div>
+                                <h2 className="text-3xl font-bold text-slate-900 tracking-normal" style={{ fontFamily: 'BebasNeue-Bold' }}>Custom Text</h2>
                                 <div className="flex flex-wrap items-center justify-end gap-2">
                                     <button onClick={() => setShowHebrewPalette(true)} className="px-5 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base">Hebrew</button>
                                     <button onClick={() => setShowAccentPalette(true)} className="px-5 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base">Accented Characters</button>
@@ -404,10 +400,7 @@ const App = () => {
                         {/* Live Preview Section */}
                         <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
                             <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center mb-6 gap-4">
-                                <div>
-                                    <h2 className="text-3xl font-bold text-slate-900 tracking-normal" style={{ fontFamily: 'BebasNeue-Bold' }}>Live Preview</h2>
-                                    <p className="text-slate-500 mt-1">The main event! See your text in action and tweak the size to perfection.</p>
-                                </div>
+                                <h2 className="text-3xl font-bold text-slate-900 tracking-normal" style={{ fontFamily: 'BebasNeue-Bold' }}>Live Preview</h2>
                                 <div className="flex items-center gap-3">
                                     <label htmlFor="fontSizeSlider" className="text-sm font-medium text-slate-600">Size</label>
                                     <input id="fontSizeSlider" type="range" min="36" max="100" step="1" value={fontSize} onChange={handleFontSizeChange} className="w-32 lg:w-48 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600" />
