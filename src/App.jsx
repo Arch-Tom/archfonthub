@@ -373,7 +373,7 @@ const App = () => {
                         {/* Font Selection Section */}
                         <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
                             <h2 className="text-3xl font-bold text-slate-900 mb-2 tracking-normal" style={{ fontFamily: 'BebasNeue-Bold' }}>Font Selection</h2>
-                            <p className="text-slate-500 mb-6">First, pick your players! Choose one or more fonts to see how they look.</p>
+                            <p className="text-slate-500 mb-6">Here's some great fonts to get your project started! Select up to 3 fonts you would like to preview. You may change your selection here at any time so try as many as you'd like before submitting your selection!</p>
                             <div className="space-y-6">
                                 {Object.entries(fontLibrary).map(([category, fonts]) => (
                                     <div key={category}>
@@ -398,7 +398,7 @@ const App = () => {
                             <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center mb-6 gap-4">
                                 <div>
                                     <h2 className="text-3xl font-bold text-slate-900 tracking-normal" style={{ fontFamily: 'BebasNeue-Bold' }}>Custom Text</h2>
-                                    <p className="text-slate-500 mt-1">Now, what do you want to say? Type your masterpiece here.</p>
+                                    <p className="text-slate-500 mt-1">Type a sample of the text you would like to preview. You'll see this displayed in your font choices below. No need to type out all of your order wording. Our designers will typeset your text in the fonts you select.</p>
                                 </div>
                                 <div className="flex flex-wrap items-center justify-end gap-2">
                                     <button onClick={() => setShowHebrewPalette(true)} className="px-5 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base">Hebrew</button>
@@ -414,7 +414,7 @@ const App = () => {
                             <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center mb-6 gap-4">
                                 <div>
                                     <h2 className="text-3xl font-bold text-slate-900 tracking-normal" style={{ fontFamily: 'BebasNeue-Bold' }}>Live Preview</h2>
-                                    <p className="text-slate-500 mt-1">The main event! See your text in action and tweak the size to perfection.</p>
+                                    <p className="text-slate-500 mt-1">Here's your text preview. When you're happy with your selection hit the button below! If you don't like a font feel free to deselect it above and try a new one out!</p>
                                 </div>
                                 <div className="flex items-center gap-3">
                                     <label htmlFor="fontSizeSlider" className="text-sm font-medium text-slate-600">Size</label>
