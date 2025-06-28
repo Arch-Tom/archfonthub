@@ -20,7 +20,6 @@ const FormInput = ({ label, id, value, onChange, required = false, isOptional = 
     </div>
 );
 
-
 const App = () => {
     const WORKER_URL = "https://customerfontselection-worker.tom-4a9.workers.dev";
     const DEFAULT_TEXT_PLACEHOLDER = 'Type your text here...';
@@ -107,7 +106,6 @@ const App = () => {
     const [hebrewPreviewFont, setHebrewPreviewFont] = useState({ name: 'Times New Roman', family: 'TimesNewRomanPSMT' });
     const [lastHebrewBaseChar, setLastHebrewBaseChar] = useState('א');
 
-
     const textInputRef = useRef(null);
 
     useEffect(() => {
@@ -191,7 +189,6 @@ const App = () => {
         setLastHebrewBaseChar('א'); // Reset on close
         setShowHebrewPalette(false);
     };
-
 
     const generateSvgContent = () => {
         if (selectedFonts.length === 0 || customText.trim() === '') {
@@ -331,7 +328,6 @@ const App = () => {
         { insert: 'ׂ', name: 'Sin Dot' }, { insert: 'ׁ', name: 'Shin Dot' },
         { insert: 'ֿ', name: 'Rafe' },
     ];
-
 
     return (
         <div className="flex flex-col lg:flex-row min-h-screen bg-slate-100 font-sans">
@@ -476,7 +472,31 @@ const App = () => {
                                             {hebrewNikud.map(nikud => (
                                                 <button
                                                     key={nikud.name}
-                                                    onClick={() => setHebrewPaletteText(prev => prev + nikud.insert)}
+                                                    onClick={() => {
+                                                        setHebrewPaletteText(prev => {
+                                                            // Find the last base Hebrew character
+                                                            const hebrewBaseRegex = /[אבגדהוזחטיכךלמםנןסעפףצץקרשת]/g;
+                                                            let lastBaseIndex = -1;
+                                                            let match;
+                                                            while ((match = hebrewBaseRegex.exec(prev)) !== null) {
+                                                                lastBaseIndex = match.index;
+                                                            }
+                                                            if (lastBaseIndex === -1) {
+                                                                // No base found, just append at end
+                                                                return prev + nikud.insert;
+                                                            }
+                                                            // Insert after the last base letter + any Nikud already present
+                                                            let insertPos = lastBaseIndex + 1;
+                                                            while (
+                                                                insertPos < prev.length &&
+                                                                /[\u0591-\u05C7]/.test(prev[insertPos])
+                                                            ) {
+                                                                insertPos++;
+                                                            }
+                                                            // Insert nikud at insertPos
+                                                            return prev.slice(0, insertPos) + nikud.insert + prev.slice(insertPos);
+                                                        });
+                                                    }}
                                                     className="flex items-center justify-center h-12 w-full bg-white rounded-lg shadow-sm text-2xl text-slate-700 hover:bg-blue-100 hover:text-blue-700 transition-colors"
                                                     title={nikud.name}
                                                 >
