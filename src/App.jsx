@@ -372,7 +372,7 @@ const App = () => {
                         <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
                             <div className="flex justify-between items-center mb-6">
                                 <h2 className="text-3xl font-bold text-slate-900 tracking-normal" style={{ fontFamily: 'BebasNeue-Bold' }}>Custom Text</h2>
-                                <div className="flex items-center gap-2">
+                                <div className="flex flex-wrap items-center gap-2">
                                     <button onClick={() => setShowHebrewPalette(true)} className="px-5 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base">Hebrew</button>
                                     <button onClick={() => setShowAccentPalette(true)} className="px-5 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base">Accented Characters</button>
                                     <button onClick={() => setShowGlyphPalette(true)} className="px-5 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base">Symbols</button>
