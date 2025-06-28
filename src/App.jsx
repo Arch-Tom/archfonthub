@@ -353,6 +353,9 @@ const App = () => {
         { insert: 'ֿ', name: 'Rafe' },
     ];
 
+    const hebrewSupportedFonts = ['Times New Roman', 'Arial'];
+    const hebrewRegex = /[\u0590-\u05FF]/; // This regex detects characters in the Hebrew Unicode block
+
     return (
         <div className="flex flex-col lg:flex-row min-h-screen bg-slate-100 font-sans">
             <aside className="bg-gradient-to-b from-slate-800 to-slate-900 text-white w-full lg:w-[400px] p-4 flex-shrink-0 flex flex-row lg:flex-col items-center justify-start shadow-xl lg:rounded-r-3xl">
@@ -423,6 +426,13 @@ const App = () => {
                                 {selectedFonts.length > 0 && customText.trim() !== '' ? (
                                     selectedFonts.map((font) => {
                                         const activeFontFamily = font.styles[font.activeStyle];
+
+                                        const containsHebrew = hebrewRegex.test(customText);
+                                        const isHebrewBlocked = !hebrewSupportedFonts.includes(font.name) && containsHebrew;
+                                        const displayText = isHebrewBlocked
+                                            ? customText.replace(/[\u0590-\u05FF]/g, '')
+                                            : customText;
+
                                         return (
                                             <div key={`preview-${font.name}`} className="relative flex flex-col items-start gap-3">
                                                 <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-2">
@@ -433,7 +443,12 @@ const App = () => {
                                                         ))}
                                                     </div>
                                                 </div>
-                                                <p className="text-slate-800 break-words w-full" style={{ fontFamily: activeFontFamily, fontSize: `${fontSize}px`, lineHeight: 1.4 }} dir="auto">{customText}</p>
+                                                <p className="text-slate-800 break-words w-full" style={{ fontFamily: activeFontFamily, fontSize: `${fontSize}px`, lineHeight: 1.4 }} dir="auto">{displayText}</p>
+                                                {isHebrewBlocked && (
+                                                    <p className="text-sm text-red-600 mt-2 italic" style={{ fontFamily: 'Arial' }}>
+                                                        Note: Hebrew characters are only displayed in Times New Roman and Arial.
+                                                    </p>
+                                                )}
                                             </div>
                                         )
                                     })
