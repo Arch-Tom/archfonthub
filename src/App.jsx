@@ -190,6 +190,38 @@ const App = () => {
         setShowHebrewPalette(false);
     };
 
+    // *** MODIFICATION START: New function for intelligent Hebrew backspace ***
+    const handleHebrewBackspace = () => {
+        if (hebrewPaletteText.length === 0) return;
+
+        // 1. Use Intl.Segmenter for grapheme-aware backspace. This correctly
+        // deletes a full character (e.g., a base letter + its vowels) in one go.
+        const segmenter = new Intl.Segmenter('he', { granularity: 'grapheme' });
+        const graphemes = Array.from(segmenter.segment(hebrewPaletteText)).map(s => s.segment);
+
+        graphemes.pop(); // Remove the last logical character
+        const newText = graphemes.join('');
+
+        // 2. Update the text state
+        setHebrewPaletteText(newText);
+
+        // 3. Find the new last base character to keep the Nikud previews in sync.
+        if (newText.length === 0) {
+            setLastHebrewBaseChar('א'); // Reset to default if the string is empty
+        } else {
+            const hebrewBaseRegex = /[אבגדהוזחטיכךלמםנןסעפףצץקרשת]/g;
+            const baseCharsInNewText = newText.match(hebrewBaseRegex);
+            if (baseCharsInNewText) {
+                // Set the last base character found as the new preview base
+                setLastHebrewBaseChar(baseCharsInNewText[baseCharsInNewText.length - 1]);
+            } else {
+                // Reset if no base characters are left
+                setLastHebrewBaseChar('א');
+            }
+        }
+    };
+    // *** MODIFICATION END ***
+
     const generateSvgContent = () => {
         if (selectedFonts.length === 0 || customText.trim() === '') {
             showMessage('Please select at least one font and enter some text to save an SVG.');
@@ -473,29 +505,9 @@ const App = () => {
                                                 <button
                                                     key={nikud.name}
                                                     onClick={() => {
-                                                        setHebrewPaletteText(prev => {
-                                                            // Find the last base Hebrew character
-                                                            const hebrewBaseRegex = /[אבגדהוזחטיכךלמםנןסעפףצץקרשת]/g;
-                                                            let lastBaseIndex = -1;
-                                                            let match;
-                                                            while ((match = hebrewBaseRegex.exec(prev)) !== null) {
-                                                                lastBaseIndex = match.index;
-                                                            }
-                                                            if (lastBaseIndex === -1) {
-                                                                // No base found, just append at end
-                                                                return prev + nikud.insert;
-                                                            }
-                                                            // Insert after the last base letter + any Nikud already present
-                                                            let insertPos = lastBaseIndex + 1;
-                                                            while (
-                                                                insertPos < prev.length &&
-                                                                /[\u0591-\u05C7]/.test(prev[insertPos])
-                                                            ) {
-                                                                insertPos++;
-                                                            }
-                                                            // Insert nikud at insertPos
-                                                            return prev.slice(0, insertPos) + nikud.insert + prev.slice(insertPos);
-                                                        });
+                                                        // This logic attaches a vowel to the last-entered base
+                                                        // character, which mimics standard keyboard behavior.
+                                                        setHebrewPaletteText(prev => prev + nikud.insert);
                                                     }}
                                                     className="flex items-center justify-center h-12 w-full bg-white rounded-lg shadow-sm text-2xl text-slate-700 hover:bg-blue-100 hover:text-blue-700 transition-colors"
                                                     title={nikud.name}
@@ -510,7 +522,9 @@ const App = () => {
                                         <div className="flex justify-between items-center mb-2">
                                             <label className="block text-sm font-medium text-slate-700">Preview</label>
                                             <div className="flex items-center gap-2">
-                                                <button onClick={() => setHebrewPaletteText(text => text.slice(0, -1))} className="px-3 py-1 bg-slate-200 text-slate-700 rounded-md hover:bg-slate-300 text-sm font-semibold">Backspace</button>
+                                                {/* *** MODIFICATION START: Using the new backspace handler *** */}
+                                                <button onClick={handleHebrewBackspace} className="px-3 py-1 bg-slate-200 text-slate-700 rounded-md hover:bg-slate-300 text-sm font-semibold">Backspace</button>
+                                                {/* *** MODIFICATION END *** */}
                                                 <button onClick={() => { setHebrewPaletteText(''); setLastHebrewBaseChar('א'); }} className="px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200 text-sm font-semibold">Clear</button>
                                             </div>
                                         </div>
