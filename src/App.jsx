@@ -387,7 +387,7 @@ const App = () => {
                 <div className="max-w-7xl mx-auto">
                     <div className="space-y-10">
                         {/* Font Selection Section */}
-                        <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
+                        <section className="bg-white rounded-2xl p-8 border border-slate-100 shadow-[0_10px_25px_-5px_rgba(50,75,106,0.2),_0_8px_10px_-6px_rgba(59,130,246,0.2)]">
                             <h2 className="text-3xl font-bold text-slate-900 mb-2 tracking-normal" style={{ fontFamily: 'Alumni Sans Regular' }}>Font Selection</h2>
                             <p className="text-slate-500 mb-6">Here's some great fonts to get your project started! Select up to 3 fonts you would like to preview. You may change your selection here at any time so try as many as you'd like before submitting your selection!</p>
                             <div className="space-y-6">
@@ -421,7 +421,7 @@ const App = () => {
                         </section>
 
                         {/* Custom Text Section */}
-                        <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
+                        <section className="bg-white rounded-2xl p-8 border border-slate-100 shadow-[0_10px_25px_-5px_rgba(50,75,106,0.2),_0_8px_10px_-6px_rgba(59,130,246,0.2)]">
                             <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center mb-6 gap-4">
                                 <div>
                                     <h2 className="text-3xl font-bold text-slate-900 tracking-normal" style={{ fontFamily: 'Alumni Sans Regular' }}>Custom Text</h2>
@@ -439,7 +439,7 @@ const App = () => {
                         </section>
 
                         {/* Live Preview Section */}
-                        <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
+                        <section className="bg-white rounded-2xl p-8 border border-slate-100 shadow-[0_10px_25px_-5px_rgba(50,75,106,0.2),_0_8px_10px_-6px_rgba(59,130,246,0.2)]">
                             <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center mb-6 gap-4">
                                 <div>
                                     <h2 className="text-3xl font-bold text-slate-900 tracking-normal" style={{ fontFamily: 'Alumni Sans Regular' }}>Live Preview</h2>
@@ -503,7 +503,7 @@ const App = () => {
                     </div>
 
                     <div className="mt-12">
-                        <button className="w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white font-bold py-6 px-8 rounded-2xl shadow-2xl hover:shadow-blue-200 hover:from-blue-700 hover:to-blue-600 transition-all duration-200 transform hover:scale-105 text-2xl tracking-wide disabled:opacity-75 disabled:cursor-not-allowed" onClick={handleSubmitClick} disabled={isSubmitting}>
+                        <button className="w-full bg-[rgb(50,75,106)] text-white font-bold py-6 px-8 rounded-2xl shadow-2xl hover:shadow-[0_0_15px_rgb(50,75,106)] hover:bg-[rgb(40,65,96)] transition-all duration-200 transform hover:scale-105 text-2xl tracking-wide disabled:opacity-75 disabled:cursor-not-allowed" onClick={handleSubmitClick} disabled={isSubmitting}>
                             {isSubmitting ? 'Submitting...' : 'Submit Fonts to Arch Engraving'}
                         </button>
                     </div>
