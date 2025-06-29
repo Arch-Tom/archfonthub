@@ -106,6 +106,8 @@ const App = () => {
     const [hebrewPaletteText, setHebrewPaletteText] = useState('');
     const [hebrewPreviewFont, setHebrewPreviewFont] = useState({ name: 'Times New Roman', family: 'TimesNewRomanPSMT' });
     const [lastHebrewBaseChar, setLastHebrewBaseChar] = useState('א');
+    const [isShifted, setIsShifted] = useState(false);
+
 
     const textInputRef = useRef(null);
 
@@ -343,15 +345,25 @@ const App = () => {
 
     const hebrewCharacters = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ', 'ך', 'ל', 'מ', 'ם', 'נ', 'ן', 'ס', 'ע', 'פ', 'ף', 'צ', 'ץ', 'ק', 'ר', 'ש', 'ת'];
 
-    const hebrewNikud = [
-        { insert: 'ַ', name: 'Patah' }, { insert: 'ָ', name: 'Qamats' },
-        { insert: 'ֶ', name: 'Segol' }, { insert: 'ֵ', name: 'Tsere' },
-        { insert: 'ִ', name: 'Hiriq' }, { insert: 'ֹ', name: 'Holam' },
-        { insert: 'ֻ', name: 'Qubuts' }, { insert: 'ּ', name: 'Dagesh or Shuruk' },
-        { insert: 'ְ', name: 'Shva' }, { insert: 'ֲ', name: 'Hataf Patah' },
-        { insert: 'ֳ', name: 'Hataf Qamats' }, { insert: 'ֱ', name: 'Hataf Segol' },
-        { insert: 'ׂ', name: 'Sin Dot' }, { insert: 'ׁ', name: 'Shin Dot' },
-        { insert: 'ֿ', name: 'Rafe' },
+    const hebrewKeyboardLayout = [
+        [
+            { unshifted: '`', shifted: '~' },
+            { unshifted: '1', shifted: 'ְ', name: 'Shva' },
+            { unshifted: '2', shifted: 'ַ', name: 'Patah' },
+            { unshifted: '3', shifted: 'ָ', name: 'Qamats' },
+            { unshifted: '4', shifted: 'ֶ', name: 'Segol' },
+            { unshifted: '5', shifted: 'ֵ', name: 'Tsere' },
+            { unshifted: '6', shifted: 'ִ', name: 'Hiriq' },
+            { unshifted: '7', shifted: 'ֹ', name: 'Holam' },
+            { unshifted: '8', shifted: 'ּ', name: 'Dagesh' },
+            { unshifted: '9', shifted: 'ֻ', name: 'Qubuts' },
+            { unshifted: '0', shifted: 'ֿ', name: 'Rafe' },
+            { unshifted: '-', shifted: 'ׁ', name: 'Shin Dot' },
+            { unshifted: '=', shifted: 'ׂ', name: 'Sin Dot' },
+        ],
+        ['/', "'", 'ק', 'ר', 'א', 'ט', 'ו', 'ן', 'ם', 'פ', '[', ']'],
+        ['ש', 'ד', 'ג', 'כ', 'ע', 'י', 'ח', 'ל', 'ך', 'ף', ','],
+        ['ז', 'ס', 'ב', 'ה', 'נ', 'מ', 'צ', 'ת', 'ץ', '.']
     ];
 
     const hebrewSupportedFonts = ['Times New Roman', 'Arial'];
@@ -470,10 +482,10 @@ const App = () => {
             {/* --- MODALS --- */}
             {(showCustomerModal || showMessageBox || showGlyphPalette || showAccentPalette || showHebrewPalette || showSuccessModal) && (
                 <div className="fixed inset-0 bg-slate-900 bg-opacity-75 flex items-center justify-center p-4 z-50 transition-opacity animate-fade-in">
-                    <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-lg relative transform transition-all animate-jump-in">
+                    <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-4xl animate-jump-in">
 
                         {showSuccessModal && (
-                            <div className="flex flex-col items-center text-center">
+                            <div className="flex flex-col items-center text-center max-w-lg mx-auto">
                                 <img src="/images/Arch Vector Logo.svg" alt="Arch Engraving Logo" className="h-80 w-80 mb-6" />
                                 <h3 className="text-3xl font-bold text-slate-800 mb-2">Submission Successful!</h3>
                                 <p className="text-lg text-slate-600 mb-8">We Appreciate Your Business!</p>
@@ -488,72 +500,64 @@ const App = () => {
 
                         {showHebrewPalette && (
                             <div className="space-y-4">
-                                <h3 className="text-2xl font-bold text-slate-900">Hebrew Character Palette</h3>
-                                <div className="p-4 bg-slate-50 rounded-lg space-y-4 max-h-[60vh] overflow-y-auto">
-                                    <div className="flex items-center gap-2">
-                                        <label className="block text-sm font-medium text-slate-700">Preview Font:</label>
-                                        <button onClick={() => setHebrewPreviewFont({ name: 'Times New Roman', family: 'TimesNewRomanPSMT' })} className={`px-4 py-2 text-sm rounded-md border-2 ${hebrewPreviewFont.name === 'Times New Roman' ? 'bg-slate-700 text-white border-slate-700' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-100'}`}>Times New Roman</button>
-                                        <button onClick={() => setHebrewPreviewFont({ name: 'Arial', family: 'ArialMT' })} className={`px-4 py-2 text-sm rounded-md border-2 ${hebrewPreviewFont.name === 'Arial' ? 'bg-slate-700 text-white border-slate-700' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-100'}`}>Arial</button>
+                                <h3 className="text-2xl font-bold text-slate-900">Hebrew Keyboard</h3>
+
+                                {/* Preview Text Area */}
+                                <div className="pt-2">
+                                    <div className="flex justify-between items-center mb-2">
+                                        <label className="block text-sm font-medium text-slate-700">Preview</label>
+                                        <button onClick={() => { setHebrewPaletteText(''); setLastHebrewBaseChar('א'); }} className="px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200 text-sm font-semibold">Clear</button>
                                     </div>
-                                    <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800">
-                                        Please note: Full Hebrew character support is optimized for <strong>Times New Roman</strong> and <strong>Arial</strong>. Appearance may vary in other fonts.
-                                    </div>
-                                    <div>
-                                        <h4 className="font-semibold text-lg text-slate-800 mb-2">Base Letters</h4>
-                                        <div className="grid grid-cols-8 lg:grid-cols-10 gap-2">
-                                            {hebrewCharacters.map(char => (
-                                                <button
-                                                    key={char}
-                                                    onClick={() => {
-                                                        setHebrewPaletteText(prev => prev + char);
-                                                        setLastHebrewBaseChar(char);
-                                                    }}
-                                                    className="flex items-center justify-center h-12 w-full bg-white rounded-lg shadow-sm text-2xl text-slate-700 hover:bg-blue-100 hover:text-blue-700 transition-colors"
-                                                    title={`Insert ${char}`}
-                                                    style={{ fontFamily: hebrewPreviewFont.family }}
-                                                >
-                                                    {char}
-                                                </button>
-                                            ))}
+                                    <textarea
+                                        readOnly
+                                        className="w-full p-3 border-2 border-slate-200 rounded-xl shadow-inner bg-slate-50 min-h-[100px] text-2xl cursor-default"
+                                        value={hebrewPaletteText}
+                                        dir="rtl"
+                                        style={{ fontFamily: hebrewPreviewFont.family }}
+                                    />
+                                </div>
+
+                                {/* Virtual Keyboard */}
+                                <div className="p-3 bg-slate-200 rounded-xl space-y-2 select-none">
+                                    {hebrewKeyboardLayout.map((row, rowIndex) => (
+                                        <div key={rowIndex} className="flex justify-center gap-1.5">
+                                            {row.map((key, keyIndex) => {
+                                                const char = typeof key === 'object' ? (isShifted ? key.shifted : key.unshifted) : key;
+                                                return (
+                                                    <button
+                                                        key={keyIndex}
+                                                        onClick={() => {
+                                                            setHebrewPaletteText(prev => prev + char);
+                                                            if (!isShifted && hebrewCharacters.includes(char)) {
+                                                                setLastHebrewBaseChar(char);
+                                                            }
+                                                            setIsShifted(false);
+                                                        }}
+                                                        className="h-12 flex-1 flex items-center justify-center rounded-lg bg-white hover:bg-blue-100 text-slate-800 text-xl font-semibold shadow-sm transition-colors"
+                                                    >
+                                                        {char}
+                                                    </button>
+                                                );
+                                            })}
                                         </div>
-                                    </div>
-                                    <div>
-                                        <h4 className="font-semibold text-lg text-slate-800 mb-2">Vowels & Symbols (Nikud)</h4>
-                                        <div className="grid grid-cols-8 lg:grid-cols-10 gap-2">
-                                            {hebrewNikud.map(nikud => (
-                                                <button
-                                                    key={nikud.name}
-                                                    onClick={() => {
-                                                        setHebrewPaletteText(prev => prev + nikud.insert);
-                                                    }}
-                                                    className="flex items-center justify-center h-12 w-full bg-white rounded-lg shadow-sm text-2xl text-slate-700 hover:bg-blue-100 hover:text-blue-700 transition-colors"
-                                                    title={nikud.name}
-                                                    style={{ fontFamily: hebrewPreviewFont.family }}
-                                                >
-                                                    {`${lastHebrewBaseChar}${nikud.insert}`}
-                                                </button>
-                                            ))}
-                                        </div>
-                                    </div>
-                                    <div className="pt-4">
-                                        <div className="flex justify-between items-center mb-2">
-                                            <label className="block text-sm font-medium text-slate-700">Preview</label>
-                                            <div className="flex items-center gap-2">
-                                                <button onClick={handleHebrewBackspace} className="px-3 py-1 bg-slate-200 text-slate-700 rounded-md hover:bg-slate-300 text-sm font-semibold">Backspace</button>
-                                                <button onClick={() => { setHebrewPaletteText(''); setLastHebrewBaseChar('א'); }} className="px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200 text-sm font-semibold">Clear</button>
-                                            </div>
-                                        </div>
-                                        <textarea
-                                            readOnly
-                                            className="w-full p-3 border-2 border-slate-200 rounded-xl shadow-inner bg-slate-50 min-h-[100px] text-2xl cursor-default"
-                                            value={hebrewPaletteText}
-                                            dir="rtl"
-                                            style={{ fontFamily: hebrewPreviewFont.family }}
-                                        />
+                                    ))}
+                                    {/* Special Keys Row */}
+                                    <div className="flex justify-center gap-1.5">
+                                        <button onClick={() => setIsShifted(prev => !prev)} className={`h-12 w-24 flex items-center justify-center rounded-lg text-slate-800 text-lg font-semibold shadow-sm transition-colors ${isShifted ? 'bg-blue-500 text-white' : 'bg-white hover:bg-blue-100'}`}>
+                                            Shift
+                                        </button>
+                                        <button onClick={() => setHebrewPaletteText(prev => prev + ' ')} className="h-12 flex-1 flex items-center justify-center rounded-lg bg-white hover:bg-blue-100 text-slate-800 text-xl font-semibold shadow-sm transition-colors">
+                                            Space
+                                        </button>
+                                        <button onClick={handleHebrewBackspace} className="h-12 w-24 flex items-center justify-center rounded-lg bg-white hover:bg-blue-100 text-slate-800 text-lg font-semibold shadow-sm transition-colors">
+                                            Backspace
+                                        </button>
                                     </div>
                                 </div>
+
+                                {/* Action Buttons */}
                                 <div className="flex justify-between items-center pt-4">
-                                    <button type="button" className="px-6 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base flex-shrink-0" onClick={() => { setShowHebrewPalette(false); setHebrewPaletteText(''); setLastHebrewBaseChar('א'); }}>Close</button>
+                                    <button type="button" className="px-6 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base flex-shrink-0" onClick={() => { setShowHebrewPalette(false); setIsShifted(false); setHebrewPaletteText(''); setLastHebrewBaseChar('א'); }}>Close</button>
                                     <button type="button" className="px-8 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-bold transition-colors shadow-sm text-base flex-shrink-0" onClick={handleInsertToMain}>Insert Text</button>
                                 </div>
                             </div>
