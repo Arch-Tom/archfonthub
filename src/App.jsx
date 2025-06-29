@@ -102,6 +102,7 @@ const App = () => {
     const [selectedFonts, setSelectedFonts] = useState([]);
     const [customText, setCustomText] = useState('');
     const [fontSize, setFontSize] = useState(36);
+    const [customerNotes, setCustomerNotes] = useState('');
     const [message, setMessage] = useState('');
     const [showMessageBox, setShowMessageBox] = useState(false);
     const [showCustomerModal, setShowCustomerModal] = useState(false);
@@ -233,7 +234,7 @@ const App = () => {
 
     const generateSvgContent = () => {
         if (selectedFonts.length === 0 || customText.trim() === '') {
-            showMessage('Please select at least one font and enter some text to save an SVG.');
+            showMessage('Please select at least one font and enter some text to submit your selection.');
             return null;
         }
         const lines = customText.split('\n').filter(line => line.trim() !== '');
@@ -266,6 +267,19 @@ const App = () => {
                 y += lineHeight * 0.75;
             }
         });
+
+        if (customerNotes.trim() !== '') {
+            y += lineHeight; // Add some space before the notes section
+            svgTextElements += `<text x="${padding}" y="${y}" font-family="Arial" font-size="${labelFontSize}" fill="#6b7280" font-weight="600">Customer Notes</text>\n`;
+            y += lineHeight * 0.5;
+
+            const noteLines = customerNotes.split('\n').filter(line => line.trim() !== '');
+            noteLines.forEach(noteLine => {
+                const sanitizedNoteLine = noteLine.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                y += labelFontSize * 1.4; // Use a smaller line height for notes
+                svgTextElements += `<text x="${padding}" y="${y}" font-family="Arial" font-size="${labelFontSize}" fill="#181717">${sanitizedNoteLine}</text>\n`;
+            });
+        }
 
         const svgWidth = 800;
         const svgHeight = y + padding;
@@ -399,7 +413,7 @@ const App = () => {
                         {/* Font Selection Section */}
                         <section className="bg-white rounded-2xl p-8 border border-slate-100 shadow-[0_10px_25px_-5px_rgba(50,75,106,0.2),_0_8px_10px_-6px_rgba(59,130,246,0.2)]">
                             <h2 className="text-3xl font-bold text-slate-900 mb-2 tracking-normal" style={{ fontFamily: 'Alumni Sans Regular' }}>Font Selection</h2>
-                            <p className="text-slate-500 mb-6">Here's some great fonts to get your project started! Select up to 3 fonts you would like to preview. You may change your selection here at any time so try as many as you'd like before submitting your selection!</p>
+                            <p className="text-slate-500 mb-6">Here's some great fonts to get your project started! Select up to 3 fonts you would like to preview. You may change your fonts here at any time so try as many as you'd like before submitting your selection!</p>
                             <div className="space-y-6">
                                 {Object.entries(fontLibrary).map(([category, fonts]) => (
                                     <div key={category}>
@@ -435,9 +449,9 @@ const App = () => {
                             <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center mb-6 gap-4">
                                 <div>
                                     <h2 className="text-3xl font-bold text-slate-900 tracking-normal" style={{ fontFamily: 'Alumni Sans Regular' }}>Custom Text</h2>
-                                    <p className="text-slate-500 mt-1">Type a sample of the text you would like to preview. You'll see this displayed in your font choices below.
+                                    <p className="text-slate-500 mt-1">Type a sample of your order text to preview. You'll see this displayed in your font choices below.
                                         <br />
-                                        No need to type out all of your order wording. Our designers will typeset your text in the fonts you select.</p>
+                                        Be sure to test out any special characters your order may have!</p>
                                 </div>
                                 <div className="flex flex-wrap items-center justify-center sm:justify-end gap-2">
                                     <button onClick={() => setShowHebrewPalette(true)} className="px-5 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base">Hebrew</button>
@@ -510,6 +524,22 @@ const App = () => {
                                 )}
                             </div>
                         </section>
+
+                        {/* Customer Notes Section */}
+                        <section className="bg-white rounded-2xl p-8 border border-slate-100 shadow-[0_10px_25px_-5px_rgba(50,75,106,0.2),_0_8px_10px_-6px_rgba(59,130,246,0.2)]">
+                            <h2 className="text-3xl font-bold text-slate-900 tracking-normal" style={{ fontFamily: 'Alumni Sans Regular' }}>Customer Notes</h2>
+                            <p className="text-slate-500 mt-1 mb-6">
+                                Use this space to provide any specific instructions for your font selection. For example: "Use Times New Roman for the award information and Benguiat for the name."
+                            </p>
+                            <textarea
+                                className="w-full p-5 border-2 border-slate-200 rounded-xl shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 min-h-[120px] text-xl"
+                                value={customerNotes}
+                                onChange={(e) => setCustomerNotes(e.target.value)}
+                                placeholder="Enter any notes for the engraver here..."
+                                dir="auto"
+                            />
+                        </section>
+
                     </div>
 
                     <div className="mt-12">
@@ -527,7 +557,7 @@ const App = () => {
 
                         {showSuccessModal && (
                             <div className="flex flex-col items-center text-center max-w-lg mx-auto">
-                                <img src="/images/Arch Vector Logo.svg" alt="Arch Engraving Logo" className="h-80 w-80 mb-6" />
+                                <img src="/images/Arch Vector Logo.svg" alt="Arch Engraving Logo" className="h-95 w-95 mb-6" />
                                 <h3 className="text-3xl font-bold text-slate-800 mb-2">Submission Successful!</h3>
                                 <p className="text-lg text-slate-600 mb-8">We Appreciate Your Business!</p>
                                 <button
