@@ -25,7 +25,7 @@ const App = () => {
     const DEFAULT_TEXT_PLACEHOLDER = 'Type your text here...';
 
     const scriptFontsToAdjust = [
-        'Alumni Sans', 'Amatic SC', 'Amazone', 'BlackChancery', 'Clicker Script',
+        'Alumni Sans', 'Amatic', 'Amazone', 'Black Chancery', 'Clicker Script',
         'Collegiate', 'Concerto Pro', 'Courgette', 'Cowboy Rodeo',
         'Cutive Mono', 'Freebooter Script', 'French Script', 'Great Vibes',
         'Honey Script', 'I Love Glitter', 'Machine BT', 'Murray Hill',
@@ -65,7 +65,7 @@ const App = () => {
         'Script & Display': [
             { name: 'Amatic SC', styles: { regular: 'Amatic SC Regular', bold: 'Amatic SC Bold' } },
             { name: 'Amazone', styles: { regular: 'Amazone BT' } },
-            { name: 'BlackChancery', styles: { regular: 'BlackChancery' } },
+            { name: 'Black Chancery', styles: { regular: 'BlackChancery' } },
             { name: 'Clicker Script', styles: { regular: 'Clicker Script' } },
             { name: 'Collegiate', styles: { black: 'CollegiateBlackFLF', outline: 'CollegiateOutlineFLF' } },
             { name: 'Concerto Pro', styles: { regular: 'ConcertoPro-Regular' } },
