@@ -24,12 +24,12 @@ const App = () => {
     const WORKER_URL = "https://customerfontselection-worker.tom-4a9.workers.dev";
     const DEFAULT_TEXT_PLACEHOLDER = 'Type your text here...';
 
-    // Updated to include all fonts from the new "Script" and "Display" categories
     const scriptFontsToAdjust = [
-        'Amatic SC', 'Amazone', 'BlackChancery', 'Clicker Script', 'Concerto Pro', 'Courgette',
-        'Freebooter Script', 'French Script', 'Great Vibes', 'Honey Script', 'I Love Glitter',
-        'ITC Zapf Chancery', 'Murray Hill', 'Collegiate', 'Cowboy Rodeo', 'Machine BT',
-        'Old English', 'Planscribe', 'Alumni Sans', 'Rajdhani', 'Cutive Mono'
+        'Alumni Sans', 'Amatic SC', 'Amazone', 'BlackChancery', 'Clicker Script',
+        'Collegiate', 'Concerto Pro', 'Courgette', 'Cowboy Rodeo',
+        'Cutive Mono', 'Freebooter Script', 'French Script', 'Great Vibes',
+        'Honey Script', 'I Love Glitter', 'Machine BT', 'Murray Hill',
+        'Old English', 'Planscribe', 'Rajdhani', 'ITC Zapf Chancery'
     ];
 
     const fontLibrary = {
@@ -374,7 +374,7 @@ const App = () => {
 
     return (
         <div className="flex flex-col lg:flex-row min-h-screen bg-slate-100 font-sans">
-            <aside className="bg-gradient-to-b from-slate-800 to-slate-900 text-white w-full lg:w-[400px] p-4 flex-shrink-0 flex flex-row lg:flex-col items-center justify-start shadow-xl lg:rounded-r-3xl">
+            <aside className="bg-[rgb(50,75,106)] text-white w-full lg:w-[400px] p-4 flex-shrink-0 flex flex-row lg:flex-col items-center justify-start shadow-xl lg:rounded-r-3xl">
                 <div className="flex flex-row lg:flex-col items-center justify-center gap-4">
                     <div className="flex-shrink-0">
                         <img src="/images/Arch Vector Logo White.svg" alt="Arch Font Hub Logo" className="object-contain drop-shadow-lg h-16 w-16 lg:h-[400px] lg:w-[400px]" />
