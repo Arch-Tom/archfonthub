@@ -366,7 +366,6 @@ const App = () => {
         ['ז', 'ס', 'ב', 'ה', 'נ', 'מ', 'צ', 'ת', 'ץ', '.']
     ];
 
-    const hebrewSupportedFonts = ['Times New Roman', 'Arial'];
     const hebrewRegex = /[\u0590-\u05FF]/;
 
     return (
@@ -438,13 +437,27 @@ const App = () => {
                                 </div>
                             </div>
                             <div className="bg-gradient-to-b from-slate-50 to-slate-200 p-6 rounded-xl min-h-[150px] space-y-10 border border-slate-100">
+
+                                {hebrewRegex.test(customText) && (
+                                    <div className="p-4 mb-6 bg-amber-50 border-l-4 border-amber-400 rounded-r-lg">
+                                        <div className="flex">
+                                            <div className="flex-shrink-0">
+                                                <svg className="h-5 w-5 text-amber-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                    <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 3.001-1.742 3.001H4.42c-1.53 0-2.493-1.667-1.743-3.001l5.58-9.92zM10 13a1 1 0 110-2 1 1 0 010 2zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                                </svg>
+                                            </div>
+                                            <div className="ml-3">
+                                                <p className="text-sm text-amber-800 font-medium">
+                                                    Please check each preview carefully, as Hebrew character support can vary between fonts.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
                                 {selectedFonts.length > 0 && customText.trim() !== '' ? (
                                     selectedFonts.map((font) => {
                                         const activeFontFamily = font.styles[font.activeStyle];
-                                        const containsHebrew = hebrewRegex.test(customText);
-                                        const isHebrewBlocked = !hebrewSupportedFonts.includes(font.name) && containsHebrew;
-                                        const displayText = isHebrewBlocked ? customText.replace(/[\u0590-\u05FF]/g, '') : customText;
-
                                         return (
                                             <div key={`preview-${font.name}`} className="relative flex flex-col items-start gap-3">
                                                 <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-2">
@@ -455,12 +468,7 @@ const App = () => {
                                                         ))}
                                                     </div>
                                                 </div>
-                                                <p className="text-slate-800 break-words w-full" style={{ fontFamily: activeFontFamily, fontSize: `${fontSize}px`, lineHeight: 1.4 }} dir="auto">{displayText}</p>
-                                                {isHebrewBlocked && (
-                                                    <p className="text-sm text-red-600 mt-2 italic" style={{ fontFamily: 'Arial' }}>
-                                                        Note: Hebrew characters are only displayed in Times New Roman and Arial.
-                                                    </p>
-                                                )}
+                                                <p className="text-slate-800 break-words w-full" style={{ fontFamily: activeFontFamily, fontSize: `${fontSize}px`, lineHeight: 1.4 }} dir="auto">{customText}</p>
                                             </div>
                                         )
                                     })
