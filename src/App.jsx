@@ -116,6 +116,7 @@ const App = () => {
     const [pendingSvgContent, setPendingSvgContent] = useState(null);
     const [isDataPrefilled, setIsDataPrefilled] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isSubmissionComplete, setIsSubmissionComplete] = useState(false);
 
     // State for the Hebrew palette
     const [hebrewPaletteText, setHebrewPaletteText] = useState('');
@@ -341,6 +342,7 @@ const App = () => {
                 throw new Error(await response.text());
             }
             setShowSuccessModal(true);
+            setIsSubmissionComplete(true); // Set submission as complete
         } catch (error) {
             console.error('Upload error:', error);
             showMessage(`Error uploading SVG: ${error.message}`, 6000);
@@ -407,7 +409,19 @@ const App = () => {
                 </div>
             </aside>
 
-            <main className="flex-1 p-4 sm:p-8 lg:p-12">
+            <main className="flex-1 p-4 sm:p-8 lg:p-12 relative">
+                {isSubmissionComplete && (
+                    <div className="absolute inset-0 bg-slate-100 bg-opacity-95 flex items-center justify-center z-30 rounded-2xl">
+                        <div className="text-center p-8">
+                            <h2 className="text-4xl font-bold text-slate-700" style={{ fontFamily: 'Alumni Sans Regular' }}>
+                                Submission Complete
+                            </h2>
+                            <p className="text-xl text-slate-600 mt-4">
+                                Thank you for your submission! You may now close this window.
+                            </p>
+                        </div>
+                    </div>
+                )}
                 <div className="max-w-7xl mx-auto">
                     <div className="space-y-10">
                         {/* Font Selection Section */}
@@ -543,8 +557,8 @@ const App = () => {
                     </div>
 
                     <div className="mt-12">
-                        <button className="w-full bg-[rgb(50,75,106)] text-white font-bold py-6 px-8 rounded-2xl shadow-2xl hover:shadow-[0_0_15px_rgb(50,75,106)] hover:bg-[rgb(40,65,96)] transition-all duration-200 transform hover:scale-105 text-2xl tracking-wide disabled:opacity-75 disabled:cursor-not-allowed" onClick={handleSubmitClick} disabled={isSubmitting}>
-                            {isSubmitting ? 'Submitting...' : 'Submit Fonts to Arch Engraving'}
+                        <button className="w-full bg-[rgb(50,75,106)] text-white font-bold py-6 px-8 rounded-2xl shadow-2xl hover:shadow-[0_0_15px_rgb(50,75,106)] hover:bg-[rgb(40,65,96)] transition-all duration-200 transform hover:scale-105 text-2xl tracking-wide disabled:opacity-75 disabled:cursor-not-allowed" onClick={handleSubmitClick} disabled={isSubmitting || isSubmissionComplete}>
+                            {isSubmitting ? 'Submitting...' : isSubmissionComplete ? 'Submission Sent!' : 'Submit Fonts to Arch Engraving'}
                         </button>
                     </div>
                 </div>
