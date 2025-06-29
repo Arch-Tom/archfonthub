@@ -24,7 +24,6 @@ const App = () => {
     const WORKER_URL = "https://customerfontselection-worker.tom-4a9.workers.dev";
     const DEFAULT_TEXT_PLACEHOLDER = 'Type your text here...';
 
-    // Corrected to match the display fonts from your definitive list
     const scriptFontsToAdjust = [
         'Alumni Sans', 'Amatic SC', 'Amazone', 'BlackChancery', 'Clicker Script',
         'Collegiate', 'Concerto Pro', 'Courgette', 'Cowboy Rodeo',
@@ -33,7 +32,6 @@ const App = () => {
         'Old English', 'Planscribe', 'Rajdhani', 'ITC Zapf Chancery'
     ];
 
-    // Rebuilt from scratch based on your definitive list
     const fontLibrary = {
         'Sans-serif': [
             {
@@ -65,9 +63,9 @@ const App = () => {
             { name: 'Times New Roman', styles: { regular: 'Times New Roman', bold: 'Times New Roman Bold', italic: 'Times New Roman Italic', boldItalic: 'Times New Roman Bold Italic' } },
         ],
         'Script & Display': [
-            { name: 'Amatic SC', styles: { regular: 'Amatic SC Regular', bold: 'Amatic SC Bold' } },
+            { name: 'Amatic', styles: { regular: 'Amatic SC Regular', bold: 'Amatic SC Bold' } },
             { name: 'Amazone', styles: { regular: 'Amazone BT' } },
-            { name: 'BlackChancery', styles: { regular: 'BlackChancery' } },
+            { name: 'Black Chancery', styles: { regular: 'BlackChancery' } },
             { name: 'Clicker Script', styles: { regular: 'Clicker Script' } },
             { name: 'Collegiate', styles: { black: 'CollegiateBlackFLF', outline: 'CollegiateOutlineFLF' } },
             { name: 'Concerto Pro', styles: { regular: 'ConcertoPro-Regular' } },
@@ -85,6 +83,20 @@ const App = () => {
             { name: 'Planscribe', styles: { regular: 'Planscribe NF W01 Regular' } },
         ],
     };
+
+    // Defines the logical order for font style buttons
+    const styleSortOrder = [
+        'thin', 'thinItalic',
+        'extralight', 'extralightItalic',
+        'light', 'lightItalic',
+        'regular', 'italic', 'book', 'bookItalic', 'roman',
+        'medium', 'mediumItalic',
+        'semibold', 'demi', 'semiboldItalic',
+        'bold', 'boldItalic',
+        'extrabold', 'extraboldItalic',
+        'black', 'blackItalic',
+        'outline', 'condensed', 'condensedBold', 'condensedItalic', 'condensedBoldItalic'
+    ];
 
     const [selectedFonts, setSelectedFonts] = useState([]);
     const [customText, setCustomText] = useState('');
@@ -334,16 +346,6 @@ const App = () => {
         handleFinalSubmit(pendingSvgContent);
     };
 
-    const glyphs = ['©', '®', '™', '&', '#', '+', '–', '—', '…', '•', '°', '·', '♥', '♡', '♦', '♢', '♣', '♧', '♠', '♤', '★', '☆', '♪', '♫', '←', '→', '↑', '↓', '∞', '†', '✡\uFE0E', '✞', '✠', '±', '½', '¼', 'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ', 'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ρ', 'Σ', 'Τ', 'Υ', 'Φ', 'Χ', 'Ψ', 'Ω'];
-
-    const accentedCharacters = {
-        'A': ['À', 'à', 'Á', 'á', 'Â', 'â', 'Ã', 'ã', 'Ä', 'ä', 'Å', 'å', 'Æ', 'æ'], 'C': ['Ç', 'ç'],
-        'E': ['È', 'è', 'É', 'é', 'Ê', 'ê', 'Ë', 'ë'], 'I': ['Ì', 'ì', 'Í', 'í', 'Î', 'î', 'Ï', 'ï'],
-        'N': ['Ñ', 'ñ'], 'O': ['Ò', 'ò', 'Ó', 'ó', 'Ô', 'ô', 'Õ', 'õ', 'Ö', 'ö', 'Ø', 'ø', 'Œ', 'œ'],
-        'S': ['Š', 'š', 'ß'], 'U': ['Ù', 'ù', 'Ú', 'ú', 'Û', 'û', 'Ü', 'ü'],
-        'Y': ['Ý', 'ý', 'Ÿ', 'ÿ'], 'Z': ['Ž', 'ž']
-    };
-
     const hebrewCharacters = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ', 'ך', 'ל', 'מ', 'ם', 'נ', 'ן', 'ס', 'ע', 'פ', 'ף', 'צ', 'ץ', 'ק', 'ר', 'ש', 'ת'];
 
     const hebrewKeyboardLayout = [
@@ -385,7 +387,7 @@ const App = () => {
                     <div className="space-y-10">
                         {/* Font Selection Section */}
                         <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
-                            <h2 className="text-3xl font-bold text-slate-900 mb-2 tracking-normal" style={{ fontFamily: 'Bebas Neue Regular' }}>Font Selection</h2>
+                            <h2 className="text-3xl font-bold text-slate-900 mb-2 tracking-normal" style={{ fontFamily: 'Alumni Sans Regular' }}>Font Selection</h2>
                             <p className="text-slate-500 mb-6">Here's some great fonts to get your project started! Select up to 3 fonts you would like to preview. You may change your selection here at any time so try as many as you'd like before submitting your selection!</p>
                             <div className="space-y-6">
                                 {Object.entries(fontLibrary).map(([category, fonts]) => (
@@ -397,7 +399,7 @@ const App = () => {
                                                 let fontSizeClass = isScriptFont ? 'text-2xl' : 'text-lg';
                                                 if (font.name === 'Concerto Pro') fontSizeClass = 'text-4xl';
                                                 return (
-                                                    <button key={font.name} onClick={() => handleFontSelect(font)} className={`px-5 py-3 rounded-xl font-semibold border-2 transition-all duration-150 transform hover:scale-105 focus:outline-none ${fontSizeClass} ${selectedFonts.some(f => f.name === font.name) ? 'bg-blue-600 text-white border-blue-600 shadow-md' : 'bg-white text-blue-900 border-blue-500 hover:bg-blue-50'}`} style={{ fontFamily: font.styles[Object.keys(font.styles)[0]] }}>{font.name}</button>
+                                                    <button key={font.name} onClick={() => handleFontSelect(font)} className={`px-5 py-3 rounded-xl font-semibold border-2 transition-all duration-150 transform hover:scale-105 focus:outline-none ${fontSizeClass} ${selectedFonts.some(f => f.name === font.name) ? 'bg-blue-600 text-white border-blue-600 shadow-md' : 'bg-white text-blue-900 border-blue-500 hover:bg-blue-50'}`} style={{ fontFamily: 'Alumni Sans Regular' }}>{font.name}</button>
                                                 )
                                             })}
                                         </div>
@@ -410,7 +412,7 @@ const App = () => {
                         <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
                             <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center mb-6 gap-4">
                                 <div>
-                                    <h2 className="text-3xl font-bold text-slate-900 tracking-normal" style={{ fontFamily: 'Bebas Neue Regular' }}>Custom Text</h2>
+                                    <h2 className="text-3xl font-bold text-slate-900 tracking-normal" style={{ fontFamily: 'Alumni Sans Regular' }}>Custom Text</h2>
                                     <p className="text-slate-500 mt-1">Type a sample of the text you would like to preview. You'll see this displayed in your font choices below.
                                         <br />
                                         No need to type out all of your order wording. Our designers will typeset your text in the fonts you select.</p>
@@ -428,7 +430,7 @@ const App = () => {
                         <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
                             <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center mb-6 gap-4">
                                 <div>
-                                    <h2 className="text-3xl font-bold text-slate-900 tracking-normal" style={{ fontFamily: 'Bebas Neue Regular' }}>Live Preview</h2>
+                                    <h2 className="text-3xl font-bold text-slate-900 tracking-normal" style={{ fontFamily: 'Alumni Sans Regular' }}>Live Preview</h2>
                                     <p className="text-slate-500 mt-1">Here's your text preview. When you're happy with your selection hit the button below! If you don't like a font feel free to deselect it above and try a new one out!</p>
                                 </div>
                                 <div className="flex items-center gap-3">
@@ -464,9 +466,17 @@ const App = () => {
                                                 <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-2">
                                                     <span className="bg-blue-600 text-white px-4 py-1 rounded-full text-sm font-bold shadow-sm z-10" style={{ fontFamily: 'Arial' }}>{font.name}</span>
                                                     <div className="flex flex-wrap gap-1">
-                                                        {Object.keys(font.styles).map(styleKey => (
-                                                            <button key={styleKey} onClick={() => handleStyleChange(font.name, styleKey)} className={`px-4 py-2 text-sm rounded-md border-2 transition-colors ${font.activeStyle === styleKey ? 'bg-slate-700 text-white border-slate-700' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-100'}`}>{styleKey.charAt(0).toUpperCase() + styleKey.slice(1)}</button>
-                                                        ))}
+                                                        {Object.keys(font.styles)
+                                                            .sort((a, b) => {
+                                                                const indexA = styleSortOrder.indexOf(a.toLowerCase());
+                                                                const indexB = styleSortOrder.indexOf(b.toLowerCase());
+                                                                if (indexA === -1) return 1;
+                                                                if (indexB === -1) return -1;
+                                                                return indexA - indexB;
+                                                            })
+                                                            .map(styleKey => (
+                                                                <button key={styleKey} onClick={() => handleStyleChange(font.name, styleKey)} className={`px-4 py-2 text-sm rounded-md border-2 transition-colors ${font.activeStyle === styleKey ? 'bg-slate-700 text-white border-slate-700' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-100'}`}>{styleKey.charAt(0).toUpperCase() + styleKey.slice(1)}</button>
+                                                            ))}
                                                     </div>
                                                 </div>
                                                 <p className="text-slate-800 break-words w-full" style={{ fontFamily: activeFontFamily, fontSize: `${fontSize}px`, lineHeight: 1.4 }} dir="auto">{customText}</p>
