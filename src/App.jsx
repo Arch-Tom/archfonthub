@@ -398,7 +398,18 @@ const App = () => {
                                                 let fontSizeClass = isScriptFont ? 'text-2xl' : 'text-lg';
                                                 if (font.name === 'Concerto Pro') fontSizeClass = 'text-4xl';
                                                 return (
-                                                    <button key={font.name} onClick={() => handleFontSelect(font)} className={`px-5 py-3 rounded-xl font-semibold border-2 transition-all duration-150 transform hover:scale-105 focus:outline-none ${fontSizeClass} ${selectedFonts.some(f => f.name === font.name) ? 'bg-blue-600 text-white border-blue-600 shadow-md' : 'bg-white text-blue-900 border-blue-500 hover:bg-blue-50'}`} style={{ fontFamily: font.styles[Object.keys(font.styles)[0]] }}>{font.name}</button>
+                                                    <button
+                                                        key={font.name}
+                                                        onClick={() => handleFontSelect(font)}
+                                                        className={`px-5 py-3 rounded-xl font-semibold border-2 transition-all duration-150 transform hover:scale-105 focus:outline-none ${fontSizeClass} ${selectedFonts.some(f => f.name === font.name) ? 'bg-blue-600 text-white border-blue-600 shadow-md' : 'bg-white text-blue-900 border-blue-500 hover:bg-blue-50'}`}
+                                                        style={{
+                                                            fontFamily: font.name === 'Alumni Sans'
+                                                                ? 'Alumni Sans Regular'
+                                                                : font.styles[Object.keys(font.styles)[0]]
+                                                        }}
+                                                    >
+                                                        {font.name}
+                                                    </button>
                                                 )
                                             })}
                                         </div>
