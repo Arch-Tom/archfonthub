@@ -24,64 +24,65 @@ const App = () => {
     const WORKER_URL = "https://customerfontselection-worker.tom-4a9.workers.dev";
     const DEFAULT_TEXT_PLACEHOLDER = 'Type your text here...';
 
+    // Corrected to match the display fonts from your definitive list
     const scriptFontsToAdjust = [
-        'Amazone', 'Angelface', 'Clicker Script', 'Concerto Pro', 'Courgette',
-        'Cowboy Rodeo', 'Freebooter Script', 'French Script', 'Great Vibes',
-        'Honey Script', 'I Love Glitter', 'Lisbon Script', 'Murray Hill', 'Machine BT'
+        'Alumni Sans', 'Amatic SC', 'Amazone', 'BlackChancery', 'Clicker Script',
+        'Collegiate', 'Concerto Pro', 'Courgette', 'Cowboy Rodeo',
+        'Cutive Mono', 'Freebooter Script', 'French Script', 'Great Vibes',
+        'Honey Script', 'I Love Glitter', 'Machine BT', 'Murray Hill',
+        'Old English', 'Planscribe', 'Rajdhani', 'ITC Zapf Chancery'
     ];
 
+    // Rebuilt from scratch based on your definitive list
     const fontLibrary = {
         'Sans-serif': [
-            { name: 'Arial', styles: { regular: 'ArialMT', bold: 'Arial-BoldMT', italic: 'Arial-ItalicMT', boldItalic: 'Arial-BoldItalicMT' } },
-            { name: 'Bebas Neue', styles: { regular: 'BebasNeue-Regular', bold: 'BebasNeue-Bold' } },
-            { name: 'Berlin Sans', styles: { regular: 'BerlinSansFB-Reg', bold: 'BerlinSansFB-Bold' } },
-            { name: 'Calibri', styles: { regular: 'Calibri', bold: 'Calibri-Bold', italic: 'Calibri-Italic' } },
-            { name: 'Century Gothic', styles: { regular: 'CenturyGothicPaneuropean', bold: 'CenturyGothicPaneuropean-Bold', boldItalic: 'CenturyGothicPaneuropean-BoldItalic' } },
-            { name: 'Graphik', styles: { regular: 'Graphik-Regular', regularItalic: 'Graphik-RegularItalic', medium: 'Graphik-Medium', mediumItalic: 'Graphik-MediumItalic', semibold: 'Graphik-Semibold', thin: 'Graphik-Thin', thinItalic: 'Graphik-ThinItalic' } },
-            { name: 'Zapf Humanist', styles: { demi: 'ZapfHumanist601BT-Demi' } },
-        ],
-        'Serif': [
-            { name: 'Benguiat', styles: { regular: 'Benguiat', bold: 'BenguiatITCbyBT-Bold', italic: 'BenguiatITCbyBT-BookItalic' } },
-            { name: 'Bookman', styles: { bold: 'BookmanOldStyle-Bold', boldItalic: 'BookmanOldStyle-BoldItalic', italic: 'BookmanOldStyle-Italic' } },
-            { name: 'Century Schoolbook', styles: { regular: 'CenturySchoolbook', bold: 'CenturySchoolbook-Bold', boldItalic: 'CenturySchoolbook-BoldItalic' } },
-            { name: 'Century', styles: { roman: 'Century725BT-Roman', italic: 'Century725BT-Italic', bold: 'Century725BT-Bold', black: 'Century725BT-Black', condensed: 'Century725BT-RomanCondensed' } },
-            { name: 'Copperplate', styles: { regular: 'CopperplateGothicBT-Roman' } },
             {
-                name: 'DejaVu Serif', styles: {
-                    regular: 'DejaVuSerif',
-                    bold: 'DejaVuSerif-Bold',
-                    italic: 'DejaVuSerif-Italic',
-                    boldItalic: 'DejaVuSerif-BoldItalic',
-                    condensed: 'DejaVuSerifCondensed',
-                    condensedBold: 'DejaVuSerifCondensed-Bold',
-                    condensedItalic: 'DejaVuSerifCondensed-Italic',
-                    condensedBoldItalic: 'DejaVuSerifCondensed-BoldItalic'
+                name: 'Alumni Sans', styles: {
+                    black: 'Alumni Sans Black', bold: 'Alumni Sans Bold', extrabold: 'Alumni Sans ExtraBold',
+                    italic: 'Alumni Sans Italic', light: 'Alumni Sans Light', lightItalic: 'Alumni Sans Light Italic',
+                    medium: 'Alumni Sans Medium', mediumItalic: 'Alumni Sans Medium Italic', regular: 'Alumni Sans Regular',
+                    semibold: 'Alumni Sans SemiBold', semiboldItalic: 'Alumni Sans SemiBold Italic'
                 }
             },
-            { name: 'Garamond', styles: { v3: 'Garamond3LTStd', v3_bold: 'Garamond3LTStd-Bold', v3_italic: 'Garamond3LTStd-Italic', v3_boldItalic: 'Garamond3LTStd-BoldItalic' } },
-            { name: 'Times New Roman', styles: { regular: 'TimesNewRomanPSMT', bold: 'TimesNewRomanPS-BoldMT', italic: 'TimesNewRomanPS-ItalicMT', boldItalic: 'TimesNewRomanPS-BoldItalicMT' } },
+            { name: 'Arial', styles: { regular: 'Arial', bold: 'Arial Bold', italic: 'Arial Italic', boldItalic: 'Arial Bold Italic' } },
+            { name: 'Bebas Neue', styles: { regular: 'Bebas Neue Regular', bold: 'Bebas Neue Bold' } },
+            { name: 'Berlin Sans', styles: { regular: 'Berlin Sans FB', bold: 'Berlin Sans FB Bold' } },
+            { name: 'Calibri', styles: { regular: 'Calibri', bold: 'Calibri Bold', italic: 'Calibri Italic' } },
+            { name: 'Century Gothic', styles: { regular: 'Century Gothic Paneuropean', bold: 'Century Gothic Paneuropean Bold', boldItalic: 'Century Gothic Paneuropean Bold Italic' } },
+            { name: 'Graphik', styles: { regular: 'Graphik', medium: 'Graphik Medium', semibold: 'Graphik Semibold', thin: 'Graphik Thin', regularItalic: 'Graphik Regular Italic', mediumItalic: 'Graphik Medium Italic', thinItalic: 'Graphik Thin Italic' } },
+            { name: 'Rajdhani', styles: { regular: 'Rajdhani Regular', light: 'Rajdhani Light', medium: 'Rajdhani Medium', semibold: 'Rajdhani SemiBold', bold: 'Rajdhani Bold' } },
+            { name: 'Zapf Humanist', styles: { demi: 'Zapf Humanist 601 Demi BT' } },
+        ],
+        'Serif': [
+            { name: 'Benguiat', styles: { regular: 'Benguiat', bold: 'Benguiat Bold BT', bookItalic: 'Benguiat Book Italic BT' } },
+            { name: 'Bookman Old Style', styles: { bold: 'Bookman Old Style Bold', italic: 'Bookman Old Style Italic', boldItalic: 'Bookman Old Style Bold Italic' } },
+            { name: 'Century Schoolbook', styles: { regular: 'Century Schoolbook', bold: 'Century Schoolbook Bold', boldItalic: 'Century Schoolbook Bold Italic' } },
+            { name: 'Copperplate', styles: { regular: 'CopprplGoth BT Roman' } },
+            { name: 'Cutive Mono', styles: { regular: 'Cutive Mono Regular' } },
+            { name: 'DejaVu Serif', styles: { regular: 'DejaVu Serif', bold: 'DejaVu Serif Bold', italic: 'DejaVu Serif Italic', boldItalic: 'DejaVu Serif Bold Italic', condensed: 'DejaVu Serif Condensed', condensedBold: 'DejaVu Serif Condensed Bold', condensedItalic: 'DejaVu Serif Condensed Italic', condensedBoldItalic: 'DejaVu Serif Condensed Bold Italic' } },
+            { name: 'Garamond', styles: { v1: 'Garamond', v2_bold: 'Garamond 3 LT Std Bold', v2_boldItalic: 'Garamond 3 LT Std Bold Italic', v2_italic: 'Garamond 3 LT Std Italic', v2_regular: 'Garamond 3 LT Std' } },
+            { name: 'Noto Rashi Hebrew', styles: { regular: 'Noto Rashi Hebrew Regular', thin: 'Noto Rashi Hebrew Thin', extralight: 'Noto Rashi Hebrew ExtraLight', light: 'Noto Rashi Hebrew Light', medium: 'Noto Rashi Hebrew Medium', semibold: 'Noto Rashi Hebrew SemiBold', bold: 'Noto Rashi Hebrew Bold', extrabold: 'Noto Rashi Hebrew ExtraBold', black: 'Noto Rashi Hebrew Black' } },
+            { name: 'Times New Roman', styles: { regular: 'Times New Roman', bold: 'Times New Roman Bold', italic: 'Times New Roman Italic', boldItalic: 'Times New Roman Bold Italic' } },
         ],
         'Script & Display': [
-            { name: 'Amazone', styles: { regular: 'AmazoneBT-Regular' } },
-            { name: 'American Pop Plain', styles: { regular: 'American Pop Plain' } },
-            { name: 'Angelface', styles: { regular: 'Angelface' } },
+            { name: 'Amatic SC', styles: { regular: 'Amatic SC Regular', bold: 'Amatic SC Bold' } },
+            { name: 'Amazone', styles: { regular: 'Amazone BT' } },
             { name: 'BlackChancery', styles: { regular: 'BlackChancery' } },
-            { name: 'Clicker Script', styles: { regular: 'ClickerScript-Regular' } },
+            { name: 'Clicker Script', styles: { regular: 'Clicker Script' } },
             { name: 'Collegiate', styles: { black: 'CollegiateBlackFLF', outline: 'CollegiateOutlineFLF' } },
             { name: 'Concerto Pro', styles: { regular: 'ConcertoPro-Regular' } },
-            { name: 'Courgette', styles: { regular: 'Courgette-Regular' } },
-            { name: 'Cowboy Rodeo', styles: { regular: 'CowboyRodeoW01-Regular' } },
-            { name: 'Freebooter Script', styles: { regular: 'FreebooterScript' } },
-            { name: 'French Script', styles: { regular: 'FrenchScriptMT' } },
-            { name: 'Great Vibes', styles: { regular: 'GreatVibes-Regular' } },
-            { name: 'Honey Script', styles: { light: 'HoneyScript-Light', semiBold: 'HoneyScript-SemiBold' } },
-            { name: 'I Love Glitter', styles: { regular: 'ILoveGlitter' } },
-            { name: 'ITC Zapf Chancery', styles: { regular: 'ZapfChancery-Roman' } },
-            { name: 'Lisbon Script', styles: { regular: 'LisbonScript-Regular' } },
-            { name: 'Machine BT', styles: { regular: 'MachineITCbyBT-Regular' } },
-            { name: 'Murray Hill', styles: { regular: 'MurrayHill' } },
-            { name: 'Old English', styles: { regular: 'OldEnglishTextMT' } },
-            { name: 'Planscribe', styles: { regular: 'PlanscribeNFW01-Regular' } },
+            { name: 'Courgette', styles: { regular: 'Courgette Regular' } },
+            { name: 'Cowboy Rodeo', styles: { regular: 'Cowboy Rodeo W01 Regular' } },
+            { name: 'Freebooter Script', styles: { regular: 'Freebooter Script' } },
+            { name: 'French Script', styles: { regular: 'French Script MT' } },
+            { name: 'Great Vibes', styles: { regular: 'Great Vibes' } },
+            { name: 'Honey Script', styles: { light: 'Honey Script Light', semiBold: 'Honey Script SemiBold' } },
+            { name: 'I Love Glitter', styles: { regular: 'I Love Glitter' } },
+            { name: 'ITC Zapf Chancery', styles: { regular: 'ITC Zapf Chancery Roman' } },
+            { name: 'Machine BT', styles: { regular: 'Machine BT' } },
+            { name: 'Murray Hill', styles: { regular: 'Murray Hill Regular' } },
+            { name: 'Old English', styles: { regular: 'Old English Text MT' } },
+            { name: 'Planscribe', styles: { regular: 'Planscribe NF W01 Regular' } },
         ],
     };
 
@@ -104,7 +105,7 @@ const App = () => {
 
     // State for the Hebrew palette
     const [hebrewPaletteText, setHebrewPaletteText] = useState('');
-    const [hebrewPreviewFont, setHebrewPreviewFont] = useState({ name: 'Times New Roman', family: 'TimesNewRomanPSMT' });
+    const [hebrewPreviewFont, setHebrewPreviewFont] = useState({ name: 'Noto Rashi Hebrew', family: 'Noto Rashi Hebrew Regular' });
     const [lastHebrewBaseChar, setLastHebrewBaseChar] = useState('א');
     const [isShifted, setIsShifted] = useState(false);
 
@@ -384,7 +385,7 @@ const App = () => {
                     <div className="space-y-10">
                         {/* Font Selection Section */}
                         <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
-                            <h2 className="text-3xl font-bold text-slate-900 mb-2 tracking-normal" style={{ fontFamily: 'BebasNeue-Bold' }}>Font Selection</h2>
+                            <h2 className="text-3xl font-bold text-slate-900 mb-2 tracking-normal" style={{ fontFamily: 'Bebas Neue Regular' }}>Font Selection</h2>
                             <p className="text-slate-500 mb-6">Here's some great fonts to get your project started! Select up to 3 fonts you would like to preview. You may change your selection here at any time so try as many as you'd like before submitting your selection!</p>
                             <div className="space-y-6">
                                 {Object.entries(fontLibrary).map(([category, fonts]) => (
@@ -409,7 +410,7 @@ const App = () => {
                         <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
                             <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center mb-6 gap-4">
                                 <div>
-                                    <h2 className="text-3xl font-bold text-slate-900 tracking-normal" style={{ fontFamily: 'BebasNeue-Bold' }}>Custom Text</h2>
+                                    <h2 className="text-3xl font-bold text-slate-900 tracking-normal" style={{ fontFamily: 'Bebas Neue Regular' }}>Custom Text</h2>
                                     <p className="text-slate-500 mt-1">Type a sample of the text you would like to preview. You'll see this displayed in your font choices below.
                                         <br />
                                         No need to type out all of your order wording. Our designers will typeset your text in the fonts you select.</p>
@@ -427,7 +428,7 @@ const App = () => {
                         <section className="bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
                             <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center mb-6 gap-4">
                                 <div>
-                                    <h2 className="text-3xl font-bold text-slate-900 tracking-normal" style={{ fontFamily: 'BebasNeue-Bold' }}>Live Preview</h2>
+                                    <h2 className="text-3xl font-bold text-slate-900 tracking-normal" style={{ fontFamily: 'Bebas Neue Regular' }}>Live Preview</h2>
                                     <p className="text-slate-500 mt-1">Here's your text preview. When you're happy with your selection hit the button below! If you don't like a font feel free to deselect it above and try a new one out!</p>
                                 </div>
                                 <div className="flex items-center gap-3">
@@ -509,8 +510,12 @@ const App = () => {
                         {showHebrewPalette && (
                             <div className="space-y-4">
                                 <h3 className="text-2xl font-bold text-slate-900">Hebrew Keyboard</h3>
-
-                                {/* Preview Text Area */}
+                                <div className="flex items-center gap-2">
+                                    <label className="block text-sm font-medium text-slate-700">Preview Font:</label>
+                                    <button onClick={() => setHebrewPreviewFont({ name: 'Noto Rashi Hebrew', family: 'Noto Rashi Hebrew Regular' })} className={`px-4 py-2 text-sm rounded-md border-2 ${hebrewPreviewFont.name === 'Noto Rashi Hebrew' ? 'bg-slate-700 text-white border-slate-700' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-100'}`}>Noto Rashi Hebrew</button>
+                                    <button onClick={() => setHebrewPreviewFont({ name: 'Times New Roman', family: 'Times New Roman' })} className={`px-4 py-2 text-sm rounded-md border-2 ${hebrewPreviewFont.name === 'Times New Roman' ? 'bg-slate-700 text-white border-slate-700' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-100'}`}>Times New Roman</button>
+                                    <button onClick={() => setHebrewPreviewFont({ name: 'Arial', family: 'Arial' })} className={`px-4 py-2 text-sm rounded-md border-2 ${hebrewPreviewFont.name === 'Arial' ? 'bg-slate-700 text-white border-slate-700' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-100'}`}>Arial</button>
+                                </div>
                                 <div className="pt-2">
                                     <div className="flex justify-between items-center mb-2">
                                         <label className="block text-sm font-medium text-slate-700">Preview</label>
@@ -524,8 +529,6 @@ const App = () => {
                                         style={{ fontFamily: hebrewPreviewFont.family }}
                                     />
                                 </div>
-
-                                {/* Virtual Keyboard */}
                                 <div className="p-3 bg-slate-200 rounded-xl space-y-2 select-none">
                                     {hebrewKeyboardLayout.map((row, rowIndex) => (
                                         <div key={rowIndex} className="flex justify-center gap-1.5">
@@ -549,7 +552,6 @@ const App = () => {
                                             })}
                                         </div>
                                     ))}
-                                    {/* Special Keys Row */}
                                     <div className="flex justify-center gap-1.5">
                                         <button onClick={() => setIsShifted(prev => !prev)} className={`h-12 w-24 flex items-center justify-center rounded-lg text-slate-800 text-lg font-semibold shadow-sm transition-colors ${isShifted ? 'bg-blue-500 text-white' : 'bg-white hover:bg-blue-100'}`}>
                                             Shift
@@ -562,8 +564,6 @@ const App = () => {
                                         </button>
                                     </div>
                                 </div>
-
-                                {/* Action Buttons */}
                                 <div className="flex justify-between items-center pt-4">
                                     <button type="button" className="px-6 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base flex-shrink-0" onClick={() => { setShowHebrewPalette(false); setIsShifted(false); setHebrewPaletteText(''); setLastHebrewBaseChar('א'); }}>Close</button>
                                     <button type="button" className="px-8 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-bold transition-colors shadow-sm text-base flex-shrink-0" onClick={handleInsertToMain}>Insert Text</button>

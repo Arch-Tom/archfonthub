@@ -31,192 +31,215 @@ body {
     }
 }
 
-/* ---
-Final Font-Face Definitions
-Based on the provided font_list_update62525.txt
-The font-family uses the exact PostScript Name for maximum compatibility.
---- */
-
-/* Amazone */
 @font-face {
-    font-family: 'AmazoneBT-Regular';
+    font-family: 'Alumni Sans Black';
+    src: url('/fonts/AlumniSans-Black.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Alumni Sans Bold';
+    src: url('/fonts/AlumniSans-Bold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Alumni Sans ExtraBold';
+    src: url('/fonts/AlumniSans-ExtraBold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Alumni Sans Italic';
+    src: url('/fonts/AlumniSans-Italic.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Alumni Sans Light';
+    src: url('/fonts/AlumniSans-Light.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Alumni Sans Light Italic';
+    src: url('/fonts/AlumniSans-LightItalic.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Alumni Sans Medium';
+    src: url('/fonts/AlumniSans-Medium.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Alumni Sans Medium Italic';
+    src: url('/fonts/AlumniSans-MediumItalic.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Alumni Sans Regular';
+    src: url('/fonts/AlumniSans-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Alumni Sans SemiBold';
+    src: url('/fonts/AlumniSans-SemiBold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Alumni Sans SemiBold Italic';
+    src: url('/fonts/AlumniSans-SemiBoldItalic.ttf') format('truetype');
+}
+
+/* --- Amatic SC --- */
+@font-face {
+    font-family: 'Amatic SC Bold';
+    src: url('/fonts/AmaticSC-Bold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Amatic SC Regular';
+    src: url('/fonts/AmaticSC-Regular.ttf') format('truetype');
+}
+
+/* --- Amazone --- */
+@font-face {
+    font-family: 'Amazone BT';
     src: url('/fonts/AmazonRg_0.ttf') format('truetype');
 }
 
-/* American Pop Plain */
+/* --- Arial --- */
 @font-face {
-    font-family: 'American Pop Plain';
-    src: url('/fonts/American Pop Plain.ttf') format('truetype');
-}
-
-/* Angelface */
-@font-face {
-    font-family: 'Angelface';
-    src: url('/fonts/Angelface.otf') format('opentype');
-}
-
-/* Arial */
-@font-face {
-    font-family: 'ArialMT';
+    font-family: 'Arial';
     src: url('/fonts/arial.ttf') format('truetype');
 }
 
 @font-face {
-    font-family: 'Arial-BoldMT';
+    font-family: 'Arial Bold';
     src: url('/fonts/arialbd.ttf') format('truetype');
 }
 
 @font-face {
-    font-family: 'Arial-BoldItalicMT';
+    font-family: 'Arial Bold Italic';
     src: url('/fonts/arialbi.ttf') format('truetype');
 }
 
 @font-face {
-    font-family: 'Arial-ItalicMT';
+    font-family: 'Arial Italic';
     src: url('/fonts/ariali.ttf') format('truetype');
 }
 
-/* Bebas Neue */
+/* --- Bebas Neue --- */
 @font-face {
-    font-family: 'BebasNeue-Regular';
+    font-family: 'Bebas Neue Regular';
     src: url('/fonts/Bebas Neue Regular 400.ttf') format('truetype');
 }
 
 @font-face {
-    font-family: 'BebasNeue-Bold';
+    font-family: 'Bebas Neue Bold';
     src: url('/fonts/BebasNeue-Bold.otf') format('opentype');
 }
 
-/* Benguiat */
+/* --- Benguiat --- */
+@font-face {
+    font-family: 'Benguiat Bold BT';
+    src: url('/fonts/BENGUIAB.TTF') format('truetype');
+}
+
 @font-face {
     font-family: 'Benguiat';
     src: url('/fonts/Benguiat.ttf') format('truetype');
 }
 
 @font-face {
-    font-family: 'BenguiatITCbyBT-Bold';
-    src: url('/fonts/BENGUIAB.TTF') format('truetype');
-}
-
-@font-face {
-    font-family: 'BenguiatITCbyBT-BookItalic';
+    font-family: 'Benguiat Book Italic BT';
     src: url('/fonts/benguini.ttf') format('truetype');
 }
 
-/* Berlin Sans FB */
-@font-face {
-    font-family: 'BerlinSansFB-Bold';
-    src: url('/fonts/BRLNSB.TTF') format('truetype');
-}
-
-@font-face {
-    font-family: 'BerlinSansFB-Reg';
-    src: url('/fonts/BRLNSR.TTF') format('truetype');
-}
-
-/* BlackChancery */
+/* --- BlackChancery --- */
 @font-face {
     font-family: 'BlackChancery';
     src: url('/fonts/BLKCHCRY.TTF') format('truetype');
 }
 
-/* Bookman Old Style */
+/* --- Bookman Old Style --- */
 @font-face {
-    font-family: 'BookmanOldStyle-Bold';
+    font-family: 'Bookman Old Style Bold';
     src: url('/fonts/BOOKOSB.TTF') format('truetype');
 }
 
 @font-face {
-    font-family: 'BookmanOldStyle-BoldItalic';
+    font-family: 'Bookman Old Style Bold Italic';
     src: url('/fonts/BOOKOSBI.TTF') format('truetype');
 }
 
 @font-face {
-    font-family: 'BookmanOldStyle-Italic';
+    font-family: 'Bookman Old Style Italic';
     src: url('/fonts/BOOKOSI.TTF') format('truetype');
 }
 
-/* Calibri */
+/* --- Berlin Sans --- */
+@font-face {
+    font-family: 'Berlin Sans FB Bold';
+    src: url('/fonts/BRLNSB.TTF') format('truetype');
+}
+
+@font-face {
+    font-family: 'Berlin Sans FB';
+    src: url('/fonts/BRLNSR.TTF') format('truetype');
+}
+
+/* --- Calibri --- */
 @font-face {
     font-family: 'Calibri';
     src: url('/fonts/CALIBRI.TTF') format('truetype');
 }
 
 @font-face {
-    font-family: 'Calibri-Bold';
+    font-family: 'Calibri Bold';
     src: url('/fonts/CALIBRIB_0.TTF') format('truetype');
 }
 
 @font-face {
-    font-family: 'Calibri-Italic';
+    font-family: 'Calibri Italic';
     src: url('/fonts/CALIBRII.TTF') format('truetype');
 }
 
-/* Century Gothic */
+/* --- Century Schoolbook --- */
 @font-face {
-    font-family: 'CenturyGothicPaneuropean-Bold';
-    src: url('/fonts/CenturyGothicPaneuropeanBold.ttf') format('truetype');
-}
-
-@font-face {
-    font-family: 'CenturyGothicPaneuropean-BoldItalic';
-    src: url('/fonts/CenturyGothicPaneuropeanBoldItalic.ttf') format('truetype');
-}
-
-@font-face {
-    font-family: 'CenturyGothicPaneuropean';
-    src: url('/fonts/CenturyGothicPaneuropeanRegular.ttf') format('truetype');
-}
-
-/* Century Schoolbook */
-@font-face {
-    font-family: 'CenturySchoolbook';
+    font-family: 'Century Schoolbook';
     src: url('/fonts/CENSCBK.TTF') format('truetype');
 }
 
 @font-face {
-    font-family: 'CenturySchoolbook-Bold';
+    font-family: 'Century Schoolbook Bold';
     src: url('/fonts/SCHLBKB.TTF') format('truetype');
 }
 
 @font-face {
-    font-family: 'CenturySchoolbook-BoldItalic';
+    font-family: 'Century Schoolbook Bold Italic';
     src: url('/fonts/SCHLBKBI.TTF') format('truetype');
 }
 
-/* Century725 */
+
+/* --- Century Gothic --- */
 @font-face {
-    font-family: 'Century725BT-Bold';
-    src: url('/fonts/cen725b.ttf') format('truetype');
+    font-family: 'Century Gothic Paneuropean Bold';
+    src: url('/fonts/CenturyGothicPaneuropeanBold.ttf') format('truetype');
 }
 
 @font-face {
-    font-family: 'Century725BT-Italic';
-    src: url('/fonts/cen725i.ttf') format('truetype');
+    font-family: 'Century Gothic Paneuropean Bold Italic';
+    src: url('/fonts/CenturyGothicPaneuropeanBoldItalic.ttf') format('truetype');
 }
 
 @font-face {
-    font-family: 'Century725BT-Roman';
-    src: url('/fonts/cen725_.ttf') format('truetype');
+    font-family: 'Century Gothic Paneuropean';
+    src: url('/fonts/CenturyGothicPaneuropeanRegular.ttf') format('truetype');
 }
 
+/* --- Clicker Script --- */
 @font-face {
-    font-family: 'Century725BT-Black';
-    src: url('/fonts/cen725k.ttf') format('truetype');
-}
-
-@font-face {
-    font-family: 'Century725BT-RomanCondensed';
-    src: url('/fonts/cen725c.ttf') format('truetype');
-}
-
-/* Clicker Script */
-@font-face {
-    font-family: 'ClickerScript-Regular';
+    font-family: 'Clicker Script';
     src: url('/fonts/ClickerScript-Regular.ttf') format('truetype');
 }
 
-/* Collegiate */
+/* --- Collegiate --- */
 @font-face {
     font-family: 'CollegiateBlackFLF';
     src: url('/fonts/CollegiateBlackFLF.ttf') format('truetype');
@@ -227,227 +250,299 @@ The font-family uses the exact PostScript Name for maximum compatibility.
     src: url('/fonts/CollegiateOutlineFLF.ttf') format('truetype');
 }
 
-/* Concerto Pro */
+/* --- Concerto Pro --- */
 @font-face {
     font-family: 'ConcertoPro-Regular';
     src: url('/fonts/concertoproregular.ttf') format('truetype');
 }
 
-/* CopprplGoth BT */
+/* --- Copperplate --- */
 @font-face {
-    font-family: 'CopperplateGothicBT-Roman';
+    font-family: 'CopprplGoth BT Roman';
     src: url('/fonts/Copperplate Gothic.ttf') format('truetype');
 }
 
-/* Courgette */
+/* --- Courgette --- */
 @font-face {
-    font-family: 'Courgette-Regular';
+    font-family: 'Courgette Regular';
     src: url('/fonts/Courgette-Regular.ttf') format('truetype');
 }
 
-/* Cowboy Rodeo */
+/* --- Cowboy Rodeo --- */
 @font-face {
-    font-family: 'CowboyRodeoW01-Regular';
+    font-family: 'Cowboy Rodeo W01 Regular';
     src: url('/fonts/Cowboy Rodeo W01 Regular.ttf') format('truetype');
 }
 
-/* DejaVu Serif */
+/* --- Cutive Mono --- */
 @font-face {
-    font-family: 'DejaVuSerif-Bold';
+    font-family: 'Cutive Mono Regular';
+    src: url('/fonts/CutiveMono-Regular.ttf') format('truetype');
+}
+
+/* --- DejaVu Serif --- */
+@font-face {
+    font-family: 'DejaVu Serif Bold';
     src: url('/fonts/DejaVuSerif-Bold.ttf') format('truetype');
 }
 
 @font-face {
-    font-family: 'DejaVuSerif-BoldItalic';
+    font-family: 'DejaVu Serif Bold Italic';
     src: url('/fonts/DejaVuSerif-BoldItalic.ttf') format('truetype');
 }
 
 @font-face {
-    font-family: 'DejaVuSerif-Italic';
+    font-family: 'DejaVu Serif Italic';
     src: url('/fonts/DejaVuSerif-Italic.ttf') format('truetype');
 }
 
 @font-face {
-    font-family: 'DejaVuSerif';
+    font-family: 'DejaVu Serif';
     src: url('/fonts/DejaVuSerif.ttf') format('truetype');
 }
 
 @font-face {
-    font-family: 'DejaVuSerifCondensed-Bold';
+    font-family: 'DejaVu Serif Condensed Bold';
     src: url('/fonts/DejaVuSerifCondensed-Bold.ttf') format('truetype');
 }
 
 @font-face {
-    font-family: 'DejaVuSerifCondensed-BoldItalic';
+    font-family: 'DejaVu Serif Condensed Bold Italic';
     src: url('/fonts/DejaVuSerifCondensed-BoldItalic.ttf') format('truetype');
 }
 
 @font-face {
-    font-family: 'DejaVuSerifCondensed-Italic';
+    font-family: 'DejaVu Serif Condensed Italic';
     src: url('/fonts/DejaVuSerifCondensed-Italic.ttf') format('truetype');
 }
 
 @font-face {
-    font-family: 'DejaVuSerifCondensed';
+    font-family: 'DejaVu Serif Condensed';
     src: url('/fonts/DejaVuSerifCondensed.ttf') format('truetype');
 }
 
-/* Freebooter Script */
+/* --- Freebooter Script --- */
 @font-face {
-    font-family: 'FreebooterScript';
+    font-family: 'Freebooter Script';
     src: url('/fonts/freebooterscript.ttf') format('truetype');
 }
 
-/* French Script MT */
+/* --- French Script --- */
 @font-face {
-    font-family: 'FrenchScriptMT';
+    font-family: 'French Script MT';
     src: url('/fonts/Frscript.TTF') format('truetype');
 }
 
-/* Garamond */
+/* --- Garamond --- */
 @font-face {
     font-family: 'Garamond';
     src: url('/fonts/GARA.TTF') format('truetype');
 }
 
 @font-face {
-    font-family: 'Garamond3LTStd-Bold';
+    font-family: 'Garamond 3 LT Std Bold';
     src: url('/fonts/Garamond3LTStd-Bold.otf') format('opentype');
 }
 
 @font-face {
-    font-family: 'Garamond3LTStd-BoldItalic';
+    font-family: 'Garamond 3 LT Std Bold Italic';
     src: url('/fonts/Garamond3LTStd-BoldItalic.otf') format('opentype');
 }
 
 @font-face {
-    font-family: 'Garamond3LTStd-Italic';
+    font-family: 'Garamond 3 LT Std Italic';
     src: url('/fonts/Garamond3LTStd-Italic.otf') format('opentype');
 }
 
 @font-face {
-    font-family: 'Garamond3LTStd';
+    font-family: 'Garamond 3 LT Std';
     src: url('/fonts/Garamond3LTStd.otf') format('opentype');
 }
 
-/* Graphik */
+/* --- Graphik --- */
 @font-face {
-    font-family: 'Graphik-Medium';
+    font-family: 'Graphik Medium';
     src: url('/fonts/Graphik-Medium.otf') format('opentype');
 }
 
 @font-face {
-    font-family: 'Graphik-MediumItalic';
+    font-family: 'Graphik Medium Italic';
     src: url('/fonts/Graphik-MediumItalic.otf') format('opentype');
 }
 
 @font-face {
-    font-family: 'Graphik-Regular';
+    font-family: 'Graphik';
     src: url('/fonts/Graphik-Regular.otf') format('opentype');
 }
 
 @font-face {
-    font-family: 'Graphik-RegularItalic';
+    font-family: 'Graphik Regular Italic';
     src: url('/fonts/Graphik-RegularItalic.otf') format('opentype');
 }
 
 @font-face {
-    font-family: 'Graphik-Semibold';
+    font-family: 'Graphik Semibold';
     src: url('/fonts/Graphik-Semibold.otf') format('opentype');
 }
 
 @font-face {
-    font-family: 'Graphik-Thin';
+    font-family: 'Graphik Thin';
     src: url('/fonts/Graphik-Thin.otf') format('opentype');
 }
 
 @font-face {
-    font-family: 'Graphik-ThinItalic';
+    font-family: 'Graphik Thin Italic';
     src: url('/fonts/Graphik-ThinItalic.otf') format('opentype');
 }
 
-/* Great Vibes */
+/* --- Great Vibes --- */
 @font-face {
-    font-family: 'GreatVibes-Regular';
+    font-family: 'Great Vibes';
     src: url('/fonts/Great Vibes.ttf') format('truetype');
 }
 
-/* Honey Script */
+/* --- Honey Script --- */
 @font-face {
-    font-family: 'HoneyScript-Light';
+    font-family: 'Honey Script Light';
     src: url('/fonts/HONEYSCL.TTF') format('truetype');
 }
 
 @font-face {
-    font-family: 'HoneyScript-SemiBold';
+    font-family: 'Honey Script SemiBold';
     src: url('/fonts/HONEYSSB.TTF') format('truetype');
 }
 
-/* I Love Glitter */
+/* --- I Love Glitter --- */
 @font-face {
-    font-family: 'ILoveGlitter';
+    font-family: 'I Love Glitter';
     src: url('/fonts/I Love Glitter.ttf') format('truetype');
 }
 
-/* ITC Zapf Chancery */
+/* --- Machine BT --- */
 @font-face {
-    font-family: 'ZapfChancery-Roman';
-    src: url('/fonts/Zapf Chancery Font.otf') format('opentype');
-}
-
-/* Lisbon Script */
-@font-face {
-    font-family: 'LisbonScript-Regular';
-    src: url('/fonts/Lisbon-Script.otf') format('opentype');
-}
-
-/* Machine BT */
-@font-face {
-    font-family: 'MachineITCbyBT-Regular';
+    font-family: 'Machine BT';
     src: url('/fonts/machinen.ttf') format('truetype');
 }
 
-/* Murray Hill */
+/* --- Murray Hill --- */
 @font-face {
-    font-family: 'MurrayHill';
+    font-family: 'Murray Hill Regular';
     src: url('/fonts/Murray Hill Regular.ttf') format('truetype');
 }
 
-/* Old English Text MT */
+/* --- Noto Rashi Hebrew --- */
 @font-face {
-    font-family: 'OldEnglishTextMT';
+    font-family: 'Noto Rashi Hebrew Black';
+    src: url('/fonts/NotoRashiHebrew-Black.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Noto Rashi Hebrew Bold';
+    src: url('/fonts/NotoRashiHebrew-Bold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Noto Rashi Hebrew ExtraBold';
+    src: url('/fonts/NotoRashiHebrew-ExtraBold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Noto Rashi Hebrew ExtraLight';
+    src: url('/fonts/NotoRashiHebrew-ExtraLight.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Noto Rashi Hebrew Light';
+    src: url('/fonts/NotoRashiHebrew-Light.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Noto Rashi Hebrew Medium';
+    src: url('/fonts/NotoRashiHebrew-Medium.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Noto Rashi Hebrew Regular';
+    src: url('/fonts/NotoRashiHebrew-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Noto Rashi Hebrew SemiBold';
+    src: url('/fonts/NotoRashiHebrew-SemiBold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Noto Rashi Hebrew Thin';
+    src: url('/fonts/NotoRashiHebrew-Thin.ttf') format('truetype');
+}
+
+/* --- Old English --- */
+@font-face {
+    font-family: 'Old English Text MT';
     src: url('/fonts/OLDENGL.TTF') format('truetype');
 }
 
-/* Planscribe */
+/* --- Planscribe --- */
 @font-face {
-    font-family: 'PlanscribeNFW01-Regular';
+    font-family: 'Planscribe NF W01 Regular';
     src: url('/fonts/Planscribe NF W01 Regular.ttf') format('truetype');
 }
 
-/* Times New Roman */
+/* --- Rajdhani --- */
 @font-face {
-    font-family: 'TimesNewRomanPSMT';
+    font-family: 'Rajdhani Bold';
+    src: url('/fonts/Rajdhani-Bold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Rajdhani Light';
+    src: url('/fonts/Rajdhani-Light.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Rajdhani Medium';
+    src: url('/fonts/Rajdhani-Medium.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Rajdhani Regular';
+    src: url('/fonts/Rajdhani-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Rajdhani SemiBold';
+    src: url('/fonts/Rajdhani-SemiBold.ttf') format('truetype');
+}
+
+/* --- Times New Roman --- */
+@font-face {
+    font-family: 'Times New Roman';
     src: url('/fonts/TIMES.TTF') format('truetype');
 }
 
 @font-face {
-    font-family: 'TimesNewRomanPS-BoldMT';
+    font-family: 'Times New Roman Bold';
     src: url('/fonts/timesbd.ttf') format('truetype');
 }
 
 @font-face {
-    font-family: 'TimesNewRomanPS-BoldItalicMT';
+    font-family: 'Times New Roman Bold Italic';
     src: url('/fonts/timesbi.ttf') format('truetype');
 }
 
 @font-face {
-    font-family: 'TimesNewRomanPS-ItalicMT';
+    font-family: 'Times New Roman Italic';
     src: url('/fonts/timesi.ttf') format('truetype');
 }
 
-/* Zapf Humanist */
+/* --- Zapf Chancery --- */
 @font-face {
-    font-family: 'ZapfHumanist601BT-Demi';
+    font-family: 'ITC Zapf Chancery Roman';
+    src: url('/fonts/Zapf Chancery Font.otf') format('opentype');
+}
+
+/* --- Zapf Humanist --- */
+@font-face {
+    font-family: 'Zapf Humanist 601 Demi BT';
     src: url('/fonts/ZHUM601D.TTF') format('truetype');
 }
