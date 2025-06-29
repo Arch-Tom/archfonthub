@@ -63,9 +63,9 @@ const App = () => {
             { name: 'Times New Roman', styles: { regular: 'Times New Roman', bold: 'Times New Roman Bold', italic: 'Times New Roman Italic', boldItalic: 'Times New Roman Bold Italic' } },
         ],
         'Script & Display': [
-            { name: 'Amatic', styles: { regular: 'Amatic SC Regular', bold: 'Amatic SC Bold' } },
+            { name: 'Amatic SC', styles: { regular: 'Amatic SC Regular', bold: 'Amatic SC Bold' } },
             { name: 'Amazone', styles: { regular: 'Amazone BT' } },
-            { name: 'Black Chancery', styles: { regular: 'BlackChancery' } },
+            { name: 'BlackChancery', styles: { regular: 'BlackChancery' } },
             { name: 'Clicker Script', styles: { regular: 'Clicker Script' } },
             { name: 'Collegiate', styles: { black: 'CollegiateBlackFLF', outline: 'CollegiateOutlineFLF' } },
             { name: 'Concerto Pro', styles: { regular: 'ConcertoPro-Regular' } },
@@ -84,7 +84,6 @@ const App = () => {
         ],
     };
 
-    // Defines the logical order for font style buttons
     const styleSortOrder = [
         'thin', 'thinItalic',
         'extralight', 'extralightItalic',
@@ -399,7 +398,7 @@ const App = () => {
                                                 let fontSizeClass = isScriptFont ? 'text-2xl' : 'text-lg';
                                                 if (font.name === 'Concerto Pro') fontSizeClass = 'text-4xl';
                                                 return (
-                                                    <button key={font.name} onClick={() => handleFontSelect(font)} className={`px-5 py-3 rounded-xl font-semibold border-2 transition-all duration-150 transform hover:scale-105 focus:outline-none ${fontSizeClass} ${selectedFonts.some(f => f.name === font.name) ? 'bg-blue-600 text-white border-blue-600 shadow-md' : 'bg-white text-blue-900 border-blue-500 hover:bg-blue-50'}`} style={{ fontFamily: 'Alumni Sans Regular' }}>{font.name}</button>
+                                                    <button key={font.name} onClick={() => handleFontSelect(font)} className={`px-5 py-3 rounded-xl font-semibold border-2 transition-all duration-150 transform hover:scale-105 focus:outline-none ${fontSizeClass} ${selectedFonts.some(f => f.name === font.name) ? 'bg-blue-600 text-white border-blue-600 shadow-md' : 'bg-white text-blue-900 border-blue-500 hover:bg-blue-50'}`} style={{ fontFamily: font.styles[Object.keys(font.styles)[0]] }}>{font.name}</button>
                                                 )
                                             })}
                                         </div>
