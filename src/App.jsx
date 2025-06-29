@@ -24,12 +24,12 @@ const App = () => {
     const WORKER_URL = "https://customerfontselection-worker.tom-4a9.workers.dev";
     const DEFAULT_TEXT_PLACEHOLDER = 'Type your text here...';
 
+    // Updated to include all fonts from the new "Script" and "Display" categories
     const scriptFontsToAdjust = [
-        'Alumni Sans', 'Amatic', 'Amazone', 'Black Chancery', 'Clicker Script',
-        'Collegiate', 'Concerto Pro', 'Courgette', 'Cowboy Rodeo',
-        'Cutive Mono', 'Freebooter Script', 'French Script', 'Great Vibes',
-        'Honey Script', 'I Love Glitter', 'Machine BT', 'Murray Hill',
-        'Old English', 'Planscribe', 'Rajdhani', 'ITC Zapf Chancery'
+        'Amatic SC', 'Amazone', 'BlackChancery', 'Clicker Script', 'Concerto Pro', 'Courgette',
+        'Freebooter Script', 'French Script', 'Great Vibes', 'Honey Script', 'I Love Glitter',
+        'ITC Zapf Chancery', 'Murray Hill', 'Collegiate', 'Cowboy Rodeo', 'Machine BT',
+        'Old English', 'Planscribe', 'Alumni Sans', 'Rajdhani', 'Cutive Mono'
     ];
 
     const fontLibrary = {
@@ -62,23 +62,25 @@ const App = () => {
             { name: 'Noto Rashi Hebrew', styles: { regular: 'Noto Rashi Hebrew Regular', thin: 'Noto Rashi Hebrew Thin', extralight: 'Noto Rashi Hebrew ExtraLight', light: 'Noto Rashi Hebrew Light', medium: 'Noto Rashi Hebrew Medium', semibold: 'Noto Rashi Hebrew SemiBold', bold: 'Noto Rashi Hebrew Bold', extrabold: 'Noto Rashi Hebrew ExtraBold', black: 'Noto Rashi Hebrew Black' } },
             { name: 'Times New Roman', styles: { regular: 'Times New Roman', bold: 'Times New Roman Bold', italic: 'Times New Roman Italic', boldItalic: 'Times New Roman Bold Italic' } },
         ],
-        'Script & Display': [
+        'Script': [
             { name: 'Amatic SC', styles: { regular: 'Amatic SC Regular', bold: 'Amatic SC Bold' } },
             { name: 'Amazone', styles: { regular: 'Amazone BT' } },
-            { name: 'Black Chancery', styles: { regular: 'BlackChancery' } },
+            { name: 'BlackChancery', styles: { regular: 'BlackChancery' } },
             { name: 'Clicker Script', styles: { regular: 'Clicker Script' } },
-            { name: 'Collegiate', styles: { black: 'CollegiateBlackFLF', outline: 'CollegiateOutlineFLF' } },
             { name: 'Concerto Pro', styles: { regular: 'ConcertoPro-Regular' } },
             { name: 'Courgette', styles: { regular: 'Courgette Regular' } },
-            { name: 'Cowboy Rodeo', styles: { regular: 'Cowboy Rodeo W01 Regular' } },
             { name: 'Freebooter Script', styles: { regular: 'Freebooter Script' } },
             { name: 'French Script', styles: { regular: 'French Script MT' } },
             { name: 'Great Vibes', styles: { regular: 'Great Vibes' } },
             { name: 'Honey Script', styles: { light: 'Honey Script Light', semiBold: 'Honey Script SemiBold' } },
             { name: 'I Love Glitter', styles: { regular: 'I Love Glitter' } },
             { name: 'ITC Zapf Chancery', styles: { regular: 'ITC Zapf Chancery Roman' } },
-            { name: 'Machine BT', styles: { regular: 'Machine BT' } },
             { name: 'Murray Hill', styles: { regular: 'Murray Hill Regular' } },
+        ],
+        'Display': [
+            { name: 'Collegiate', styles: { black: 'CollegiateBlackFLF', outline: 'CollegiateOutlineFLF' } },
+            { name: 'Cowboy Rodeo', styles: { regular: 'Cowboy Rodeo W01 Regular' } },
+            { name: 'Machine BT', styles: { regular: 'Machine BT' } },
             { name: 'Old English', styles: { regular: 'Old English Text MT' } },
             { name: 'Planscribe', styles: { regular: 'Planscribe NF W01 Regular' } },
         ],
