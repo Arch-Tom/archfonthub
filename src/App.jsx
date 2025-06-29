@@ -409,9 +409,9 @@ const App = () => {
                 </div>
             </aside>
 
-            <main className="flex-1 p-4 sm:p-8 lg:p-12 relative">
+            <main className="flex-1 p-4 sm:p-8 lg:p-12">
                 {isSubmissionComplete && (
-                    <div className="absolute inset-0 bg-slate-100 bg-opacity-95 flex items-center justify-center z-30 rounded-2xl">
+                    <div className="fixed inset-0 bg-slate-100 bg-opacity-95 flex items-center justify-center z-30">
                         <div className="text-center p-8">
                             <h2 className="text-4xl font-bold text-slate-700" style={{ fontFamily: 'Alumni Sans Regular' }}>
                                 Submission Complete
