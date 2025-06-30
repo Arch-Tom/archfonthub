@@ -403,9 +403,9 @@ const App = () => {
             <aside className="bg-[rgb(50,75,106)] text-white w-full lg:w-[400px] p-4 flex-shrink-0 flex flex-row lg:flex-col items-center justify-start shadow-xl lg:rounded-r-3xl">
                 <div className="flex flex-row lg:flex-col items-center justify-center gap-4">
                     <div className="flex-shrink-0">
-                        <img src="/images/Arch Vector Logo White.svg" alt="Arch Font Hub Logo" className="object-contain drop-shadow-lg h-16 w-16 lg:h-[400px] lg:w-[400px]" />
+                        <img src="/images/Arch Vector Logo White.svg" alt="Arch Font Hub Logo" className="object-contain drop-shadow-lg h-24 w-24 lg:h-[400px] lg:w-[400px]" />
                     </div>
-                    <h1 className="text-xl font-bold lg:hidden">Arch Font Hub</h1>
+                    <h1 className="text-xl font-bold hidden">Arch Font Hub</h1>
                 </div>
             </aside>
 
