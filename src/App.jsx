@@ -384,14 +384,14 @@ const App = () => {
 
     return (
         <div className="flex flex-col lg:flex-row min-h-screen bg-slate-100 font-sans">
-            <aside className="bg-[rgb(50,75,106)] text-white w-full lg:w-[400px] p-2 lg:p-4 flex-shrink-0 flex items-center justify-center shadow-xl lg:rounded-r-3xl">
-                <div className="flex flex-row lg:flex-col items-center justify-center gap-4 lg:gap-4">
+            <aside className="bg-[rgb(50,75,106)] text-white w-full lg:w-[400px] p-4 flex-shrink-0 flex lg:flex-col items-center justify-center lg:justify-start shadow-xl lg:rounded-r-3xl">
+                <div className="flex flex-col items-center justify-center gap-4">
                     <div className="flex-shrink-0">
-                        <img src="/images/Arch Vector Logo White.svg" alt="Arch Font Hub Logo" className="object-contain drop-shadow-lg h-32 w-32 lg:h-[400px] lg:w-[400px]" />
+                        <img src="/images/Arch Vector Logo White.svg" alt="Arch Font Hub Logo" className="object-contain drop-shadow-lg h-48 w-48 lg:h-[400px] lg:w-[400px]" />
                     </div>
                     <div className="flex flex-col">
                         <h1 className="text-xl font-bold hidden">Arch Font Hub</h1>
-                        <p className="text-center lg:text-left text-slate-200 text-sm lg:text-base lg:max-w-sm px-2">
+                        <p className="text-center text-slate-200 text-xs lg:text-base lg:max-w-sm px-2">
                             Let's find your perfect font! Select a few options, preview them with your text, and submit your favorites. Our designers will use your selection to craft your proof. If you have another font in mind, let us know in the notes section below!
                         </p>
                     </div>
