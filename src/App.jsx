@@ -143,10 +143,17 @@ const App = () => {
     const handleFontSelect = (font) => {
         const isSelected = selectedFonts.some(f => f.name === font.name);
         if (isSelected) {
+            // Always allow deselecting
             setSelectedFonts(prev => prev.filter(f => f.name !== font.name));
         } else {
-            const defaultStyleKey = Object.keys(font.styles)[0];
-            setSelectedFonts(prev => [...prev, { ...font, activeStyle: defaultStyleKey }]);
+            // Only allow selecting if the current selection is less than 3
+            if (selectedFonts.length < 3) {
+                const defaultStyleKey = Object.keys(font.styles)[0];
+                setSelectedFonts(prev => [...prev, { ...font, activeStyle: defaultStyleKey }]);
+            } else {
+                // Show a message if the user tries to select a fourth font
+                showMessage('You may select a maximum of 3 fonts. Please deselect a font to choose a new one.');
+            }
         }
     };
 
@@ -298,6 +305,7 @@ const App = () => {
             customerCompany.trim() ? formatForFilename(customerCompany) : ''
         ].filter(Boolean).join('_') + '.svg';
 
+        /* This block is now commented out to prevent local download.
         try {
             const blob = new Blob([svgContent], { type: 'image/svg+xml' });
             const url = URL.createObjectURL(blob);
@@ -311,6 +319,7 @@ const App = () => {
         } catch (error) {
             showMessage(`Could not save file locally: ${error.message}`);
         }
+        */
 
         try {
             const response = await fetch(`${WORKER_URL}/${filename}`, {
