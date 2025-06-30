@@ -28,7 +28,7 @@ const App = () => {
         'Alumni Sans', 'Amatic SC', 'Amazone', 'BlackChancery', 'Clicker Script',
         'Collegiate', 'Concerto Pro', 'Courgette', 'Cowboy Rodeo',
         'Cutive Mono', 'Freebooter Script', 'French Script', 'Great Vibes',
-        'Honey Script', 'I Love Glitter', 'Machine BT', 'Murray Hill',
+        'Honey Script', 'I Love Glitter', 'Machine BT', 'Monotype Corsiva', 'Murray Hill',
         'Old English', 'Planscribe', 'Rajdhani', 'ITC Zapf Chancery'
     ];
 
@@ -76,6 +76,7 @@ const App = () => {
             { name: 'I Love Glitter', styles: { regular: 'I Love Glitter' } },
             { name: 'ITC Zapf Chancery', styles: { regular: 'ITC Zapf Chancery Roman' } },
             { name: 'Murray Hill', styles: { regular: 'Murray Hill Regular' } },
+            { name: 'Monotype Corsiva', styles: { regular: 'Monotype Corsiva' } },
         ],
         'Display': [
             { name: 'Collegiate', styles: { black: 'CollegiateBlackFLF', outline: 'CollegiateOutlineFLF' } },
