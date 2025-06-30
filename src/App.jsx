@@ -420,7 +420,12 @@ const App = () => {
                         {/* Font Selection Section */}
                         <section className="bg-white rounded-2xl p-8 border border-slate-100 shadow-[0_10px_25px_-5px_rgba(50,75,106,0.2),_0_8px_10px_-6px_rgba(59,130,246,0.2)]">
                             <h2 className="text-3xl font-bold text-slate-900 mb-2 tracking-normal" style={{ fontFamily: 'Alumni Sans Regular' }}>Font Selection</h2>
-                            <p className="text-slate-500 mb-6">Select up to 3 fonts you would like to preview. You may change your selected fonts here at any time. Try as many as you'd like before submitting your selection!</p>
+                            <p className="text-slate-500 mb-6">
+                                Select up to 3 fonts you would like to preview. You may change your selected fonts here at any time. Try as many as you'd like before submitting your selection!
+                                <br />
+                                <br />
+                                Looking for Bold, Italic or other versions of a selected font? Check the live preview for available styles!
+                            </p>
                             <div className="space-y-6">
                                 {Object.entries(fontLibrary).map(([category, fonts]) => (
                                     <div key={category}>
