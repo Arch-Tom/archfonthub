@@ -120,7 +120,6 @@ const App = () => {
 
     // State for the Hebrew palette
     const [hebrewPaletteText, setHebrewPaletteText] = useState('');
-    const [hebrewPreviewFont, setHebrewPreviewFont] = useState({ name: 'Noto Rashi Hebrew', family: 'Noto Rashi Hebrew Regular' });
     const [lastHebrewBaseChar, setLastHebrewBaseChar] = useState('א');
     const [isShifted, setIsShifted] = useState(false);
 
@@ -188,21 +187,6 @@ const App = () => {
 
     const handleInsertToMain = () => {
         if (!hebrewPaletteText) return;
-
-        const isFontAlreadySelected = selectedFonts.some(font => font.name === hebrewPreviewFont.name);
-
-        if (!isFontAlreadySelected) {
-            const fontCategory = Object.keys(fontLibrary).find(category =>
-                fontLibrary[category].some(f => f.name === hebrewPreviewFont.name)
-            );
-            if (fontCategory) {
-                const fontToAdd = fontLibrary[fontCategory].find(f => f.name === hebrewPreviewFont.name);
-                if (fontToAdd) {
-                    handleFontSelect(fontToAdd);
-                }
-            }
-        }
-
         handleGlyphInsert(hebrewPaletteText);
         setHebrewPaletteText('');
         setLastHebrewBaseChar('א'); // Reset on close
@@ -400,15 +384,17 @@ const App = () => {
 
     return (
         <div className="flex flex-col lg:flex-row min-h-screen bg-slate-100 font-sans">
-            <aside className="bg-[rgb(50,75,106)] text-white w-full lg:w-[400px] p-2 lg:p-4 flex-shrink-0 flex flex-row lg:flex-col items-center justify-center lg:justify-start shadow-xl lg:rounded-r-3xl">
-                <div className="flex flex-col items-center justify-center gap-2 lg:gap-4">
+            <aside className="bg-[rgb(50,75,106)] text-white w-full lg:w-[400px] p-2 lg:p-4 flex-shrink-0 flex items-center justify-center shadow-xl lg:rounded-r-3xl">
+                <div className="flex flex-row lg:flex-col items-center justify-center gap-4 lg:gap-4">
                     <div className="flex-shrink-0">
-                        <img src="/images/Arch Vector Logo White.svg" alt="Arch Font Hub Logo" className="object-contain drop-shadow-lg h-40 w-40 lg:h-[400px] lg:w-[400px]" />
+                        <img src="/images/Arch Vector Logo White.svg" alt="Arch Font Hub Logo" className="object-contain drop-shadow-lg h-32 w-32 lg:h-[400px] lg:w-[400px]" />
                     </div>
-                    <h1 className="text-xl font-bold hidden">Arch Font Hub</h1>
-                    <p className="text-center text-slate-200 text-sm lg:text-base lg:max-w-sm px-2">
-                        Let's find your perfect font! Select a few options, preview them with your text, and submit your favorites. Our designers will use your selection to craft your proof. If you have another font in mind, let us know in the notes section below!
-                    </p>
+                    <div className="flex flex-col">
+                        <h1 className="text-xl font-bold hidden">Arch Font Hub</h1>
+                        <p className="text-center lg:text-left text-slate-200 text-sm lg:text-base lg:max-w-sm px-2">
+                            Let's find your perfect font! Select a few options, preview them with your text, and submit your favorites. Our designers will use your selection to craft your proof. If you have another font in mind, let us know in the notes section below!
+                        </p>
+                    </div>
                 </div>
             </aside>
 
@@ -430,7 +416,7 @@ const App = () => {
                         {/* Font Selection Section */}
                         <section className="bg-white rounded-2xl p-8 border border-slate-100 shadow-[0_10px_25px_-5px_rgba(50,75,106,0.2),_0_8px_10px_-6px_rgba(59,130,246,0.2)]">
                             <h2 className="text-3xl font-bold text-slate-900 mb-2 tracking-normal" style={{ fontFamily: 'Alumni Sans Regular' }}>Font Selection</h2>
-                            <p className="text-slate-500 mb-6">Here's some great fonts to get your project started! Select up to 3 fonts you would like to preview. You may change your fonts here at any time so try as many as you'd like before submitting your selection!</p>
+                            <p className="text-slate-500 mb-6">Select up to 3 fonts you would like to preview. You may change your selected fonts here at any time. Try as many as you'd like before submitting your selection!</p>
                             <div className="space-y-6">
                                 {Object.entries(fontLibrary).map(([category, fonts]) => (
                                     <div key={category}>
@@ -552,7 +538,7 @@ const App = () => {
                                 className="w-full p-5 border-2 border-slate-200 rounded-xl shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 min-h-[120px] text-xl"
                                 value={customerNotes}
                                 onChange={(e) => setCustomerNotes(e.target.value)}
-                                placeholder="Enter any notes for the engraver here..."
+                                placeholder="Enter any notes for the designer here..."
                                 dir="auto"
                             />
                         </section>
@@ -589,12 +575,9 @@ const App = () => {
                         {showHebrewPalette && (
                             <div className="space-y-4">
                                 <h3 className="text-2xl font-bold text-slate-900">Hebrew Keyboard</h3>
-                                <div className="flex items-center gap-2">
-                                    <label className="block text-sm font-medium text-slate-700">Preview Font:</label>
-                                    <button onClick={() => setHebrewPreviewFont({ name: 'Noto Rashi Hebrew', family: 'Noto Rashi Hebrew Regular' })} className={`px-4 py-2 text-sm rounded-md border-2 ${hebrewPreviewFont.name === 'Noto Rashi Hebrew' ? 'bg-slate-700 text-white border-slate-700' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-100'}`}>Noto Rashi Hebrew</button>
-                                    <button onClick={() => setHebrewPreviewFont({ name: 'Times New Roman', family: 'Times New Roman' })} className={`px-4 py-2 text-sm rounded-md border-2 ${hebrewPreviewFont.name === 'Times New Roman' ? 'bg-slate-700 text-white border-slate-700' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-100'}`}>Times New Roman</button>
-                                    <button onClick={() => setHebrewPreviewFont({ name: 'Arial', family: 'Arial' })} className={`px-4 py-2 text-sm rounded-md border-2 ${hebrewPreviewFont.name === 'Arial' ? 'bg-slate-700 text-white border-slate-700' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-100'}`}>Arial</button>
-                                </div>
+                                <p className="text-slate-600 pb-2">
+                                    Please use the virtual keyboard below to compose your Hebrew text. When finished, click the 'Insert Text' button. Your text will be added to the main input area, allowing you to preview it in your chosen fonts.
+                                </p>
                                 <div className="pt-2">
                                     <div className="flex justify-between items-center mb-2">
                                         <label className="block text-sm font-medium text-slate-700">Preview</label>
@@ -605,7 +588,7 @@ const App = () => {
                                         className="w-full p-3 border-2 border-slate-200 rounded-xl shadow-inner bg-slate-50 min-h-[100px] text-2xl cursor-default"
                                         value={hebrewPaletteText}
                                         dir="rtl"
-                                        style={{ fontFamily: hebrewPreviewFont.family }}
+                                        style={{ fontFamily: 'Noto Rashi Hebrew Regular' }}
                                     />
                                 </div>
                                 <div className="p-3 bg-slate-200 rounded-xl space-y-2 select-none">
