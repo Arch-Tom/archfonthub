@@ -384,7 +384,7 @@ const App = () => {
 
     return (
         <div className="flex flex-col lg:flex-row min-h-screen bg-slate-100 font-sans">
-            <aside className="bg-[rgb(50,75,106)] text-white w-full lg:w-[400px] p-4 flex-shrink-0 flex flex-col shadow-xl lg:rounded-r-3xl">
+            <aside className="bg-[rgb(50,75,106)] text-white w-full lg:w-[400px] p-4 flex-shrink-0 flex flex-col shadow-xl lg:rounded-r-3xl lg:justify-start">
                 {/* Logo container */}
                 <div className="flex-shrink-0 pt-4 lg:pt-8">
                     <img
@@ -394,9 +394,9 @@ const App = () => {
                     />
                 </div>
 
-                {/* Text container that grows to fill remaining space */}
-                <div className="flex-grow flex items-center justify-center">
-                    <p className="text-center text-slate-200 text-xs lg:text-base lg:max-w-sm px-2">
+                {/* Text container with responsive centering logic */}
+                <div className="flex-grow flex items-center justify-center lg:flex-grow-0 lg:items-start lg:mt-4">
+                    <p className="text-center lg:text-left text-slate-200 text-xs lg:text-base lg:max-w-sm px-2">
                         Let's find your perfect font! Select a few options, preview them with your text, and submit your favorites. Our designers will use your selection to craft your proof. If you have another font in mind, let us know in the notes section below!
                     </p>
                 </div>
