@@ -384,17 +384,21 @@ const App = () => {
 
     return (
         <div className="flex flex-col lg:flex-row min-h-screen bg-slate-100 font-sans">
-            <aside className="bg-[rgb(50,75,106)] text-white w-full lg:w-[400px] p-4 flex-shrink-0 flex lg:flex-col items-center justify-center lg:justify-start shadow-xl lg:rounded-r-3xl">
-                <div className="flex flex-col items-center justify-center gap-4">
-                    <div className="flex-shrink-0">
-                        <img src="/images/Arch Vector Logo White.svg" alt="Arch Font Hub Logo" className="object-contain drop-shadow-lg h-48 w-48 lg:h-[400px] lg:w-[400px]" />
-                    </div>
-                    <div className="flex flex-col">
-                        <h1 className="text-xl font-bold hidden">Arch Font Hub</h1>
-                        <p className="text-center text-slate-200 text-xs lg:text-base lg:max-w-sm px-2">
-                            Let's find your perfect font! Select a few options, preview them with your text, and submit your favorites. Our designers will use your selection to craft your proof. If you have another font in mind, let us know in the notes section below!
-                        </p>
-                    </div>
+            <aside className="bg-[rgb(50,75,106)] text-white w-full lg:w-[400px] p-4 flex-shrink-0 flex flex-col shadow-xl lg:rounded-r-3xl">
+                {/* Logo container */}
+                <div className="flex-shrink-0 pt-4 lg:pt-8">
+                    <img
+                        src="/images/Arch Vector Logo White.svg"
+                        alt="Arch Font Hub Logo"
+                        className="object-contain drop-shadow-lg h-48 w-48 mx-auto lg:h-auto lg:w-[350px]"
+                    />
+                </div>
+
+                {/* Text container that grows to fill remaining space */}
+                <div className="flex-grow flex items-center justify-center">
+                    <p className="text-center text-slate-200 text-xs lg:text-base lg:max-w-sm px-2">
+                        Let's find your perfect font! Select a few options, preview them with your text, and submit your favorites. Our designers will use your selection to craft your proof. If you have another font in mind, let us know in the notes section below!
+                    </p>
                 </div>
             </aside>
 
