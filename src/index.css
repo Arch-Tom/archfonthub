@@ -553,5 +553,8 @@ body {
 /* --- Zapf Humanist --- */
 @font-face {
     font-family: 'Zapf Humanist 601 Demi BT';
-    src: url('/fonts/ZHUM601D.TTF') format('truetype');
+    src: url('/fonts/ZapfHumanist601BT-Demi.woff2') format('woff2'), url('/fonts/ZapfHumanist601BT-Demi.woff') format('woff'), url('/fonts/ZHUM601D.tff') format('truetype'); /* Use .ttf if that is the correct extension */
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
 }
