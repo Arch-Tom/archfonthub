@@ -1,4 +1,3 @@
-// MonogramPreview.jsx
 import React from 'react';
 
 export default function MonogramPreview({
@@ -8,37 +7,36 @@ export default function MonogramPreview({
     fontFamily,
     fontSize = 100,
     middleScale = 1.5,
-    letterSpacing = '0.05em',
     className = '',
     style = {}
 }) {
-    // Calculate the tallest letter to set container height (prevents layout shift)
-    const previewHeight = fontSize * middleScale;
+    // Calculate the font size for the larger middle initial
+    const middleFontSize = fontSize * middleScale;
 
     return (
         <div
+            // The main container uses flexbox to vertically center the initials
             className={`flex items-center justify-center select-none ${className}`}
             style={{
                 fontFamily,
-                fontSize,
-                lineHeight: 1,
-                letterSpacing,
-                height: previewHeight,
                 ...style
             }}
         >
-            <span style={{ display: 'inline-block', lineHeight: 1 }}>{first}</span>
+            {/* First initial with the base font size */}
+            <span style={{ fontSize: `${fontSize}px` }}>{first}</span>
+
+            {/* Middle initial with a larger font size and negative margin for kerning */}
             <span
                 style={{
-                    display: 'inline-block',
-                    transform: `scale(${middleScale})`,
-                    lineHeight: 1,
-                    margin: '0 0.08em',
+                    fontSize: `${middleFontSize}px`,
+                    margin: '0 -0.1em', // Pulls the side letters closer
                 }}
             >
                 {middle}
             </span>
-            <span style={{ display: 'inline-block', lineHeight: 1 }}>{last}</span>
+
+            {/* Last initial with the base font size */}
+            <span style={{ fontSize: `${fontSize}px` }}>{last}</span>
         </div>
     );
 }
