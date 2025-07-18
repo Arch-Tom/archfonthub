@@ -58,25 +58,9 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                 </header>
 
                 {/* Main Content */}
-                <div className="flex-1 flex flex-col sm:flex-row overflow-y-auto">
-
-                    {/* === Preview comes first on mobile === */}
-                    <aside className="w-full sm:w-1/2 flex flex-col items-center justify-center bg-white sm:bg-gradient-to-tr sm:from-blue-50 sm:to-white px-3 sm:p-5 pt-5 sm:pt-5">
-                        <div className="w-full h-40 sm:h-56 md:h-[70%] flex items-center justify-center rounded-xl border border-slate-200 shadow-inner bg-white mb-5 sm:mb-6">
-                            <MonogramPreview
-                                first={firstInitial || 'N'}
-                                middle={middleInitial || 'X'}
-                                last={lastInitial || 'D'}
-                                fontFamily={selectedFont.styles[activeStyle]}
-                                fontSize={fontSize}
-                                middleScale={1.5}
-                                style={{ width: '100%', height: '100%' }}
-                            />
-                        </div>
-                    </aside>
-
-                    {/* === Controls === */}
-                    <section className="w-full sm:w-1/2 flex flex-col gap-6 px-3 sm:p-5 pb-28 sm:pb-0">
+                <div className="flex-1 flex flex-row overflow-y-auto">
+                    {/* === Controls: left side === */}
+                    <section className="w-full md:w-1/2 flex flex-col gap-6 px-3 sm:p-5 pb-28 sm:pb-0 max-w-xl min-w-[320px]">
                         {/* Initials input */}
                         <div>
                             <h3 className="text-base sm:text-lg font-semibold text-slate-700 mb-2 sm:mb-3">Your Initials</h3>
@@ -117,7 +101,7 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                                         key={font.name}
                                         onClick={() => setSelectedFont(font)}
                                         className={`group flex flex-col items-center justify-center px-2 py-3 rounded-xl border-2 transition
-                      ${selectedFont.name === font.name
+                                            ${selectedFont.name === font.name
                                                 ? 'border-blue-600 bg-blue-50 shadow-md'
                                                 : 'border-slate-200 bg-white hover:border-blue-400 hover:bg-blue-50/40'}`}
                                         style={{
@@ -158,9 +142,24 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                             </div>
                         </div>
                     </section>
+
+                    {/* === Preview: right side === */}
+                    <aside className="flex-1 flex flex-col items-center justify-center bg-white md:bg-gradient-to-tr md:from-blue-50 md:to-white px-3 sm:p-5 pt-5 sm:pt-5 min-w-[200px]">
+                        <div className="w-full h-40 sm:h-56 md:h-[70%] flex items-center justify-center rounded-xl border border-slate-200 shadow-inner bg-white mb-5 sm:mb-6">
+                            <MonogramPreview
+                                first={firstInitial || 'N'}
+                                middle={middleInitial || 'X'}
+                                last={lastInitial || 'D'}
+                                fontFamily={selectedFont.styles[activeStyle]}
+                                fontSize={fontSize}
+                                middleScale={1.5}
+                                style={{ width: '100%', height: '100%' }}
+                            />
+                        </div>
+                    </aside>
                 </div>
 
-                {/* Footer Actions (fixed on mobile for reachability) */}
+                {/* Footer Actions */}
                 <footer className="fixed sm:sticky bottom-0 left-0 w-full bg-white/95 border-t border-slate-200 px-4 py-3 flex flex-row-reverse justify-between gap-3 z-20">
                     <button
                         onClick={handleInsert}
