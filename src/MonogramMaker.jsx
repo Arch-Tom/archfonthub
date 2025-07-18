@@ -1,27 +1,24 @@
 import React, { useState, useMemo } from 'react';
 
 export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
-    // Use useMemo to flatten the font list. The filter for Script fonts has been removed.
+    // Flatten font list for easy mapping
     const monogramFonts = useMemo(() => {
         return Object.entries(fontLibrary)
             .flatMap(([category, fonts]) => fonts.map(font => ({ ...font, category })));
     }, [fontLibrary]);
 
-    // Set a default font on initial render
+    // Set default font on mount
     const [selectedFont, setSelectedFont] = useState(monogramFonts.find(f => f.category === 'Serif') || monogramFonts[0]);
     const [activeStyle, setActiveStyle] = useState(Object.keys(selectedFont.styles)[0]);
 
-    // Use three separate state variables for each initial
+    // State for initials and font size
     const [firstInitial, setFirstInitial] = useState('');
     const [middleInitial, setMiddleInitial] = useState('');
     const [lastInitial, setLastInitial] = useState('');
-
     const [fontSize, setFontSize] = useState(100);
 
     const handleInsert = () => {
-        // Check if all three initials are provided
         if (!firstInitial || !middleInitial || !lastInitial) return;
-
         onInsert({
             text: `${firstInitial}${middleInitial}${lastInitial}`,
             font: selectedFont,
@@ -32,25 +29,39 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
     };
 
     return (
-        <div className="fixed inset-0 bg-slate-900 bg-opacity-75 flex items-center justify-center p-4 z-50 animate-fade-in" onClick={onClose}>
-            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-6xl h-[80vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
+        <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/70 backdrop-blur-[3px] p-2 animate-fade-in"
+            onClick={onClose}
+        >
+            <div
+                className="relative bg-white rounded-3xl shadow-2xl max-w-2xl w-full md:max-w-5xl md:h-[90vh] flex flex-col overflow-hidden transition-all"
+                onClick={e => e.stopPropagation()}
+            >
                 {/* Header */}
-                <div className="p-6 border-b border-slate-200 flex justify-between items-center">
+                <header className="sticky top-0 z-10 bg-white/95 border-b border-slate-200 flex justify-between items-center px-5 py-4">
                     <div>
-                        <h2 className="text-2xl font-bold text-slate-800" style={{ fontFamily: 'Alumni Sans Regular' }}>Monogram Maker</h2>
-                        <p className="text-slate-500">Design your three-letter monogram for preview.</p>
+                        <h2 className="text-xl md:text-2xl font-bold text-slate-900 tracking-tight" style={{ fontFamily: 'Alumni Sans Regular' }}>
+                            Monogram Maker
+                        </h2>
+                        <p className="text-slate-500 text-sm">Create your three-letter monogram instantly.</p>
                     </div>
-                    <button className="text-3xl font-light text-slate-500 hover:text-slate-900" onClick={onClose} title="Close">&times;</button>
-                </div>
+                    <button
+                        className="text-3xl font-light text-slate-400 hover:text-slate-800 transition p-2 -mr-2"
+                        onClick={onClose}
+                        title="Close"
+                    >
+                        &times;
+                    </button>
+                </header>
 
-                {/* Main Content (2-column layout) */}
-                <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
-                    {/* === Left Column: Controls === */}
-                    <div className="w-full md:w-1/2 p-6 space-y-6 overflow-y-auto border-r border-slate-200">
-                        {/* 1. Font Selection */}
+                {/* Responsive Main Content */}
+                <div className="flex-1 flex flex-col-reverse md:flex-row overflow-y-auto">
+                    {/* Controls */}
+                    <section className="w-full md:w-1/2 p-5 space-y-6 bg-gradient-to-br from-slate-50 via-white to-slate-100">
+                        {/* Font Selection */}
                         <div>
-                            <h3 className="text-lg font-semibold text-slate-700 mb-3">1. Select a Font</h3>
-                            <div className="max-h-60 overflow-y-auto p-3 bg-slate-50 rounded-lg border border-slate-200 space-y-2">
+                            <h3 className="text-base md:text-lg font-semibold text-slate-700 mb-3">Font</h3>
+                            <div className="flex gap-2 overflow-x-auto md:flex-col md:gap-1 md:max-h-52 md:overflow-y-auto">
                                 {monogramFonts.map(font => (
                                     <button
                                         key={font.name}
@@ -58,46 +69,81 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                                             setSelectedFont(font);
                                             setActiveStyle(Object.keys(font.styles)[0]);
                                         }}
-                                        className={`w-full text-left p-3 rounded-lg transition-colors text-lg ${selectedFont.name === font.name ? 'bg-blue-600 text-white shadow' : 'bg-white hover:bg-blue-50'}`}
-                                        style={{ fontFamily: font.styles[Object.keys(font.styles)[0]] }}
+                                        className={`min-w-[120px] md:min-w-0 px-4 py-2 rounded-xl border text-base transition
+                                            ${selectedFont.name === font.name ? 'bg-blue-600 text-white border-blue-700 shadow-md' : 'bg-white border-slate-200 hover:bg-blue-50 text-slate-800'}`}
+                                        style={{
+                                            fontFamily: font.styles[Object.keys(font.styles)[0]],
+                                            fontWeight: 500,
+                                            letterSpacing: "0.04em",
+                                            outline: selectedFont.name === font.name ? '2px solid #2563eb' : 'none'
+                                        }}
                                     >
-                                        {font.name} <span className="text-xs opacity-70">({font.category})</span>
+                                        {font.name}
+                                        <span className="ml-1 text-xs opacity-60">({font.category})</span>
                                     </button>
                                 ))}
                             </div>
                         </div>
 
-                        {/* 2. Initials Input */}
+                        {/* Initials Input */}
                         <div>
-                            <h3 className="text-lg font-semibold text-slate-700 mb-3">2. Enter Initials</h3>
-                            <div className="grid grid-cols-3 gap-4">
-                                <input type="text" placeholder="First" value={firstInitial} onChange={e => setFirstInitial(e.target.value.toUpperCase())} maxLength="1" className="p-4 text-center text-2xl border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" />
-                                <input type="text" placeholder="Middle" value={middleInitial} onChange={e => setMiddleInitial(e.target.value.toUpperCase())} maxLength="1" className="p-4 text-center text-2xl border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" />
-                                <input type="text" placeholder="Last" value={lastInitial} onChange={e => setLastInitial(e.target.value.toUpperCase())} maxLength="1" className="p-4 text-center text-2xl border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+                            <h3 className="text-base md:text-lg font-semibold text-slate-700 mb-3">Initials</h3>
+                            <div className="flex gap-3">
+                                <input
+                                    type="text"
+                                    placeholder="F"
+                                    value={firstInitial}
+                                    onChange={e => setFirstInitial(e.target.value.toUpperCase())}
+                                    maxLength={1}
+                                    className="w-14 h-14 md:w-16 md:h-16 bg-white border-2 border-slate-200 text-3xl md:text-4xl text-center rounded-2xl focus:ring-2 focus:ring-blue-500 transition"
+                                />
+                                <input
+                                    type="text"
+                                    placeholder="M"
+                                    value={middleInitial}
+                                    onChange={e => setMiddleInitial(e.target.value.toUpperCase())}
+                                    maxLength={1}
+                                    className="w-14 h-14 md:w-16 md:h-16 bg-white border-2 border-slate-200 text-3xl md:text-4xl text-center rounded-2xl focus:ring-2 focus:ring-blue-500 transition"
+                                />
+                                <input
+                                    type="text"
+                                    placeholder="L"
+                                    value={lastInitial}
+                                    onChange={e => setLastInitial(e.target.value.toUpperCase())}
+                                    maxLength={1}
+                                    className="w-14 h-14 md:w-16 md:h-16 bg-white border-2 border-slate-200 text-3xl md:text-4xl text-center rounded-2xl focus:ring-2 focus:ring-blue-500 transition"
+                                />
                             </div>
                         </div>
 
-                        {/* 3. Font Size Slider */}
+                        {/* Font Size Slider */}
                         <div>
-                            <h3 className="text-lg font-semibold text-slate-700 mb-3">3. Adjust Size</h3>
+                            <h3 className="text-base md:text-lg font-semibold text-slate-700 mb-3">Size</h3>
                             <div className="flex items-center gap-4">
-                                <input id="monogramFontSize" type="range" min="50" max="250" value={fontSize} onChange={e => setFontSize(Number(e.target.value))} className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600" />
-                                <span className="font-semibold text-slate-600 w-16 text-center">{fontSize}px</span>
+                                <input
+                                    id="monogramFontSize"
+                                    type="range"
+                                    min={50}
+                                    max={250}
+                                    value={fontSize}
+                                    onChange={e => setFontSize(Number(e.target.value))}
+                                    className="w-full h-2 bg-slate-200 rounded-lg accent-blue-600"
+                                />
+                                <span className="font-semibold text-slate-600 w-12 text-center">{fontSize}px</span>
                             </div>
                         </div>
-                    </div>
+                    </section>
 
-                    {/* === Right Column: Preview === */}
-                    <div className="flex-1 flex flex-col items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 p-6">
-                        <div className="w-full h-full bg-white rounded-xl shadow-inner border border-slate-200 flex items-center justify-center overflow-hidden">
-                            {/* Spacing and alignment has been adjusted here */}
+                    {/* Preview */}
+                    <aside className="w-full md:w-1/2 flex flex-col items-center justify-center bg-white md:bg-gradient-to-tr md:from-blue-50 md:to-white p-5">
+                        <div className="w-full h-56 md:h-[70%] flex items-center justify-center rounded-xl border border-slate-200 shadow-inner bg-white mb-6 md:mb-0">
                             <div
-                                className="flex items-baseline justify-center transition-all duration-150"
+                                className="flex items-baseline justify-center w-full transition-all duration-150"
                                 style={{
                                     fontFamily: selectedFont.styles[activeStyle],
                                     fontSize: `${fontSize}px`,
                                     lineHeight: 1,
-                                    letterSpacing: '0.05em'
+                                    letterSpacing: "0.05em",
                                 }}
                             >
                                 <span className="transition-all duration-150">{firstInitial || 'F'}</span>
@@ -107,22 +153,25 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                                 <span className="transition-all duration-150">{lastInitial || 'L'}</span>
                             </div>
                         </div>
-                    </div>
+                    </aside>
                 </div>
 
-                {/* Footer Actions */}
-                <div className="p-4 bg-slate-50 border-t border-slate-200 flex justify-end gap-4">
-                    <button onClick={onClose} className="px-6 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base">
-                        Cancel
-                    </button>
+                {/* Footer: Always visible & floating on mobile */}
+                <footer className="sticky bottom-0 left-0 w-full bg-white/95 border-t border-slate-200 px-4 py-3 flex flex-row-reverse justify-between gap-3 z-20">
                     <button
                         onClick={handleInsert}
                         disabled={!firstInitial || !middleInitial || !lastInitial}
-                        className="px-8 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-bold transition-colors shadow-sm text-base disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="px-8 py-3 bg-blue-600 text-white rounded-2xl hover:bg-blue-700 font-bold transition-colors shadow-sm text-base disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         Insert Monogram
                     </button>
-                </div>
+                    <button
+                        onClick={onClose}
+                        className="px-6 py-3 bg-slate-200 text-slate-800 rounded-2xl hover:bg-slate-300 font-semibold transition-colors text-base"
+                    >
+                        Cancel
+                    </button>
+                </footer>
             </div>
         </div>
     );
