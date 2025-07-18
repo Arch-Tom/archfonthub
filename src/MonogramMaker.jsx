@@ -64,9 +64,9 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                     <aside className="w-full sm:w-1/2 flex flex-col items-center justify-center bg-white sm:bg-gradient-to-tr sm:from-blue-50 sm:to-white px-3 sm:p-5 pt-5 sm:pt-5">
                         <div className="w-full h-40 sm:h-56 md:h-[70%] flex items-center justify-center rounded-xl border border-slate-200 shadow-inner bg-white mb-5 sm:mb-6">
                             <MonogramPreview
-                                first={firstInitial || 'F'}
-                                middle={middleInitial || 'M'}
-                                last={lastInitial || 'L'}
+                                first={firstInitial || 'N'}
+                                middle={middleInitial || 'X'}
+                                last={lastInitial || 'D'}
                                 fontFamily={selectedFont.styles[activeStyle]}
                                 fontSize={fontSize}
                                 middleScale={1.5}
@@ -83,7 +83,7 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                             <div className="flex gap-3">
                                 <input
                                     type="text"
-                                    placeholder="F"
+                                    placeholder="N"
                                     value={firstInitial}
                                     onChange={e => setFirstInitial(e.target.value.toUpperCase())}
                                     maxLength={1}
@@ -91,7 +91,7 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                                 />
                                 <input
                                     type="text"
-                                    placeholder="M"
+                                    placeholder="X"
                                     value={middleInitial}
                                     onChange={e => setMiddleInitial(e.target.value.toUpperCase())}
                                     maxLength={1}
@@ -99,7 +99,7 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                                 />
                                 <input
                                     type="text"
-                                    placeholder="L"
+                                    placeholder="D"
                                     value={lastInitial}
                                     onChange={e => setLastInitial(e.target.value.toUpperCase())}
                                     maxLength={1}
@@ -126,9 +126,9 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                                         }}
                                     >
                                         <MonogramPreview
-                                            first={firstInitial || 'F'}
-                                            middle={middleInitial || 'M'}
-                                            last={lastInitial || 'L'}
+                                            first={firstInitial || 'N'}
+                                            middle={middleInitial || 'X'}
+                                            last={lastInitial || 'D'}
                                             fontFamily={font.styles[Object.keys(font.styles)[0]]}
                                             fontSize={28}
                                             middleScale={1.5}
