@@ -151,9 +151,9 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                     <aside className="w-full md:w-1/2 flex flex-col items-center justify-center bg-white md:bg-gradient-to-tr md:from-blue-50 md:to-white p-5">
                         <div className="w-full h-56 md:h-[70%] flex items-center justify-center rounded-xl border border-slate-200 shadow-inner bg-white mb-6 md:mb-0">
                             <MonogramPreview
-                                first={firstInitial || 'F'}
-                                middle={middleInitial || 'M'}
-                                last={lastInitial || 'L'}
+                                first={firstInitial || 'N'}
+                                middle={middleInitial || 'X'}
+                                last={lastInitial || 'D'}
                                 fontFamily={selectedFont.styles[activeStyle]}
                                 fontSize={fontSize}
                                 middleScale={1.5}
