@@ -230,55 +230,80 @@ const App = () => {
     };
 
     const generateSvgContent = () => {
-        if (selectedFonts.length === 0 || customText.trim() === '') {
-            showMessage('Please select at least one font and enter some text to submit your selection.');
-            return null;
-        }
-        const lines = customText.split('\n').filter(line => line.trim() !== '');
-        if (lines.length === 0) {
-            showMessage('Please enter some text to save an SVG.');
+        const hasStandardSelection = selectedFonts.length > 0 && customText.trim() !== '';
+
+        // 1. VALIDATION: Ensure there's something to submit.
+        if (!monogramData && !hasStandardSelection) {
+            showMessage('Please create a monogram, or select at least one font and enter some text to submit.');
             return null;
         }
 
+        const lines = customText.split('\n').filter(line => line.trim() !== '');
         let svgTextElements = '';
         const lineHeight = fontSize * 1.4;
         const labelFontSize = 16;
         const padding = 20;
+        const svgWidth = 800; // Defined early for positioning
         let y = padding;
 
-        selectedFonts.forEach((font, fontIndex) => {
-            const activeFontFamily = font.styles[font.activeStyle];
-            const styleName = font.activeStyle.charAt(0).toUpperCase() + font.activeStyle.slice(1);
+        // 2. MONOGRAM: Add the monogram to the SVG if it exists.
+        if (monogramData) {
+            const monogramFontFamily = monogramData.font.styles[monogramData.style];
+            const monogramStyleName = monogramData.style.charAt(0).toUpperCase() + monogramData.style.slice(1);
+            const monogramFontSize = monogramData.fontSize || 150;
+            const largeMonogramFontSize = monogramFontSize * 1.5;
 
             y += labelFontSize + 10;
-            svgTextElements += `<text x="${padding}" y="${y}" font-family="Arial" font-size="${labelFontSize}" fill="#6b7280" font-weight="600">${font.name} (${styleName})</text>\n`;
-            y += lineHeight * 0.5;
+            svgTextElements += `<text x="${padding}" y="${y}" font-family="Arial" font-size="${labelFontSize}" fill="#6b7280" font-weight="600">Monogram: ${monogramData.font.name} (${monogramStyleName})</text>\n`;
 
-            lines.forEach((line) => {
-                const sanitizedLine = line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                y += lineHeight;
-                svgTextElements += `<text x="${padding}" y="${y}" font-family="${activeFontFamily}" font-size="${fontSize}" fill="#181717">${sanitizedLine}</text>\n`;
+            y += largeMonogramFontSize * 1.2;
+
+            // Render the monogram with a larger center initial, mimicking the live preview
+            svgTextElements += `<text x="${svgWidth / 2}" y="${y}" font-family="${monogramFontFamily}" fill="#181717" text-anchor="middle" alignment-baseline="middle">`;
+            svgTextElements += `<tspan font-size="${monogramFontSize}">${monogramData.text[0]}</tspan>`;
+            svgTextElements += `<tspan font-size="${largeMonogramFontSize}" dx="-0.1em">${monogramData.text[1]}</tspan>`;
+            svgTextElements += `<tspan font-size="${monogramFontSize}" dx="-0.1em">${monogramData.text[2]}</tspan>`;
+            svgTextElements += `</text>\n`;
+
+            y += lineHeight;
+        }
+
+        // 3. FONT PREVIEWS: Add standard text previews if they exist.
+        if (hasStandardSelection && lines.length > 0) {
+            selectedFonts.forEach((font, fontIndex) => {
+                const activeFontFamily = font.styles[font.activeStyle];
+                const styleName = font.activeStyle.charAt(0).toUpperCase() + font.activeStyle.slice(1);
+
+                y += labelFontSize + 10;
+                svgTextElements += `<text x="${padding}" y="${y}" font-family="Arial" font-size="${labelFontSize}" fill="#6b7280" font-weight="600">${font.name} (${styleName})</text>\n`;
+                y += lineHeight * 0.5;
+
+                lines.forEach((line) => {
+                    const sanitizedLine = line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                    y += lineHeight;
+                    svgTextElements += `<text x="${padding}" y="${y}" font-family="${activeFontFamily}" font-size="${fontSize}" fill="#181717">${sanitizedLine}</text>\n`;
+                });
+
+                if (fontIndex < selectedFonts.length - 1) {
+                    y += lineHeight * 0.75;
+                }
             });
+        }
 
-            if (fontIndex < selectedFonts.length - 1) {
-                y += lineHeight * 0.75;
-            }
-        });
-
+        // 4. CUSTOMER NOTES: Add notes if they exist.
         if (customerNotes.trim() !== '') {
-            y += lineHeight; // Add some space before the notes section
+            y += lineHeight;
             svgTextElements += `<text x="${padding}" y="${y}" font-family="Arial" font-size="${labelFontSize}" fill="#6b7280" font-weight="600">Customer Notes</text>\n`;
             y += lineHeight * 0.5;
 
             const noteLines = customerNotes.split('\n').filter(line => line.trim() !== '');
             noteLines.forEach(noteLine => {
                 const sanitizedNoteLine = noteLine.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                y += labelFontSize * 1.4; // Use a smaller line height for notes
+                y += labelFontSize * 1.4;
                 svgTextElements += `<text x="${padding}" y="${y}" font-family="Arial" font-size="${labelFontSize}" fill="#181717">${sanitizedNoteLine}</text>\n`;
             });
         }
 
-        const svgWidth = 800;
         const svgHeight = y + padding;
         return `<svg xmlns="http://www.w3.org/2000/svg" width="${svgWidth}" height="${svgHeight}" style="background-color: #FFF;">\n${svgTextElements}</svg>`;
     };
@@ -582,18 +607,16 @@ const App = () => {
                         </section>
                     </div>
 
-                    {/* --- MODIFICATION HERE --- */}
                     {/* Final Submit Button Area - Full width and centered */}
                     <div className="mt-10">
                         <button
                             onClick={handleSubmitClick}
                             className="w-full px-10 py-4 bg-blue-600 text-white text-xl rounded-2xl font-bold hover:bg-blue-700 shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                            disabled={isSubmitting || (selectedFonts.length === 0 && !monogramData) || (customText.trim() === '' && !monogramData)}
+                            disabled={isSubmitting || (!monogramData && (selectedFonts.length === 0 || customText.trim() === ''))}
                         >
                             {isSubmitting ? 'Submitting...' : 'Submit Selection'}
                         </button>
                     </div>
-                    {/* --- END MODIFICATION --- */}
                 </div>
             </main>
 
