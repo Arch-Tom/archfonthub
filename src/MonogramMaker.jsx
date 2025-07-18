@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import MonogramPreview from './MonogramPreview'; // <-- import the shared preview!
+import MonogramPreview from './MonogramPreview';
 
 export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
     const monogramFonts = useMemo(() => {
@@ -16,7 +16,6 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
     const [lastInitial, setLastInitial] = useState('');
     const [fontSize, setFontSize] = useState(100);
 
-    // Ensure selectedFont/activeStyle are always in sync
     React.useEffect(() => {
         setActiveStyle(Object.keys(selectedFont.styles)[0]);
     }, [selectedFont]);
@@ -34,20 +33,20 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
 
     return (
         <div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/70 backdrop-blur-[3px] p-2 animate-fade-in"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/70 backdrop-blur-[3px] p-0 sm:p-2 animate-fade-in"
             onClick={onClose}
         >
             <div
-                className="relative bg-white rounded-3xl shadow-2xl max-w-2xl w-full md:max-w-5xl md:h-[90vh] flex flex-col overflow-hidden transition-all"
+                className="relative bg-white rounded-none sm:rounded-3xl shadow-2xl w-full max-w-full sm:max-w-2xl md:max-w-5xl h-screen sm:h-[90vh] flex flex-col overflow-hidden transition-all"
                 onClick={e => e.stopPropagation()}
             >
                 {/* Header */}
-                <header className="sticky top-0 z-10 bg-white/95 border-b border-slate-200 flex justify-between items-center px-5 py-4">
+                <header className="sticky top-0 z-10 bg-white/95 border-b border-slate-200 flex justify-between items-center px-4 sm:px-5 py-3 sm:py-4">
                     <div>
-                        <h2 className="text-xl md:text-2xl font-bold text-slate-900 tracking-tight" style={{ fontFamily: 'Alumni Sans Regular' }}>
+                        <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 tracking-tight" style={{ fontFamily: 'Alumni Sans Regular' }}>
                             Monogram Maker
                         </h2>
-                        <p className="text-slate-500 text-sm">Create your three-letter monogram instantly.</p>
+                        <p className="text-slate-500 text-xs sm:text-sm">Create your three-letter monogram instantly.</p>
                     </div>
                     <button
                         className="text-3xl font-light text-slate-400 hover:text-slate-800 transition p-2 -mr-2"
@@ -59,46 +58,60 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                 </header>
 
                 {/* Main Content */}
-                <div className="flex-1 flex flex-col-reverse md:flex-row overflow-y-auto">
+                <div className="flex-1 flex flex-col sm:flex-row overflow-y-auto">
 
-                    {/* Controls: mobile and desktop */}
-                    <section className="w-full md:w-1/2 flex flex-col gap-7 p-5 bg-gradient-to-br from-slate-50 via-white to-slate-100">
+                    {/* === Preview comes first on mobile === */}
+                    <aside className="w-full sm:w-1/2 flex flex-col items-center justify-center bg-white sm:bg-gradient-to-tr sm:from-blue-50 sm:to-white px-3 sm:p-5 pt-5 sm:pt-5">
+                        <div className="w-full h-40 sm:h-56 md:h-[70%] flex items-center justify-center rounded-xl border border-slate-200 shadow-inner bg-white mb-5 sm:mb-6">
+                            <MonogramPreview
+                                first={firstInitial || 'F'}
+                                middle={middleInitial || 'M'}
+                                last={lastInitial || 'L'}
+                                fontFamily={selectedFont.styles[activeStyle]}
+                                fontSize={fontSize}
+                                middleScale={1.5}
+                                style={{ width: '100%', height: '100%' }}
+                            />
+                        </div>
+                    </aside>
 
-                        {/* === Initials input (at the top) === */}
+                    {/* === Controls === */}
+                    <section className="w-full sm:w-1/2 flex flex-col gap-6 px-3 sm:p-5 pb-28 sm:pb-0">
+                        {/* Initials input */}
                         <div>
-                            <h3 className="text-base md:text-lg font-semibold text-slate-700 mb-3">Your Initials</h3>
+                            <h3 className="text-base sm:text-lg font-semibold text-slate-700 mb-2 sm:mb-3">Your Initials</h3>
                             <div className="flex gap-3">
                                 <input
                                     type="text"
-                                    placeholder="N"
+                                    placeholder="F"
                                     value={firstInitial}
                                     onChange={e => setFirstInitial(e.target.value.toUpperCase())}
                                     maxLength={1}
-                                    className="w-14 h-14 md:w-16 md:h-16 bg-white border-2 border-slate-200 text-3xl md:text-4xl text-center rounded-2xl focus:ring-2 focus:ring-blue-500 transition"
+                                    className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-white border-2 border-slate-200 text-2xl sm:text-3xl md:text-4xl text-center rounded-2xl focus:ring-2 focus:ring-blue-500 transition"
                                 />
                                 <input
                                     type="text"
-                                    placeholder="X"
+                                    placeholder="M"
                                     value={middleInitial}
                                     onChange={e => setMiddleInitial(e.target.value.toUpperCase())}
                                     maxLength={1}
-                                    className="w-14 h-14 md:w-16 md:h-16 bg-white border-2 border-slate-200 text-3xl md:text-4xl text-center rounded-2xl focus:ring-2 focus:ring-blue-500 transition"
+                                    className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-white border-2 border-slate-200 text-2xl sm:text-3xl md:text-4xl text-center rounded-2xl focus:ring-2 focus:ring-blue-500 transition"
                                 />
                                 <input
                                     type="text"
-                                    placeholder="D"
+                                    placeholder="L"
                                     value={lastInitial}
                                     onChange={e => setLastInitial(e.target.value.toUpperCase())}
                                     maxLength={1}
-                                    className="w-14 h-14 md:w-16 md:h-16 bg-white border-2 border-slate-200 text-3xl md:text-4xl text-center rounded-2xl focus:ring-2 focus:ring-blue-500 transition"
+                                    className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-white border-2 border-slate-200 text-2xl sm:text-3xl md:text-4xl text-center rounded-2xl focus:ring-2 focus:ring-blue-500 transition"
                                 />
                             </div>
                         </div>
 
-                        {/* === Font Selection Area - Grid of mini-cards === */}
+                        {/* Font Selection Area */}
                         <div>
-                            <h3 className="text-base md:text-lg font-semibold text-slate-700 mb-3">Choose a Font</h3>
-                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                            <h3 className="text-base sm:text-lg font-semibold text-slate-700 mb-2 sm:mb-3">Choose a Font</h3>
+                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3">
                                 {monogramFonts.map(font => (
                                     <button
                                         key={font.name}
@@ -108,17 +121,16 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                                                 ? 'border-blue-600 bg-blue-50 shadow-md'
                                                 : 'border-slate-200 bg-white hover:border-blue-400 hover:bg-blue-50/40'}`}
                                         style={{
-                                            minHeight: '90px',
+                                            minHeight: '80px',
                                             outline: selectedFont.name === font.name ? '2px solid #2563eb55' : 'none',
                                         }}
                                     >
-                                        {/* Monogram preview for the font */}
                                         <MonogramPreview
-                                            first={firstInitial || 'N'}
-                                            middle={middleInitial || 'X'}
-                                            last={lastInitial || 'D'}
+                                            first={firstInitial || 'F'}
+                                            middle={middleInitial || 'M'}
+                                            last={lastInitial || 'L'}
                                             fontFamily={font.styles[Object.keys(font.styles)[0]]}
-                                            fontSize={36}
+                                            fontSize={28}
                                             middleScale={1.5}
                                             className="mb-1"
                                         />
@@ -129,10 +141,10 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                             </div>
                         </div>
 
-                        {/* === Font Size === */}
+                        {/* Font Size */}
                         <div>
-                            <h3 className="text-base md:text-lg font-semibold text-slate-700 mb-3">Size</h3>
-                            <div className="flex items-center gap-4">
+                            <h3 className="text-base sm:text-lg font-semibold text-slate-700 mb-2 sm:mb-3">Size</h3>
+                            <div className="flex items-center gap-3">
                                 <input
                                     id="monogramFontSize"
                                     type="range"
@@ -146,25 +158,10 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                             </div>
                         </div>
                     </section>
-
-                    {/* === Preview Area === */}
-                    <aside className="w-full md:w-1/2 flex flex-col items-center justify-center bg-white md:bg-gradient-to-tr md:from-blue-50 md:to-white p-5">
-                        <div className="w-full h-56 md:h-[70%] flex items-center justify-center rounded-xl border border-slate-200 shadow-inner bg-white mb-6 md:mb-0">
-                            <MonogramPreview
-                                first={firstInitial || 'N'}
-                                middle={middleInitial || 'X'}
-                                last={lastInitial || 'D'}
-                                fontFamily={selectedFont.styles[activeStyle]}
-                                fontSize={fontSize}
-                                middleScale={1.5}
-                                style={{ width: '100%', height: '100%' }}
-                            />
-                        </div>
-                    </aside>
                 </div>
 
-                {/* Footer Actions */}
-                <footer className="sticky bottom-0 left-0 w-full bg-white/95 border-t border-slate-200 px-4 py-3 flex flex-row-reverse justify-between gap-3 z-20">
+                {/* Footer Actions (fixed on mobile for reachability) */}
+                <footer className="fixed sm:sticky bottom-0 left-0 w-full bg-white/95 border-t border-slate-200 px-4 py-3 flex flex-row-reverse justify-between gap-3 z-20">
                     <button
                         onClick={handleInsert}
                         disabled={!firstInitial || !middleInitial || !lastInitial}
