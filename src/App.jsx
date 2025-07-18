@@ -232,7 +232,6 @@ const App = () => {
     const generateSvgContent = () => {
         const hasStandardSelection = selectedFonts.length > 0 && customText.trim() !== '';
 
-        // 1. VALIDATION: Ensure there's something to submit.
         if (!monogramData && !hasStandardSelection) {
             showMessage('Please create a monogram, or select at least one font and enter some text to submit.');
             return null;
@@ -243,60 +242,59 @@ const App = () => {
         const lineHeight = fontSize * 1.4;
         const labelFontSize = 16;
         const padding = 20;
-        const svgWidth = 800; // Defined early for positioning
+        const svgWidth = 800;
         let y = padding;
 
-        // 2. MONOGRAM: Add the monogram to the SVG if it exists.
         if (monogramData) {
             const monogramFontFamily = monogramData.font.styles[monogramData.style];
             const monogramStyleName = monogramData.style.charAt(0).toUpperCase() + monogramData.style.slice(1);
             const monogramFontSize = monogramData.fontSize || 150;
             const largeMonogramFontSize = monogramFontSize * 1.5;
 
-            // Add a label for the monogram section in the SVG
             y += labelFontSize + 10;
             svgTextElements += `<text x="${padding}" y="${y}" font-family="Arial" font-size="${labelFontSize}" fill="#6b7280" font-weight="600">Monogram: ${monogramData.font.name} (${monogramStyleName})</text>\n`;
 
             y += largeMonogramFontSize * 1.2;
 
-            // --- High-Fidelity Monogram Rendering ---
             const centerX = svgWidth / 2;
             const baselineY = y;
-            // Heuristic calculation for spacing the letters. Assumes average character width is ~60% of font size.
-            // This provides a great starting point for the designer.
             const sideLetterOffset = (largeMonogramFontSize * 0.3) + (monogramFontSize * 0.3);
 
-            // Add a comment in the SVG for the designer
+            // --- Vertical Centering Fix for CorelDRAW ---
+            // Manually calculate a vertical offset for the smaller letters to ensure they appear centered.
+            // This is a robust solution for vector editors that ignore the 'dominant-baseline' attribute.
+            // The calculation is a font-size-based heuristic to approximate the visual center.
+            const yOffset = monogramFontSize * 0.175;
+
             svgTextElements += `\n`;
 
-            // Left Initial (Small)
+            // Left Initial (Small, shifted up)
             svgTextElements += `<text
-                x="${centerX - sideLetterOffset}" y="${baselineY}"
+                x="${centerX - sideLetterOffset}" y="${baselineY - yOffset}"
                 font-family="${monogramFontFamily}" font-size="${monogramFontSize}px"
-                fill="#181717" text-anchor="middle" dominant-baseline="middle">
+                fill="#181717" text-anchor="middle">
                 ${monogramData.text[0].replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}
             </text>\n`;
 
-            // Center Initial (Large)
+            // Center Initial (Large, on baseline)
             svgTextElements += `<text
                 x="${centerX}" y="${baselineY}"
                 font-family="${monogramFontFamily}" font-size="${largeMonogramFontSize}px"
-                fill="#181717" text-anchor="middle" dominant-baseline="middle">
+                fill="#181717" text-anchor="middle">
                 ${monogramData.text[1].replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}
             </text>\n`;
 
-            // Right Initial (Small)
+            // Right Initial (Small, shifted up)
             svgTextElements += `<text
-                x="${centerX + sideLetterOffset}" y="${baselineY}"
+                x="${centerX + sideLetterOffset}" y="${baselineY - yOffset}"
                 font-family="${monogramFontFamily}" font-size="${monogramFontSize}px"
-                fill="#181717" text-anchor="middle" dominant-baseline="middle">
+                fill="#181717" text-anchor="middle">
                 ${monogramData.text[2].replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}
             </text>\n`;
 
             y += lineHeight;
         }
 
-        // 3. FONT PREVIEWS: Add standard text previews if they exist.
         if (hasStandardSelection && lines.length > 0) {
             selectedFonts.forEach((font, fontIndex) => {
                 const activeFontFamily = font.styles[font.activeStyle];
@@ -318,7 +316,6 @@ const App = () => {
             });
         }
 
-        // 4. CUSTOMER NOTES: Add notes if they exist.
         if (customerNotes.trim() !== '') {
             y += lineHeight;
             svgTextElements += `<text x="${padding}" y="${y}" font-family="Arial" font-size="${labelFontSize}" fill="#6b7280" font-weight="600">Customer Notes</text>\n`;
