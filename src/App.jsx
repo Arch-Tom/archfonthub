@@ -253,17 +253,45 @@ const App = () => {
             const monogramFontSize = monogramData.fontSize || 150;
             const largeMonogramFontSize = monogramFontSize * 1.5;
 
+            // Add a label for the monogram section in the SVG
             y += labelFontSize + 10;
             svgTextElements += `<text x="${padding}" y="${y}" font-family="Arial" font-size="${labelFontSize}" fill="#6b7280" font-weight="600">Monogram: ${monogramData.font.name} (${monogramStyleName})</text>\n`;
 
             y += largeMonogramFontSize * 1.2;
 
-            // Render the monogram with a larger center initial, mimicking the live preview
-            svgTextElements += `<text x="${svgWidth / 2}" y="${y}" font-family="${monogramFontFamily}" fill="#181717" text-anchor="middle" alignment-baseline="middle">`;
-            svgTextElements += `<tspan font-size="${monogramFontSize}">${monogramData.text[0]}</tspan>`;
-            svgTextElements += `<tspan font-size="${largeMonogramFontSize}" dx="-0.1em">${monogramData.text[1]}</tspan>`;
-            svgTextElements += `<tspan font-size="${monogramFontSize}" dx="-0.1em">${monogramData.text[2]}</tspan>`;
-            svgTextElements += `</text>\n`;
+            // --- High-Fidelity Monogram Rendering ---
+            const centerX = svgWidth / 2;
+            const baselineY = y;
+            // Heuristic calculation for spacing the letters. Assumes average character width is ~60% of font size.
+            // This provides a great starting point for the designer.
+            const sideLetterOffset = (largeMonogramFontSize * 0.3) + (monogramFontSize * 0.3);
+
+            // Add a comment in the SVG for the designer
+            svgTextElements += `\n`;
+
+            // Left Initial (Small)
+            svgTextElements += `<text
+                x="${centerX - sideLetterOffset}" y="${baselineY}"
+                font-family="${monogramFontFamily}" font-size="${monogramFontSize}px"
+                fill="#181717" text-anchor="middle" dominant-baseline="middle">
+                ${monogramData.text[0].replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}
+            </text>\n`;
+
+            // Center Initial (Large)
+            svgTextElements += `<text
+                x="${centerX}" y="${baselineY}"
+                font-family="${monogramFontFamily}" font-size="${largeMonogramFontSize}px"
+                fill="#181717" text-anchor="middle" dominant-baseline="middle">
+                ${monogramData.text[1].replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}
+            </text>\n`;
+
+            // Right Initial (Small)
+            svgTextElements += `<text
+                x="${centerX + sideLetterOffset}" y="${baselineY}"
+                font-family="${monogramFontFamily}" font-size="${monogramFontSize}px"
+                fill="#181717" text-anchor="middle" dominant-baseline="middle">
+                ${monogramData.text[2].replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}
+            </text>\n`;
 
             y += lineHeight;
         }
