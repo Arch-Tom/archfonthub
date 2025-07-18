@@ -310,22 +310,6 @@ const App = () => {
             customerCompany.trim() ? formatForFilename(customerCompany) : ''
         ].filter(Boolean).join('_') + '.svg';
 
-        /* This block is now commented out to prevent local download.
-        try {
-            const blob = new Blob([svgContent], { type: 'image/svg+xml' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        } catch (error) {
-            showMessage(`Could not save file locally: ${error.message}`);
-        }
-        */
-
         try {
             const response = await fetch(`${WORKER_URL}/${filename}`, {
                 method: 'PUT',
@@ -526,9 +510,10 @@ const App = () => {
                                             <span style={{
                                                 fontFamily: monogramData.font.styles[monogramData.style],
                                                 fontSize: `${monogramData.fontSize || 150}px`,
-                                                letterSpacing: '0.2em'
-                                            }} className="text-slate-800">
-                                                {monogramData.text}
+                                            }} className="text-slate-800 flex items-center">
+                                                <span>{monogramData.text[0]}</span>
+                                                <span style={{ fontSize: '1.5em', margin: '0 -0.1em' }}>{monogramData.text[1]}</span>
+                                                <span>{monogramData.text[2]}</span>
                                             </span>
                                         </div>
                                     </div>
@@ -582,8 +567,7 @@ const App = () => {
                             </div>
                         </section>
 
-                        {/* --- MODIFICATION STARTS HERE --- */}
-                        {/* Customer Notes & Submission Section */}
+                        {/* Customer Notes Section */}
                         <section className="bg-white rounded-2xl p-8 border border-slate-100 shadow-[0_10px_25px_-5px_rgba(50,75,106,0.2),_0_8px_10px_-6px_rgba(59,130,246,0.2)]">
                             <h2 className="text-3xl font-bold text-slate-900 mb-2 tracking-normal" style={{ fontFamily: 'Alumni Sans Regular' }}>Notes for Designer</h2>
                             <p className="text-slate-500 mb-6">
@@ -596,20 +580,20 @@ const App = () => {
                                 placeholder="e.g., Please use the font 'Gotham' if available. Also, make the first line larger than the second..."
                             />
                         </section>
-
-                        {/* Final Submit Button Area */}
-                        <div className="mt-8 flex justify-end">
-                            <button
-                                onClick={handleSubmitClick}
-                                className="px-10 py-4 bg-blue-600 text-white text-lg rounded-xl font-bold hover:bg-blue-700 shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                                disabled={isSubmitting || (selectedFonts.length === 0 && !monogramData) || (customText.trim() === '' && !monogramData)}
-                            >
-                                {isSubmitting ? 'Submitting...' : 'Submit Selection'}
-                            </button>
-                        </div>
-                        {/* --- MODIFICATION ENDS HERE --- */}
-
                     </div>
+
+                    {/* --- MODIFICATION HERE --- */}
+                    {/* Final Submit Button Area - Full width and centered */}
+                    <div className="mt-10">
+                        <button
+                            onClick={handleSubmitClick}
+                            className="w-full px-10 py-4 bg-blue-600 text-white text-xl rounded-2xl font-bold hover:bg-blue-700 shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled={isSubmitting || (selectedFonts.length === 0 && !monogramData) || (customText.trim() === '' && !monogramData)}
+                        >
+                            {isSubmitting ? 'Submitting...' : 'Submit Selection'}
+                        </button>
+                    </div>
+                    {/* --- END MODIFICATION --- */}
                 </div>
             </main>
 
@@ -757,7 +741,6 @@ const App = () => {
                 </div>
             )}
 
-            {/* MonogramMaker moved here, inside the main return but outside the main layout for overlay */}
             {showMonogramMaker && (
                 <MonogramMaker
                     fontLibrary={fontLibrary}
