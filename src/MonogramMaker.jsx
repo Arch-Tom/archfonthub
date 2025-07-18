@@ -1,17 +1,13 @@
 import React, { useState, useMemo } from 'react';
 
 export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
-    // Flatten font list for easy mapping
     const monogramFonts = useMemo(() => {
         return Object.entries(fontLibrary)
             .flatMap(([category, fonts]) => fonts.map(font => ({ ...font, category })));
     }, [fontLibrary]);
 
-    // Set default font on mount
     const [selectedFont, setSelectedFont] = useState(monogramFonts.find(f => f.category === 'Serif') || monogramFonts[0]);
     const [activeStyle, setActiveStyle] = useState(Object.keys(selectedFont.styles)[0]);
-
-    // State for initials and font size
     const [firstInitial, setFirstInitial] = useState('');
     const [middleInitial, setMiddleInitial] = useState('');
     const [lastInitial, setLastInitial] = useState('');
@@ -27,6 +23,15 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
         });
         onClose();
     };
+
+    // Helper for grid preview
+    const getPreview = () => (
+        <span>
+            <span>{firstInitial || 'F'}</span>
+            <span style={{ fontSize: '1.4em', verticalAlign: 'middle' }}>{middleInitial || 'M'}</span>
+            <span>{lastInitial || 'L'}</span>
+        </span>
+    );
 
     return (
         <div
@@ -54,40 +59,15 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                     </button>
                 </header>
 
-                {/* Responsive Main Content */}
+                {/* Main content */}
                 <div className="flex-1 flex flex-col-reverse md:flex-row overflow-y-auto">
-                    {/* Controls */}
-                    <section className="w-full md:w-1/2 p-5 space-y-6 bg-gradient-to-br from-slate-50 via-white to-slate-100">
-                        {/* Font Selection */}
-                        <div>
-                            <h3 className="text-base md:text-lg font-semibold text-slate-700 mb-3">Font</h3>
-                            <div className="flex gap-2 overflow-x-auto md:flex-col md:gap-1 md:max-h-52 md:overflow-y-auto">
-                                {monogramFonts.map(font => (
-                                    <button
-                                        key={font.name}
-                                        onClick={() => {
-                                            setSelectedFont(font);
-                                            setActiveStyle(Object.keys(font.styles)[0]);
-                                        }}
-                                        className={`min-w-[120px] md:min-w-0 px-4 py-2 rounded-xl border text-base transition
-                                            ${selectedFont.name === font.name ? 'bg-blue-600 text-white border-blue-700 shadow-md' : 'bg-white border-slate-200 hover:bg-blue-50 text-slate-800'}`}
-                                        style={{
-                                            fontFamily: font.styles[Object.keys(font.styles)[0]],
-                                            fontWeight: 500,
-                                            letterSpacing: "0.04em",
-                                            outline: selectedFont.name === font.name ? '2px solid #2563eb' : 'none'
-                                        }}
-                                    >
-                                        {font.name}
-                                        <span className="ml-1 text-xs opacity-60">({font.category})</span>
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
 
-                        {/* Initials Input */}
+                    {/* Controls: mobile and desktop */}
+                    <section className="w-full md:w-1/2 flex flex-col gap-7 p-5 bg-gradient-to-br from-slate-50 via-white to-slate-100">
+
+                        {/* === Initials input (moved to top) === */}
                         <div>
-                            <h3 className="text-base md:text-lg font-semibold text-slate-700 mb-3">Initials</h3>
+                            <h3 className="text-base md:text-lg font-semibold text-slate-700 mb-3">Your Initials</h3>
                             <div className="flex gap-3">
                                 <input
                                     type="text"
@@ -116,7 +96,47 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                             </div>
                         </div>
 
-                        {/* Font Size Slider */}
+                        {/* === Font Selection Area - Grid of mini-cards === */}
+                        <div>
+                            <h3 className="text-base md:text-lg font-semibold text-slate-700 mb-3">Choose a Font</h3>
+                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                                {monogramFonts.map(font => (
+                                    <button
+                                        key={font.name}
+                                        onClick={() => {
+                                            setSelectedFont(font);
+                                            setActiveStyle(Object.keys(font.styles)[0]);
+                                        }}
+                                        className={`group flex flex-col items-center justify-center px-2 py-3 rounded-xl border-2 transition
+                                            ${selectedFont.name === font.name
+                                                ? 'border-blue-600 bg-blue-50 shadow-md'
+                                                : 'border-slate-200 bg-white hover:border-blue-400 hover:bg-blue-50/40'}`}
+                                        style={{
+                                            minHeight: '82px',
+                                            outline: selectedFont.name === font.name ? '2px solid #2563eb55' : 'none',
+                                        }}
+                                    >
+                                        {/* Monogram preview for the font */}
+                                        <span
+                                            className="mb-1 text-lg"
+                                            style={{
+                                                fontFamily: font.styles[Object.keys(font.styles)[0]],
+                                                fontWeight: 500,
+                                                letterSpacing: "0.03em",
+                                                fontSize: '1.5em',
+                                                transition: 'font-size 0.2s'
+                                            }}
+                                        >
+                                            {getPreview()}
+                                        </span>
+                                        <span className="text-xs font-semibold text-slate-700 group-hover:text-blue-700">{font.name}</span>
+                                        <span className="text-[11px] text-slate-400">{font.category}</span>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* === Font Size === */}
                         <div>
                             <h3 className="text-base md:text-lg font-semibold text-slate-700 mb-3">Size</h3>
                             <div className="flex items-center gap-4">
@@ -134,7 +154,7 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                         </div>
                     </section>
 
-                    {/* Preview */}
+                    {/* === Preview Area === */}
                     <aside className="w-full md:w-1/2 flex flex-col items-center justify-center bg-white md:bg-gradient-to-tr md:from-blue-50 md:to-white p-5">
                         <div className="w-full h-56 md:h-[70%] flex items-center justify-center rounded-xl border border-slate-200 shadow-inner bg-white mb-6 md:mb-0">
                             <div
@@ -156,7 +176,7 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                     </aside>
                 </div>
 
-                {/* Footer: Always visible & floating on mobile */}
+                {/* Footer Actions */}
                 <footer className="sticky bottom-0 left-0 w-full bg-white/95 border-t border-slate-200 px-4 py-3 flex flex-row-reverse justify-between gap-3 z-20">
                     <button
                         onClick={handleInsert}
