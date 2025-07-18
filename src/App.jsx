@@ -581,13 +581,13 @@ const App = () => {
                                 )}
                             </div>
                         </section>
-                        {/* The stray brace from here has been removed */}
 
+                        {/* --- MODIFICATION STARTS HERE --- */}
                         {/* Customer Notes & Submission Section */}
                         <section className="bg-white rounded-2xl p-8 border border-slate-100 shadow-[0_10px_25px_-5px_rgba(50,75,106,0.2),_0_8px_10px_-6px_rgba(59,130,246,0.2)]">
-                            <h2 className="text-3xl font-bold text-slate-900 mb-2 tracking-normal" style={{ fontFamily: 'Alumni Sans Regular' }}>Notes & Submission</h2>
+                            <h2 className="text-3xl font-bold text-slate-900 mb-2 tracking-normal" style={{ fontFamily: 'Alumni Sans Regular' }}>Notes for Designer</h2>
                             <p className="text-slate-500 mb-6">
-                                Have a specific font in mind not listed above? Or any other special requests for our designers? Let us know here!
+                                Have a specific font in mind not listed above? Or any other special requests? Let us know here!
                             </p>
                             <textarea
                                 className="w-full p-5 border-2 border-slate-200 rounded-xl shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 min-h-[120px] text-xl"
@@ -595,16 +595,20 @@ const App = () => {
                                 onChange={(e) => setCustomerNotes(e.target.value)}
                                 placeholder="e.g., Please use the font 'Gotham' if available. Also, make the first line larger than the second..."
                             />
-                            <div className="mt-8 flex justify-end">
-                                <button
-                                    onClick={handleSubmitClick}
-                                    className="px-10 py-4 bg-green-600 text-white text-lg rounded-xl font-bold hover:bg-green-700 shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                                    disabled={isSubmitting || (selectedFonts.length === 0 && !monogramData) || (customText.trim() === '' && !monogramData)}
-                                >
-                                    {isSubmitting ? 'Submitting...' : 'Submit Font Selection'}
-                                </button>
-                            </div>
                         </section>
+
+                        {/* Final Submit Button Area */}
+                        <div className="mt-8 flex justify-end">
+                            <button
+                                onClick={handleSubmitClick}
+                                className="px-10 py-4 bg-blue-600 text-white text-lg rounded-xl font-bold hover:bg-blue-700 shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                disabled={isSubmitting || (selectedFonts.length === 0 && !monogramData) || (customText.trim() === '' && !monogramData)}
+                            >
+                                {isSubmitting ? 'Submitting...' : 'Submit Selection'}
+                            </button>
+                        </div>
+                        {/* --- MODIFICATION ENDS HERE --- */}
+
                     </div>
                 </div>
             </main>
