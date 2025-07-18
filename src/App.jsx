@@ -1,4 +1,5 @@
 ﻿import React, { useState, useRef, useEffect } from 'react';
+import MonogramMaker from './MonogramMaker';
 
 // This component remains outside the main App component for good practice.
 const FormInput = ({ label, id, value, onChange, required = false, isOptional = false, disabled = false }) => (
@@ -118,6 +119,9 @@ const App = () => {
     const [isDataPrefilled, setIsDataPrefilled] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmissionComplete, setIsSubmissionComplete] = useState(false);
+    // --- Monogram modal and data ---
+    const [showMonogramMaker, setShowMonogramMaker] = useState(false);
+    const [monogramData, setMonogramData] = useState(null);
 
     // State for the Hebrew palette
     const [hebrewPaletteText, setHebrewPaletteText] = useState('');
@@ -466,6 +470,16 @@ const App = () => {
                             </div>
                         </section>
 
+                        <div className="flex justify-end mt-4">
+                            <button
+                                className="px-6 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 shadow"
+                                onClick={() => setShowMonogramMaker(true)}
+                                type="button"
+                            >
+                                Open Monogram Maker
+                            </button>
+                        </div>
+
                         {/* Custom Text Section */}
                         <section className="bg-white rounded-2xl p-8 border border-slate-100 shadow-[0_10px_25px_-5px_rgba(50,75,106,0.2),_0_8px_10px_-6px_rgba(59,130,246,0.2)]">
                             <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center mb-6 gap-4">
@@ -499,6 +513,27 @@ const App = () => {
                             </div>
                             <div className="bg-gradient-to-b from-slate-50 to-slate-200 p-6 rounded-xl min-h-[150px] space-y-10 border border-slate-100">
 
+                                {/* --- Monogram Preview Block --- */}
+                                {monogramData && (
+                                    <div className="mb-10 p-6 border border-blue-200 rounded-xl bg-blue-50 shadow">
+                                        <div className="mb-2 flex items-center gap-4">
+                                            <span className="bg-blue-700 text-white px-4 py-1 rounded-full text-lg font-bold shadow" style={{ fontFamily: 'Arial' }}>
+                                                {monogramData.font.name} (Monogram)
+                                            </span>
+                                            <span className="text-slate-700 font-semibold">{monogramData.style.charAt(0).toUpperCase() + monogramData.style.slice(1)}</span>
+                                        </div>
+                                        <div className="flex justify-center items-center">
+                                            <span style={{
+                                                fontFamily: monogramData.font.styles[monogramData.style],
+                                                fontSize: `${monogramData.fontSize || 150}px`,
+                                                letterSpacing: '0.2em'
+                                            }} className="text-slate-800">
+                                                {monogramData.text}
+                                            </span>
+                                        </div>
+                                    </div>
+                                )}
+
                                 {hebrewRegex.test(customText) && (
                                     <div className="p-4 mb-6 bg-amber-50 border-l-4 border-amber-400 rounded-r-lg">
                                         <div className="flex">
@@ -509,7 +544,7 @@ const App = () => {
                                             </div>
                                             <div className="ml-3">
                                                 <p className="text-sm text-amber-800 font-medium">
-                                                    Please check each preview carefully, as Hebrew character support can vary between fonts.
+                                                    Please check each preview carefully as Hebrew character support can vary between fonts.
                                                 </p>
                                             </div>
                                         </div>
@@ -546,28 +581,30 @@ const App = () => {
                                 )}
                             </div>
                         </section>
+                        {/* The stray brace from here has been removed */}
 
-                        {/* Customer Notes Section */}
+                        {/* Customer Notes & Submission Section */}
                         <section className="bg-white rounded-2xl p-8 border border-slate-100 shadow-[0_10px_25px_-5px_rgba(50,75,106,0.2),_0_8px_10px_-6px_rgba(59,130,246,0.2)]">
-                            <h2 className="text-3xl font-bold text-slate-900 tracking-normal" style={{ fontFamily: 'Alumni Sans Regular' }}>Customer Notes</h2>
-                            <p className="text-slate-500 mt-1 mb-6">
-                                Use this space to provide any specific instructions for your font selection. For example: "Use Times New Roman for the award information and Benguiat for the name."
+                            <h2 className="text-3xl font-bold text-slate-900 mb-2 tracking-normal" style={{ fontFamily: 'Alumni Sans Regular' }}>Notes & Submission</h2>
+                            <p className="text-slate-500 mb-6">
+                                Have a specific font in mind not listed above? Or any other special requests for our designers? Let us know here!
                             </p>
                             <textarea
                                 className="w-full p-5 border-2 border-slate-200 rounded-xl shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 min-h-[120px] text-xl"
                                 value={customerNotes}
                                 onChange={(e) => setCustomerNotes(e.target.value)}
-                                placeholder="Enter any notes for the designer here..."
-                                dir="auto"
+                                placeholder="e.g., Please use the font 'Gotham' if available. Also, make the first line larger than the second..."
                             />
+                            <div className="mt-8 flex justify-end">
+                                <button
+                                    onClick={handleSubmitClick}
+                                    className="px-10 py-4 bg-green-600 text-white text-lg rounded-xl font-bold hover:bg-green-700 shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                    disabled={isSubmitting || (selectedFonts.length === 0 && !monogramData) || (customText.trim() === '' && !monogramData)}
+                                >
+                                    {isSubmitting ? 'Submitting...' : 'Submit Font Selection'}
+                                </button>
+                            </div>
                         </section>
-
-                    </div>
-
-                    <div className="mt-12">
-                        <button className="w-full bg-[rgb(50,75,106)] text-white font-bold py-6 px-8 rounded-2xl shadow-2xl hover:shadow-[0_0_15px_rgb(50,75,106)] hover:bg-[rgb(40,65,96)] transition-all duration-200 transform hover:scale-105 text-2xl tracking-wide disabled:opacity-75 disabled:cursor-not-allowed" onClick={handleSubmitClick} disabled={isSubmitting || isSubmissionComplete}>
-                            {isSubmitting ? 'Submitting...' : isSubmissionComplete ? 'Submission Sent!' : 'Submit Fonts to Arch Engraving'}
-                        </button>
                     </div>
                 </div>
             </main>
@@ -714,6 +751,18 @@ const App = () => {
                         )}
                     </div>
                 </div>
+            )}
+
+            {/* MonogramMaker moved here, inside the main return but outside the main layout for overlay */}
+            {showMonogramMaker && (
+                <MonogramMaker
+                    fontLibrary={fontLibrary}
+                    onClose={() => setShowMonogramMaker(false)}
+                    onInsert={(data) => {
+                        setMonogramData(data);
+                        setShowMonogramMaker(false); // Close modal on insert
+                    }}
+                />
             )}
         </div>
     );
