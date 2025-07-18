@@ -114,9 +114,9 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                                     >
                                         {/* Monogram preview for the font */}
                                         <MonogramPreview
-                                            first={firstInitial || 'F'}
-                                            middle={middleInitial || 'M'}
-                                            last={lastInitial || 'L'}
+                                            first={firstInitial || 'N'}
+                                            middle={middleInitial || 'X'}
+                                            last={lastInitial || 'D'}
                                             fontFamily={font.styles[Object.keys(font.styles)[0]]}
                                             fontSize={36}
                                             middleScale={1.5}
