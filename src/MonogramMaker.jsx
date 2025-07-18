@@ -70,7 +70,7 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                             <div className="flex gap-3">
                                 <input
                                     type="text"
-                                    placeholder="F"
+                                    placeholder="N"
                                     value={firstInitial}
                                     onChange={e => setFirstInitial(e.target.value.toUpperCase())}
                                     maxLength={1}
@@ -78,7 +78,7 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                                 />
                                 <input
                                     type="text"
-                                    placeholder="M"
+                                    placeholder="X"
                                     value={middleInitial}
                                     onChange={e => setMiddleInitial(e.target.value.toUpperCase())}
                                     maxLength={1}
@@ -86,7 +86,7 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                                 />
                                 <input
                                     type="text"
-                                    placeholder="L"
+                                    placeholder="D"
                                     value={lastInitial}
                                     onChange={e => setLastInitial(e.target.value.toUpperCase())}
                                     maxLength={1}
