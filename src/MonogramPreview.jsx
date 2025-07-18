@@ -2,9 +2,9 @@
 import React from 'react';
 
 export default function MonogramPreview({
-    first = 'F',
-    middle = 'M',
-    last = 'L',
+    first = 'N',
+    middle = 'X',
+    last = 'D',
     fontFamily,
     fontSize = 100,
     middleScale = 1.5,
