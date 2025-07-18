@@ -1,7 +1,8 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import MonogramPreview from './MonogramPreview';
 
 export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
+    // --- STATE AND REFS ---
     const monogramFonts = useMemo(() => {
         return Object.entries(fontLibrary)
             .flatMap(([category, fonts]) => fonts.map(font => ({ ...font, category })));
@@ -11,25 +12,66 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
         monogramFonts.find(f => f.category === 'Serif') || monogramFonts[0]
     );
     const [activeStyle, setActiveStyle] = useState(Object.keys(selectedFont.styles)[0]);
-    const [firstInitial, setFirstInitial] = useState('');
-    const [middleInitial, setMiddleInitial] = useState('');
-    const [lastInitial, setLastInitial] = useState('');
+
+    // Use a single array for initials to simplify state management
+    const [initials, setInitials] = useState(['', '', '']);
+
     const [fontSize, setFontSize] = useState(100);
 
-    React.useEffect(() => {
+    // Create refs for each input field to manage focus
+    const inputRefs = useRef([]);
+
+    // --- EFFECTS ---
+
+    // Set initial focus on the first input when the modal mounts
+    useEffect(() => {
+        if (inputRefs.current[0]) {
+            inputRefs.current[0].focus();
+        }
+    }, []);
+
+    // Effect to update the active style when the font changes
+    useEffect(() => {
         setActiveStyle(Object.keys(selectedFont.styles)[0]);
     }, [selectedFont]);
 
+
+    // --- HANDLERS ---
+
+    // Handles changes for any of the three initial inputs
+    const handleInitialChange = (e, index) => {
+        const newInitials = [...initials];
+        // Limit to a single uppercase character
+        newInitials[index] = e.target.value.slice(0, 1).toUpperCase();
+        setInitials(newInitials);
+
+        // If a character was entered and it's not the last input, move focus to the next one
+        if (e.target.value && index < 2) {
+            inputRefs.current[index + 1]?.focus();
+        }
+    };
+
+    // Handles the backspace key to move focus backward
+    const handleKeyDown = (e, index) => {
+        if (e.key === 'Backspace' && !initials[index] && index > 0) {
+            inputRefs.current[index - 1]?.focus();
+        }
+    };
+
     const handleInsert = () => {
-        if (!firstInitial || !middleInitial || !lastInitial) return;
+        const [first, middle, last] = initials;
+        if (!first || !middle || !last) return;
+
         onInsert({
-            text: `${firstInitial}${middleInitial}${lastInitial}`,
+            text: initials.join(''),
             font: selectedFont,
             style: activeStyle,
             fontSize,
         });
         onClose();
     };
+
+    // --- RENDER ---
 
     return (
         <div
@@ -65,30 +107,19 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                         <div>
                             <h3 className="text-base sm:text-lg font-semibold text-slate-700 mb-2 sm:mb-3">Your Initials</h3>
                             <div className="flex gap-3">
-                                <input
-                                    type="text"
-                                    placeholder="N"
-                                    value={firstInitial}
-                                    onChange={e => setFirstInitial(e.target.value.toUpperCase())}
-                                    maxLength={1}
-                                    className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-white border-2 border-slate-200 text-2xl sm:text-3xl md:text-4xl text-center rounded-2xl focus:ring-2 focus:ring-blue-500 transition"
-                                />
-                                <input
-                                    type="text"
-                                    placeholder="X"
-                                    value={middleInitial}
-                                    onChange={e => setMiddleInitial(e.target.value.toUpperCase())}
-                                    maxLength={1}
-                                    className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-white border-2 border-slate-200 text-2xl sm:text-3xl md:text-4xl text-center rounded-2xl focus:ring-2 focus:ring-blue-500 transition"
-                                />
-                                <input
-                                    type="text"
-                                    placeholder="D"
-                                    value={lastInitial}
-                                    onChange={e => setLastInitial(e.target.value.toUpperCase())}
-                                    maxLength={1}
-                                    className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-white border-2 border-slate-200 text-2xl sm:text-3xl md:text-4xl text-center rounded-2xl focus:ring-2 focus:ring-blue-500 transition"
-                                />
+                                {initials.map((initial, index) => (
+                                    <input
+                                        key={index}
+                                        ref={el => (inputRefs.current[index] = el)}
+                                        type="text"
+                                        placeholder={['F', 'L', 'M'][index]}
+                                        value={initial}
+                                        onChange={e => handleInitialChange(e, index)}
+                                        onKeyDown={e => handleKeyDown(e, index)}
+                                        maxLength={1}
+                                        className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-white border-2 border-slate-200 text-2xl sm:text-3xl md:text-4xl text-center rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                                    />
+                                ))}
                             </div>
                         </div>
 
@@ -110,9 +141,9 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                                         }}
                                     >
                                         <MonogramPreview
-                                            first={firstInitial || 'N'}
-                                            middle={middleInitial || 'X'}
-                                            last={lastInitial || 'D'}
+                                            first={initials[0] || 'F'}
+                                            middle={initials[1] || 'L'}
+                                            last={initials[2] || 'M'}
                                             fontFamily={font.styles[Object.keys(font.styles)[0]]}
                                             fontSize={28}
                                             middleScale={1.5}
@@ -147,9 +178,9 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                     <aside className="flex-1 flex flex-col items-center justify-center bg-white md:bg-gradient-to-tr md:from-blue-50 md:to-white px-3 sm:p-5 pt-5 sm:pt-5 min-w-[200px]">
                         <div className="w-full h-40 sm:h-56 md:h-[70%] flex items-center justify-center rounded-xl border border-slate-200 shadow-inner bg-white mb-5 sm:mb-6">
                             <MonogramPreview
-                                first={firstInitial || 'N'}
-                                middle={middleInitial || 'X'}
-                                last={lastInitial || 'D'}
+                                first={initials[0] || 'F'}
+                                middle={initials[1] || 'L'}
+                                last={initials[2] || 'M'}
                                 fontFamily={selectedFont.styles[activeStyle]}
                                 fontSize={fontSize}
                                 middleScale={1.5}
@@ -163,7 +194,7 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                 <footer className="fixed sm:sticky bottom-0 left-0 w-full bg-white/95 border-t border-slate-200 px-4 py-3 flex flex-row-reverse justify-between gap-3 z-20">
                     <button
                         onClick={handleInsert}
-                        disabled={!firstInitial || !middleInitial || !lastInitial}
+                        disabled={!initials[0] || !initials[1] || !initials[2]}
                         className="px-8 py-3 bg-blue-600 text-white rounded-2xl hover:bg-blue-700 font-bold transition-colors shadow-sm text-base disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         Insert Monogram
