@@ -1,10 +1,9 @@
 import React, { useState, useMemo } from 'react';
 
 export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
-    // Use useMemo to filter and flatten the font list once, excluding script fonts
+    // Use useMemo to flatten the font list. The filter for Script fonts has been removed.
     const monogramFonts = useMemo(() => {
         return Object.entries(fontLibrary)
-            .filter(([category]) => category !== 'Script')
             .flatMap(([category, fonts]) => fonts.map(font => ({ ...font, category })));
     }, [fontLibrary]);
 
@@ -91,17 +90,18 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                     {/* === Right Column: Preview === */}
                     <div className="flex-1 flex flex-col items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 p-6">
                         <div className="w-full h-full bg-white rounded-xl shadow-inner border border-slate-200 flex items-center justify-center overflow-hidden">
-                            {/* This is the key change for the 150% middle letter */}
+                            {/* Spacing and alignment has been adjusted here */}
                             <div
-                                className="flex items-center justify-center transition-all duration-150"
+                                className="flex items-baseline justify-center transition-all duration-150"
                                 style={{
                                     fontFamily: selectedFont.styles[activeStyle],
                                     fontSize: `${fontSize}px`,
                                     lineHeight: 1,
+                                    letterSpacing: '0.05em'
                                 }}
                             >
                                 <span className="transition-all duration-150">{firstInitial || 'F'}</span>
-                                <span className="transition-all duration-150" style={{ fontSize: '1.5em', margin: '0 -0.1em' }}>
+                                <span className="transition-all duration-150" style={{ fontSize: '1.5em' }}>
                                     {middleInitial || 'M'}
                                 </span>
                                 <span className="transition-all duration-150">{lastInitial || 'L'}</span>
