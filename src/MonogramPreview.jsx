@@ -7,36 +7,34 @@ export default function MonogramPreview({
     fontFamily,
     fontSize = 100,
     middleScale = 1.5,
+    letterSpacing = '0.05em', // This now controls the gap for consistent spacing
     className = '',
     style = {}
 }) {
-    // Calculate the font size for the larger middle initial
     const middleFontSize = fontSize * middleScale;
 
     return (
         <div
-            // The main container uses flexbox to vertically center the initials
             className={`flex items-center justify-center select-none ${className}`}
             style={{
                 fontFamily,
+                // Set the base font-size on the container. The side letters will inherit this.
+                fontSize: `${fontSize}px`,
+                // The `gap` property is the best way to create consistent space between letters.
+                gap: letterSpacing,
                 ...style
             }}
         >
-            {/* First initial with the base font size */}
-            <span style={{ fontSize: `${fontSize}px` }}>{first}</span>
+            {/* This span inherits its font size from the parent div */}
+            <span>{first}</span>
 
-            {/* Middle initial with a larger font size and negative margin for kerning */}
-            <span
-                style={{
-                    fontSize: `${middleFontSize}px`,
-                    margin: '0 -0.1em', // Pulls the side letters closer
-                }}
-            >
+            {/* This span overrides the font size to be larger */}
+            <span style={{ fontSize: `${middleFontSize}px` }}>
                 {middle}
             </span>
 
-            {/* Last initial with the base font size */}
-            <span style={{ fontSize: `${fontSize}px` }}>{last}</span>
+            {/* This span also inherits its font size from the parent div */}
+            <span>{last}</span>
         </div>
     );
 }
