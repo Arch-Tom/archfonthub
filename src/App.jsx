@@ -556,14 +556,15 @@ const App = () => {
                                             </span>
                                             <span className="text-slate-700 font-semibold">{monogramData.style.charAt(0).toUpperCase() + monogramData.style.slice(1)}</span>
                                         </div>
-                                        <div className="flex justify-center items-center">
-                                            <span style={{
-                                                fontFamily: monogramData.font.styles[monogramData.style],
-                                                fontSize: `${monogramData.fontSize || 150}px`,
-                                            }} className="text-slate-800 flex items-center">
-                                                <span>{monogramData.text[0]}</span>
-                                                <span style={{ fontSize: '1.5em', margin: '0 -0.1em' }}>{monogramData.text[1]}</span>
-                                                <span>{monogramData.text[2]}</span>
+                                        <div className="flex justify-center items-center text-slate-800" style={{ fontFamily: monogramData.font.styles[monogramData.style] }}>
+                                            <span style={{ fontSize: `${monogramData.fontSize || 150}px` }}>
+                                                {monogramData.text[0]}
+                                            </span>
+                                            <span style={{ fontSize: `${(monogramData.fontSize || 150) * 1.5}px`, margin: '0 -0.1em' }}>
+                                                {monogramData.text[1]}
+                                            </span>
+                                            <span style={{ fontSize: `${monogramData.fontSize || 150}px` }}>
+                                                {monogramData.text[2]}
                                             </span>
                                         </div>
                                     </div>
@@ -612,7 +613,8 @@ const App = () => {
                                         )
                                     })
                                 ) : (
-                                    <div className="flex items-center justify-center h-full"><p className="text-slate-500 italic">Select fonts and enter text to see a live preview.</p></div>
+                                    // Hide the placeholder text if a monogram is present, otherwise show it
+                                    !monogramData && <div className="flex items-center justify-center h-full"><p className="text-slate-500 italic">Select fonts and enter text to see a live preview.</p></div>
                                 )}
                             </div>
                         </section>
