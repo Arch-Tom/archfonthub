@@ -112,7 +112,7 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                                         key={index}
                                         ref={el => (inputRefs.current[index] = el)}
                                         type="text"
-                                        placeholder={['F', 'L', 'M'][index]}
+                                        placeholder={['N', 'X', 'D'][index]}
                                         value={initial}
                                         onChange={e => handleInitialChange(e, index)}
                                         onKeyDown={e => handleKeyDown(e, index)}
@@ -141,9 +141,9 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                                         }}
                                     >
                                         <MonogramPreview
-                                            first={initials[0] || 'F'}
-                                            middle={initials[1] || 'L'}
-                                            last={initials[2] || 'M'}
+                                            first={initials[0] || 'N'}
+                                            middle={initials[1] || 'X'}
+                                            last={initials[2] || 'D'}
                                             fontFamily={font.styles[Object.keys(font.styles)[0]]}
                                             fontSize={28}
                                             middleScale={1.5}
@@ -178,9 +178,9 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                     <aside className="flex-1 flex flex-col items-center justify-center bg-white md:bg-gradient-to-tr md:from-blue-50 md:to-white px-3 sm:p-5 pt-5 sm:pt-5 min-w-[200px]">
                         <div className="w-full h-40 sm:h-56 md:h-[70%] flex items-center justify-center rounded-xl border border-slate-200 shadow-inner bg-white mb-5 sm:mb-6">
                             <MonogramPreview
-                                first={initials[0] || 'F'}
-                                middle={initials[1] || 'L'}
-                                last={initials[2] || 'M'}
+                                first={initials[0] || 'N'}
+                                middle={initials[1] || 'X'}
+                                last={initials[2] || 'D'}
                                 fontFamily={selectedFont.styles[activeStyle]}
                                 fontSize={fontSize}
                                 middleScale={1.5}
