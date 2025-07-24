@@ -53,6 +53,41 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
         onClose();
     };
 
+    // -- PREVIEW BOX COMPONENT (reuse for mobile and desktop) --
+    const previewBox = (
+        <div className="w-full flex flex-col items-center mb-2">
+            <label className="text-xs font-semibold text-slate-500 mb-1" htmlFor="monogram-preview-box">Preview</label>
+            <div
+                id="monogram-preview-box"
+                className="w-full max-w-[340px] flex items-center justify-center rounded-xl border border-slate-200 shadow-inner bg-white px-2 py-2 overflow-x-auto"
+                style={{
+                    minHeight: 0,
+                    height: 'auto',
+                }}
+            >
+                <MonogramPreview
+                    first={initials[0] || 'N'}
+                    middle={initials[1] || 'X'}
+                    last={initials[2] || 'D'}
+                    fontFamily={selectedFont.styles[activeStyle]}
+                    fontSize={fontSize}
+                    sideScale={1.2}
+                    middleScale={1.5}
+                    style={{
+                        width: '100%',
+                        maxWidth: '100%',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        minHeight: 0,
+                    }}
+                />
+            </div>
+        </div>
+    );
+
     return (
         <div
             className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/70 backdrop-blur-[3px] p-0 sm:p-2 animate-fade-in"
@@ -80,6 +115,7 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                 </header>
 
                 <div className="flex-1 flex flex-col md:flex-row overflow-y-auto">
+                    {/* LEFT COLUMN */}
                     <section className="w-full md:w-1/2 flex flex-col gap-6 px-3 sm:p-5 pb-6 md:pb-0 max-w-xl min-w-[320px] mx-auto">
                         {/* Initials input */}
                         <div>
@@ -100,40 +136,8 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                                 ))}
                             </div>
                         </div>
-
-                        {/* Preview Label and Box */}
-                        <div className="w-full flex flex-col items-center mb-2">
-                            <label className="text-xs font-semibold text-slate-500 mb-1" htmlFor="monogram-preview-box">Preview</label>
-                            <div
-                                id="monogram-preview-box"
-                                className="w-full max-w-[340px] flex items-center justify-center rounded-xl border border-slate-200 shadow-inner bg-white px-2 py-2 overflow-x-auto"
-                                style={{
-                                    minHeight: 0,
-                                    height: 'auto',
-                                }}
-                            >
-                                <MonogramPreview
-                                    first={initials[0] || 'N'}
-                                    middle={initials[1] || 'X'}
-                                    last={initials[2] || 'D'}
-                                    fontFamily={selectedFont.styles[activeStyle]}
-                                    fontSize={fontSize}
-                                    sideScale={1.2}
-                                    middleScale={1.5}
-                                    style={{
-                                        width: '100%',
-                                        maxWidth: '100%',
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                        alignItems: 'center', // <-- ensures vertical centering
-                                        whiteSpace: 'nowrap',
-                                        overflow: 'hidden',
-                                        minHeight: 0,
-                                    }}
-                                />
-                            </div>
-                        </div>
-
+                        {/* PREVIEW: MOBILE ONLY */}
+                        <div className="block md:hidden">{previewBox}</div>
                         {/* Font Selection Area */}
                         <div>
                             <h3 className="text-base sm:text-lg font-semibold text-slate-700 mb-2 sm:mb-3">Choose a Font</h3>
@@ -168,6 +172,10 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                             </div>
                         </div>
                     </section>
+                    {/* RIGHT COLUMN: PREVIEW (DESKTOP ONLY) */}
+                    <aside className="hidden md:flex w-1/2 flex-col items-center justify-center p-5">
+                        {previewBox}
+                    </aside>
                 </div>
 
                 {/* Footer Actions */}
