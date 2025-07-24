@@ -2,7 +2,6 @@ import React, { useState, useMemo, useRef, useEffect } from 'react';
 import MonogramPreview from './MonogramPreview';
 
 export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
-    // --- STATE AND REFS ---
     const monogramFonts = useMemo(() => {
         return Object.entries(fontLibrary)
             .flatMap(([category, fonts]) => fonts.map(font => ({ ...font, category })));
@@ -13,7 +12,7 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
     );
     const [activeStyle, setActiveStyle] = useState(Object.keys(selectedFont.styles)[0]);
     const [initials, setInitials] = useState(['', '', '']);
-    const [fontSize] = useState(100); // fixed font size (you can tweak this value as needed)
+    const [fontSize] = useState(54); // You can adjust for ideal preview size
 
     const inputRefs = useRef([]);
 
@@ -27,7 +26,6 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
         setActiveStyle(Object.keys(selectedFont.styles)[0]);
     }, [selectedFont]);
 
-    // --- HANDLERS ---
     const handleInitialChange = (e, index) => {
         const newInitials = [...initials];
         newInitials[index] = e.target.value.slice(0, 1).toUpperCase();
@@ -46,7 +44,6 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
     const handleInsert = () => {
         const [first, middle, last] = initials;
         if (!first || !middle || !last) return;
-
         onInsert({
             text: initials.join(''),
             font: selectedFont,
@@ -56,7 +53,6 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
         onClose();
     };
 
-    // --- RENDER ---
     return (
         <div
             className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/70 backdrop-blur-[3px] p-0 sm:p-2 animate-fade-in"
@@ -84,7 +80,6 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                 </header>
 
                 <div className="flex-1 flex flex-col md:flex-row overflow-y-auto">
-                    {/* Controls and content area */}
                     <section className="w-full md:w-1/2 flex flex-col gap-6 px-3 sm:p-5 pb-6 md:pb-0 max-w-xl min-w-[320px] mx-auto">
                         {/* Initials input */}
                         <div>
@@ -106,60 +101,36 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                             </div>
                         </div>
 
-                        {/* --- PREVIEW: just above font selection --- */}
-                        <div className="flex flex-col items-center justify-center w-full">
+                        {/* Preview Label and Box */}
+                        <div className="w-full flex flex-col items-center mb-2">
+                            <label className="text-xs font-semibold text-slate-500 mb-1" htmlFor="monogram-preview-box">Preview</label>
                             <div
-                                className="w-full max-w-[340px] h-28 sm:h-36 flex items-center justify-center rounded-xl border border-slate-200 shadow-inner bg-white mb-4 overflow-hidden"
+                                id="monogram-preview-box"
+                                className="w-full max-w-[340px] flex items-center justify-center rounded-xl border border-slate-200 shadow-inner bg-white px-2 py-2 overflow-x-auto"
                                 style={{
-                                    boxSizing: 'border-box',
-                                    padding: '0.5rem',
-                                    background: '#fff'
+                                    minHeight: 0,
+                                    height: 'auto',
                                 }}
                             >
-                                <div
-                                    className="w-full flex items-center justify-center"
+                                <MonogramPreview
+                                    first={initials[0] || 'N'}
+                                    middle={initials[1] || 'X'}
+                                    last={initials[2] || 'D'}
+                                    fontFamily={selectedFont.styles[activeStyle]}
+                                    fontSize={fontSize}
+                                    sideScale={1.2}
+                                    middleScale={1.5}
                                     style={{
-                                        // Scaling: the monogram will shrink to fit container if too wide
-                                        overflow: 'hidden',
                                         width: '100%',
-                                        height: '100%',
+                                        maxWidth: '100%',
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'flex-end',
+                                        whiteSpace: 'nowrap',
+                                        overflow: 'hidden',
+                                        minHeight: 0,
                                     }}
-                                >
-                                    <div
-                                        style={{
-                                            width: '100%',
-                                            display: 'flex',
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                            whiteSpace: 'nowrap',
-                                            overflow: 'hidden',
-                                            // Responsive scaling
-                                            fontSize: '100%',
-                                            maxWidth: '100%',
-                                        }}
-                                    >
-                                        <MonogramPreview
-                                            first={initials[0] || 'N'}
-                                            middle={initials[1] || 'X'}
-                                            last={initials[2] || 'D'}
-                                            fontFamily={selectedFont.styles[activeStyle]}
-                                            fontSize={fontSize}
-                                            middleScale={1.5}
-                                            style={{
-                                                width: '100%',
-                                                maxWidth: '100%',
-                                                height: '100%',
-                                                overflow: 'hidden',
-                                                display: 'flex',
-                                                justifyContent: 'center',
-                                                alignItems: 'center',
-                                                whiteSpace: 'nowrap',
-                                                // Add font size scaling for very wide monograms
-                                                fontSize: 'clamp(2.3rem, 8vw, 3.5rem)',
-                                            }}
-                                        />
-                                    </div>
-                                </div>
+                                />
                             </div>
                         </div>
 
@@ -186,6 +157,7 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                                             last={initials[2] || 'D'}
                                             fontFamily={font.styles[Object.keys(font.styles)[0]]}
                                             fontSize={28}
+                                            sideScale={1.1}
                                             middleScale={1.5}
                                             className="mb-1"
                                         />
@@ -196,8 +168,6 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                             </div>
                         </div>
                     </section>
-
-                    {/* (No aside/preview panel now, since preview is in the main column) */}
                 </div>
 
                 {/* Footer Actions */}
