@@ -12,7 +12,7 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
     );
     const [activeStyle, setActiveStyle] = useState(Object.keys(selectedFont.styles)[0]);
     const [initials, setInitials] = useState(['', '', '']);
-    const [fontSize] = useState(54); // You can adjust for ideal preview size
+    const [fontSize] = useState(54); // Adjust for your design
 
     const inputRefs = useRef([]);
 
@@ -125,7 +125,7 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                                         maxWidth: '100%',
                                         display: 'flex',
                                         justifyContent: 'center',
-                                        alignItems: 'flex-end',
+                                        alignItems: 'center', // <-- ensures vertical centering
                                         whiteSpace: 'nowrap',
                                         overflow: 'hidden',
                                         minHeight: 0,
