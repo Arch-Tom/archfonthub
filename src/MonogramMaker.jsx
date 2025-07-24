@@ -12,45 +12,31 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
         monogramFonts.find(f => f.category === 'Serif') || monogramFonts[0]
     );
     const [activeStyle, setActiveStyle] = useState(Object.keys(selectedFont.styles)[0]);
-
-    // Use a single array for initials to simplify state management
     const [initials, setInitials] = useState(['', '', '']);
+    const [fontSize] = useState(100); // fixed font size (you can tweak this value as needed)
 
-    const [fontSize, setFontSize] = useState(100);
-
-    // Create refs for each input field to manage focus
     const inputRefs = useRef([]);
 
-    // --- EFFECTS ---
-
-    // Set initial focus on the first input when the modal mounts
     useEffect(() => {
         if (inputRefs.current[0]) {
             inputRefs.current[0].focus();
         }
     }, []);
 
-    // Effect to update the active style when the font changes
     useEffect(() => {
         setActiveStyle(Object.keys(selectedFont.styles)[0]);
     }, [selectedFont]);
 
     // --- HANDLERS ---
-
-    // Handles changes for any of the three initial inputs
     const handleInitialChange = (e, index) => {
         const newInitials = [...initials];
-        // Limit to a single uppercase character
         newInitials[index] = e.target.value.slice(0, 1).toUpperCase();
         setInitials(newInitials);
-
-        // If a character was entered and it's not the last input, move focus to the next one
         if (e.target.value && index < 2) {
             inputRefs.current[index + 1]?.focus();
         }
     };
 
-    // Handles the backspace key to move focus backward
     const handleKeyDown = (e, index) => {
         if (e.key === 'Backspace' && !initials[index] && index > 0) {
             inputRefs.current[index - 1]?.focus();
@@ -71,7 +57,6 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
     };
 
     // --- RENDER ---
-
     return (
         <div
             className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/70 backdrop-blur-[3px] p-0 sm:p-2 animate-fade-in"
@@ -98,10 +83,9 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                     </button>
                 </header>
 
-                {/* --- MAIN CONTENT: MOBILE FRIENDLY! --- */}
                 <div className="flex-1 flex flex-col md:flex-row overflow-y-auto">
-                    {/* Controls Area */}
-                    <section className="w-full md:w-1/2 flex flex-col gap-6 px-3 sm:p-5 pb-6 md:pb-0 max-w-xl min-w-[320px]">
+                    {/* Controls and content area */}
+                    <section className="w-full md:w-1/2 flex flex-col gap-6 px-3 sm:p-5 pb-6 md:pb-0 max-w-xl min-w-[320px] mx-auto">
                         {/* Initials input */}
                         <div>
                             <h3 className="text-base sm:text-lg font-semibold text-slate-700 mb-2 sm:mb-3">Your Initials</h3>
@@ -119,6 +103,63 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                                         className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-white border-2 border-slate-200 text-2xl sm:text-3xl md:text-4xl text-center rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                                     />
                                 ))}
+                            </div>
+                        </div>
+
+                        {/* --- PREVIEW: just above font selection --- */}
+                        <div className="flex flex-col items-center justify-center w-full">
+                            <div
+                                className="w-full max-w-[340px] h-28 sm:h-36 flex items-center justify-center rounded-xl border border-slate-200 shadow-inner bg-white mb-4 overflow-hidden"
+                                style={{
+                                    boxSizing: 'border-box',
+                                    padding: '0.5rem',
+                                    background: '#fff'
+                                }}
+                            >
+                                <div
+                                    className="w-full flex items-center justify-center"
+                                    style={{
+                                        // Scaling: the monogram will shrink to fit container if too wide
+                                        overflow: 'hidden',
+                                        width: '100%',
+                                        height: '100%',
+                                    }}
+                                >
+                                    <div
+                                        style={{
+                                            width: '100%',
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            whiteSpace: 'nowrap',
+                                            overflow: 'hidden',
+                                            // Responsive scaling
+                                            fontSize: '100%',
+                                            maxWidth: '100%',
+                                        }}
+                                    >
+                                        <MonogramPreview
+                                            first={initials[0] || 'N'}
+                                            middle={initials[1] || 'X'}
+                                            last={initials[2] || 'D'}
+                                            fontFamily={selectedFont.styles[activeStyle]}
+                                            fontSize={fontSize}
+                                            middleScale={1.5}
+                                            style={{
+                                                width: '100%',
+                                                maxWidth: '100%',
+                                                height: '100%',
+                                                overflow: 'hidden',
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                                whiteSpace: 'nowrap',
+                                                // Add font size scaling for very wide monograms
+                                                fontSize: 'clamp(2.3rem, 8vw, 3.5rem)',
+                                            }}
+                                        />
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -154,48 +195,9 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                                 ))}
                             </div>
                         </div>
-
-                        {/* Font Size */}
-                        <div>
-                            <h3 className="text-base sm:text-lg font-semibold text-slate-700 mb-2 sm:mb-3">Size</h3>
-                            <div className="flex items-center gap-3">
-                                <input
-                                    id="monogramFontSize"
-                                    type="range"
-                                    min={50}
-                                    max={250}
-                                    value={fontSize}
-                                    onChange={e => setFontSize(Number(e.target.value))}
-                                    className="w-full h-2 bg-slate-200 rounded-lg accent-blue-600"
-                                />
-                                <span className="font-semibold text-slate-600 w-12 text-center">{fontSize}px</span>
-                            </div>
-                        </div>
                     </section>
 
-                    {/* Preview Area - below controls on mobile, right on desktop */}
-                    <div className="w-full md:w-1/2 flex flex-col items-center justify-center bg-white md:bg-gradient-to-tr md:from-blue-50 md:to-white px-3 sm:p-5 pt-3 sm:pt-5 min-w-[200px]">
-                        <div className="w-full max-w-full md:max-w-[430px] h-40 sm:h-56 md:h-[70%] flex items-center justify-center rounded-xl border border-slate-200 shadow-inner bg-white mb-5 sm:mb-6 overflow-x-auto">
-                            <MonogramPreview
-                                first={initials[0] || 'N'}
-                                middle={initials[1] || 'X'}
-                                last={initials[2] || 'D'}
-                                fontFamily={selectedFont.styles[activeStyle]}
-                                fontSize={fontSize}
-                                middleScale={1.5}
-                                style={{
-                                    width: '100%',
-                                    maxWidth: '100%',
-                                    height: '100%',
-                                    overflow: 'hidden',
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    whiteSpace: 'nowrap',
-                                }}
-                            />
-                        </div>
-                    </div>
+                    {/* (No aside/preview panel now, since preview is in the main column) */}
                 </div>
 
                 {/* Footer Actions */}
