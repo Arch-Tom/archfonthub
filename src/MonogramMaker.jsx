@@ -35,7 +35,6 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
         setActiveStyle(Object.keys(selectedFont.styles)[0]);
     }, [selectedFont]);
 
-
     // --- HANDLERS ---
 
     // Handles changes for any of the three initial inputs
@@ -99,10 +98,10 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                     </button>
                 </header>
 
-                {/* Main Content */}
-                <div className="flex-1 flex flex-row overflow-y-auto">
-                    {/* === Controls: left side === */}
-                    <section className="w-full md:w-1/2 flex flex-col gap-6 px-3 sm:p-5 pb-28 sm:pb-0 max-w-xl min-w-[320px]">
+                {/* --- MAIN CONTENT: MOBILE FRIENDLY! --- */}
+                <div className="flex-1 flex flex-col md:flex-row overflow-y-auto">
+                    {/* Controls Area */}
+                    <section className="w-full md:w-1/2 flex flex-col gap-6 px-3 sm:p-5 pb-6 md:pb-0 max-w-xl min-w-[320px]">
                         {/* Initials input */}
                         <div>
                             <h3 className="text-base sm:text-lg font-semibold text-slate-700 mb-2 sm:mb-3">Your Initials</h3>
@@ -174,9 +173,9 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                         </div>
                     </section>
 
-                    {/* === Preview: right side === */}
-                    <aside className="flex-1 flex flex-col items-center justify-center bg-white md:bg-gradient-to-tr md:from-blue-50 md:to-white px-3 sm:p-5 pt-5 sm:pt-5 min-w-[200px]">
-                        <div className="w-full h-40 sm:h-56 md:h-[70%] flex items-center justify-center rounded-xl border border-slate-200 shadow-inner bg-white mb-5 sm:mb-6">
+                    {/* Preview Area - below controls on mobile, right on desktop */}
+                    <div className="w-full md:w-1/2 flex flex-col items-center justify-center bg-white md:bg-gradient-to-tr md:from-blue-50 md:to-white px-3 sm:p-5 pt-3 sm:pt-5 min-w-[200px]">
+                        <div className="w-full max-w-full md:max-w-[430px] h-40 sm:h-56 md:h-[70%] flex items-center justify-center rounded-xl border border-slate-200 shadow-inner bg-white mb-5 sm:mb-6 overflow-x-auto">
                             <MonogramPreview
                                 first={initials[0] || 'N'}
                                 middle={initials[1] || 'X'}
@@ -184,10 +183,19 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                                 fontFamily={selectedFont.styles[activeStyle]}
                                 fontSize={fontSize}
                                 middleScale={1.5}
-                                style={{ width: '100%', height: '100%' }}
+                                style={{
+                                    width: '100%',
+                                    maxWidth: '100%',
+                                    height: '100%',
+                                    overflow: 'hidden',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    whiteSpace: 'nowrap',
+                                }}
                             />
                         </div>
-                    </aside>
+                    </div>
                 </div>
 
                 {/* Footer Actions */}
@@ -201,7 +209,7 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                     </button>
                     <button
                         onClick={onClose}
-                        className="px-6 py-3 bg-slate-200 text-slate-800 rounded-2xl hover:bg-slate-300 font-semibold transition-colors text-base"
+                        className="px-6 py-3 bg-slate-200 text-slate-700 rounded-2xl hover:bg-slate-300 font-semibold transition-colors shadow-sm text-base"
                     >
                         Cancel
                     </button>
