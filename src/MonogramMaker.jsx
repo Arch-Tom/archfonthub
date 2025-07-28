@@ -59,7 +59,7 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
             text: initials.join(''),
             font: selectedFont,
             style: activeStyle,
-            fontSize,
+            fontSize: 1, // Use a relative scale factor instead of fixed px
             isCircular: monogramStyle === 'circular',
             disableScaling: monogramStyle === 'flat'
         });

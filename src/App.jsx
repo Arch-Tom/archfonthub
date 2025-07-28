@@ -581,6 +581,7 @@ const App = () => {
                                     </div>
                                 )}
 
+
                                 {hebrewRegex.test(customText) && (
                                     <div className="p-4 mb-6 bg-amber-50 border-l-4 border-amber-400 rounded-r-lg">
                                         <div className="flex">
