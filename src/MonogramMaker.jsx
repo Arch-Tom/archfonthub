@@ -19,7 +19,7 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
         selectedFont.circular ? null : Object.keys(selectedFont.styles)[0]
     );
     const [initials, setInitials] = useState(['', '', '']);
-    const [fontSize] = useState(54);
+    const [fontSize] = useState(100); // Increased default font size
 
     const inputRefs = useRef([]);
 
@@ -71,8 +71,8 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
             <label className="text-xs font-semibold text-slate-500 mb-1" htmlFor="monogram-preview-box">Preview</label>
             <div
                 id="monogram-preview-box"
-                className="w-full max-w-[340px] flex items-center justify-center rounded-xl border border-slate-200 shadow-inner bg-white px-2 py-4"
-                style={{ minHeight: '120px' }}
+                className="w-full max-w-[400px] flex items-center justify-center rounded-xl border border-slate-200 shadow-inner bg-white px-2 py-6"
+                style={{ minHeight: '150px' }}
             >
                 <MonogramPreview
                     first={initials[0] || 'N'}
@@ -82,9 +82,9 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                     firstFont={monogramStyle === 'circular' ? 'LeftCircleMonogram' : undefined}
                     middleFont={monogramStyle === 'circular' ? 'MiddleCircleMonogram' : undefined}
                     lastFont={monogramStyle === 'circular' ? 'RightCircleMonogram' : undefined}
-                    fontSize={fontSize}
+                    fontSize={monogramStyle === 'circular' ? fontSize * 1.4 : fontSize}
                     sideScale={1.2}
-                    middleScale={monogramStyle === 'flat' ? 1 : 1.5}
+                    middleScale={monogramStyle === 'flat' ? 1 : 1.6}
                     disableScaling={monogramStyle === 'flat' || monogramStyle === 'circular'}
                 />
             </div>
@@ -169,7 +169,7 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                                             middle={initials[1] || 'X'}
                                             last={initials[2] || 'D'}
                                             fontFamily={font.circular ? undefined : font.styles[Object.keys(font.styles)[0]]}
-                                            fontSize={28}
+                                            fontSize={40}
                                             sideScale={1.1}
                                             middleScale={monogramStyle === 'flat' ? 1 : 1.5}
                                             disableScaling={monogramStyle === 'flat'}
