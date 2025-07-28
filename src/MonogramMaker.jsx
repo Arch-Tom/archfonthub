@@ -71,8 +71,11 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
             <label className="text-xs font-semibold text-slate-500 mb-1" htmlFor="monogram-preview-box">Preview</label>
             <div
                 id="monogram-preview-box"
-                className="w-full max-w-[400px] flex items-center justify-center rounded-xl border border-slate-200 shadow-inner bg-white px-2 py-6"
-                style={{ minHeight: '150px' }}
+                className="w-full max-w-[400px] flex items-center justify-center rounded-xl border border-slate-200 shadow-inner bg-white px-2"
+                style={{
+                    height: '180px',
+                    minHeight: '180px'
+                }}
             >
                 <MonogramPreview
                     first={initials[0] || 'N'}
@@ -82,10 +85,11 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                     firstFont={monogramStyle === 'circular' ? 'LeftCircleMonogram' : undefined}
                     middleFont={monogramStyle === 'circular' ? 'MiddleCircleMonogram' : undefined}
                     lastFont={monogramStyle === 'circular' ? 'RightCircleMonogram' : undefined}
-                    fontSize={monogramStyle === 'circular' ? fontSize * 1.4 : fontSize}
+                    fontSize={monogramStyle === 'circular' ? fontSize * 1.2 : fontSize}
                     sideScale={1.2}
                     middleScale={monogramStyle === 'flat' ? 1 : 1.6}
                     disableScaling={monogramStyle === 'flat' || monogramStyle === 'circular'}
+                    style={{ textAlign: 'center' }}
                 />
             </div>
         </div>
