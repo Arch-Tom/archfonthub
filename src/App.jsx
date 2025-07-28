@@ -551,30 +551,43 @@ const App = () => {
                                 {monogramData && (
                                     <div className="mb-10 p-6 border border-blue-200 rounded-xl bg-blue-50 shadow">
                                         <div className="mb-2 flex items-center gap-4">
-                                            <span className="bg-blue-700 text-white px-4 py-1 rounded-full text-lg font-bold shadow" style={{ fontFamily: 'Arial' }}>
+                                            <span
+                                                className="bg-blue-700 text-white px-4 py-1 rounded-full text-lg font-bold shadow"
+                                                style={{ fontFamily: 'Arial' }}
+                                            >
                                                 {monogramData.font.name} (Monogram)
                                             </span>
                                         </div>
                                         <div className="flex justify-center items-center text-slate-800">
                                             {monogramData.isCircular ? (
                                                 <>
-                                                    <span style={{ fontFamily: 'LeftCircleMonogram', fontSize: `${monogramData.fontSize || 150}px` }}>
+                                                    <span style={{ fontFamily: 'LeftCircleMonogram', fontSize: `${fontSize}px` }}>
                                                         {monogramData.text[0]}
                                                     </span>
-                                                    <span style={{ fontFamily: 'MiddleCircleMonogram', fontSize: `${monogramData.fontSize || 150}px` }}>
+                                                    <span style={{ fontFamily: 'MiddleCircleMonogram', fontSize: `${fontSize}px` }}>
                                                         {monogramData.text[1]}
                                                     </span>
-                                                    <span style={{ fontFamily: 'RightCircleMonogram', fontSize: `${monogramData.fontSize || 150}px` }}>
+                                                    <span style={{ fontFamily: 'RightCircleMonogram', fontSize: `${fontSize}px` }}>
                                                         {monogramData.text[2]}
                                                     </span>
                                                 </>
                                             ) : (
                                                 <>
-                                                    <span style={{ fontSize: `${monogramData.fontSize || 150}px` }}>{monogramData.text[0]}</span>
-                                                    <span style={{ fontSize: `${(monogramData.fontSize || 150) * 1.5}px`, margin: '0 -0.1em' }}>
+                                                    <span style={{ fontFamily: monogramData.font.styles[monogramData.style], fontSize: `${fontSize}px` }}>
+                                                        {monogramData.text[0]}
+                                                    </span>
+                                                    <span
+                                                        style={{
+                                                            fontFamily: monogramData.font.styles[monogramData.style],
+                                                            fontSize: `${fontSize * 1.5}px`,
+                                                            margin: '0 -0.1em'
+                                                        }}
+                                                    >
                                                         {monogramData.text[1]}
                                                     </span>
-                                                    <span style={{ fontSize: `${monogramData.fontSize || 150}px` }}>{monogramData.text[2]}</span>
+                                                    <span style={{ fontFamily: monogramData.font.styles[monogramData.style], fontSize: `${fontSize}px` }}>
+                                                        {monogramData.text[2]}
+                                                    </span>
                                                 </>
                                             )}
                                         </div>
