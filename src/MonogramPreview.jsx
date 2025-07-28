@@ -12,9 +12,10 @@ export default function MonogramPreview({
     middleScale = 1.5,
     letterSpacing = '0.05em',
     className = '',
-    style = {}
+    style = {},
+    disableScaling = false
 }) {
-    const middleFontSize = fontSize * middleScale;
+    const middleFontSize = disableScaling ? fontSize : fontSize * middleScale;
 
     return (
         <div
@@ -25,11 +26,11 @@ export default function MonogramPreview({
                 ...style
             }}
         >
-            <span style={{ fontFamily: firstFont || fontFamily }}>{first}</span>
+            <span style={{ fontFamily: firstFont || fontFamily, fontSize: `${fontSize}px` }}>{first}</span>
             <span style={{ fontFamily: middleFont || fontFamily, fontSize: `${middleFontSize}px` }}>
                 {middle}
             </span>
-            <span style={{ fontFamily: lastFont || fontFamily }}>{last}</span>
+            <span style={{ fontFamily: lastFont || fontFamily, fontSize: `${fontSize}px` }}>{last}</span>
         </div>
     );
 }

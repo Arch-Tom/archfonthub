@@ -75,6 +75,7 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                     fontSize={fontSize}
                     sideScale={1.2}
                     middleScale={1.5}
+                    disableScaling={selectedFont.circular}
                     style={{
                         width: '100%',
                         maxWidth: '100%',
@@ -168,6 +169,7 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                                             fontSize={28}
                                             sideScale={1.1}
                                             middleScale={1.5}
+                                            disableScaling={font.circular}
                                             className="mb-1"
                                         />
                                         <span className="text-xs font-semibold text-slate-700 group-hover:text-blue-700">{font.name}</span>

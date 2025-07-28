@@ -561,7 +561,7 @@ const App = () => {
                                                     <span style={{ fontFamily: 'LeftCircleMonogram', fontSize: `${monogramData.fontSize || 150}px` }}>
                                                         {monogramData.text[0]}
                                                     </span>
-                                                    <span style={{ fontFamily: 'MiddleCircleMonogram', fontSize: `${(monogramData.fontSize || 150) * 1.5}px`, margin: '0 -0.1em' }}>
+                                                    <span style={{ fontFamily: 'MiddleCircleMonogram', fontSize: `${monogramData.fontSize || 150}px` }}>
                                                         {monogramData.text[1]}
                                                     </span>
                                                     <span style={{ fontFamily: 'RightCircleMonogram', fontSize: `${monogramData.fontSize || 150}px` }}>
