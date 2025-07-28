@@ -3,36 +3,38 @@ import MonogramPreview from './MonogramPreview';
 
 export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
     const monogramFonts = useMemo(() => {
-        return Object.entries(fontLibrary)
+        const fonts = Object.entries(fontLibrary)
             .flatMap(([category, fonts]) => fonts.map(font => ({ ...font, category })));
+        return [
+            ...fonts,
+            { name: 'Circular Monogram', category: 'Special', circular: true }
+        ];
     }, [fontLibrary]);
 
-    const [selectedFont, setSelectedFont] = useState(
-        monogramFonts.find(f => f.category === 'Serif') || monogramFonts[0]
+    const [selectedFont, setSelectedFont] = useState(monogramFonts[0]);
+    const [activeStyle, setActiveStyle] = useState(
+        selectedFont.circular ? null : Object.keys(selectedFont.styles)[0]
     );
-    const [activeStyle, setActiveStyle] = useState(Object.keys(selectedFont.styles)[0]);
     const [initials, setInitials] = useState(['', '', '']);
-    const [fontSize] = useState(54); // Adjust for your design
+    const [fontSize] = useState(54);
 
     const inputRefs = useRef([]);
 
     useEffect(() => {
-        if (inputRefs.current[0]) {
-            inputRefs.current[0].focus();
-        }
+        if (inputRefs.current[0]) inputRefs.current[0].focus();
     }, []);
 
     useEffect(() => {
-        setActiveStyle(Object.keys(selectedFont.styles)[0]);
+        if (!selectedFont.circular) {
+            setActiveStyle(Object.keys(selectedFont.styles)[0]);
+        }
     }, [selectedFont]);
 
     const handleInitialChange = (e, index) => {
         const newInitials = [...initials];
         newInitials[index] = e.target.value.slice(0, 1).toUpperCase();
         setInitials(newInitials);
-        if (e.target.value && index < 2) {
-            inputRefs.current[index + 1]?.focus();
-        }
+        if (e.target.value && index < 2) inputRefs.current[index + 1]?.focus();
     };
 
     const handleKeyDown = (e, index) => {
@@ -49,27 +51,27 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
             font: selectedFont,
             style: activeStyle,
             fontSize,
+            isCircular: selectedFont.circular || false
         });
         onClose();
     };
 
-    // -- PREVIEW BOX COMPONENT (reuse for mobile and desktop) --
     const previewBox = (
         <div className="w-full flex flex-col items-center mb-2">
             <label className="text-xs font-semibold text-slate-500 mb-1" htmlFor="monogram-preview-box">Preview</label>
             <div
                 id="monogram-preview-box"
                 className="w-full max-w-[340px] flex items-center justify-center rounded-xl border border-slate-200 shadow-inner bg-white px-2 py-2 overflow-x-auto"
-                style={{
-                    minHeight: 0,
-                    height: 'auto',
-                }}
+                style={{ minHeight: 0, height: 'auto' }}
             >
                 <MonogramPreview
                     first={initials[0] || 'N'}
                     middle={initials[1] || 'X'}
                     last={initials[2] || 'D'}
-                    fontFamily={selectedFont.styles[activeStyle]}
+                    fontFamily={selectedFont.circular ? undefined : selectedFont.styles[activeStyle]}
+                    firstFont={selectedFont.circular ? 'LeftCircleMonogram' : undefined}
+                    middleFont={selectedFont.circular ? 'MiddleCircleMonogram' : undefined}
+                    lastFont={selectedFont.circular ? 'RightCircleMonogram' : undefined}
                     fontSize={fontSize}
                     sideScale={1.2}
                     middleScale={1.5}
@@ -159,7 +161,10 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                                             first={initials[0] || 'N'}
                                             middle={initials[1] || 'X'}
                                             last={initials[2] || 'D'}
-                                            fontFamily={font.styles[Object.keys(font.styles)[0]]}
+                                            fontFamily={font.circular ? undefined : font.styles[Object.keys(font.styles)[0]]}
+                                            firstFont={font.circular ? 'LeftCircleMonogram' : undefined}
+                                            middleFont={font.circular ? 'MiddleCircleMonogram' : undefined}
+                                            lastFont={font.circular ? 'RightCircleMonogram' : undefined}
                                             fontSize={28}
                                             sideScale={1.1}
                                             middleScale={1.5}
