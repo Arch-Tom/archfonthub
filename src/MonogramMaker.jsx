@@ -11,15 +11,13 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
         ];
     }, [fontLibrary]);
 
-    // --- State for Monogram Style ---
     const [monogramStyle, setMonogramStyle] = useState('classic'); // 'classic' | 'flat' | 'circular'
-
     const [selectedFont, setSelectedFont] = useState(monogramFonts[0]);
     const [activeStyle, setActiveStyle] = useState(
         selectedFont.circular ? null : Object.keys(selectedFont.styles)[0]
     );
     const [initials, setInitials] = useState(['', '', '']);
-    const [fontSize] = useState(100); // Increased default font size
+    const [fontSize] = useState(100);
 
     const inputRefs = useRef([]);
 
@@ -33,7 +31,6 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
         }
     }, [selectedFont]);
 
-    // Filter fonts based on monogramStyle
     const visibleFonts = monogramFonts.filter(font => {
         if (monogramStyle === 'circular') return font.circular;
         return !font.circular;
@@ -59,7 +56,7 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
             text: initials.join(''),
             font: selectedFont,
             style: activeStyle,
-            fontSize: 1, // Use a relative scale factor instead of fixed px
+            fontSize,
             isCircular: monogramStyle === 'circular',
             disableScaling: monogramStyle === 'flat'
         });
@@ -158,12 +155,12 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                     {monogramStyle !== 'circular' && (
                         <div className="w-full max-w-2xl mt-6">
                             <h3 className="text-base sm:text-lg font-semibold text-slate-700 mb-2 sm:mb-3 text-center">Choose a Font</h3>
-                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3 justify-items-center">
+                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                                 {visibleFonts.map(font => (
                                     <button
                                         key={font.name}
                                         onClick={() => setSelectedFont(font)}
-                                        className={`group flex flex-col items-center justify-center px-2 py-3 rounded-xl border-2 transition
+                                        className={`group flex flex-col items-center justify-between rounded-xl border-2 transition h-32 w-full p-3
                                             ${selectedFont.name === font.name
                                                 ? 'border-blue-600 bg-blue-50 shadow-md'
                                                 : 'border-slate-200 bg-white hover:border-blue-400 hover:bg-blue-50/40'}`}
@@ -173,13 +170,13 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                                             middle={initials[1] || 'X'}
                                             last={initials[2] || 'D'}
                                             fontFamily={font.circular ? undefined : font.styles[Object.keys(font.styles)[0]]}
-                                            fontSize={40}
+                                            fontSize={32}
                                             sideScale={1.1}
                                             middleScale={monogramStyle === 'flat' ? 1 : 1.5}
                                             disableScaling={monogramStyle === 'flat'}
-                                            className="mb-1"
+                                            className="mb-2"
                                         />
-                                        <span className="text-xs font-semibold text-slate-700 group-hover:text-blue-700">{font.name}</span>
+                                        <span className="text-xs font-semibold text-slate-700 group-hover:text-blue-700 text-center">{font.name}</span>
                                         <span className="text-[11px] text-slate-400">{font.category}</span>
                                     </button>
                                 ))}
