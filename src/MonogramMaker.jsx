@@ -11,7 +11,7 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
         ];
     }, [fontLibrary]);
 
-    // --- New State for Monogram Style ---
+    // --- State for Monogram Style ---
     const [monogramStyle, setMonogramStyle] = useState('classic'); // 'classic' | 'flat' | 'circular'
 
     const [selectedFont, setSelectedFont] = useState(monogramFonts[0]);
@@ -71,7 +71,10 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
             <label className="text-xs font-semibold text-slate-500 mb-1" htmlFor="monogram-preview-box">Preview</label>
             <div
                 id="monogram-preview-box"
-                className="w-full max-w-[340px] flex items-center justify-center rounded-xl border border-slate-200 shadow-inner bg-white px-2 py-2 overflow-x-auto"
+                className="w-full max-w-[340px] flex items-center justify-center rounded-xl border border-slate-200 shadow-inner bg-white px-2 py-4 overflow-x-auto"
+                style={{
+                    minHeight: '120px'
+                }}
             >
                 <MonogramPreview
                     first={initials[0] || 'N'}
@@ -96,7 +99,7 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                 {/* Header */}
                 <header className="sticky top-0 z-10 bg-white/95 border-b border-slate-200 flex justify-between items-center px-4 sm:px-5 py-3 sm:py-4">
                     <div>
-                        <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-900" style={{ fontFamily: 'Alumni Sans Regular' }}>
+                        <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 tracking-tight" style={{ fontFamily: 'Alumni Sans Regular' }}>
                             Monogram Maker
                         </h2>
                         <p className="text-slate-500 text-xs sm:text-sm">Create your three-letter monogram instantly.</p>
@@ -106,11 +109,11 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                     </button>
                 </header>
 
-                <div className="flex-1 flex flex-col md:flex-row overflow-y-auto">
+                <div className="flex-1 flex flex-col md:flex-row overflow-y-auto pb-[100px]">
                     {/* LEFT COLUMN */}
                     <section className="w-full md:w-1/2 flex flex-col gap-6 px-3 sm:p-5 pb-6 md:pb-0 max-w-xl min-w-[320px] mx-auto">
-                        {/* Initials input */}
-                        <div className="flex justify-between items-start gap-4">
+                        {/* Initials input & Style Selector */}
+                        <div className="flex flex-col gap-4">
                             <div>
                                 <h3 className="text-base sm:text-lg font-semibold text-slate-700 mb-2 sm:mb-3">Your Initials</h3>
                                 <div className="flex gap-3">
@@ -130,13 +133,15 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                                 </div>
                             </div>
                             {/* Style Buttons */}
-                            <div className="flex flex-col gap-2">
+                            <div className="flex gap-2 bg-slate-100 p-1 rounded-xl shadow-inner overflow-x-auto">
                                 {['classic', 'flat', 'circular'].map(style => (
                                     <button
                                         key={style}
                                         onClick={() => setMonogramStyle(style)}
-                                        className={`px-4 py-2 rounded-lg font-semibold text-sm border-2 transition 
-                                            ${monogramStyle === style ? 'bg-blue-600 text-white border-blue-600' : 'bg-white border-slate-300 hover:bg-slate-100'}`}
+                                        className={`px-4 py-2 rounded-lg font-semibold text-sm transition 
+                                            ${monogramStyle === style
+                                                ? 'bg-blue-600 text-white shadow'
+                                                : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'}`}
                                     >
                                         {style === 'classic' ? 'Classic' : style === 'flat' ? 'All Same Size' : 'Circular'}
                                     </button>
