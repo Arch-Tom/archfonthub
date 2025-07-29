@@ -1,5 +1,6 @@
 ﻿import React, { useState, useRef, useEffect } from 'react';
 import MonogramMaker from './MonogramMaker';
+import CircularMonogram from './CircularMonogram'; // NEW import
 
 // This component remains outside the main App component for good practice.
 const FormInput = ({ label, id, value, onChange, required = false, isOptional = false, disabled = false }) => (
@@ -119,15 +120,11 @@ const App = () => {
     const [isDataPrefilled, setIsDataPrefilled] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmissionComplete, setIsSubmissionComplete] = useState(false);
-    // --- Monogram modal and data ---
     const [showMonogramMaker, setShowMonogramMaker] = useState(false);
     const [monogramData, setMonogramData] = useState(null);
-
-    // State for the Hebrew palette
     const [hebrewPaletteText, setHebrewPaletteText] = useState('');
     const [lastHebrewBaseChar, setLastHebrewBaseChar] = useState('א');
     const [isShifted, setIsShifted] = useState(false);
-
 
     const textInputRef = useRef(null);
 
@@ -148,17 +145,12 @@ const App = () => {
     const handleFontSelect = (font) => {
         const isSelected = selectedFonts.some(f => f.name === font.name);
         if (isSelected) {
-            // Always allow deselecting
             setSelectedFonts(prev => prev.filter(f => f.name !== font.name));
+        } else if (selectedFonts.length < 3) {
+            const defaultStyleKey = Object.keys(font.styles)[0];
+            setSelectedFonts(prev => [...prev, { ...font, activeStyle: defaultStyleKey }]);
         } else {
-            // Only allow selecting if the current selection is less than 3
-            if (selectedFonts.length < 3) {
-                const defaultStyleKey = Object.keys(font.styles)[0];
-                setSelectedFonts(prev => [...prev, { ...font, activeStyle: defaultStyleKey }]);
-            } else {
-                // Show a message if the user tries to select a fourth font
-                showMessage('You may select a maximum of 3 fonts. Please deselect a font to choose a new one.');
-            }
+            showMessage('You may select a maximum of 3 fonts. Please deselect a font to choose a new one.');
         }
     };
 
@@ -559,81 +551,15 @@ const App = () => {
                                             </span>
                                         </div>
                                         <div className="flex justify-center items-center text-slate-800">
-                                            {monogramData.isCircular ? (
-                                                monogramData.frameStyle && monogramData.frameStyle !== 'none' ? (
-                                                    <svg width="200" height="200" viewBox="0 0 200 200">
-                                                        {/* Frame styles */}
-                                                        {monogramData.frameStyle === 'solid' && (
-                                                            <circle cx="100" cy="100" r="90" fill="black" stroke="white" strokeWidth="3" />
-                                                        )}
-                                                        {monogramData.frameStyle === 'double' && (
-                                                            <>
-                                                                <circle cx="100" cy="100" r="90" fill="black" stroke="white" strokeWidth="3" />
-                                                                <circle cx="100" cy="100" r="80" fill="none" stroke="white" strokeWidth="2" />
-                                                            </>
-                                                        )}
-                                                        {monogramData.frameStyle === 'dotted' && (
-                                                            <circle
-                                                                cx="100"
-                                                                cy="100"
-                                                                r="90"
-                                                                fill="black"
-                                                                stroke="white"
-                                                                strokeWidth="3"
-                                                                strokeDasharray="6 6"
-                                                            />
-                                                        )}
-
-                                                        {/* Identical spacing inside frame */}
-                                                        <foreignObject x="0" y="0" width="200" height="200">
-                                                            <div className="w-full h-full flex items-center justify-center">
-                                                                <div
-                                                                    className="flex items-center justify-center"
-                                                                    style={{
-                                                                        fontSize: `${fontSize}px`,
-                                                                        gap: '0.05em',
-                                                                        color: 'white'
-                                                                    }}
-                                                                >
-                                                                    <span style={{ fontFamily: 'LeftCircleMonogram', fontSize: `${fontSize}px` }}>
-                                                                        {monogramData.text[0]}
-                                                                    </span>
-                                                                    <span style={{ fontFamily: 'MiddleCircleMonogram', fontSize: `${fontSize * 1.5}px`, margin: '0 -0.1em' }}>
-                                                                        {monogramData.text[1]}
-                                                                    </span>
-                                                                    <span style={{ fontFamily: 'RightCircleMonogram', fontSize: `${fontSize}px` }}>
-                                                                        {monogramData.text[2]}
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-                                                        </foreignObject>
-                                                    </svg>
-                                                ) : (
-                                                    <>
-                                                        <span style={{ fontFamily: 'LeftCircleMonogram', fontSize: `${fontSize}px` }}>
-                                                            {monogramData.text[0]}
-                                                        </span>
-                                                        <span style={{ fontFamily: 'MiddleCircleMonogram', fontSize: `${fontSize * 1.5}px`, margin: '0 -0.1em' }}>
-                                                            {monogramData.text[1]}
-                                                        </span>
-                                                        <span style={{ fontFamily: 'RightCircleMonogram', fontSize: `${fontSize}px` }}>
-                                                            {monogramData.text[2]}
-                                                        </span>
-                                                    </>
-                                                )
-                                            ) : (
-                                                <>
-                                                    <span style={{ fontSize: `${fontSize}px` }}>{monogramData.text[0]}</span>
-                                                    <span style={{ fontSize: `${fontSize * 1.5}px`, margin: '0 -0.1em' }}>
-                                                        {monogramData.text[1]}
-                                                    </span>
-                                                    <span style={{ fontSize: `${fontSize}px` }}>{monogramData.text[2]}</span>
-                                                </>
-                                            )}
+                                            <CircularMonogram
+                                                text={monogramData.text}
+                                                fontSize={fontSize}
+                                                frameStyle={monogramData.frameStyle}
+                                                color={monogramData.frameStyle !== 'none' ? 'white' : 'black'}
+                                            />
                                         </div>
                                     </div>
                                 )}
-
 
                                 {hebrewRegex.test(customText) && (
                                     <div className="p-4 mb-6 bg-amber-50 border-l-4 border-amber-400 rounded-r-lg">
