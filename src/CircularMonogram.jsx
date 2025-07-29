@@ -113,18 +113,18 @@ export default function CircularMonogram({
                     viewBox="0 0 200 200"
                     preserveAspectRatio="xMidYMid meet"
                 >
-                    {/* --- FRAME DIAMETER REDUCED --- */}
+                    {/* --- FRAME DIAMETER REDUCED BY 25% --- */}
                     {frameStyle === 'solid' && (
-                        <circle cx="100" cy="100" r="85" fill="black" />
+                        <circle cx="100" cy="100" r="64" fill="black" />
                     )}
                     {frameStyle === 'double' && (
                         <>
-                            <circle cx="100" cy="100" r="85" fill="black" />
-                            <circle cx="100" cy="100" r="78" fill="none" stroke="white" strokeWidth="3" />
+                            <circle cx="100" cy="100" r="64" fill="black" />
+                            <circle cx="100" cy="100" r="59" fill="none" stroke="white" strokeWidth="3" />
                         </>
                     )}
                     {frameStyle === 'dotted' && (
-                        <circle cx="100" cy="100" r="85" fill="none" stroke="black" strokeWidth="4" strokeDasharray="10 10" />
+                        <circle cx="100" cy="100" r="64" fill="none" stroke="black" strokeWidth="4" strokeDasharray="10 10" />
                     )}
                 </svg>
                 <div className="relative z-10">{renderLetters()}</div>
