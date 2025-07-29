@@ -13,12 +13,19 @@ export default function CircularMonogram({
 }) {
     const [first, middle, last] = text;
 
-    // Auto color logic: white text if a frame is present for circular monograms, otherwise use the provided color or default to black.
-    const textColor = frameStyle !== 'none' && isCircular ? 'white' : (color || 'black');
+    // --- UPDATED COLOR LOGIC ---
+    // Default to black. Change to white for solid/double frames. Dotted frame remains black.
+    let determinedColor = 'black';
+    if (isCircular && (frameStyle === 'solid' || frameStyle === 'double')) {
+        determinedColor = 'white';
+    }
+    const textColor = color || determinedColor;
 
     const renderLetters = () => {
         if (isCircular) {
-            // This part renders the special circular monogram fonts
+            // --- FONT SIZE INCREASED ---
+            const circularFontSize = fontSize * 1.2; // Font size is 20% larger for circular monograms
+
             return (
                 <div
                     className="flex items-center justify-center"
@@ -31,7 +38,7 @@ export default function CircularMonogram({
                     <span
                         style={{
                             fontFamily: 'LeftCircleMonogram',
-                            fontSize: `${fontSize}px`,
+                            fontSize: `${circularFontSize}px`,
                             color: textColor
                         }}
                     >
@@ -40,7 +47,7 @@ export default function CircularMonogram({
                     <span
                         style={{
                             fontFamily: 'MiddleCircleMonogram',
-                            fontSize: `${fontSize}px`,
+                            fontSize: `${circularFontSize}px`,
                             color: textColor
                         }}
                     >
@@ -49,7 +56,7 @@ export default function CircularMonogram({
                     <span
                         style={{
                             fontFamily: 'RightCircleMonogram',
-                            fontSize: `${fontSize}px`,
+                            fontSize: `${circularFontSize}px`,
                             color: textColor
                         }}
                     >
@@ -103,8 +110,10 @@ export default function CircularMonogram({
 
     // If a frame style is selected for a circular monogram, wrap the letters with the frame SVG.
     if (frameStyle !== 'none' && isCircular) {
+        // Adjust container size based on the new, larger font size
+        const containerSize = (fontSize * 1.2) * 2;
         return (
-            <div className="relative flex items-center justify-center" style={{ width: `${fontSize * 2}px`, height: `${fontSize * 2}px` }}>
+            <div className="relative flex items-center justify-center" style={{ width: `${containerSize}px`, height: `${containerSize}px` }}>
                 <svg
                     className="absolute inset-0 w-full h-full"
                     viewBox="0 0 200 200"
