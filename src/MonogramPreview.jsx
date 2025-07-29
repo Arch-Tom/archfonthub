@@ -22,9 +22,9 @@ export default function MonogramPreview({
     if (frameStyle !== 'none') {
         return (
             <svg
-                width="180"
-                height="180"
-                viewBox="0 0 200 200"
+                width="200"
+                height="200"
+                viewBox="-10 -10 220 220"
                 className={`flex items-center justify-center ${className}`}
                 style={style}
             >
@@ -50,14 +50,14 @@ export default function MonogramPreview({
                     />
                 )}
 
-                {/* Monogram Letters - Centered with Separate <text> */}
+                {/* Letters with improved spacing */}
                 <text
-                    x={100 - fontSize * 0.8}
+                    x={100 - fontSize * 1.5}
                     y="100"
                     textAnchor="middle"
                     dominantBaseline="middle"
                     fill="white"
-                    style={{ fontFamily: firstFont || fontFamily, fontSize }}
+                    style={{ fontFamily: firstFont || fontFamily, fontSize: fontSize * 0.9 }}
                 >
                     {first}
                 </text>
@@ -67,17 +67,17 @@ export default function MonogramPreview({
                     textAnchor="middle"
                     dominantBaseline="middle"
                     fill="white"
-                    style={{ fontFamily: middleFont || fontFamily, fontSize: middleFontSize }}
+                    style={{ fontFamily: middleFont || fontFamily, fontSize }}
                 >
                     {middle}
                 </text>
                 <text
-                    x={100 + fontSize * 0.8}
+                    x={100 + fontSize * 1.5}
                     y="100"
                     textAnchor="middle"
                     dominantBaseline="middle"
                     fill="white"
-                    style={{ fontFamily: lastFont || fontFamily, fontSize }}
+                    style={{ fontFamily: lastFont || fontFamily, fontSize: fontSize * 0.9 }}
                 >
                     {last}
                 </text>

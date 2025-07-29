@@ -561,7 +561,7 @@ const App = () => {
                                         <div className="flex justify-center items-center text-slate-800">
                                             {monogramData.isCircular ? (
                                                 monogramData.frameStyle && monogramData.frameStyle !== 'none' ? (
-                                                    <svg width="200" height="200" viewBox="0 0 200 200">
+                                                    <svg width="200" height="200" viewBox="-10 -10 220 220">
                                                         {/* Frame styles */}
                                                         {monogramData.frameStyle === 'solid' && (
                                                             <circle cx="100" cy="100" r="90" fill="black" stroke="white" strokeWidth="3" />
@@ -584,14 +584,14 @@ const App = () => {
                                                             />
                                                         )}
 
-                                                        {/* Monogram Letters - Centered */}
+                                                        {/* Letters with improved spacing */}
                                                         <text
-                                                            x={100 - fontSize * 0.8}
+                                                            x={100 - fontSize * 1.5}
                                                             y="100"
                                                             textAnchor="middle"
                                                             dominantBaseline="middle"
                                                             fill="white"
-                                                            style={{ fontFamily: 'LeftCircleMonogram', fontSize }}
+                                                            style={{ fontFamily: 'LeftCircleMonogram', fontSize: fontSize * 0.9 }}
                                                         >
                                                             {monogramData.text[0]}
                                                         </text>
@@ -601,17 +601,17 @@ const App = () => {
                                                             textAnchor="middle"
                                                             dominantBaseline="middle"
                                                             fill="white"
-                                                            style={{ fontFamily: 'MiddleCircleMonogram', fontSize: fontSize * 1.2 }}
+                                                            style={{ fontFamily: 'MiddleCircleMonogram', fontSize }}
                                                         >
                                                             {monogramData.text[1]}
                                                         </text>
                                                         <text
-                                                            x={100 + fontSize * 0.8}
+                                                            x={100 + fontSize * 1.5}
                                                             y="100"
                                                             textAnchor="middle"
                                                             dominantBaseline="middle"
                                                             fill="white"
-                                                            style={{ fontFamily: 'RightCircleMonogram', fontSize }}
+                                                            style={{ fontFamily: 'RightCircleMonogram', fontSize: fontSize * 0.9 }}
                                                         >
                                                             {monogramData.text[2]}
                                                         </text>
@@ -641,6 +641,7 @@ const App = () => {
                                         </div>
                                     </div>
                                 )}
+
 
 
 
