@@ -7,14 +7,14 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
             .flatMap(([category, fonts]) => fonts.map(font => ({ ...font, category })));
         return [
             ...fonts,
-            { name: 'Circular Monogram', category: 'Special', circular: true }
+            { name: 'Circular Monogram', category: 'Special', circular: true, frameStyle: 'none' }
         ];
     }, [fontLibrary]);
 
     const [monogramStyle, setMonogramStyle] = useState('classic'); // 'classic' | 'flat' | 'circular'
     const [selectedFont, setSelectedFont] = useState(monogramFonts[0]);
     const [activeStyle, setActiveStyle] = useState(
-        selectedFont.circular ? null : Object.keys(selectedFont.styles)[0]
+        selectedFont.circular ? null : Object.keys(selectedFont.styles || {})[0]
     );
     const [initials, setInitials] = useState(['', '', '']);
     const [fontSize] = useState(100);
@@ -26,7 +26,7 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
     }, []);
 
     useEffect(() => {
-        if (!selectedFont.circular) {
+        if (!selectedFont.circular && selectedFont.styles) {
             setActiveStyle(Object.keys(selectedFont.styles)[0]);
         }
     }, [selectedFont]);
@@ -80,8 +80,12 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                     ]}
                     fontSize={monogramStyle === 'circular' ? fontSize * 1.2 : fontSize}
                     frameStyle={monogramStyle === 'circular' ? selectedFont.frameStyle || 'none' : 'none'}
-                    color={monogramStyle === 'circular' && selectedFont.frameStyle !== 'none' ? 'white' : 'black'}
-                    fontFamily={monogramStyle === 'circular' ? undefined : selectedFont.styles[activeStyle]}
+                    color={
+                        monogramStyle === 'circular'
+                            ? (selectedFont.frameStyle && selectedFont.frameStyle !== 'none' ? 'white' : 'black')
+                            : 'black'
+                    }
+                    fontFamily={monogramStyle === 'circular' ? undefined : selectedFont.styles?.[activeStyle]}
                     isCircular={monogramStyle === 'circular'}
                     disableScaling={monogramStyle === 'flat'}
                 />
@@ -168,10 +172,11 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                                                 initials[1] || 'X',
                                                 initials[2] || 'D'
                                             ]}
-                                            fontSize={fontSize * 1.2}
-                                            frameStyle={monogramStyle === 'circular' ? selectedFont.frameStyle || 'none' : 'none'}
-                                            color={monogramStyle === 'circular' ? 'black' : 'black'}
-                                            isCircular={monogramStyle === 'circular'}
+                                            fontSize={32}
+                                            fontFamily={font.circular ? undefined : font.styles?.[Object.keys(font.styles)[0]]}
+                                            isCircular={font.circular}
+                                            disableScaling={monogramStyle === 'flat'}
+                                            color="black"
                                         />
                                         <span className="text-xs font-semibold text-slate-700 group-hover:text-blue-700 text-center">{font.name}</span>
                                         <span className="text-[11px] text-slate-400">{font.category}</span>
