@@ -1,5 +1,5 @@
 ﻿import React, { useState, useMemo, useRef, useEffect } from 'react';
-import CircularMonogram from './CircularMonogram';
+import MonogramPreview from './MonogramPreview';
 
 export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
     const monogramFonts = useMemo(() => {
@@ -72,22 +72,19 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                 className="w-full max-w-[400px] flex items-center justify-center rounded-xl border border-slate-200 shadow-inner bg-white px-2"
                 style={{ height: '180px', minHeight: '180px' }}
             >
-                <CircularMonogram
-                    text={[
-                        initials[0] || 'N',
-                        initials[1] || 'X',
-                        initials[2] || 'D'
-                    ]}
-                    fontSize={monogramStyle === 'circular' ? fontSize * 1.2 : fontSize}
-                    frameStyle={monogramStyle === 'circular' ? selectedFont.frameStyle || 'none' : 'none'}
-                    color={
-                        monogramStyle === 'circular'
-                            ? (selectedFont.frameStyle && selectedFont.frameStyle !== 'none' ? 'white' : 'black')
-                            : 'black'
-                    }
+                <MonogramPreview
+                    first={initials[0] || 'N'}
+                    middle={initials[1] || 'X'}
+                    last={initials[2] || 'D'}
                     fontFamily={monogramStyle === 'circular' ? undefined : selectedFont.styles?.[activeStyle]}
-                    isCircular={monogramStyle === 'circular'}
-                    disableScaling={monogramStyle === 'flat'}
+                    firstFont={monogramStyle === 'circular' ? 'LeftCircleMonogram' : undefined}
+                    middleFont={monogramStyle === 'circular' ? 'MiddleCircleMonogram' : undefined}
+                    lastFont={monogramStyle === 'circular' ? 'RightCircleMonogram' : undefined}
+                    fontSize={monogramStyle === 'circular' ? fontSize * 1.2 : fontSize}
+                    sideScale={monogramStyle === 'flat' ? 1 : 1.2}  // Fix side letter scaling
+                    middleScale={monogramStyle === 'flat' ? 1 : 1.6} // Fix middle letter scaling
+                    disableScaling={monogramStyle === 'flat' || monogramStyle === 'circular'}
+                    style={{ textAlign: 'center', gap: '0.05em' }} // Add spacing fix
                 />
             </div>
         </div>
@@ -166,17 +163,16 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                                                 ? 'border-blue-600 bg-blue-50 shadow-md'
                                                 : 'border-slate-200 bg-white hover:border-blue-400 hover:bg-blue-50/40'}`}
                                     >
-                                        <CircularMonogram
-                                            text={[
-                                                initials[0] || 'N',
-                                                initials[1] || 'X',
-                                                initials[2] || 'D'
-                                            ]}
-                                            fontSize={32}
+                                        <MonogramPreview
+                                            first={initials[0] || 'N'}
+                                            middle={initials[1] || 'X'}
+                                            last={initials[2] || 'D'}
                                             fontFamily={font.circular ? undefined : font.styles?.[Object.keys(font.styles)[0]]}
-                                            isCircular={font.circular}
+                                            fontSize={32}
+                                            sideScale={monogramStyle === 'flat' ? 1 : 1.2}
+                                            middleScale={monogramStyle === 'flat' ? 1 : 1.5}
                                             disableScaling={monogramStyle === 'flat'}
-                                            color="black"
+                                            className="mb-2"
                                         />
                                         <span className="text-xs font-semibold text-slate-700 group-hover:text-blue-700 text-center">{font.name}</span>
                                         <span className="text-[11px] text-slate-400">{font.category}</span>

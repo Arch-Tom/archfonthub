@@ -529,15 +529,150 @@ const App = () => {
                             <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center mb-6 gap-4">
                                 <div>
                                     <h2 className="text-3xl font-bold text-slate-900 tracking-normal" style={{ fontFamily: 'Alumni Sans Regular' }}>Live Preview</h2>
-                                    <p className="text-slate-500 mt-1">Here's your text preview. When you're happy with your selection hit the button below! If you don't like a font feel free to deselect it above and try a new one out!</p>
+                                    <p className="text-slate-500 mt-1">
+                                        Here's your text preview. When you're happy with your selection hit the button below!
+                                        If you don't like a font feel free to deselect it above and try a new one out!
+                                    </p>
                                 </div>
                                 <div className="flex items-center gap-3">
                                     <label htmlFor="fontSizeSlider" className="text-sm font-medium text-slate-600">Size</label>
-                                    <input id="fontSizeSlider" type="range" min="36" max="100" step="1" value={fontSize} onChange={handleFontSizeChange} className="w-32 lg:w-48 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600" />
+                                    <input
+                                        id="fontSizeSlider"
+                                        type="range"
+                                        min="36"
+                                        max="100"
+                                        step="1"
+                                        value={fontSize}
+                                        onChange={handleFontSizeChange}
+                                        className="w-32 lg:w-48 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                                    />
                                     <span className="text-sm font-medium text-slate-600 w-12 text-left">{fontSize}px</span>
                                 </div>
                             </div>
+
                             <div className="bg-gradient-to-b from-slate-50 to-slate-200 p-6 rounded-xl min-h-[150px] space-y-10 border border-slate-100">
+
+                                {/* --- Monogram Preview Block --- */}
+                                {monogramData && (
+                                    <div className="mb-10 p-6 border border-blue-200 rounded-xl bg-blue-50 shadow flex justify-center items-center">
+                                        {monogramData.isCircular ? (
+                                            <CircularMonogram
+                                                text={monogramData.text}
+                                                fontSize={monogramData.fontSize || fontSize}
+                                                frameStyle={monogramData.frameStyle || 'none'}
+                                                fontFamily={undefined}
+                                                isCircular={true}
+                                                disableScaling={monogramData.disableScaling}
+                                            />
+                                        ) : (
+                                            <div
+                                                className="flex items-center justify-center"
+                                                style={{
+                                                    lineHeight: 1,
+                                                    textAlign: 'center',
+                                                    gap: '0.05em'
+                                                }}
+                                            >
+                                                <span
+                                                    style={{
+                                                        fontFamily: monogramData.font.styles[monogramData.style],
+                                                        fontSize: `${monogramData.disableScaling ? monogramData.fontSize : (monogramData.fontSize || fontSize) * 1.2}px`
+                                                    }}
+                                                >
+                                                    {monogramData.text[0]}
+                                                </span>
+                                                <span
+                                                    style={{
+                                                        fontFamily: monogramData.font.styles[monogramData.style],
+                                                        fontSize: `${monogramData.disableScaling ? monogramData.fontSize : (monogramData.fontSize || fontSize) * 1.6}px`,
+                                                        margin: '0 -0.05em'
+                                                    }}
+                                                >
+                                                    {monogramData.text[1]}
+                                                </span>
+                                                <span
+                                                    style={{
+                                                        fontFamily: monogramData.font.styles[monogramData.style],
+                                                        fontSize: `${monogramData.disableScaling ? monogramData.fontSize : (monogramData.fontSize || fontSize) * 1.2}px`
+                                                    }}
+                                                >
+                                                    {monogramData.text[2]}
+                                                </span>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+
+                                {/* Warning for Hebrew */}
+                                {hebrewRegex.test(customText) && (
+                                    <div className="p-4 mb-6 bg-amber-50 border-l-4 border-amber-400 rounded-r-lg">
+                                        <div className="flex">
+                                            <div className="flex-shrink-0">
+                                                <svg className="h-5 w-5 text-amber-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                    <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 3.001-1.742 3.001H4.42c-1.53 0-2.493-1.667-1.743-3.001l5.58-9.92zM10 13a1 1 0 110-2 1 1 0 010 2zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                                </svg>
+                                            </div>
+                                            <div className="ml-3">
+                                                <p className="text-sm text-amber-800 font-medium">
+                                                    Please check each preview carefully as Hebrew character support can vary between fonts.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Selected Fonts Live Preview */}
+                                {selectedFonts.length > 0 && customText.trim() !== '' ? (
+                                    selectedFonts.map((font) => {
+                                        const activeFontFamily = font.styles[font.activeStyle];
+                                        return (
+                                            <div key={`preview-${font.name}`} className="relative flex flex-col items-start gap-3">
+                                                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-2">
+                                                    <span
+                                                        className="bg-[rgb(50,75,106)] text-white px-4 py-1 rounded-full text-sm font-bold shadow-sm z-10"
+                                                        style={{ fontFamily: 'Arial' }}
+                                                    >
+                                                        {font.name}
+                                                    </span>
+                                                    <div className="flex flex-wrap gap-1">
+                                                        {Object.keys(font.styles)
+                                                            .sort((a, b) => {
+                                                                const indexA = styleSortOrder.indexOf(a.toLowerCase());
+                                                                const indexB = styleSortOrder.indexOf(b.toLowerCase());
+                                                                if (indexA === -1) return 1;
+                                                                if (indexB === -1) return -1;
+                                                                return indexA - indexB;
+                                                            })
+                                                            .map(styleKey => (
+                                                                <button
+                                                                    key={styleKey}
+                                                                    onClick={() => handleStyleChange(font.name, styleKey)}
+                                                                    className={`px-4 py-2 text-sm rounded-md border-2 transition-colors ${font.activeStyle === styleKey
+                                                                        ? 'bg-slate-700 text-white border-slate-700'
+                                                                        : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-100'
+                                                                        }`}
+                                                                >
+                                                                    {styleKey.charAt(0).toUpperCase() + styleKey.slice(1)}
+                                                                </button>
+                                                            ))}
+                                                    </div>
+                                                </div>
+                                                <p
+                                                    className="text-slate-800 break-words w-full"
+                                                    style={{ fontFamily: activeFontFamily, fontSize: `${fontSize}px`, lineHeight: 1.4 }}
+                                                    dir="auto"
+                                                >
+                                                    {customText}
+                                                </p>
+                                            </div>
+                                        );
+                                    })
+                                ) : (
+                                    !monogramData && <div className="flex items-center justify-center h-full"><p className="text-slate-500 italic">Select fonts and enter text to see a live preview.</p></div>
+                                )}
+                            </div>
+                        </section>
+
 
                                 {/* --- Monogram Preview Block --- */}
                                 {monogramData && (
