@@ -541,16 +541,15 @@ const App = () => {
 
                                 {/* --- Monogram Preview Block --- */}
                                 {monogramData && (
-                                    <div className="mb-10 p-6 border border-blue-200 rounded-xl bg-blue-50 shadow flex justify-center">
+                                    <div className="mb-10 p-6 border border-blue-200 rounded-xl bg-blue-50 shadow flex justify-center items-center">
                                         <CircularMonogram
                                             text={monogramData.text}
                                             fontSize={fontSize}
-                                            frameStyle={monogramData.frameStyle}
+                                            frameStyle={monogramData.frameStyle || 'none'}
                                             color={monogramData.frameStyle !== 'none' ? 'white' : 'black'}
                                         />
                                     </div>
                                 )}
-
 
                                 {hebrewRegex.test(customText) && (
                                     <div className="p-4 mb-6 bg-amber-50 border-l-4 border-amber-400 rounded-r-lg">
