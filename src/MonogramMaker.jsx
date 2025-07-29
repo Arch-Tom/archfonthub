@@ -58,6 +58,7 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
             style: activeStyle,
             fontSize,
             isCircular: monogramStyle === 'circular',
+            frameStyle: monogramStyle === 'circular' ? selectedFont.frameStyle || 'none' : 'none',
             disableScaling: monogramStyle === 'flat'
         });
         onClose();
@@ -80,36 +81,26 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                     fontSize={monogramStyle === 'circular' ? fontSize * 1.2 : fontSize}
                     frameStyle={monogramStyle === 'circular' ? selectedFont.frameStyle || 'none' : 'none'}
                     color={monogramStyle === 'circular' && selectedFont.frameStyle !== 'none' ? 'white' : 'black'}
+                    fontFamily={monogramStyle === 'circular' ? undefined : selectedFont.styles[activeStyle]}
+                    isCircular={monogramStyle === 'circular'}
+                    disableScaling={monogramStyle === 'flat'}
                 />
             </div>
         </div>
     );
 
     return (
-        <div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/70 backdrop-blur-[3px] p-0 sm:p-2 animate-fade-in"
-            onClick={onClose}
-        >
-            <div
-                className="relative bg-white rounded-none sm:rounded-3xl shadow-2xl w-full max-w-full sm:max-w-2xl md:max-w-3xl h-screen sm:h-[90vh] flex flex-col overflow-hidden transition-all"
-                onClick={e => e.stopPropagation()}
-            >
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/70 backdrop-blur-[3px] p-0 sm:p-2 animate-fade-in" onClick={onClose}>
+            <div className="relative bg-white rounded-none sm:rounded-3xl shadow-2xl w-full max-w-full sm:max-w-2xl md:max-w-3xl h-screen sm:h-[90vh] flex flex-col overflow-hidden transition-all" onClick={e => e.stopPropagation()}>
                 {/* Header */}
                 <header className="sticky top-0 z-10 bg-white/95 border-b border-slate-200 flex justify-between items-center px-4 sm:px-5 py-3 sm:py-4">
                     <div>
-                        <h2
-                            className="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 tracking-tight"
-                            style={{ fontFamily: 'Alumni Sans Regular' }}
-                        >
+                        <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 tracking-tight" style={{ fontFamily: 'Alumni Sans Regular' }}>
                             Monogram Maker
                         </h2>
                         <p className="text-slate-500 text-xs sm:text-sm">Create your three-letter monogram instantly.</p>
                     </div>
-                    <button
-                        className="text-3xl font-light text-slate-400 hover:text-slate-800 transition p-2 -mr-2"
-                        onClick={onClose}
-                        title="Close"
-                    >
+                    <button className="text-3xl font-light text-slate-400 hover:text-slate-800 transition p-2 -mr-2" onClick={onClose} title="Close">
                         &times;
                     </button>
                 </header>
@@ -178,7 +169,9 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                                                 initials[2] || 'D'
                                             ]}
                                             fontSize={32}
-                                            frameStyle={font.circular ? 'none' : 'none'}
+                                            fontFamily={font.circular ? undefined : font.styles[Object.keys(font.styles)[0]]}
+                                            isCircular={font.circular}
+                                            disableScaling={monogramStyle === 'flat'}
                                         />
                                         <span className="text-xs font-semibold text-slate-700 group-hover:text-blue-700 text-center">{font.name}</span>
                                         <span className="text-[11px] text-slate-400">{font.category}</span>

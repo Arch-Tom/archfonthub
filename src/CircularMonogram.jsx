@@ -4,40 +4,97 @@ export default function CircularMonogram({
     text = ['A', 'B', 'C'],
     fontSize = 100,
     frameStyle = 'none',
-    color = 'black'
+    color = 'black',
+    fontFamily,
+    sideScale = 1.2,
+    middleScale = 1.6,
+    isCircular = false,
+    disableScaling = false
 }) {
     const [first, middle, last] = text;
 
+    const renderMonogramLetters = () => {
+        if (isCircular) {
+            return (
+                <>
+                    <span
+                        style={{
+                            fontFamily: 'LeftCircleMonogram',
+                            fontSize: `${fontSize}px`,
+                            color
+                        }}
+                    >
+                        {first}
+                    </span>
+                    <span
+                        style={{
+                            fontFamily: 'MiddleCircleMonogram',
+                            fontSize: `${fontSize}px`,
+                            color
+                        }}
+                    >
+                        {middle}
+                    </span>
+                    <span
+                        style={{
+                            fontFamily: 'RightCircleMonogram',
+                            fontSize: `${fontSize}px`,
+                            color
+                        }}
+                    >
+                        {last}
+                    </span>
+                </>
+            );
+        }
+
+        return (
+            <>
+                <span
+                    style={{
+                        fontFamily,
+                        fontSize: `${disableScaling ? fontSize : fontSize * sideScale}px`,
+                        color
+                    }}
+                >
+                    {first}
+                </span>
+                <span
+                    style={{
+                        fontFamily,
+                        fontSize: `${disableScaling ? fontSize : fontSize * middleScale}px`,
+                        margin: '0 0.05em',
+                        color
+                    }}
+                >
+                    {middle}
+                </span>
+                <span
+                    style={{
+                        fontFamily,
+                        fontSize: `${disableScaling ? fontSize : fontSize * sideScale}px`,
+                        color
+                    }}
+                >
+                    {last}
+                </span>
+            </>
+        );
+    };
+
     const monogramHTML = (
         <div
-            className="flex items-center justify-center"
+            className="flex items-center justify-center gap-1"
             style={{
-                fontSize: `${fontSize}px`,
-                gap: '0.05em',
-                color,
                 lineHeight: 1,
                 textAlign: 'center'
             }}
         >
-            <span style={{ fontFamily: 'LeftCircleMonogram', fontSize: `${fontSize}px` }}>
-                {first}
-            </span>
-            <span
-                style={{
-                    fontFamily: 'MiddleCircleMonogram',
-                    fontSize: `${fontSize * 1.5}px`,
-                    margin: '0 -0.1em'
-                }}
-            >
-                {middle}
-            </span>
-            <span style={{ fontFamily: 'RightCircleMonogram', fontSize: `${fontSize}px` }}>
-                {last}
-            </span>
+            {renderMonogramLetters()}
         </div>
     );
 
-    if (frameStyle !== 'none') {
+    if (frameStyle !== 'none' && isCircular) {
         return (
             <svg
                 width="100%"
