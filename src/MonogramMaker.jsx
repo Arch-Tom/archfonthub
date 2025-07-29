@@ -18,6 +18,7 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
     );
     const [initials, setInitials] = useState(['', '', '']);
     const [fontSize] = useState(100);
+    const [frameStyle, setFrameStyle] = useState('none'); // New: frame styles for circular monograms
 
     const inputRefs = useRef([]);
 
@@ -58,7 +59,8 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
             style: activeStyle,
             fontSize,
             isCircular: monogramStyle === 'circular',
-            disableScaling: monogramStyle === 'flat'
+            disableScaling: monogramStyle === 'flat',
+            frameStyle: monogramStyle === 'circular' ? frameStyle : 'none'
         });
         onClose();
     };
@@ -86,7 +88,7 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                     sideScale={1.2}
                     middleScale={monogramStyle === 'flat' ? 1 : 1.6}
                     disableScaling={monogramStyle === 'flat' || monogramStyle === 'circular'}
-                    style={{ textAlign: 'center' }}
+                    frameStyle={monogramStyle === 'circular' ? frameStyle : 'none'}
                 />
             </div>
         </div>
@@ -144,9 +146,30 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                                 </button>
                             ))}
                         </div>
+
+                        {/* Frame Style Selector (for circular only) */}
+                        {monogramStyle === 'circular' && (
+                            <div className="flex flex-col items-center gap-2 mt-4">
+                                <h4 className="text-sm font-semibold text-slate-600">Frame Style</h4>
+                                <div className="flex gap-2 flex-wrap justify-center">
+                                    {['none', 'solid', 'double', 'dotted'].map(style => (
+                                        <button
+                                            key={style}
+                                            onClick={() => setFrameStyle(style)}
+                                            className={`px-4 py-2 rounded-lg text-sm font-medium transition
+                                                ${frameStyle === style
+                                                    ? 'bg-blue-600 text-white'
+                                                    : 'bg-white text-slate-600 border border-slate-300 hover:bg-slate-100'}`}
+                                        >
+                                            {style.charAt(0).toUpperCase() + style.slice(1)}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
                     </div>
 
-                    {/* Preview (centered above font list) */}
+                    {/* Preview */}
                     <div className="w-full max-w-xl mt-6">
                         {previewBox}
                     </div>
