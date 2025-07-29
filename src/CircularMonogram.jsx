@@ -13,7 +13,6 @@ export default function CircularMonogram({
 }) {
     const [first, middle, last] = text;
 
-    // Set text color to black for dotted frames, otherwise white for other frames.
     let determinedColor = 'black';
     if (isCircular && (frameStyle === 'solid' || frameStyle === 'double')) {
         determinedColor = 'white';
@@ -22,8 +21,7 @@ export default function CircularMonogram({
 
     const renderLetters = () => {
         if (isCircular) {
-            // --- FONT SIZE FURTHER INCREASED ---
-            const circularFontSize = fontSize * 1.5; // Font size is now 50% larger for circular monograms
+            const circularFontSize = fontSize * 1.5;
 
             return (
                 <div
@@ -65,7 +63,6 @@ export default function CircularMonogram({
             );
         }
 
-        // Renders standard, non-circular monograms
         return (
             <div
                 className="flex items-center justify-center"
@@ -107,7 +104,6 @@ export default function CircularMonogram({
         );
     };
 
-    // Wraps the letters with the frame SVG if a frame style is selected
     if (frameStyle !== 'none' && isCircular) {
         const containerSize = (fontSize * 1.5) * 2;
         return (
@@ -117,15 +113,18 @@ export default function CircularMonogram({
                     viewBox="0 0 200 200"
                     preserveAspectRatio="xMidYMid meet"
                 >
-                    {frameStyle === 'solid' && <circle cx="100" cy="100" r="98" fill="black" />}
+                    {/* --- FRAME DIAMETER REDUCED --- */}
+                    {frameStyle === 'solid' && (
+                        <circle cx="100" cy="100" r="85" fill="black" />
+                    )}
                     {frameStyle === 'double' && (
                         <>
-                            <circle cx="100" cy="100" r="98" fill="black" />
-                            <circle cx="100" cy="100" r="88" fill="none" stroke="white" strokeWidth="3" />
+                            <circle cx="100" cy="100" r="85" fill="black" />
+                            <circle cx="100" cy="100" r="78" fill="none" stroke="white" strokeWidth="3" />
                         </>
                     )}
                     {frameStyle === 'dotted' && (
-                        <circle cx="100" cy="100" r="95" fill="none" stroke="black" strokeWidth="4" strokeDasharray="10 10" />
+                        <circle cx="100" cy="100" r="85" fill="none" stroke="black" strokeWidth="4" strokeDasharray="10 10" />
                     )}
                 </svg>
                 <div className="relative z-10">{renderLetters()}</div>
