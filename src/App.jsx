@@ -673,7 +673,6 @@ const App = () => {
                             </div>
                         </section>
 
-
                                 {/* --- Monogram Preview Block --- */}
                                 {monogramData && (
                                     <div className="mb-10 p-6 border border-blue-200 rounded-xl bg-blue-50 shadow flex justify-center items-center">
