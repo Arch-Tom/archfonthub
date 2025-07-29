@@ -561,7 +561,7 @@ const App = () => {
                                         <div className="flex justify-center items-center text-slate-800">
                                             {monogramData.isCircular ? (
                                                 monogramData.frameStyle && monogramData.frameStyle !== 'none' ? (
-                                                    <svg width="200" height="200" viewBox="-10 -10 220 220">
+                                                    <svg width="200" height="200" viewBox="0 0 200 200">
                                                         {/* Frame styles */}
                                                         {monogramData.frameStyle === 'solid' && (
                                                             <circle cx="100" cy="100" r="90" fill="black" stroke="white" strokeWidth="3" />
@@ -584,44 +584,46 @@ const App = () => {
                                                             />
                                                         )}
 
-                                                        {/* Letters with improved spacing */}
-                                                        <text
-                                                            x={100 - fontSize * 1.5}
-                                                            y="100"
-                                                            textAnchor="middle"
-                                                            dominantBaseline="middle"
-                                                            fill="white"
-                                                            style={{ fontFamily: 'LeftCircleMonogram', fontSize: fontSize * 0.9 }}
-                                                        >
-                                                            {monogramData.text[0]}
-                                                        </text>
-                                                        <text
-                                                            x="100"
-                                                            y="100"
-                                                            textAnchor="middle"
-                                                            dominantBaseline="middle"
-                                                            fill="white"
-                                                            style={{ fontFamily: 'MiddleCircleMonogram', fontSize }}
-                                                        >
-                                                            {monogramData.text[1]}
-                                                        </text>
-                                                        <text
-                                                            x={100 + fontSize * 1.5}
-                                                            y="100"
-                                                            textAnchor="middle"
-                                                            dominantBaseline="middle"
-                                                            fill="white"
-                                                            style={{ fontFamily: 'RightCircleMonogram', fontSize: fontSize * 0.9 }}
-                                                        >
-                                                            {monogramData.text[2]}
-                                                        </text>
+                                                        {/* Monogram letters - same spacing as no-frame */}
+                                                        <g transform="translate(100,100)">
+                                                            <text
+                                                                x="-0.6em"
+                                                                y="0"
+                                                                textAnchor="middle"
+                                                                dominantBaseline="middle"
+                                                                fill="white"
+                                                                style={{ fontFamily: 'LeftCircleMonogram', fontSize }}
+                                                            >
+                                                                {monogramData.text[0]}
+                                                            </text>
+                                                            <text
+                                                                x="0"
+                                                                y="0"
+                                                                textAnchor="middle"
+                                                                dominantBaseline="middle"
+                                                                fill="white"
+                                                                style={{ fontFamily: 'MiddleCircleMonogram', fontSize: fontSize * 1.5 }}
+                                                            >
+                                                                {monogramData.text[1]}
+                                                            </text>
+                                                            <text
+                                                                x="0.6em"
+                                                                y="0"
+                                                                textAnchor="middle"
+                                                                dominantBaseline="middle"
+                                                                fill="white"
+                                                                style={{ fontFamily: 'RightCircleMonogram', fontSize }}
+                                                            >
+                                                                {monogramData.text[2]}
+                                                            </text>
+                                                        </g>
                                                     </svg>
                                                 ) : (
                                                     <>
                                                         <span style={{ fontFamily: 'LeftCircleMonogram', fontSize: `${fontSize}px` }}>
                                                             {monogramData.text[0]}
                                                         </span>
-                                                        <span style={{ fontFamily: 'MiddleCircleMonogram', fontSize: `${fontSize}px` }}>
+                                                        <span style={{ fontFamily: 'MiddleCircleMonogram', fontSize: `${fontSize * 1.5}px`, margin: '0 -0.1em' }}>
                                                             {monogramData.text[1]}
                                                         </span>
                                                         <span style={{ fontFamily: 'RightCircleMonogram', fontSize: `${fontSize}px` }}>
@@ -641,10 +643,6 @@ const App = () => {
                                         </div>
                                     </div>
                                 )}
-
-
-
-
 
                                 {hebrewRegex.test(customText) && (
                                     <div className="p-4 mb-6 bg-amber-50 border-l-4 border-amber-400 rounded-r-lg">

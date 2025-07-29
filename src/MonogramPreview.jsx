@@ -5,8 +5,12 @@ export default function MonogramPreview({
     middle = 'X',
     last = 'D',
     fontFamily,
+    firstFont,
+    middleFont,
+    lastFont,
     fontSize = 100,
-    middleScale = 1.3,
+    middleScale = 1.5,
+    letterSpacing = '0.05em',
     className = '',
     style = {},
     disableScaling = false,
@@ -14,6 +18,43 @@ export default function MonogramPreview({
 }) {
     const middleFontSize = disableScaling ? fontSize : fontSize * middleScale;
 
+    // Helper: Render the 3-letter monogram
+    const renderMonogram = (fill = 'white') => (
+        <>
+            <text
+                x="-0.6em"
+                y="0"
+                textAnchor="middle"
+                dominantBaseline="middle"
+                fill={fill}
+                style={{ fontFamily: firstFont || fontFamily, fontSize: `${fontSize}px` }}
+            >
+                {first}
+            </text>
+            <text
+                x="0"
+                y="0"
+                textAnchor="middle"
+                dominantBaseline="middle"
+                fill={fill}
+                style={{ fontFamily: middleFont || fontFamily, fontSize: `${middleFontSize}px` }}
+            >
+                {middle}
+            </text>
+            <text
+                x="0.6em"
+                y="0"
+                textAnchor="middle"
+                dominantBaseline="middle"
+                fill={fill}
+                style={{ fontFamily: lastFont || fontFamily, fontSize: `${fontSize}px` }}
+            >
+                {last}
+            </text>
+        </>
+    );
+
+    // Circular monogram with frame
     if (frameStyle !== 'none') {
         return (
             <svg
@@ -45,49 +86,29 @@ export default function MonogramPreview({
                     />
                 )}
 
-                {/* Letters closer to center */}
-                <text
-                    x={100 - fontSize * 0.8}
-                    y="100"
-                    textAnchor="middle"
-                    dominantBaseline="middle"
-                    fill="red" // debug color
-                    style={{ fontFamily: 'MiddleCircleMonogram', fontSize: fontSize * 0.8 }}
-                >
-                    {first}
-                </text>
-                <text
-                    x="100"
-                    y="100"
-                    textAnchor="middle"
-                    dominantBaseline="middle"
-                    fill="white"
-                    style={{ fontFamily: 'MiddleCircleMonogram', fontSize }}
-                >
-                    {middle}
-                </text>
-                <text
-                    x={100 + fontSize * 0.8}
-                    y="100"
-                    textAnchor="middle"
-                    dominantBaseline="middle"
-                    fill="blue" // debug color
-                    style={{ fontFamily: 'MiddleCircleMonogram', fontSize: fontSize * 0.8 }}
-                >
-                    {last}
-                </text>
+                {/* Monogram, centered */}
+                <g transform="translate(100,100)">
+                    {renderMonogram('white')}
+                </g>
             </svg>
         );
     }
 
+    // Default (non-circular or no frame)
     return (
         <div
             className={`flex items-center justify-center select-none ${className}`}
-            style={{ fontSize: `${fontSize}px`, ...style }}
+            style={{
+                fontSize: `${fontSize}px`,
+                gap: letterSpacing,
+                ...style
+            }}
         >
-            <span style={{ fontFamily: 'MiddleCircleMonogram', fontSize: `${fontSize}px` }}>{first}</span>
-            <span style={{ fontFamily: 'MiddleCircleMonogram', fontSize: `${middleFontSize}px` }}>{middle}</span>
-            <span style={{ fontFamily: 'MiddleCircleMonogram', fontSize: `${fontSize}px` }}>{last}</span>
+            <span style={{ fontFamily: firstFont || fontFamily, fontSize: `${fontSize}px` }}>{first}</span>
+            <span style={{ fontFamily: middleFont || fontFamily, fontSize: `${middleFontSize}px` }}>
+                {middle}
+            </span>
+            <span style={{ fontFamily: lastFont || fontFamily, fontSize: `${fontSize}px` }}>{last}</span>
         </div>
     );
 }
