@@ -581,18 +581,32 @@ const App = () => {
                                                             />
                                                         )}
 
-                                                        {/* Text */}
-                                                        <text x="50" y="115" textAnchor="middle" fill="white"
-                                                            style={{ fontFamily: 'LeftCircleMonogram', fontSize: fontSize }}>
-                                                            {monogramData.text[0]}
-                                                        </text>
-                                                        <text x="100" y="115" textAnchor="middle" fill="white"
-                                                            style={{ fontFamily: 'MiddleCircleMonogram', fontSize: fontSize }}>
-                                                            {monogramData.text[1]}
-                                                        </text>
-                                                        <text x="150" y="115" textAnchor="middle" fill="white"
-                                                            style={{ fontFamily: 'RightCircleMonogram', fontSize: fontSize }}>
-                                                            {monogramData.text[2]}
+                                                        {/* Centered Text */}
+                                                        <text
+                                                            x="100"
+                                                            y="100"
+                                                            textAnchor="middle"
+                                                            dominantBaseline="middle"
+                                                            fill="white"
+                                                        >
+                                                            <tspan
+                                                                style={{ fontFamily: 'LeftCircleMonogram', fontSize: fontSize }}
+                                                                dx={-fontSize * 1.1}
+                                                            >
+                                                                {monogramData.text[0]}
+                                                            </tspan>
+                                                            <tspan
+                                                                style={{ fontFamily: 'MiddleCircleMonogram', fontSize: fontSize * 1.2 }}
+                                                                dx={0}
+                                                            >
+                                                                {monogramData.text[1]}
+                                                            </tspan>
+                                                            <tspan
+                                                                style={{ fontFamily: 'RightCircleMonogram', fontSize: fontSize }}
+                                                                dx={fontSize * 1.1}
+                                                            >
+                                                                {monogramData.text[2]}
+                                                            </tspan>
                                                         </text>
                                                     </svg>
                                                 ) : (

@@ -14,11 +14,11 @@ export default function MonogramPreview({
     className = '',
     style = {},
     disableScaling = false,
-    frameStyle = 'none' // New: frame style for circular monograms
+    frameStyle = 'none'
 }) {
     const middleFontSize = disableScaling ? fontSize : fontSize * middleScale;
 
-    // For circular monograms with frames, we wrap everything in an SVG
+    // Circular monogram with frame
     if (frameStyle !== 'none') {
         return (
             <svg
@@ -50,39 +50,38 @@ export default function MonogramPreview({
                     />
                 )}
 
-                {/* Text */}
-                <text
-                    x="50"
-                    y="115"
-                    textAnchor="middle"
-                    fill="white"
-                    style={{ fontFamily: firstFont || fontFamily, fontSize }}
-                >
-                    {first}
-                </text>
+                {/* Monogram Letters - Centered */}
                 <text
                     x="100"
-                    y="115"
+                    y="100"
                     textAnchor="middle"
+                    dominantBaseline="middle"
                     fill="white"
-                    style={{ fontFamily: middleFont || fontFamily, fontSize: middleFontSize }}
                 >
-                    {middle}
-                </text>
-                <text
-                    x="150"
-                    y="115"
-                    textAnchor="middle"
-                    fill="white"
-                    style={{ fontFamily: lastFont || fontFamily, fontSize }}
-                >
-                    {last}
+                    <tspan
+                        style={{ fontFamily: firstFont || fontFamily, fontSize }}
+                        dx={-fontSize * 1.1}
+                    >
+                        {first}
+                    </tspan>
+                    <tspan
+                        style={{ fontFamily: middleFont || fontFamily, fontSize: middleFontSize }}
+                        dx={0}
+                    >
+                        {middle}
+                    </tspan>
+                    <tspan
+                        style={{ fontFamily: lastFont || fontFamily, fontSize }}
+                        dx={fontSize * 1.1}
+                    >
+                        {last}
+                    </tspan>
                 </text>
             </svg>
         );
     }
 
-    // Default behavior (no frame)
+    // Default (non-circular or no frame)
     return (
         <div
             className={`flex items-center justify-center select-none ${className}`}
