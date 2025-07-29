@@ -168,10 +168,10 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                                                 initials[1] || 'X',
                                                 initials[2] || 'D'
                                             ]}
-                                            fontSize={32}
-                                            fontFamily={font.circular ? undefined : font.styles[Object.keys(font.styles)[0]]}
-                                            isCircular={font.circular}
-                                            disableScaling={monogramStyle === 'flat'}
+                                            fontSize={fontSize * 1.2}
+                                            frameStyle={monogramStyle === 'circular' ? selectedFont.frameStyle || 'none' : 'none'}
+                                            color={monogramStyle === 'circular' ? 'black' : 'black'}
+                                            isCircular={monogramStyle === 'circular'}
                                         />
                                         <span className="text-xs font-semibold text-slate-700 group-hover:text-blue-700 text-center">{font.name}</span>
                                         <span className="text-[11px] text-slate-400">{font.category}</span>
