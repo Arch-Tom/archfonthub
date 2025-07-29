@@ -113,7 +113,6 @@ export default function CircularMonogram({
                     viewBox="0 0 200 200"
                     preserveAspectRatio="xMidYMid meet"
                 >
-                    {/* --- FRAME DIAMETER REDUCED BY 25% --- */}
                     {frameStyle === 'solid' && (
                         <circle cx="100" cy="100" r="64" fill="black" />
                     )}
@@ -127,7 +126,10 @@ export default function CircularMonogram({
                         <circle cx="100" cy="100" r="64" fill="none" stroke="black" strokeWidth="4" strokeDasharray="10 10" />
                     )}
                 </svg>
-                <div className="relative z-10">{renderLetters()}</div>
+                {/* --- CENTERED TEXT CONTAINER --- */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                    {renderLetters()}
+                </div>
             </div>
         );
     }
