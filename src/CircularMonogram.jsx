@@ -13,8 +13,7 @@ export default function CircularMonogram({
 }) {
     const [first, middle, last] = text;
 
-    // --- UPDATED COLOR LOGIC ---
-    // Default to black. Change to white for solid/double frames. Dotted frame remains black.
+    // Set text color to black for dotted frames, otherwise white for other frames.
     let determinedColor = 'black';
     if (isCircular && (frameStyle === 'solid' || frameStyle === 'double')) {
         determinedColor = 'white';
@@ -23,8 +22,8 @@ export default function CircularMonogram({
 
     const renderLetters = () => {
         if (isCircular) {
-            // --- FONT SIZE INCREASED ---
-            const circularFontSize = fontSize * 1.2; // Font size is 20% larger for circular monograms
+            // --- FONT SIZE FURTHER INCREASED ---
+            const circularFontSize = fontSize * 1.5; // Font size is now 50% larger for circular monograms
 
             return (
                 <div
@@ -66,7 +65,7 @@ export default function CircularMonogram({
             );
         }
 
-        // This part renders the standard, non-circular monogram
+        // Renders standard, non-circular monograms
         return (
             <div
                 className="flex items-center justify-center"
@@ -108,10 +107,9 @@ export default function CircularMonogram({
         );
     };
 
-    // If a frame style is selected for a circular monogram, wrap the letters with the frame SVG.
+    // Wraps the letters with the frame SVG if a frame style is selected
     if (frameStyle !== 'none' && isCircular) {
-        // Adjust container size based on the new, larger font size
-        const containerSize = (fontSize * 1.2) * 2;
+        const containerSize = (fontSize * 1.5) * 2;
         return (
             <div className="relative flex items-center justify-center" style={{ width: `${containerSize}px`, height: `${containerSize}px` }}>
                 <svg
@@ -119,10 +117,7 @@ export default function CircularMonogram({
                     viewBox="0 0 200 200"
                     preserveAspectRatio="xMidYMid meet"
                 >
-                    {/* Render the selected frame style */}
-                    {frameStyle === 'solid' && (
-                        <circle cx="100" cy="100" r="98" fill="black" />
-                    )}
+                    {frameStyle === 'solid' && <circle cx="100" cy="100" r="98" fill="black" />}
                     {frameStyle === 'double' && (
                         <>
                             <circle cx="100" cy="100" r="98" fill="black" />
@@ -130,24 +125,13 @@ export default function CircularMonogram({
                         </>
                     )}
                     {frameStyle === 'dotted' && (
-                        <circle
-                            cx="100"
-                            cy="100"
-                            r="95"
-                            fill="none"
-                            stroke="black"
-                            strokeWidth="4"
-                            strokeDasharray="10 10"
-                        />
+                        <circle cx="100" cy="100" r="95" fill="none" stroke="black" strokeWidth="4" strokeDasharray="10 10" />
                     )}
                 </svg>
-                <div className="relative z-10">
-                    {renderLetters()}
-                </div>
+                <div className="relative z-10">{renderLetters()}</div>
             </div>
         );
     }
 
-    // If no frame is selected, render just the letters.
     return renderLetters();
 }
