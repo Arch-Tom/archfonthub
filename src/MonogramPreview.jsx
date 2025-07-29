@@ -18,43 +18,24 @@ export default function MonogramPreview({
 }) {
     const middleFontSize = disableScaling ? fontSize : fontSize * middleScale;
 
-    // Helper: Render the 3-letter monogram
-    const renderMonogram = (fill = 'white') => (
-        <>
-            <text
-                x="-0.6em"
-                y="0"
-                textAnchor="middle"
-                dominantBaseline="middle"
-                fill={fill}
-                style={{ fontFamily: firstFont || fontFamily, fontSize: `${fontSize}px` }}
-            >
-                {first}
-            </text>
-            <text
-                x="0"
-                y="0"
-                textAnchor="middle"
-                dominantBaseline="middle"
-                fill={fill}
-                style={{ fontFamily: middleFont || fontFamily, fontSize: `${middleFontSize}px` }}
-            >
+    const monogramHTML = (
+        <div
+            className="flex items-center justify-center"
+            style={{
+                fontSize: `${fontSize}px`,
+                gap: letterSpacing,
+                color: frameStyle !== 'none' ? 'white' : 'black'
+            }}
+        >
+            <span style={{ fontFamily: firstFont || fontFamily, fontSize: `${fontSize}px` }}>{first}</span>
+            <span style={{ fontFamily: middleFont || fontFamily, fontSize: `${middleFontSize}px` }}>
                 {middle}
-            </text>
-            <text
-                x="0.6em"
-                y="0"
-                textAnchor="middle"
-                dominantBaseline="middle"
-                fill={fill}
-                style={{ fontFamily: lastFont || fontFamily, fontSize: `${fontSize}px` }}
-            >
-                {last}
-            </text>
-        </>
+            </span>
+            <span style={{ fontFamily: lastFont || fontFamily, fontSize: `${fontSize}px` }}>{last}</span>
+        </div>
     );
 
-    // Circular monogram with frame
+    // If frame is selected, render the frame and overlay HTML monogram
     if (frameStyle !== 'none') {
         return (
             <svg
@@ -86,15 +67,17 @@ export default function MonogramPreview({
                     />
                 )}
 
-                {/* Monogram, centered */}
-                <g transform="translate(100,100)">
-                    {renderMonogram('white')}
-                </g>
+                {/* Use foreignObject for identical spacing */}
+                <foreignObject x="0" y="0" width="200" height="200">
+                    <div className="w-full h-full flex items-center justify-center">
+                        {monogramHTML}
+                    </div>
+                </foreignObject>
             </svg>
         );
     }
 
-    // Default (non-circular or no frame)
+    // Default (no frame)
     return (
         <div
             className={`flex items-center justify-center select-none ${className}`}
@@ -104,11 +87,7 @@ export default function MonogramPreview({
                 ...style
             }}
         >
-            <span style={{ fontFamily: firstFont || fontFamily, fontSize: `${fontSize}px` }}>{first}</span>
-            <span style={{ fontFamily: middleFont || fontFamily, fontSize: `${middleFontSize}px` }}>
-                {middle}
-            </span>
-            <span style={{ fontFamily: lastFont || fontFamily, fontSize: `${fontSize}px` }}>{last}</span>
+            {monogramHTML}
         </div>
     );
 }
