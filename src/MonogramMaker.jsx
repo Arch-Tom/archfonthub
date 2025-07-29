@@ -111,7 +111,7 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
 
                 {/* Monogram Preview */}
                 <div className="mb-6 flex justify-center">
-                    <div className="p-4 border rounded-xl bg-slate-50">
+                    <div className="p-4 border rounded-xl bg-slate-50 flex items-center justify-center">
                         <CircularMonogram
                             text={[
                                 firstLetter || 'A',

@@ -10,23 +10,19 @@ export default function CircularMonogram({
 
     const monogramHTML = (
         <div
-            className="flex items-center justify-center h-full w-full"
+            className="flex items-center justify-center"
             style={{
                 fontSize: `${fontSize}px`,
                 gap: '0.05em',
-                color: color,
+                color,
                 lineHeight: 1,
                 textAlign: 'center'
             }}
         >
-            <span
-                className="leading-none"
-                style={{ fontFamily: 'LeftCircleMonogram', fontSize: `${fontSize}px` }}
-            >
+            <span style={{ fontFamily: 'LeftCircleMonogram', fontSize: `${fontSize}px` }}>
                 {first}
             </span>
             <span
-                className="leading-none"
                 style={{
                     fontFamily: 'MiddleCircleMonogram',
                     fontSize: `${fontSize * 1.5}px`,
@@ -35,23 +31,20 @@ export default function CircularMonogram({
             >
                 {middle}
             </span>
-            <span
-                className="leading-none"
-                style={{ fontFamily: 'RightCircleMonogram', fontSize: `${fontSize}px` }}
-            >
+            <span style={{ fontFamily: 'RightCircleMonogram', fontSize: `${fontSize}px` }}>
                 {last}
             </span>
         </div>
     );
 
-    // Frame rendering for circular monogram
     if (frameStyle !== 'none') {
         return (
             <svg
                 width="100%"
                 height="100%"
                 viewBox="0 0 200 200"
-                className="max-w-[200px] max-h-[200px] md:max-w-[250px] md:max-h-[250px]"
+                preserveAspectRatio="xMidYMid meet"
+                className="w-full h-full"
             >
                 {frameStyle === 'solid' && (
                     <circle cx="100" cy="100" r="90" fill="black" stroke="white" strokeWidth="3" />
@@ -74,9 +67,8 @@ export default function CircularMonogram({
                     />
                 )}
 
-                {/* Use foreignObject for perfect spacing */}
                 <foreignObject x="0" y="0" width="200" height="200">
-                    <div className="w-full h-full flex items-center justify-center">
+                    <div className="flex items-center justify-center w-full h-full">
                         {monogramHTML}
                     </div>
                 </foreignObject>
@@ -84,19 +76,5 @@ export default function CircularMonogram({
         );
     }
 
-    // No frame
-    return (
-        <div
-            className="flex items-center justify-center select-none"
-            style={{
-                fontSize: `${fontSize}px`,
-                gap: '0.05em',
-                color: color,
-                lineHeight: 1,
-                textAlign: 'center'
-            }}
-        >
-            {monogramHTML}
-        </div>
-    );
+    return monogramHTML;
 }

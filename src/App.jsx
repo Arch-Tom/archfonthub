@@ -541,25 +541,16 @@ const App = () => {
 
                                 {/* --- Monogram Preview Block --- */}
                                 {monogramData && (
-                                    <div className="mb-10 p-6 border border-blue-200 rounded-xl bg-blue-50 shadow">
-                                        <div className="mb-2 flex items-center gap-4">
-                                            <span
-                                                className="bg-blue-700 text-white px-4 py-1 rounded-full text-lg font-bold shadow"
-                                                style={{ fontFamily: 'Arial' }}
-                                            >
-                                                {monogramData.font.name} (Monogram)
-                                            </span>
-                                        </div>
-                                        <div className="flex justify-center items-center text-slate-800">
-                                            <CircularMonogram
-                                                text={monogramData.text}
-                                                fontSize={fontSize}
-                                                frameStyle={monogramData.frameStyle}
-                                                color={monogramData.frameStyle !== 'none' ? 'white' : 'black'}
-                                            />
-                                        </div>
+                                    <div className="mb-10 p-6 border border-blue-200 rounded-xl bg-blue-50 shadow flex justify-center">
+                                        <CircularMonogram
+                                            text={monogramData.text}
+                                            fontSize={fontSize}
+                                            frameStyle={monogramData.frameStyle}
+                                            color={monogramData.frameStyle !== 'none' ? 'white' : 'black'}
+                                        />
                                     </div>
                                 )}
+
 
                                 {hebrewRegex.test(customText) && (
                                     <div className="p-4 mb-6 bg-amber-50 border-l-4 border-amber-400 rounded-r-lg">
