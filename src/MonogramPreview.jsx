@@ -5,12 +5,8 @@ export default function MonogramPreview({
     middle = 'X',
     last = 'D',
     fontFamily,
-    firstFont,
-    middleFont,
-    lastFont,
     fontSize = 100,
     middleScale = 1.5,
-    letterSpacing = '0.05em',
     className = '',
     style = {},
     disableScaling = false,
@@ -18,7 +14,7 @@ export default function MonogramPreview({
 }) {
     const middleFontSize = disableScaling ? fontSize : fontSize * middleScale;
 
-    // Circular monogram with frame
+    // Circular monogram with frame (debug colors)
     if (frameStyle !== 'none') {
         return (
             <svg
@@ -50,14 +46,14 @@ export default function MonogramPreview({
                     />
                 )}
 
-                {/* Letters with improved spacing */}
+                {/* Debug letters - all use MiddleCircleMonogram */}
                 <text
                     x={100 - fontSize * 1.5}
                     y="100"
                     textAnchor="middle"
                     dominantBaseline="middle"
-                    fill="white"
-                    style={{ fontFamily: firstFont || fontFamily, fontSize: fontSize * 0.9 }}
+                    fill="red"  // debug color
+                    style={{ fontFamily: 'MiddleCircleMonogram', fontSize: fontSize * 0.9 }}
                 >
                     {first}
                 </text>
@@ -67,7 +63,7 @@ export default function MonogramPreview({
                     textAnchor="middle"
                     dominantBaseline="middle"
                     fill="white"
-                    style={{ fontFamily: middleFont || fontFamily, fontSize }}
+                    style={{ fontFamily: 'MiddleCircleMonogram', fontSize }}
                 >
                     {middle}
                 </text>
@@ -76,8 +72,8 @@ export default function MonogramPreview({
                     y="100"
                     textAnchor="middle"
                     dominantBaseline="middle"
-                    fill="white"
-                    style={{ fontFamily: lastFont || fontFamily, fontSize: fontSize * 0.9 }}
+                    fill="blue"  // debug color
+                    style={{ fontFamily: 'MiddleCircleMonogram', fontSize: fontSize * 0.9 }}
                 >
                     {last}
                 </text>
@@ -91,15 +87,14 @@ export default function MonogramPreview({
             className={`flex items-center justify-center select-none ${className}`}
             style={{
                 fontSize: `${fontSize}px`,
-                gap: letterSpacing,
                 ...style
             }}
         >
-            <span style={{ fontFamily: firstFont || fontFamily, fontSize: `${fontSize}px` }}>{first}</span>
-            <span style={{ fontFamily: middleFont || fontFamily, fontSize: `${middleFontSize}px` }}>
+            <span style={{ fontFamily: 'MiddleCircleMonogram', fontSize: `${fontSize}px` }}>{first}</span>
+            <span style={{ fontFamily: 'MiddleCircleMonogram', fontSize: `${middleFontSize}px` }}>
                 {middle}
             </span>
-            <span style={{ fontFamily: lastFont || fontFamily, fontSize: `${fontSize}px` }}>{last}</span>
+            <span style={{ fontFamily: 'MiddleCircleMonogram', fontSize: `${fontSize}px` }}>{last}</span>
         </div>
     );
 }
