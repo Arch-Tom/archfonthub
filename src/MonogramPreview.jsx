@@ -50,32 +50,36 @@ export default function MonogramPreview({
                     />
                 )}
 
-                {/* Monogram Letters - Centered */}
+                {/* Monogram Letters - Centered with Separate <text> */}
+                <text
+                    x={100 - fontSize * 0.8}
+                    y="100"
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    fill="white"
+                    style={{ fontFamily: firstFont || fontFamily, fontSize }}
+                >
+                    {first}
+                </text>
                 <text
                     x="100"
                     y="100"
                     textAnchor="middle"
                     dominantBaseline="middle"
                     fill="white"
+                    style={{ fontFamily: middleFont || fontFamily, fontSize: middleFontSize }}
                 >
-                    <tspan
-                        style={{ fontFamily: firstFont || fontFamily, fontSize }}
-                        dx={-fontSize * 1.1}
-                    >
-                        {first}
-                    </tspan>
-                    <tspan
-                        style={{ fontFamily: middleFont || fontFamily, fontSize: middleFontSize }}
-                        dx={0}
-                    >
-                        {middle}
-                    </tspan>
-                    <tspan
-                        style={{ fontFamily: lastFont || fontFamily, fontSize }}
-                        dx={fontSize * 1.1}
-                    >
-                        {last}
-                    </tspan>
+                    {middle}
+                </text>
+                <text
+                    x={100 + fontSize * 0.8}
+                    y="100"
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    fill="white"
+                    style={{ fontFamily: lastFont || fontFamily, fontSize }}
+                >
+                    {last}
                 </text>
             </svg>
         );

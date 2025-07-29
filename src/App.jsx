@@ -551,7 +551,10 @@ const App = () => {
                                 {monogramData && (
                                     <div className="mb-10 p-6 border border-blue-200 rounded-xl bg-blue-50 shadow">
                                         <div className="mb-2 flex items-center gap-4">
-                                            <span className="bg-blue-700 text-white px-4 py-1 rounded-full text-lg font-bold shadow" style={{ fontFamily: 'Arial' }}>
+                                            <span
+                                                className="bg-blue-700 text-white px-4 py-1 rounded-full text-lg font-bold shadow"
+                                                style={{ fontFamily: 'Arial' }}
+                                            >
                                                 {monogramData.font.name} (Monogram)
                                             </span>
                                         </div>
@@ -581,32 +584,36 @@ const App = () => {
                                                             />
                                                         )}
 
-                                                        {/* Centered Text */}
+                                                        {/* Monogram Letters - Centered */}
+                                                        <text
+                                                            x={100 - fontSize * 0.8}
+                                                            y="100"
+                                                            textAnchor="middle"
+                                                            dominantBaseline="middle"
+                                                            fill="white"
+                                                            style={{ fontFamily: 'LeftCircleMonogram', fontSize }}
+                                                        >
+                                                            {monogramData.text[0]}
+                                                        </text>
                                                         <text
                                                             x="100"
                                                             y="100"
                                                             textAnchor="middle"
                                                             dominantBaseline="middle"
                                                             fill="white"
+                                                            style={{ fontFamily: 'MiddleCircleMonogram', fontSize: fontSize * 1.2 }}
                                                         >
-                                                            <tspan
-                                                                style={{ fontFamily: 'LeftCircleMonogram', fontSize: fontSize }}
-                                                                dx={-fontSize * 1.1}
-                                                            >
-                                                                {monogramData.text[0]}
-                                                            </tspan>
-                                                            <tspan
-                                                                style={{ fontFamily: 'MiddleCircleMonogram', fontSize: fontSize * 1.2 }}
-                                                                dx={0}
-                                                            >
-                                                                {monogramData.text[1]}
-                                                            </tspan>
-                                                            <tspan
-                                                                style={{ fontFamily: 'RightCircleMonogram', fontSize: fontSize }}
-                                                                dx={fontSize * 1.1}
-                                                            >
-                                                                {monogramData.text[2]}
-                                                            </tspan>
+                                                            {monogramData.text[1]}
+                                                        </text>
+                                                        <text
+                                                            x={100 + fontSize * 0.8}
+                                                            y="100"
+                                                            textAnchor="middle"
+                                                            dominantBaseline="middle"
+                                                            fill="white"
+                                                            style={{ fontFamily: 'RightCircleMonogram', fontSize }}
+                                                        >
+                                                            {monogramData.text[2]}
                                                         </text>
                                                     </svg>
                                                 ) : (
@@ -634,6 +641,7 @@ const App = () => {
                                         </div>
                                     </div>
                                 )}
+
 
 
 
