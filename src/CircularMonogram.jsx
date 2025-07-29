@@ -13,11 +13,12 @@ export default function CircularMonogram({
 }) {
     const [first, middle, last] = text;
 
-    // Auto color logic: white text if frame present, black otherwise
-    const textColor = frameStyle !== 'none' && isCircular ? (color || 'white') : (color || 'black');
+    // Auto color logic: white text if a frame is present for circular monograms, otherwise use the provided color or default to black.
+    const textColor = frameStyle !== 'none' && isCircular ? 'white' : (color || 'black');
 
     const renderLetters = () => {
         if (isCircular) {
+            // This part renders the special circular monogram fonts
             return (
                 <div
                     className="flex items-center justify-center"
@@ -58,6 +59,7 @@ export default function CircularMonogram({
             );
         }
 
+        // This part renders the standard, non-circular monogram
         return (
             <div
                 className="flex items-center justify-center"
@@ -99,42 +101,44 @@ export default function CircularMonogram({
         );
     };
 
-    // Render with optional frame for circular style
+    // If a frame style is selected for a circular monogram, wrap the letters with the frame SVG.
     if (frameStyle !== 'none' && isCircular) {
         return (
-            <div className="relative flex items-center justify-center w-full h-full">
+            <div className="relative flex items-center justify-center" style={{ width: `${fontSize * 2}px`, height: `${fontSize * 2}px` }}>
                 <svg
                     className="absolute inset-0 w-full h-full"
                     viewBox="0 0 200 200"
                     preserveAspectRatio="xMidYMid meet"
                 >
+                    {/* Render the selected frame style */}
                     {frameStyle === 'solid' && (
-                        <circle cx="100" cy="100" r="90" fill="black" stroke="white" strokeWidth="3" />
+                        <circle cx="100" cy="100" r="98" fill="black" />
                     )}
                     {frameStyle === 'double' && (
                         <>
-                            <circle cx="100" cy="100" r="90" fill="black" stroke="white" strokeWidth="3" />
-                            <circle cx="100" cy="100" r="80" fill="none" stroke="white" strokeWidth="2" />
+                            <circle cx="100" cy="100" r="98" fill="black" />
+                            <circle cx="100" cy="100" r="88" fill="none" stroke="white" strokeWidth="3" />
                         </>
                     )}
                     {frameStyle === 'dotted' && (
                         <circle
                             cx="100"
                             cy="100"
-                            r="90"
-                            fill="black"
-                            stroke="white"
-                            strokeWidth="3"
-                            strokeDasharray="6 6"
+                            r="95"
+                            fill="none"
+                            stroke="black"
+                            strokeWidth="4"
+                            strokeDasharray="10 10"
                         />
                     )}
                 </svg>
-                <div className="relative flex items-center justify-center w-[70%] h-[70%]">
+                <div className="relative z-10">
                     {renderLetters()}
                 </div>
             </div>
         );
     }
 
+    // If no frame is selected, render just the letters.
     return renderLetters();
 }

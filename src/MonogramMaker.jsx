@@ -1,5 +1,6 @@
 ﻿import React, { useState, useMemo, useRef, useEffect } from 'react';
 import MonogramPreview from './MonogramPreview';
+import CircularMonogram from './CircularMonogram'; // Import the updated CircularMonogram
 
 export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
     const monogramFonts = useMemo(() => {
@@ -7,17 +8,16 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
             .flatMap(([category, fonts]) => fonts.map(font => ({ ...font, category })));
         return [
             ...fonts,
-            { name: 'Circular Monogram', category: 'Special', circular: true, frameStyle: 'none' }
+            { name: 'Circular Monogram', category: 'Special', circular: true, styles: {} } // Simplified circular font entry
         ];
     }, [fontLibrary]);
 
     const [monogramStyle, setMonogramStyle] = useState('classic'); // 'classic' | 'flat' | 'circular'
     const [selectedFont, setSelectedFont] = useState(monogramFonts[0]);
-    const [activeStyle, setActiveStyle] = useState(
-        selectedFont.circular ? null : Object.keys(selectedFont.styles || {})[0]
-    );
+    const [activeStyle, setActiveStyle] = useState(Object.keys(monogramFonts[0].styles)[0]);
     const [initials, setInitials] = useState(['', '', '']);
     const [fontSize] = useState(100);
+    const [frameStyle, setFrameStyle] = useState('none'); // State for the selected frame
 
     const inputRefs = useRef([]);
 
@@ -25,16 +25,20 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
         if (inputRefs.current[0]) inputRefs.current[0].focus();
     }, []);
 
+    // Update selected font and style when monogram style changes
     useEffect(() => {
-        if (!selectedFont.circular && selectedFont.styles) {
-            setActiveStyle(Object.keys(selectedFont.styles)[0]);
+        if (monogramStyle === 'circular') {
+            setSelectedFont(monogramFonts.find(f => f.circular));
+            setActiveStyle(null);
+        } else {
+            // Default to the first non-circular font when switching away from circular
+            const firstStandardFont = monogramFonts.find(f => !f.circular);
+            setSelectedFont(firstStandardFont);
+            setActiveStyle(Object.keys(firstStandardFont.styles)[0]);
         }
-    }, [selectedFont]);
+    }, [monogramStyle, monogramFonts]);
 
-    const visibleFonts = monogramFonts.filter(font => {
-        if (monogramStyle === 'circular') return font.circular;
-        return !font.circular;
-    });
+    const visibleFonts = monogramFonts.filter(font => !font.circular);
 
     const handleInitialChange = (e, index) => {
         const newInitials = [...initials];
@@ -52,13 +56,15 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
     const handleInsert = () => {
         const [first, middle, last] = initials;
         if (!first || !middle || !last) return;
+
         onInsert({
             text: [first, middle, last],
             font: selectedFont,
             style: activeStyle,
             fontSize,
             isCircular: monogramStyle === 'circular',
-            frameStyle: monogramStyle === 'circular' ? selectedFont.frameStyle || 'none' : 'none',
+            // Pass the selected frame style if circular, otherwise 'none'
+            frameStyle: monogramStyle === 'circular' ? frameStyle : 'none',
             disableScaling: monogramStyle === 'flat'
         });
         onClose();
@@ -72,19 +78,14 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                 className="w-full max-w-[400px] flex items-center justify-center rounded-xl border border-slate-200 shadow-inner bg-white px-2"
                 style={{ height: '180px', minHeight: '180px' }}
             >
-                <MonogramPreview
-                    first={initials[0] || 'N'}
-                    middle={initials[1] || 'X'}
-                    last={initials[2] || 'D'}
-                    fontFamily={monogramStyle === 'circular' ? undefined : selectedFont.styles?.[activeStyle]}
-                    firstFont={monogramStyle === 'circular' ? 'LeftCircleMonogram' : undefined}
-                    middleFont={monogramStyle === 'circular' ? 'MiddleCircleMonogram' : undefined}
-                    lastFont={monogramStyle === 'circular' ? 'RightCircleMonogram' : undefined}
-                    fontSize={monogramStyle === 'circular' ? fontSize * 1.2 : fontSize}
-                    sideScale={monogramStyle === 'flat' ? 1 : 1.2}  // Fix side letter scaling
-                    middleScale={monogramStyle === 'flat' ? 1 : 1.6} // Fix middle letter scaling
-                    disableScaling={monogramStyle === 'flat' || monogramStyle === 'circular'}
-                    style={{ textAlign: 'center', gap: '0.05em' }} // Add spacing fix
+                {/* Use the new CircularMonogram component for the preview */}
+                <CircularMonogram
+                    text={initials.map(i => i || 'A')}
+                    fontFamily={selectedFont.styles?.[activeStyle]}
+                    fontSize={80}
+                    isCircular={monogramStyle === 'circular'}
+                    disableScaling={monogramStyle === 'flat'}
+                    frameStyle={monogramStyle === 'circular' ? frameStyle : 'none'}
                 />
             </div>
         </div>
@@ -133,7 +134,7 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                                 <button
                                     key={style}
                                     onClick={() => setMonogramStyle(style)}
-                                    className={`px-4 py-2 rounded-lg font-semibold text-sm transition 
+                                    className={`px-4 py-2 rounded-lg font-semibold text-sm transition
                                         ${monogramStyle === style
                                             ? 'bg-blue-600 text-white shadow'
                                             : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'}`}
@@ -143,6 +144,28 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                             ))}
                         </div>
                     </div>
+
+                    {/* Frame Selection UI - only shown for circular style */}
+                    {monogramStyle === 'circular' && (
+                        <div className="w-full max-w-xl mt-6">
+                            <h3 className="text-base sm:text-lg font-semibold text-slate-700 mb-2 sm:mb-3 text-center">Frame Style</h3>
+                            <div className="flex justify-center gap-2 bg-slate-100 p-1 rounded-xl shadow-inner overflow-x-auto">
+                                {['none', 'solid', 'double', 'dotted'].map(style => (
+                                    <button
+                                        key={style}
+                                        onClick={() => setFrameStyle(style)}
+                                        className={`px-4 py-2 rounded-lg font-semibold text-sm capitalize transition 
+                                            ${frameStyle === style
+                                                ? 'bg-blue-600 text-white shadow'
+                                                : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'}`}
+                                    >
+                                        {style}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
 
                     {/* Preview */}
                     <div className="w-full max-w-xl mt-6">
@@ -157,7 +180,10 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                                 {visibleFonts.map(font => (
                                     <button
                                         key={font.name}
-                                        onClick={() => setSelectedFont(font)}
+                                        onClick={() => {
+                                            setSelectedFont(font);
+                                            setActiveStyle(Object.keys(font.styles)[0]);
+                                        }}
                                         className={`group flex flex-col items-center justify-between rounded-xl border-2 transition h-32 w-full p-3
                                             ${selectedFont.name === font.name
                                                 ? 'border-blue-600 bg-blue-50 shadow-md'
@@ -167,7 +193,7 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                                             first={initials[0] || 'N'}
                                             middle={initials[1] || 'X'}
                                             last={initials[2] || 'D'}
-                                            fontFamily={font.circular ? undefined : font.styles?.[Object.keys(font.styles)[0]]}
+                                            fontFamily={font.styles?.[Object.keys(font.styles)[0]]}
                                             fontSize={32}
                                             sideScale={monogramStyle === 'flat' ? 1 : 1.2}
                                             middleScale={monogramStyle === 'flat' ? 1 : 1.5}
