@@ -2,6 +2,26 @@
 import MonogramMaker from './MonogramMaker';
 import CircularMonogram from './CircularMonogram';
 
+// This component remains outside the main App component for good practice.
+const FormInput = ({ label, id, value, onChange, required = false, isOptional = false, disabled = false }) => (
+    <div>
+        <label htmlFor={id} className="block text-sm font-medium text-slate-700 mb-1">
+            {label}
+            {required && <span className="text-red-500 ml-1">*</span>}
+            {isOptional && <span className="text-slate-500 text-xs ml-1">(Optional)</span>}
+        </label>
+        <input
+            id={id}
+            type="text"
+            value={value}
+            onChange={onChange}
+            required={required}
+            disabled={disabled}
+            className={`w-full px-3 py-2 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-400 text-base ${disabled ? 'bg-slate-100 text-slate-500 cursor-not-allowed' : 'border-slate-300'}`}
+        />
+    </div>
+);
+
 const App = () => {
     const WORKER_URL = "https://customerfontselection-worker.tom-4a9.workers.dev";
     const DEFAULT_TEXT_PLACEHOLDER = 'Type your text here...';
@@ -211,90 +231,116 @@ const App = () => {
 
         const lines = customText.split('\n').filter(line => line.trim() !== '');
         let svgTextElements = '';
-        const lineHeight = fontSize * 1.4;
         const labelFontSize = 16;
         const padding = 20;
         const svgWidth = 800;
         let y = padding;
 
+        const escapeXml = (unsafe) => unsafe.replace(/[<>&'"]/g, c => {
+            switch (c) {
+                case '<': return '&lt;';
+                case '>': return '&gt;';
+                case '&': return '&amp;';
+                case '\'': return '&apos;';
+                case '"': return '&quot;';
+            }
+        });
+
         if (monogramData) {
-            const monogramFontFamily = monogramData.font.styles[monogramData.style];
-            const monogramStyleName = monogramData.style.charAt(0).toUpperCase() + monogramData.style.slice(1);
-            const monogramFontSize = monogramData.fontSize || 150;
-            const largeMonogramFontSize = monogramFontSize * 1.5;
-
             y += labelFontSize + 10;
-            svgTextElements += `<text x="${padding}" y="${y}" font-family="Arial" font-size="${labelFontSize}" fill="#6b7280" font-weight="600">Monogram: ${monogramData.font.name} (${monogramStyleName})</text>\n`;
+            const title = monogramData.isCircular
+                ? `Circular Monogram (${monogramData.frameStyle})`
+                : `${monogramData.font.name} (${monogramData.style.charAt(0).toUpperCase() + monogramData.style.slice(1)})`;
+            svgTextElements += `<text x="${padding}" y="${y}" font-family="Arial" font-size="${labelFontSize}" fill="#6b7280" font-weight="600">Monogram: ${title}</text>\n`;
 
-            y += largeMonogramFontSize * 1.2;
+            const monogramBlockY = y + 150; // Vertical position for the monogram block
 
-            const centerX = svgWidth / 2;
-            const baselineY = y;
-            const sideLetterOffset = (largeMonogramFontSize * 0.3) + (monogramFontSize * 0.3);
+            if (monogramData.isCircular) {
+                const [first, middle, last] = monogramData.text.map(escapeXml);
+                const frameStyle = monogramData.frameStyle;
+                const textColor = (frameStyle === 'solid' || frameStyle === 'double') ? 'white' : 'black';
+                const baseFontSize = (monogramData.fontSize || 100) * 1.5;
+                const finalFontSize = baseFontSize * 0.9875;
+                const svgCenterX = svgWidth / 2;
 
-            const yOffset = monogramFontSize * 0.175;
+                let frameSvg = '';
+                if (frameStyle === 'solid') {
+                    frameSvg = `<circle cx="${svgCenterX}" cy="${monogramBlockY}" r="64" fill="black" />`;
+                } else if (frameStyle === 'double') {
+                    frameSvg = `<g>
+                        <circle cx="${svgCenterX}" cy="${monogramBlockY}" r="64" fill="black" />
+                        <circle cx="${svgCenterX}" cy="${monogramBlockY}" r="59" fill="none" stroke="white" stroke-width="3" />
+                    </g>`;
+                } else if (frameStyle === 'dotted') {
+                    frameSvg = `<circle cx="${svgCenterX}" cy="${monogramBlockY}" r="64" fill="none" stroke="black" stroke-width="4" stroke-dasharray="10 10" />`;
+                }
 
-            svgTextElements += `\n`;
+                const textSvg = `<text x="${svgCenterX}" y="${monogramBlockY}" text-anchor="middle" dominant-baseline="middle" fill="${textColor}" style="font-size: ${finalFontSize}px;">
+                    <tspan font-family="LeftCircleMonogram">${first}</tspan>
+                    <tspan font-family="MiddleCircleMonogram" dy="-0.02em">${middle}</tspan>
+                    <tspan font-family="RightCircleMonogram">${last}</tspan>
+                </text>`;
 
-            svgTextElements += `<text
-                x="${centerX - sideLetterOffset}" y="${baselineY - yOffset}"
-                font-family="${monogramFontFamily}" font-size="${monogramFontSize}px"
-                fill="#181717" text-anchor="middle">
-                ${monogramData.text[0].replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}
-            </text>\n`;
+                svgTextElements += frameSvg + textSvg;
+                y = monogramBlockY + 100;
+            } else {
+                const [first, middle, last] = monogramData.text.map(escapeXml);
+                const baseSize = monogramData.fontSize || 100;
+                const sideScale = 1.2;
+                const middleScale = 1.6;
 
-            svgTextElements += `<text
-                x="${centerX}" y="${baselineY}"
-                font-family="${monogramFontFamily}" font-size="${largeMonogramFontSize}px"
-                fill="#181717" text-anchor="middle">
-                ${monogramData.text[1].replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}
-            </text>\n`;
+                const sideSize = monogramData.disableScaling ? baseSize : baseSize * sideScale;
+                const middleSize = monogramData.disableScaling ? baseSize : baseSize * middleScale;
 
-            svgTextElements += `<text
-                x="${centerX + sideLetterOffset}" y="${baselineY - yOffset}"
-                font-family="${monogramFontFamily}" font-size="${monogramFontSize}px"
-                fill="#181717" text-anchor="middle">
-                ${monogramData.text[2].replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}
-            </text>\n`;
+                const fontFamily = monogramData.font.styles[monogramData.style];
+                const svgCenterX = svgWidth / 2;
+                const sideLetterApproxWidth = sideSize * 0.5;
 
-            y += lineHeight;
+                svgTextElements += `<g text-anchor="middle" dominant-baseline="middle" font-family="${fontFamily}" fill="#181717">
+                    <text x="${svgCenterX - sideLetterApproxWidth * 1.5}" y="${monogramBlockY}" font-size="${sideSize}px">${first}</text>
+                    <text x="${svgCenterX}" y="${monogramBlockY}" font-size="${middleSize}px">${middle}</text>
+                    <text x="${svgCenterX + sideLetterApproxWidth * 1.5}" y="${monogramBlockY}" font-size="${sideSize}px">${last}</text>
+                </g>`;
+                y = monogramBlockY + middleSize / 2;
+            }
         }
 
+        let contentY = y + 40; // Add spacing before the rest of the content
         if (hasStandardSelection && lines.length > 0) {
             selectedFonts.forEach((font, fontIndex) => {
                 const activeFontFamily = font.styles[font.activeStyle];
                 const styleName = font.activeStyle.charAt(0).toUpperCase() + font.activeStyle.slice(1);
 
-                y += labelFontSize + 10;
-                svgTextElements += `<text x="${padding}" y="${y}" font-family="Arial" font-size="${labelFontSize}" fill="#6b7280" font-weight="600">${font.name} (${styleName})</text>\n`;
-                y += lineHeight * 0.5;
+                contentY += labelFontSize + 10;
+                svgTextElements += `<text x="${padding}" y="${contentY}" font-family="Arial" font-size="${labelFontSize}" fill="#6b7280" font-weight="600">${font.name} (${styleName})</text>\n`;
+                contentY += (fontSize * 1.4) * 0.5;
 
                 lines.forEach((line) => {
-                    const sanitizedLine = line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                    y += lineHeight;
-                    svgTextElements += `<text x="${padding}" y="${y}" font-family="${activeFontFamily}" font-size="${fontSize}" fill="#181717">${sanitizedLine}</text>\n`;
+                    const sanitizedLine = escapeXml(line);
+                    contentY += (fontSize * 1.4);
+                    svgTextElements += `<text x="${padding}" y="${contentY}" font-family="${activeFontFamily}" font-size="${fontSize}" fill="#181717">${sanitizedLine}</text>\n`;
                 });
 
                 if (fontIndex < selectedFonts.length - 1) {
-                    y += lineHeight * 0.75;
+                    contentY += (fontSize * 1.4) * 0.75;
                 }
             });
         }
 
         if (customerNotes.trim() !== '') {
-            y += lineHeight;
-            svgTextElements += `<text x="${padding}" y="${y}" font-family="Arial" font-size="${labelFontSize}" fill="#6b7280" font-weight="600">Customer Notes</text>\n`;
-            y += lineHeight * 0.5;
+            contentY += (fontSize * 1.4);
+            svgTextElements += `<text x="${padding}" y="${contentY}" font-family="Arial" font-size="${labelFontSize}" fill="#6b7280" font-weight="600">Customer Notes</text>\n`;
+            contentY += labelFontSize * 0.5;
 
             const noteLines = customerNotes.split('\n').filter(line => line.trim() !== '');
             noteLines.forEach(noteLine => {
-                const sanitizedNoteLine = noteLine.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                y += labelFontSize * 1.4;
-                svgTextElements += `<text x="${padding}" y="${y}" font-family="Arial" font-size="${labelFontSize}" fill="#181717">${sanitizedNoteLine}</text>\n`;
+                const sanitizedNoteLine = escapeXml(noteLine);
+                contentY += labelFontSize * 1.4;
+                svgTextElements += `<text x="${padding}" y="${contentY}" font-family="Arial" font-size="${labelFontSize}" fill="#181717">${sanitizedNoteLine}</text>\n`;
             });
         }
 
-        const svgHeight = y + padding;
+        const svgHeight = contentY + padding;
         return `<svg xmlns="http://www.w3.org/2000/svg" width="${svgWidth}" height="${svgHeight}" style="background-color: #FFF;">\n${svgTextElements}</svg>`;
     };
 
@@ -389,30 +435,11 @@ const App = () => {
             { unshifted: '=', shifted: 'ׂ', name: 'Sin Dot' },
         ],
         ['/', "'", 'ק', 'ר', 'א', 'ט', 'ו', 'ן', 'ם', 'פ', '[', ']'],
-        ['ש', 'ד', 'ג', 'כ', 'ע', 'י', 'ח', 'ל', 'ך', 'ף', ','],
+        ['ש', 'д', 'ג', 'כ', 'ע', 'י', 'ח', 'ל', 'ך', 'ף', ','],
         ['ז', 'ס', 'ב', 'ה', 'נ', 'מ', 'צ', 'ת', 'ץ', '.']
     ];
 
     const hebrewRegex = /[\u0590-\u05FF]/;
-    const FormInput = ({ label, id, value, onChange, required = false, isOptional = false, disabled = false }) => (
-        <div>
-            <label htmlFor={id} className="block text-sm font-medium text-slate-700 mb-1">
-                {label}
-                {required && <span className="text-red-500 ml-1">*</span>}
-                {isOptional && <span className="text-slate-500 text-xs ml-1">(Optional)</span>}
-            </label>
-            <input
-                id={id}
-                type="text"
-                value={value}
-                onChange={onChange}
-                required={required}
-                disabled={disabled}
-                className={`w-full px-3 py-2 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-400 text-base ${disabled ? 'bg-slate-100 text-slate-500 cursor-not-allowed' : 'border-slate-300'}`}
-            />
-        </div>
-    );
-
 
     return (
         <div className="flex flex-col lg:flex-row min-h-screen bg-slate-100 font-sans">
@@ -424,12 +451,14 @@ const App = () => {
                         className="object-contain drop-shadow-lg h-48 w-48 mx-auto lg:h-auto lg:w-[350px]"
                     />
                 </div>
+
                 <div className="flex-grow flex items-center justify-center lg:flex-grow-0 lg:items-start lg:mt-4">
                     <p className="text-center lg:text-left text-slate-200 text-xs lg:text-base lg:max-w-sm px-2">
                         Let's find your perfect font! Select a few options, preview them with your text, and submit your favorites. Our designers will use your selection to craft your proof. If you have another font in mind, let us know in the notes section below!
                     </p>
                 </div>
             </aside>
+
             <main className="flex-1 p-4 sm:p-8 lg:p-12">
                 {isSubmissionComplete && (
                     <div className="fixed inset-0 bg-slate-100 bg-opacity-95 flex items-center justify-center z-30">
@@ -482,6 +511,7 @@ const App = () => {
                                 ))}
                             </div>
                         </section>
+
                         <div className="flex justify-end mt-4">
                             <button
                                 className="px-6 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 shadow"
@@ -491,6 +521,7 @@ const App = () => {
                                 Open Monogram Maker
                             </button>
                         </div>
+
                         <section className="bg-white rounded-2xl p-8 border border-slate-100 shadow-[0_10px_25px_-5px_rgba(50,75,106,0.2),_0_8px_10px_-6px_rgba(59,130,246,0.2)]">
                             <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center mb-6 gap-4">
                                 <div>
@@ -534,6 +565,7 @@ const App = () => {
                             </div>
 
                             <div className="bg-gradient-to-b from-slate-50 to-slate-200 p-6 rounded-xl min-h-[150px] space-y-10 border border-slate-100">
+
                                 {monogramData && (
                                     <div className="mb-10 p-6 border border-blue-200 rounded-xl bg-blue-50 shadow flex justify-center items-center">
                                         <CircularMonogram
@@ -563,6 +595,7 @@ const App = () => {
                                         </div>
                                     </div>
                                 )}
+
                                 {selectedFonts.length > 0 && customText.trim() !== '' ? (
                                     selectedFonts.map((font) => {
                                         const activeFontFamily = font.styles[font.activeStyle];
@@ -613,6 +646,7 @@ const App = () => {
                                 )}
                             </div>
                         </section>
+
                         <section className="bg-white rounded-2xl p-8 border border-slate-100 shadow-[0_10px_25px_-5px_rgba(50,75,106,0.2),_0_8px_10px_-6px_rgba(59,130,246,0.2)]">
                             <h2 className="text-3xl font-bold text-slate-900 mb-2 tracking-normal" style={{ fontFamily: 'Alumni Sans Regular' }}>Notes for Designer</h2>
                             <p className="text-slate-500 mb-6">
@@ -626,6 +660,7 @@ const App = () => {
                             />
                         </section>
                     </div>
+
                     <div className="mt-10">
                         <button
                             onClick={handleSubmitClick}
@@ -637,6 +672,7 @@ const App = () => {
                     </div>
                 </div>
             </main>
+
             {(showCustomerModal || showMessageBox || showGlyphPalette || showAccentPalette || showHebrewPalette || showSuccessModal) && (
                 <div className="fixed inset-0 bg-slate-900 bg-opacity-75 flex items-center justify-center p-4 z-50 transition-opacity animate-fade-in">
                     <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-4xl animate-jump-in">
