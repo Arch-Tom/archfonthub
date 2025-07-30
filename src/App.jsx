@@ -2,11 +2,7 @@
 import MonogramMaker from './MonogramMaker';
 import CircularMonogram from './CircularMonogram';
 
-// The FormInput component and the rest of the App component's state and functions are unchanged.
-// The only change is in the "Live Preview" section's JSX shown below.
-
 const App = () => {
-    // ... (all existing state, functions, and constants remain the same)
     const WORKER_URL = "https://customerfontselection-worker.tom-4a9.workers.dev";
     const DEFAULT_TEXT_PLACEHOLDER = 'Type your text here...';
 
@@ -384,10 +380,10 @@ const App = () => {
             { unshifted: '3', shifted: 'ָ', name: 'Qamats' },
             { unshifted: '4', shifted: 'ֶ', name: 'Segol' },
             { unshifted: '5', shifted: 'ֵ', name: 'Tsere' },
-            { unshifted: '6', shifted: 'ִ', 'Hiriq' },
+            { unshifted: '6', shifted: 'ִ', name: 'Hiriq' },
             { unshifted: '7', shifted: 'ֹ', name: 'Holam' },
             { unshifted: '8', shifted: 'ּ', name: 'Dagesh' },
-            { unshifted: '9', shifted: 'ֻ', 'Qubuts' },
+            { unshifted: '9', shifted: 'ֻ', name: 'Qubuts' },
             { unshifted: '0', shifted: 'ֿ', name: 'Rafe' },
             { unshifted: '-', shifted: 'ׁ', name: 'Shin Dot' },
             { unshifted: '=', shifted: 'ׂ', name: 'Sin Dot' },
@@ -418,11 +414,9 @@ const App = () => {
     );
 
 
-    // --- The App component's return statement ---
     return (
         <div className="flex flex-col lg:flex-row min-h-screen bg-slate-100 font-sans">
             <aside className="bg-[rgb(50,75,106)] text-white w-full lg:w-[400px] p-4 flex-shrink-0 flex flex-col shadow-xl lg:rounded-r-3xl lg:justify-start">
-                {/* Logo container */}
                 <div className="flex-shrink-0 pt-4 lg:pt-8">
                     <img
                         src="/images/Arch Vector Logo White.svg"
@@ -430,8 +424,6 @@ const App = () => {
                         className="object-contain drop-shadow-lg h-48 w-48 mx-auto lg:h-auto lg:w-[350px]"
                     />
                 </div>
-
-                {/* Text container with responsive centering logic */}
                 <div className="flex-grow flex items-center justify-center lg:flex-grow-0 lg:items-start lg:mt-4">
                     <p className="text-center lg:text-left text-slate-200 text-xs lg:text-base lg:max-w-sm px-2">
                         Let's find your perfect font! Select a few options, preview them with your text, and submit your favorites. Our designers will use your selection to craft your proof. If you have another font in mind, let us know in the notes section below!
@@ -542,7 +534,6 @@ const App = () => {
                             </div>
 
                             <div className="bg-gradient-to-b from-slate-50 to-slate-200 p-6 rounded-xl min-h-[150px] space-y-10 border border-slate-100">
-                                {/* --- Monogram Preview Block --- */}
                                 {monogramData && (
                                     <div className="mb-10 p-6 border border-blue-200 rounded-xl bg-blue-50 shadow flex justify-center items-center">
                                         <CircularMonogram
@@ -558,7 +549,18 @@ const App = () => {
 
                                 {hebrewRegex.test(customText) && (
                                     <div className="p-4 mb-6 bg-amber-50 border-l-4 border-amber-400 rounded-r-lg">
-                                        {/* ... (warning content) */}
+                                        <div className="flex">
+                                            <div className="flex-shrink-0">
+                                                <svg className="h-5 w-5 text-amber-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                    <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 3.001-1.742 3.001H4.42c-1.53 0-2.493-1.667-1.743-3.001l5.58-9.92zM10 13a1 1 0 110-2 1 1 0 010 2zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                                </svg>
+                                            </div>
+                                            <div className="ml-3">
+                                                <p className="text-sm text-amber-800 font-medium">
+                                                    Please check each preview carefully as Hebrew character support can vary between fonts.
+                                                </p>
+                                            </div>
+                                        </div>
                                     </div>
                                 )}
                                 {selectedFonts.length > 0 && customText.trim() !== '' ? (
