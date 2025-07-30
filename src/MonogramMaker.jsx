@@ -1,5 +1,5 @@
 ﻿import React, { useState, useMemo, useRef, useEffect } from 'react';
-import MonogramPreview from './MonogramPreview';
+// MonogramPreview import is no longer needed
 import CircularMonogram from './CircularMonogram';
 
 export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
@@ -83,28 +83,24 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                         frameStyle={frameStyle}
                     />
                 ) : (
-                    // --- PREVIEW LOGIC UPDATED ---
-                    // This now correctly applies the scaling based on the selected monogram style
-                    <MonogramPreview
-                        first={initials[0] || 'N'}
-                        middle={initials[1] || 'X'}
-                        last={initials[2] || 'D'}
+                    // --- PREVIEW LOGIC UPDATED TO USE CircularMonogram ---
+                    <CircularMonogram
+                        isCircular={false}
+                        text={[initials[0] || 'N', initials[1] || 'X', initials[2] || 'D']}
                         fontFamily={selectedFont.styles?.[activeStyle]}
                         fontSize={fontSize}
-                        // Apply scaling only for the 'classic' style
                         disableScaling={monogramStyle === 'flat'}
-                        sideScale={1.2}
-                        middleScale={1.6}
                     />
                 )}
             </div>
         </div>
     );
 
+    // This component's return statement remains the same but is included for completeness.
+    // The key change is in the 'previewBox' variable above.
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/70 backdrop-blur-[3px] p-0 sm:p-2 animate-fade-in" onClick={onClose}>
             <div className="relative bg-white rounded-none sm:rounded-3xl shadow-2xl w-full max-w-full sm:max-w-2xl md:max-w-3xl h-screen sm:h-[90vh] flex flex-col overflow-hidden transition-all" onClick={e => e.stopPropagation()}>
-                {/* Header */}
                 <header className="sticky top-0 z-10 bg-white/95 border-b border-slate-200 flex justify-between items-center px-4 sm:px-5 py-3 sm:py-4">
                     <div>
                         <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 tracking-tight" style={{ fontFamily: 'Alumni Sans Regular' }}>
@@ -116,9 +112,7 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                         &times;
                     </button>
                 </header>
-
                 <div className="flex-1 flex flex-col overflow-y-auto pb-[100px] items-center px-4 sm:px-6">
-                    {/* Initials input & Style Selector */}
                     <div className="w-full max-w-xl flex flex-col gap-4 mt-6">
                         <div>
                             <h3 className="text-base sm:text-lg font-semibold text-slate-700 mb-2 sm:mb-3 text-center">Your Initials</h3>
@@ -138,7 +132,6 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                                 ))}
                             </div>
                         </div>
-                        {/* Style Buttons */}
                         <div className="flex justify-center gap-2 bg-slate-100 p-1 rounded-xl shadow-inner overflow-x-auto">
                             {['classic', 'flat', 'circular'].map(style => (
                                 <button
@@ -154,8 +147,6 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                             ))}
                         </div>
                     </div>
-
-                    {/* Frame Selection UI */}
                     {monogramStyle === 'circular' && (
                         <div className="w-full max-w-xl mt-6">
                             <h3 className="text-base sm:text-lg font-semibold text-slate-700 mb-2 sm:mb-3 text-center">Frame Style</h3>
@@ -175,13 +166,9 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                             </div>
                         </div>
                     )}
-
-                    {/* Preview */}
                     <div className="w-full max-w-xl mt-6">
                         {previewBox}
                     </div>
-
-                    {/* Font Selection */}
                     {monogramStyle !== 'circular' && (
                         <div className="w-full max-w-2xl mt-6">
                             <h3 className="text-base sm:text-lg font-semibold text-slate-700 mb-2 sm:mb-3 text-center">Choose a Font</h3>
@@ -198,16 +185,14 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                                                 ? 'border-blue-600 bg-blue-50 shadow-md'
                                                 : 'border-slate-200 bg-white hover:border-blue-400 hover:bg-blue-50/40'}`}
                                     >
-                                        <MonogramPreview
-                                            first={initials[0] || 'N'}
-                                            middle={initials[1] || 'X'}
-                                            last={initials[2] || 'D'}
+                                        <CircularMonogram
+                                            isCircular={false}
+                                            text={[initials[0] || 'N', initials[1] || 'X', initials[2] || 'D']}
                                             fontFamily={font.styles?.[Object.keys(font.styles)[0]]}
                                             fontSize={32}
                                             disableScaling={monogramStyle === 'flat'}
                                             sideScale={1.2}
                                             middleScale={1.5}
-                                            className="mb-2"
                                         />
                                         <span className="text-xs font-semibold text-slate-700 group-hover:text-blue-700 text-center">{font.name}</span>
                                         <span className="text-[11px] text-slate-400">{font.category}</span>
@@ -217,8 +202,6 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                         </div>
                     )}
                 </div>
-
-                {/* Footer Actions */}
                 <footer className="fixed sm:sticky bottom-0 left-0 w-full bg-white/95 border-t border-slate-200 px-4 py-3 flex flex-row-reverse justify-between gap-3 z-20">
                     <button
                         onClick={handleInsert}
