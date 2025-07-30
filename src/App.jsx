@@ -1,6 +1,6 @@
 ﻿import React, { useState, useRef, useEffect } from 'react';
 import MonogramMaker from './MonogramMaker';
-import CircularMonogram from './CircularMonogram';
+import CircularMonogram from './CircularMonogram'; // Still needed for font thumbnails
 
 // This component remains outside the main App component for good practice.
 const FormInput = ({ label, id, value, onChange, required = false, isOptional = false, disabled = false }) => (
@@ -121,7 +121,7 @@ const App = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmissionComplete, setIsSubmissionComplete] = useState(false);
     const [showMonogramMaker, setShowMonogramMaker] = useState(false);
-    const [monogramData, setMonogramData] = useState(null);
+    const [monogramInfo, setMonogramInfo] = useState(null); // UPDATED STATE
     const [hebrewPaletteText, setHebrewPaletteText] = useState('');
     const [lastHebrewBaseChar, setLastHebrewBaseChar] = useState('א');
     const [isShifted, setIsShifted] = useState(false);
@@ -224,13 +224,13 @@ const App = () => {
     const generateSvgContent = () => {
         const hasStandardSelection = selectedFonts.length > 0 && customText.trim() !== '';
 
-        if (!monogramData && !hasStandardSelection) {
+        if (!monogramInfo && !hasStandardSelection) {
             showMessage('Please create a monogram, or select at least one font and enter some text to submit.');
             return null;
         }
 
         const lines = customText.split('\n').filter(line => line.trim() !== '');
-        let svgTextElements = '';
+        let svgElements = '';
         const labelFontSize = 16;
         const padding = 20;
         const svgWidth = 800;
@@ -246,79 +246,41 @@ const App = () => {
             }
         });
 
-        if (monogramData) {
+        if (monogramInfo) {
+            const { data, htmlString } = monogramInfo;
             y += labelFontSize + 10;
-            const title = monogramData.isCircular
-                ? `Circular Monogram (${monogramData.frameStyle})`
-                : `${monogramData.font.name} (${monogramData.style.charAt(0).toUpperCase() + monogramData.style.slice(1)})`;
-            svgTextElements += `<text x="${padding}" y="${y}" font-family="Arial" font-size="${labelFontSize}" fill="#6b7280" font-weight="600">Monogram: ${title}</text>\n`;
+            const title = data.isCircular
+                ? `Circular Monogram (${data.frameStyle})`
+                : `${data.font.name} (${data.style.charAt(0).toUpperCase() + data.style.slice(1)})`;
+            svgElements += `<text x="${padding}" y="${y}" font-family="Arial" font-size="${labelFontSize}" fill="#6b7280" font-weight="600">Monogram: ${title}</text>\n`;
 
-            const monogramBlockY = y + 150; // Vertical position for the monogram block
+            const monogramBlockY = y + 20;
+            const monogramHeight = 180;
+            const monogramWidth = 400;
+            const monogramX = (svgWidth / 2) - (monogramWidth / 2);
 
-            if (monogramData.isCircular) {
-                const [first, middle, last] = monogramData.text.map(escapeXml);
-                const frameStyle = monogramData.frameStyle;
-                const textColor = (frameStyle === 'solid' || frameStyle === 'double') ? 'white' : 'black';
-                const baseFontSize = (monogramData.fontSize || 100) * 1.5;
-                const finalFontSize = baseFontSize * 0.9875;
-                const svgCenterX = svgWidth / 2;
-
-                let frameSvg = '';
-                if (frameStyle === 'solid') {
-                    frameSvg = `<circle cx="${svgCenterX}" cy="${monogramBlockY}" r="64" fill="black" />`;
-                } else if (frameStyle === 'double') {
-                    frameSvg = `<g>
-                        <circle cx="${svgCenterX}" cy="${monogramBlockY}" r="64" fill="black" />
-                        <circle cx="${svgCenterX}" cy="${monogramBlockY}" r="59" fill="none" stroke="white" stroke-width="3" />
-                    </g>`;
-                } else if (frameStyle === 'dotted') {
-                    frameSvg = `<circle cx="${svgCenterX}" cy="${monogramBlockY}" r="64" fill="none" stroke="black" stroke-width="4" stroke-dasharray="10 10" />`;
-                }
-
-                const textSvg = `<text x="${svgCenterX}" y="${monogramBlockY}" text-anchor="middle" dominant-baseline="middle" fill="${textColor}" style="font-size: ${finalFontSize}px;">
-                    <tspan font-family="LeftCircleMonogram">${first}</tspan>
-                    <tspan font-family="MiddleCircleMonogram" dy="-0.02em">${middle}</tspan>
-                    <tspan font-family="RightCircleMonogram">${last}</tspan>
-                </text>`;
-
-                svgTextElements += frameSvg + textSvg;
-                y = monogramBlockY + 100;
-            } else {
-                const [first, middle, last] = monogramData.text.map(escapeXml);
-                const baseSize = monogramData.fontSize || 100;
-                const sideScale = 1.2;
-                const middleScale = 1.6;
-
-                const sideSize = monogramData.disableScaling ? baseSize : baseSize * sideScale;
-                const middleSize = monogramData.disableScaling ? baseSize : baseSize * middleScale;
-
-                const fontFamily = monogramData.font.styles[monogramData.style];
-                const svgCenterX = svgWidth / 2;
-                const sideLetterApproxWidth = sideSize * 0.5;
-
-                svgTextElements += `<g text-anchor="middle" dominant-baseline="middle" font-family="${fontFamily}" fill="#181717">
-                    <text x="${svgCenterX - sideLetterApproxWidth * 1.5}" y="${monogramBlockY}" font-size="${sideSize}px">${first}</text>
-                    <text x="${svgCenterX}" y="${monogramBlockY}" font-size="${middleSize}px">${middle}</text>
-                    <text x="${svgCenterX + sideLetterApproxWidth * 1.5}" y="${monogramBlockY}" font-size="${sideSize}px">${last}</text>
-                </g>`;
-                y = monogramBlockY + middleSize / 2;
-            }
+            svgElements += `<foreignObject x="${monogramX}" y="${monogramBlockY}" width="${monogramWidth}" height="${monogramHeight}">
+                <div xmlns="http://www.w3.org/1999/xhtml" style="width: 100%; height: 100%;">
+                    ${htmlString}
+                </div>
+            </foreignObject>`;
+            y = monogramBlockY + monogramHeight;
         }
 
-        let contentY = y + 40; // Add spacing before the rest of the content
+        let contentY = y + 40;
         if (hasStandardSelection && lines.length > 0) {
             selectedFonts.forEach((font, fontIndex) => {
                 const activeFontFamily = font.styles[font.activeStyle];
                 const styleName = font.activeStyle.charAt(0).toUpperCase() + font.activeStyle.slice(1);
 
                 contentY += labelFontSize + 10;
-                svgTextElements += `<text x="${padding}" y="${contentY}" font-family="Arial" font-size="${labelFontSize}" fill="#6b7280" font-weight="600">${font.name} (${styleName})</text>\n`;
+                svgElements += `<text x="${padding}" y="${contentY}" font-family="Arial" font-size="${labelFontSize}" fill="#6b7280" font-weight="600">${font.name} (${styleName})</text>\n`;
                 contentY += (fontSize * 1.4) * 0.5;
 
                 lines.forEach((line) => {
                     const sanitizedLine = escapeXml(line);
                     contentY += (fontSize * 1.4);
-                    svgTextElements += `<text x="${padding}" y="${contentY}" font-family="${activeFontFamily}" font-size="${fontSize}" fill="#181717">${sanitizedLine}</text>\n`;
+                    svgElements += `<text x="${padding}" y="${contentY}" font-family="${activeFontFamily}" font-size="${fontSize}" fill="#181717">${sanitizedLine}</text>\n`;
                 });
 
                 if (fontIndex < selectedFonts.length - 1) {
@@ -329,19 +291,19 @@ const App = () => {
 
         if (customerNotes.trim() !== '') {
             contentY += (fontSize * 1.4);
-            svgTextElements += `<text x="${padding}" y="${contentY}" font-family="Arial" font-size="${labelFontSize}" fill="#6b7280" font-weight="600">Customer Notes</text>\n`;
+            svgElements += `<text x="${padding}" y="${contentY}" font-family="Arial" font-size="${labelFontSize}" fill="#6b7280" font-weight="600">Customer Notes</text>\n`;
             contentY += labelFontSize * 0.5;
 
             const noteLines = customerNotes.split('\n').filter(line => line.trim() !== '');
             noteLines.forEach(noteLine => {
                 const sanitizedNoteLine = escapeXml(noteLine);
                 contentY += labelFontSize * 1.4;
-                svgTextElements += `<text x="${padding}" y="${contentY}" font-family="Arial" font-size="${labelFontSize}" fill="#181717">${sanitizedNoteLine}</text>\n`;
+                svgElements += `<text x="${padding}" y="${contentY}" font-family="Arial" font-size="${labelFontSize}" fill="#181717">${sanitizedNoteLine}</text>\n`;
             });
         }
 
         const svgHeight = contentY + padding;
-        return `<svg xmlns="http://www.w3.org/2000/svg" width="${svgWidth}" height="${svgHeight}" style="background-color: #FFF;">\n${svgTextElements}</svg>`;
+        return `<svg xmlns="http://www.w3.org/2000/svg" width="${svgWidth}" height="${svgHeight}" style="background-color: #FFF;">\n${svgElements}</svg>`;
     };
 
     const handleSubmitClick = () => {
@@ -451,7 +413,6 @@ const App = () => {
                         className="object-contain drop-shadow-lg h-48 w-48 mx-auto lg:h-auto lg:w-[350px]"
                     />
                 </div>
-
                 <div className="flex-grow flex items-center justify-center lg:flex-grow-0 lg:items-start lg:mt-4">
                     <p className="text-center lg:text-left text-slate-200 text-xs lg:text-base lg:max-w-sm px-2">
                         Let's find your perfect font! Select a few options, preview them with your text, and submit your favorites. Our designers will use your selection to craft your proof. If you have another font in mind, let us know in the notes section below!
@@ -565,17 +526,9 @@ const App = () => {
                             </div>
 
                             <div className="bg-gradient-to-b from-slate-50 to-slate-200 p-6 rounded-xl min-h-[150px] space-y-10 border border-slate-100">
-
-                                {monogramData && (
-                                    <div className="mb-10 p-6 border border-blue-200 rounded-xl bg-blue-50 shadow flex justify-center items-center">
-                                        <CircularMonogram
-                                            text={monogramData.text}
-                                            fontSize={monogramData.fontSize || fontSize}
-                                            frameStyle={monogramData.frameStyle || 'none'}
-                                            fontFamily={monogramData.isCircular ? undefined : monogramData.font.styles[monogramData.style]}
-                                            isCircular={monogramData.isCircular}
-                                            disableScaling={monogramData.disableScaling}
-                                        />
+                                {monogramInfo && (
+                                    <div className="mb-10 p-6 border border-blue-200 rounded-xl bg-blue-50 shadow flex justify-center items-center h-[200px]">
+                                        <div className="w-full h-full" dangerouslySetInnerHTML={{ __html: monogramInfo.htmlString }} />
                                     </div>
                                 )}
 
@@ -642,7 +595,7 @@ const App = () => {
                                         );
                                     })
                                 ) : (
-                                    !monogramData && <div className="flex items-center justify-center h-full"><p className="text-slate-500 italic">Select fonts and enter text to see a live preview.</p></div>
+                                    !monogramInfo && <div className="flex items-center justify-center h-full"><p className="text-slate-500 italic">Select fonts and enter text to see a live preview.</p></div>
                                 )}
                             </div>
                         </section>
@@ -665,7 +618,7 @@ const App = () => {
                         <button
                             onClick={handleSubmitClick}
                             className="w-full px-10 py-4 bg-blue-600 text-white text-xl rounded-2xl font-bold hover:bg-blue-700 shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                            disabled={isSubmitting || (!monogramData && (selectedFonts.length === 0 || customText.trim() === ''))}
+                            disabled={isSubmitting || (!monogramInfo && (selectedFonts.length === 0 || customText.trim() === ''))}
                         >
                             {isSubmitting ? 'Submitting...' : 'Submit Selection'}
                         </button>
@@ -820,8 +773,8 @@ const App = () => {
                 <MonogramMaker
                     fontLibrary={fontLibrary}
                     onClose={() => setShowMonogramMaker(false)}
-                    onInsert={(data) => {
-                        setMonogramData(data);
+                    onInsert={(info) => {
+                        setMonogramInfo(info);
                         setShowMonogramMaker(false);
                     }}
                 />

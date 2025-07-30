@@ -1,5 +1,5 @@
 ﻿import React, { useState, useMemo, useRef, useEffect } from 'react';
-// MonogramPreview import is no longer needed
+import ReactDOMServer from 'react-dom/server';
 import CircularMonogram from './CircularMonogram';
 
 export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
@@ -55,7 +55,7 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
         const [first, middle, last] = initials;
         if (!first || !middle || !last) return;
 
-        onInsert({
+        const monogramData = {
             text: [first, middle, last],
             font: selectedFont,
             style: activeStyle,
@@ -63,7 +63,31 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
             isCircular: monogramStyle === 'circular',
             frameStyle: monogramStyle === 'circular' ? frameStyle : 'none',
             disableScaling: monogramStyle === 'flat'
-        });
+        };
+
+        const previewComponent = (
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
+                {monogramStyle === 'circular' ? (
+                    <CircularMonogram
+                        text={initials.map(i => i || 'A')}
+                        fontSize={80}
+                        isCircular={true}
+                        frameStyle={frameStyle}
+                    />
+                ) : (
+                    <CircularMonogram
+                        isCircular={false}
+                        text={[initials[0] || 'N', initials[1] || 'X', initials[2] || 'D']}
+                        fontFamily={selectedFont.styles?.[activeStyle]}
+                        fontSize={fontSize}
+                        disableScaling={monogramStyle === 'flat'}
+                    />
+                )}
+            </div>
+        );
+
+        const renderedString = ReactDOMServer.renderToStaticMarkup(previewComponent);
+        onInsert({ htmlString: renderedString, data: monogramData });
         onClose();
     };
 
@@ -83,7 +107,6 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                         frameStyle={frameStyle}
                     />
                 ) : (
-                    // --- PREVIEW LOGIC UPDATED TO USE CircularMonogram ---
                     <CircularMonogram
                         isCircular={false}
                         text={[initials[0] || 'N', initials[1] || 'X', initials[2] || 'D']}
@@ -96,8 +119,6 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
         </div>
     );
 
-    // This component's return statement remains the same but is included for completeness.
-    // The key change is in the 'previewBox' variable above.
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/70 backdrop-blur-[3px] p-0 sm:p-2 animate-fade-in" onClick={onClose}>
             <div className="relative bg-white rounded-none sm:rounded-3xl shadow-2xl w-full max-w-full sm:max-w-2xl md:max-w-3xl h-screen sm:h-[90vh] flex flex-col overflow-hidden transition-all" onClick={e => e.stopPropagation()}>
