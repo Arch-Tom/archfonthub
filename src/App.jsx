@@ -247,24 +247,74 @@ const App = () => {
         });
 
         if (monogramInfo) {
-            const { data, htmlString } = monogramInfo;
+            const data = monogramInfo.data;
             y += labelFontSize + 10;
             const title = data.isCircular
                 ? `Circular Monogram (${data.frameStyle})`
                 : `${data.font.name} (${data.style.charAt(0).toUpperCase() + data.style.slice(1)})`;
             svgElements += `<text x="${padding}" y="${y}" font-family="Arial" font-size="${labelFontSize}" fill="#6b7280" font-weight="600">Monogram: ${title}</text>\n`;
 
-            const monogramBlockY = y + 20;
-            const monogramHeight = 180;
-            const monogramWidth = 400;
-            const monogramX = (svgWidth / 2) - (monogramWidth / 2);
+            const svgCenterX = svgWidth / 2;
+            const monogramBlockY = y + 150;
 
-            svgElements += `<foreignObject x="${monogramX}" y="${monogramBlockY}" width="${monogramWidth}" height="${monogramHeight}">
-                <div xmlns="http://www.w3.org/1999/xhtml" style="width: 100%; height: 100%;">
-                    ${htmlString}
-                </div>
-            </foreignObject>`;
-            y = monogramBlockY + monogramHeight;
+            if (data.isCircular) {
+                const [first, middle, last] = data.text.map(escapeXml);
+                const frameStyle = data.frameStyle;
+                const textColor = (frameStyle === 'solid' || frameStyle === 'double') ? 'white' : 'black';
+                const baseFontSize = (data.fontSize || 100) * 1.5;
+                const finalFontSize = baseFontSize * 0.9875;
+
+                let frameSvg = '';
+                if (frameStyle === 'solid') {
+                    frameSvg = `<circle cx="${svgCenterX}" cy="${monogramBlockY}" r="64" fill="black" />`;
+                } else if (frameStyle === 'double') {
+                    frameSvg = `<g>
+                        <circle cx="${svgCenterX}" cy="${monogramBlockY}" r="64" fill="black" />
+                        <circle cx="${svgCenterX}" cy="${monogramBlockY}" r="59" fill="none" stroke="white" stroke-width="3" />
+                    </g>`;
+                } else if (frameStyle === 'dotted') {
+                    frameSvg = `<circle cx="${svgCenterX}" cy="${monogramBlockY}" r="64" fill="none" stroke="black" stroke-width="4" stroke-dasharray="10 10" />`;
+                } else if (frameStyle === 'outline') {
+                    frameSvg = `<circle cx="${svgCenterX}" cy="${monogramBlockY}" r="64" fill="none" stroke="black" stroke-width="2" />`;
+                } else if (frameStyle === 'thick-thin') {
+                    frameSvg = `<g>
+                        <circle cx="${svgCenterX}" cy="${monogramBlockY}" r="65" fill="none" stroke="black" stroke-width="5" />
+                        <circle cx="${svgCenterX}" cy="${monogramBlockY}" r="57" fill="none" stroke="black" stroke-width="2" />
+                    </g>`;
+                }
+
+                const textSvg = `<text x="${svgCenterX}" y="${monogramBlockY}" text-anchor="middle" dominant-baseline="middle" fill="${textColor}" style="font-size: ${finalFontSize}px;">
+                    <tspan font-family="LeftCircleMonogram">${first}</tspan>
+                    <tspan font-family="MiddleCircleMonogram" dy="-0.02em">${middle}</tspan>
+                    <tspan font-family="RightCircleMonogram">${last}</tspan>
+                </text>`;
+
+                svgElements += frameSvg + textSvg;
+                y = monogramBlockY + 100;
+
+            } else {
+                const [first, middle, last] = data.text.map(escapeXml);
+                const fontFamily = data.font.styles[data.style];
+                const baseSize = data.fontSize || 100;
+                const sideScale = 1.2;
+                const middleScale = 1.6;
+                const sideSize = data.disableScaling ? baseSize : baseSize * sideScale;
+                const middleSize = data.disableScaling ? baseSize : baseSize * middleScale;
+
+                const gap = sideSize * 0.2;
+                const middleLetterHalfWidth = (middleSize / 2) * 0.7;
+
+                const middleX = svgCenterX;
+                const leftX = middleX - middleLetterHalfWidth - gap;
+                const rightX = middleX + middleLetterHalfWidth + gap;
+
+                svgElements += `<g dominant-baseline="middle" text-anchor="middle" font-family="${fontFamily}" fill="#181717">
+                    <text x="${leftX}" y="${monogramBlockY}" font-size="${sideSize}px">${first}</text>
+                    <text x="${middleX}" y="${monogramBlockY}" font-size="${middleSize}px">${middle}</text>
+                    <text x="${rightX}" y="${monogramBlockY}" font-size="${sideSize}px">${last}</text>
+                </g>`;
+                y = monogramBlockY + middleSize / 2;
+            }
         }
 
         let contentY = y + 40;
