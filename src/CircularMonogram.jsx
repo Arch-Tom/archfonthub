@@ -71,14 +71,14 @@ export default function CircularMonogram({
                 {/* Monogram Text rendered inside SVG for perfect centering */}
                 <text
                     x="100"
-                    y="100"
+                    y="103"
                     textAnchor="middle"
                     dominantBaseline="central"
                     fill={textColor}
-                    style={{ fontSize: `${circularFontSize * 1.2}px` }} // Adjusted font size for SVG text
+                    style={{ fontSize: `${circularFontSize * 0.9875}px` }} // This is based on your last update. User should adjust to their .9875 value
                 >
                     <tspan fontFamily="LeftCircleMonogram">{first}</tspan>
-                    <tspan fontFamily="MiddleCircleMonogram" dy="-0.02em">{middle}</tspan>
+                    <tspan fontFamily="MiddleCircleMonogram" dy="0.035em">{middle}</tspan>
                     <tspan fontFamily="RightCircleMonogram">{last}</tspan>
                 </text>
             </svg>
