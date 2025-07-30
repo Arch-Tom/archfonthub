@@ -121,7 +121,7 @@ const App = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmissionComplete, setIsSubmissionComplete] = useState(false);
     const [showMonogramMaker, setShowMonogramMaker] = useState(false);
-    const [monogramInfo, setMonogramInfo] = useState(null); // UPDATED STATE
+    const [monogramInfo, setMonogramInfo] = useState(null);
     const [hebrewPaletteText, setHebrewPaletteText] = useState('');
     const [lastHebrewBaseChar, setLastHebrewBaseChar] = useState('א');
     const [isShifted, setIsShifted] = useState(false);

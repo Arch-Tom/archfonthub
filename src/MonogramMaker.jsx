@@ -172,7 +172,7 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                         <div className="w-full max-w-xl mt-6">
                             <h3 className="text-base sm:text-lg font-semibold text-slate-700 mb-2 sm:mb-3 text-center">Frame Style</h3>
                             <div className="flex justify-center gap-2 bg-slate-100 p-1 rounded-xl shadow-inner overflow-x-auto">
-                                {['none', 'solid', 'double', 'dotted'].map(style => (
+                                {['none', 'solid', 'double', 'dotted', 'outline', 'thick-thin'].map(style => (
                                     <button
                                         key={style}
                                         onClick={() => setFrameStyle(style)}
@@ -181,7 +181,7 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                                                 ? 'bg-blue-600 text-white shadow'
                                                 : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'}`}
                                     >
-                                        {style}
+                                        {style.replace('-', ' & ')}
                                     </button>
                                 ))}
                             </div>

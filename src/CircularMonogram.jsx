@@ -67,6 +67,16 @@ export default function CircularMonogram({
                 {frameStyle === 'dotted' && (
                     <circle cx="100" cy="100" r="64" fill="none" stroke="black" strokeWidth="4" strokeDasharray="10 10" />
                 )}
+                {frameStyle === 'outline' && (
+                    <circle cx="100" cy="100" r="64" fill="none" stroke="black" strokeWidth="2" />
+                )}
+                {frameStyle === 'thick-thin' && (
+                    <>
+                        <circle cx="100" cy="100" r="65" fill="none" stroke="black" strokeWidth="5" />
+                        <circle cx="100" cy="100" r="57" fill="none" stroke="black" strokeWidth="2" />
+                    </>
+                )}
+
 
                 {/* Monogram Text rendered inside SVG for perfect centering */}
                 <text
