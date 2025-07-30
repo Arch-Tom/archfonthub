@@ -75,7 +75,7 @@ export default function CircularMonogram({
                     textAnchor="middle"
                     dominantBaseline="central"
                     fill={textColor}
-                    style={{ fontSize: `${circularFontSize * 0.4}px` }} // Adjusted font size for SVG text
+                    style={{ fontSize: `${circularFontSize * 0.7}px` }} // Adjusted font size for SVG text
                 >
                     <tspan fontFamily="LeftCircleMonogram">{first}</tspan>
                     <tspan fontFamily="MiddleCircleMonogram" dy="-0.02em">{middle}</tspan>
