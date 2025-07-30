@@ -27,13 +27,13 @@ export default function CircularMonogram({
                 style={{
                     lineHeight: 1,
                     textAlign: 'center',
-                    gap: '0.05em'
+                    gap: '0.2em'
                 }}
             >
                 <span style={{ fontFamily, fontSize: `${disableScaling ? fontSize : fontSize * sideScale}px`, color: textColor }}>
                     {first}
                 </span>
-                <span style={{ fontFamily, fontSize: `${disableScaling ? fontSize : fontSize * middleScale}px`, margin: '0 -0.05em', color: textColor }}>
+                <span style={{ fontFamily, fontSize: `${disableScaling ? fontSize : fontSize * middleScale}px`, color: textColor }}>
                     {middle}
                 </span>
                 <span style={{ fontFamily, fontSize: `${disableScaling ? fontSize : fontSize * sideScale}px`, color: textColor }}>
