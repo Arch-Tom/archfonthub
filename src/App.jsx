@@ -1,6 +1,6 @@
 ﻿import React, { useState, useRef, useEffect } from 'react';
-import MonogramMaker from './MonogramMaker';
-import CircularMonogram from './CircularMonogram'; // Still needed for font thumbnails
+import MonogramMaker from './MonogramMaker.jsx';
+import CircularMonogram from './CircularMonogram.jsx'; // Still needed for font thumbnails
 
 // This component remains outside the main App component for good practice.
 const FormInput = ({ label, id, value, onChange, required = false, isOptional = false, disabled = false }) => (
@@ -541,10 +541,11 @@ const App = () => {
                                         <br />
                                         Be sure to test out any special characters your order may have!</p>
                                 </div>
-                                <div className="flex flex-wrap items-center justify-center sm:justify-end gap-2">
-                                    <button onClick={() => setShowHebrewPalette(true)} className="px-5 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base">Hebrew</button>
-                                    <button onClick={() => setShowAccentPalette(true)} className="px-5 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base">Accented Characters</button>
-                                    <button onClick={() => setShowGlyphPalette(true)} className="px-5 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base">Symbols</button>
+                                {/* --- UPDATED BUTTON CONTAINER --- */}
+                                <div className="flex flex-row items-stretch justify-center sm:justify-end gap-2 w-full sm:w-auto">
+                                    <button onClick={() => setShowAccentPalette(true)} className="px-4 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-xs sm:text-sm md:text-base whitespace-nowrap">Accented Characters</button>
+                                    <button onClick={() => setShowGlyphPalette(true)} className="px-4 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-xs sm:text-sm md:text-base whitespace-nowrap">Symbols</button>
+                                    <button onClick={() => setShowHebrewPalette(true)} className="px-4 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-xs sm:text-sm md:text-base whitespace-nowrap">Hebrew</button>
                                 </div>
                             </div>
                             <textarea ref={textInputRef} className="w-full p-5 border-2 border-slate-200 rounded-xl shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 min-h-[120px] text-xl" value={customText} onChange={handleTextChange} placeholder={DEFAULT_TEXT_PLACEHOLDER} dir="auto" />
