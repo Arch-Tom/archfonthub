@@ -1,6 +1,6 @@
 ﻿import React, { useState, useMemo, useRef, useEffect } from 'react';
 import ReactDOMServer from 'react-dom/server';
-import CircularMonogram from './CircularMonogram';
+import CircularMonogram from './CircularMonogram.jsx';
 
 export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
     const monogramFonts = useMemo(() => {
@@ -171,12 +171,13 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
                     {monogramStyle === 'circular' && (
                         <div className="w-full max-w-xl mt-6">
                             <h3 className="text-base sm:text-lg font-semibold text-slate-700 mb-2 sm:mb-3 text-center">Frame Style</h3>
-                            <div className="flex justify-center gap-2 bg-slate-100 p-1 rounded-xl shadow-inner overflow-x-auto">
+                            {/* UPDATE: Changed from a flex container to a responsive grid to prevent mobile overflow */}
+                            <div className="grid grid-cols-3 gap-2 bg-slate-100 p-2 rounded-xl shadow-inner">
                                 {['none', 'solid', 'double', 'dotted', 'outline', 'thick-thin'].map(style => (
                                     <button
                                         key={style}
                                         onClick={() => setFrameStyle(style)}
-                                        className={`px-4 py-2 rounded-lg font-semibold text-sm capitalize transition
+                                        className={`px-4 py-2 rounded-lg font-semibold text-sm capitalize transition w-full
                                             ${frameStyle === style
                                                 ? 'bg-blue-600 text-white shadow'
                                                 : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'}`}
