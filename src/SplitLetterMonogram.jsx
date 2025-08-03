@@ -64,7 +64,8 @@ const SplitLetterMonogram = ({
                 dominantBaseline="middle"
                 textAnchor="middle"
                 fontSize="12"
-                fontFamily={nameFontFamily || 'Calibri'} // Default to a clean sans-serif for the name
+                // UPDATE: Use the main font family for the name as a fallback
+                fontFamily={nameFontFamily || fontFamily}
                 fill={nameColor}
                 letterSpacing="0.1em"
                 style={{ textTransform: 'uppercase' }}
