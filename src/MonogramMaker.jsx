@@ -13,9 +13,11 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
         ];
     }, [fontLibrary]);
 
+    const defaultFont = useMemo(() => monogramFonts.find(f => !f.circular) || monogramFonts[0], [monogramFonts]);
+
     const [monogramStyle, setMonogramStyle] = useState('classic');
-    const [selectedFont, setSelectedFont] = useState(monogramFonts[0]);
-    const [activeStyle, setActiveStyle] = useState(Object.keys(monogramFonts[0].styles)[0]);
+    const [selectedFont, setSelectedFont] = useState(defaultFont);
+    const [activeStyle, setActiveStyle] = useState(Object.keys(defaultFont.styles)[0]);
 
     // State for classic/flat/circular
     const [initials, setInitials] = useState(['', '', '']);
@@ -38,16 +40,28 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
         }
     }, [monogramStyle]);
 
+    // UPDATE: This effect now sets the default font based on the selected monogram style.
     useEffect(() => {
-        if (monogramStyle === 'circular' || monogramStyle === 'split') {
-            if (monogramStyle === 'circular') {
-                const circularFont = monogramFonts.find(f => f.circular);
-                if (circularFont) {
-                    setSelectedFont(circularFont);
-                    setActiveStyle(null);
+        if (monogramStyle === 'circular') {
+            const circularFont = monogramFonts.find(f => f.circular);
+            if (circularFont) {
+                setSelectedFont(circularFont);
+                setActiveStyle(null);
+            }
+        } else if (monogramStyle === 'split') {
+            const timesFont = monogramFonts.find(f => f.name === 'Times New Roman');
+            if (timesFont) {
+                setSelectedFont(timesFont);
+                setActiveStyle(Object.keys(timesFont.styles)[0] || 'regular');
+            } else {
+                // Fallback to the first available font if Times New Roman isn't found
+                const firstStandardFont = monogramFonts.find(f => !f.circular);
+                if (firstStandardFont) {
+                    setSelectedFont(firstStandardFont);
+                    setActiveStyle(Object.keys(firstStandardFont.styles)[0]);
                 }
             }
-        } else {
+        } else { // 'classic' or 'flat'
             const firstStandardFont = monogramFonts.find(f => !f.circular);
             if (firstStandardFont) {
                 setSelectedFont(firstStandardFont);
@@ -55,6 +69,7 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
             }
         }
     }, [monogramStyle, monogramFonts]);
+
 
     const visibleFonts = monogramFonts.filter(font => !font.circular);
 
