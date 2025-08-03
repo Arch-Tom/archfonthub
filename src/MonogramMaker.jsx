@@ -14,225 +14,226 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
 
     const [monogramStyle, setMonogramStyle] = useState('classic');
     const [selectedFont, setSelectedFont] = useState(monogramFonts[0]);
-    const [activeStyle, setActiveStyle] = useState(Object.keys(selectedFont.styles)[0]);
+    const [activeStyle, setActiveStyle] = useState(Object.keys(monogramFonts[0].styles)[0]);
     const [initials, setInitials] = useState(['', '', '']);
-    const [fontSize, setFontSize] = useState(72);
+    const [fontSize] = useState(100);
     const [frameStyle, setFrameStyle] = useState('none');
 
-    // keep the circular font selected if the user switches back and forth
+    const inputRefs = useRef([]);
+
+    useEffect(() => {
+        if (inputRefs.current[0]) inputRefs.current[0].focus();
+    }, []);
+
     useEffect(() => {
         if (monogramStyle === 'circular') {
             setSelectedFont(monogramFonts.find(f => f.circular));
+            setActiveStyle(null);
         } else {
-            setSelectedFont(monogramFonts.find(f => !f.circular));
+            const firstStandardFont = monogramFonts.find(f => !f.circular);
+            setSelectedFont(firstStandardFont);
+            setActiveStyle(Object.keys(firstStandardFont.styles)[0]);
         }
     }, [monogramStyle, monogramFonts]);
 
     const visibleFonts = monogramFonts.filter(font => !font.circular);
 
-    const previewProps = {
-        text: initials.map(i => i || 'A'),
-        style: activeStyle,
-        fontFamily: selectedFont.family,
-        fontWeight: selectedFont.weight,
-        fontSize,
-        isCircular: monogramStyle === 'circular',
-        frameStyle: monogramStyle === 'circular' ? frameStyle : 'none',
-        disableScaling: monogramStyle === 'flat'
+    const handleInitialChange = (e, index) => {
+        const newInitials = [...initials];
+        newInitials[index] = e.target.value.slice(0, 1).toUpperCase();
+        setInitials(newInitials);
+        if (e.target.value && index < 2) inputRefs.current[index + 1]?.focus();
+    };
+
+    const handleKeyDown = (e, index) => {
+        if (e.key === 'Backspace' && !initials[index] && index > 0) {
+            inputRefs.current[index - 1]?.focus();
+        }
+    };
+
+    const handleInsert = () => {
+        const [first, middle, last] = initials;
+        if (!first || !middle || !last) return;
+
+        const monogramData = {
+            text: [first, middle, last],
+            font: selectedFont,
+            style: activeStyle,
+            fontSize,
+            isCircular: monogramStyle === 'circular',
+            frameStyle: monogramStyle === 'circular' ? frameStyle : 'none',
+            disableScaling: monogramStyle === 'flat'
+        };
+
+        const previewComponent = (
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
+                {monogramStyle === 'circular' ? (
+                    <CircularMonogram
+                        text={initials.map(i => i || 'A')}
+                        fontSize={80}
+                        isCircular={true}
+                        frameStyle={frameStyle}
+                    />
+                ) : (
+                    <CircularMonogram
+                        isCircular={false}
+                        text={[initials[0] || 'N', initials[1] || 'X', initials[2] || 'D']}
+                        fontFamily={selectedFont.styles?.[activeStyle]}
+                        fontSize={fontSize}
+                        disableScaling={monogramStyle === 'flat'}
+                    />
+                )}
+            </div>
+        );
+
+        const renderedString = ReactDOMServer.renderToStaticMarkup(previewComponent);
+        onInsert({ htmlString: renderedString, data: monogramData });
+        onClose();
     };
 
     const previewBox = (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
-            {monogramStyle === 'circular' ? (
-                <CircularMonogram
-                    text={previewProps.text}
-                    fontSize={80} // Base size for circular preview
-                    isCircular
-                    frameStyle={frameStyle}
-                />
-            ) : (
-                <div
-                    style={{
-                        fontFamily: selectedFont.family,
-                        fontWeight: selectedFont.weight,
-                        fontSize: `${fontSize}px`,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        width: '100%',
-                        height: '100%',
-                        whiteSpace: 'nowrap'
-                    }}
-                >
-                    {previewProps.text.join('')}
-                </div>
-            )}
+        <div className="w-full flex flex-col items-center mb-2">
+            <label className="text-xs font-semibold text-slate-500 mb-1" htmlFor="monogram-preview-box">Preview</label>
+            <div
+                id="monogram-preview-box"
+                className="w-full max-w-[400px] flex items-center justify-center rounded-xl border border-slate-200 shadow-inner bg-white px-2"
+                style={{ height: '180px', minHeight: '180px' }}
+            >
+                {monogramStyle === 'circular' ? (
+                    <CircularMonogram
+                        text={initials.map(i => i || 'A')}
+                        fontSize={80} // Base size for circular preview
+                        isCircular={true}
+                        frameStyle={frameStyle}
+                    />
+                ) : (
+                    <CircularMonogram
+                        isCircular={false}
+                        text={[initials[0] || 'N', initials[1] || 'X', initials[2] || 'D']}
+                        fontFamily={selectedFont.styles?.[activeStyle]}
+                        fontSize={fontSize}
+                        disableScaling={monogramStyle === 'flat'}
+                    />
+                )}
+            </div>
         </div>
     );
 
-    const handleInsert = () => {
-        const svgString = ReactDOMServer.renderToStaticMarkup(
-            monogramStyle === 'circular'
-                ? <CircularMonogram {...previewProps} />
-                : <div
-                    style={{
-                        fontFamily: selectedFont.family,
-                        fontWeight: selectedFont.weight,
-                        fontSize: `${fontSize}px`
-                    }}
-                >
-                    {previewProps.text.join('')}
-                </div>
-        );
-        onInsert(`data:image/svg+xml;utf8,${encodeURIComponent(svgString)}`);
-    };
-
     return (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/40">
-            <div className="bg-white rounded-2xl shadow-lg w-full max-w-4xl mx-4 sm:mx-6">
-                <header className="flex justify-between items-center px-4 py-3 border-b">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/70 backdrop-blur-[3px] p-0 sm:p-2 animate-fade-in" onClick={onClose}>
+            <div className="relative bg-white rounded-none sm:rounded-3xl shadow-2xl w-full max-w-full sm:max-w-2xl md:max-w-3xl h-screen sm:h-[90vh] flex flex-col overflow-hidden transition-all" onClick={e => e.stopPropagation()}>
+                <header className="sticky top-0 z-10 bg-white/95 border-b border-slate-200 flex justify-between items-center px-4 sm:px-5 py-3 sm:py-4">
                     <div>
-                        <h2 className="text-lg sm:text-xl font-bold tracking-tight" style={{ fontFamily: 'Alumni Sans Regular' }}>
+                        <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 tracking-tight" style={{ fontFamily: 'Alumni Sans Regular' }}>
                             Monogram Maker
                         </h2>
-                        <p className="text-slate-500 text-xs sm:text-sm">
-                            Create your three-letter monogram instantly.
-                        </p>
+                        <p className="text-slate-500 text-xs sm:text-sm">Create your three-letter monogram instantly.</p>
                     </div>
-                    <button
-                        className="text-3xl font-light text-slate-800 transition p-2 -mr-2"
-                        onClick={onClose}
-                        title="Close"
-                    >
+                    <button className="text-3xl font-light text-slate-400 hover:text-slate-800 transition p-2 -mr-2" onClick={onClose} title="Close">
                         &times;
                     </button>
                 </header>
-
                 <div className="flex-1 flex flex-col overflow-y-auto pb-[100px] items-center px-4 sm:px-6">
-                    {/* Initials Input */}
                     <div className="w-full max-w-xl flex flex-col gap-4 mt-6">
                         <div>
-                            <h3 className="text-base sm:text-sm font-semibold text-slate-700 mb-2 sm:mb-3 text-center">
-                                Your Initials
-                            </h3>
+                            <h3 className="text-base sm:text-lg font-semibold text-slate-700 mb-2 sm:mb-3 text-center">Your Initials</h3>
                             <div className="flex justify-center gap-3">
-                                {initials.map((val, idx) => (
+                                {initials.map((initial, index) => (
                                     <input
-                                        key={idx}
-                                        value={val}
-                                        onChange={e => {
-                                            const newInit = [...initials];
-                                            newInit[idx] = e.target.value.toUpperCase().slice(0, 1);
-                                            setInitials(newInit);
-                                        }}
+                                        key={index}
+                                        ref={el => (inputRefs.current[index] = el)}
+                                        type="text"
+                                        placeholder={['N', 'X', 'D'][index]}
+                                        value={initial}
+                                        onChange={e => handleInitialChange(e, index)}
+                                        onKeyDown={e => handleKeyDown(e, index)}
                                         maxLength={1}
-                                        className="w-12 h-12 sm:w-14 sm:h-14 text-center text-xl font-medium border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                                        className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-white border-2 border-slate-200 text-2xl sm:text-3xl md:text-4xl text-center rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                                     />
                                 ))}
                             </div>
                         </div>
-
-                        {/* Monogram Style */}
-                        <div>
-                            <h3 className="text-base sm:text-sm font-semibold text-slate-700 mb-2 sm:mb-3 text-center">
-                                Monogram Style
-                            </h3>
+                        <div className="flex justify-center gap-2 bg-slate-100 p-1 rounded-xl shadow-inner overflow-x-auto">
+                            {['classic', 'flat', 'circular'].map(style => (
+                                <button
+                                    key={style}
+                                    onClick={() => setMonogramStyle(style)}
+                                    className={`px-4 py-2 rounded-lg font-semibold text-sm transition
+                                        ${monogramStyle === style
+                                            ? 'bg-blue-600 text-white shadow'
+                                            : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'}`}
+                                >
+                                    {style === 'classic' ? 'Classic' : style === 'flat' ? 'All Same Size' : 'Circular'}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                    {monogramStyle === 'circular' && (
+                        <div className="w-full max-w-xl mt-6">
+                            <h3 className="text-base sm:text-lg font-semibold text-slate-700 mb-2 sm:mb-3 text-center">Frame Style</h3>
                             <div className="flex justify-center gap-2 bg-slate-100 p-1 rounded-xl shadow-inner overflow-x-auto">
-                                {['classic', 'flat', 'circular'].map(style => (
+                                {['none', 'solid', 'double', 'dotted', 'outline', 'thick-thin'].map(style => (
                                     <button
                                         key={style}
-                                        onClick={() => setMonogramStyle(style)}
-                                        className={`px-4 py-2 rounded-lg font-semibold text-sm transition
-                                            ${monogramStyle === style
+                                        onClick={() => setFrameStyle(style)}
+                                        className={`px-4 py-2 rounded-lg font-semibold text-sm capitalize transition
+                                            ${frameStyle === style
                                                 ? 'bg-blue-600 text-white shadow'
                                                 : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'}`}
                                     >
-                                        {style === 'classic'
-                                            ? 'Classic'
-                                            : style === 'flat'
-                                                ? 'All Same Size'
-                                                : 'Circular'}
+                                        {style.replace('-', ' & ')}
                                     </button>
                                 ))}
                             </div>
                         </div>
-
-                        {/* Frame Style (Circular Only) */}
-                        {monogramStyle === 'circular' && (
-                            <div className="w-full max-w-xl mt-6">
-                                <h3 className="text-base sm:text-sm font-semibold text-slate-700 mb-2 sm:mb-3 text-center">
-                                    Frame Style
-                                </h3>
-                                <div className="grid grid-cols-3 gap-2 bg-slate-100 p-1 rounded-xl shadow-inner">
-                                    {['none', 'solid', 'double', 'dotted', 'outline', 'thick-thin'].map(style => (
-                                        <button
-                                            key={style}
-                                            onClick={() => setFrameStyle(style)}
-                                            className={`px-4 py-2 rounded-lg font-semibold text-sm capitalize transition
-                                                ${frameStyle === style
-                                                    ? 'bg-blue-600 text-white shadow'
-                                                    : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'}`}
-                                        >
-                                            {style.replace('-', ' & ')}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Live Preview */}
-                        <div className="w-full max-w-xl mt-6">
-                            {previewBox}
-                        </div>
-
-                        {/* Font Picker (Non-Circular) */}
-                        {monogramStyle !== 'circular' && (
-                            <div className="w-full max-w-2xl mt-6">
-                                <h3 className="text-base sm:text-sm font-semibold text-slate-700 mb-2 sm:mb-3 text-center">
-                                    Choose a Font
-                                </h3>
-                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                                    {visibleFonts.map(font => (
-                                        <button
-                                            key={font.name}
-                                            onClick={() => {
-                                                setSelectedFont(font);
-                                                setActiveStyle(Object.keys(font.styles)[0]);
-                                            }}
-                                            className={`group flex flex-col items-center justify-between rounded-xl border-2 transition h-32 w-full p-3
-                                                ${selectedFont.name === font.name
-                                                    ? 'border-blue-600'
-                                                    : 'border-transparent hover:border-slate-300'}`}
-                                        >
-                                            <div className="flex items-center justify-center flex-1">
-                                                <span
-                                                    className="text-2xl font-bold group-hover:text-blue-700"
-                                                    style={{ fontFamily: font.family }}
-                                                >
-                                                    AB
-                                                </span>
-                                            </div>
-                                            <span className="text-xs text-slate-400">{font.name}</span>
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-
+                    )}
+                    <div className="w-full max-w-xl mt-6">
+                        {previewBox}
                     </div>
+                    {monogramStyle !== 'circular' && (
+                        <div className="w-full max-w-2xl mt-6">
+                            <h3 className="text-base sm:text-lg font-semibold text-slate-700 mb-2 sm:mb-3 text-center">Choose a Font</h3>
+                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                                {visibleFonts.map(font => (
+                                    <button
+                                        key={font.name}
+                                        onClick={() => {
+                                            setSelectedFont(font);
+                                            setActiveStyle(Object.keys(font.styles)[0]);
+                                        }}
+                                        className={`group flex flex-col items-center justify-between rounded-xl border-2 transition h-32 w-full p-3
+                                            ${selectedFont.name === font.name
+                                                ? 'border-blue-600 bg-blue-50 shadow-md'
+                                                : 'border-slate-200 bg-white hover:border-blue-400 hover:bg-blue-50/40'}`}
+                                    >
+                                        <CircularMonogram
+                                            isCircular={false}
+                                            text={[initials[0] || 'N', initials[1] || 'X', initials[2] || 'D']}
+                                            fontFamily={font.styles?.[Object.keys(font.styles)[0]]}
+                                            fontSize={32}
+                                            disableScaling={monogramStyle === 'flat'}
+                                            sideScale={1.2}
+                                            middleScale={1.5}
+                                        />
+                                        <span className="text-xs font-semibold text-slate-700 group-hover:text-blue-700 text-center">{font.name}</span>
+                                        <span className="text-[11px] text-slate-400">{font.category}</span>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
-
-                <footer className="fixed sm:sticky bottom-0 left-0 right-0 bg-white border-t sm:border-t-0 sm:bg-transparent px-4 py-3 flex flex-row-reverse justify-between gap-3 z-20">
+                <footer className="fixed sm:sticky bottom-0 left-0 w-full bg-white/95 border-t border-slate-200 px-4 py-3 flex flex-row-reverse justify-between gap-3 z-20">
                     <button
                         onClick={handleInsert}
-                        disabled={!initials.every(ch => ch)}
-                        className="px-8 py-3 bg-blue-600 text-white rounded-lg shadow-sm text-base disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={!initials[0] || !initials[1] || !initials[2]}
+                        className="px-8 py-3 bg-blue-600 text-white rounded-2xl hover:bg-blue-700 font-bold transition-colors shadow-sm text-base disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         Insert Monogram
                     </button>
                     <button
                         onClick={onClose}
-                        className="px-6 py-3 bg-slate-200 text-slate-700 rounded-lg border border-slate-300 font-semibold transition-colors shadow-sm text-base"
+                        className="px-6 py-3 bg-slate-200 text-slate-700 rounded-2xl hover:bg-slate-300 font-semibold transition-colors shadow-sm text-base"
                     >
                         Cancel
                     </button>
