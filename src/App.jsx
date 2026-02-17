@@ -22,6 +22,52 @@ const FormInput = ({ label, id, value, onChange, required = false, isOptional = 
     </div>
 );
 
+// NEW: inline alignment icon (no external icon library)
+const AlignIcon = ({ align = 'left' }) => {
+    const isLeft = align === 'left';
+    const isCenter = align === 'center';
+    const isRight = align === 'right';
+
+    return (
+        <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+            focusable="false"
+            className="block"
+        >
+            {/* top line */}
+            <rect
+                x={isLeft ? 3 : isCenter ? 5 : 7}
+                y="5"
+                width="14"
+                height="2.2"
+                rx="1.1"
+                fill="currentColor"
+            />
+            {/* middle line */}
+            <rect
+                x={isLeft ? 3 : isCenter ? 7 : 9}
+                y="11"
+                width="10"
+                height="2.2"
+                rx="1.1"
+                fill="currentColor"
+            />
+            {/* bottom line */}
+            <rect
+                x={isLeft ? 3 : isCenter ? 5 : 7}
+                y="17"
+                width="14"
+                height="2.2"
+                rx="1.1"
+                fill="currentColor"
+            />
+        </svg>
+    );
+};
+
 const App = () => {
     const WORKER_URL = "https://customerfontselection-worker.tom-4a9.workers.dev";
     const DEFAULT_TEXT_PLACEHOLDER = 'Type your text here...';
@@ -105,6 +151,10 @@ const App = () => {
     const [selectedFonts, setSelectedFonts] = useState([]);
     const [customText, setCustomText] = useState('');
     const [fontSize, setFontSize] = useState(36);
+
+    // Alignment state
+    const [textAlign, setTextAlign] = useState('left'); // 'left' | 'center' | 'right'
+
     const [customerNotes, setCustomerNotes] = useState('');
     const [message, setMessage] = useState('');
     const [showMessageBox, setShowMessageBox] = useState(false);
@@ -236,6 +286,12 @@ const App = () => {
         const svgWidth = 800;
         let y = padding;
 
+        const aligned = (() => {
+            if (textAlign === 'center') return { x: svgWidth / 2, anchor: 'middle' };
+            if (textAlign === 'right') return { x: svgWidth - padding, anchor: 'end' };
+            return { x: padding, anchor: 'start' };
+        })();
+
         const escapeXml = (unsafe) => unsafe.replace(/[<>&'"]/g, c => {
             switch (c) {
                 case '<': return '&lt;';
@@ -243,6 +299,7 @@ const App = () => {
                 case '&': return '&amp;';
                 case '\'': return '&apos;';
                 case '"': return '&quot;';
+                default: return c;
             }
         });
 
@@ -330,7 +387,7 @@ const App = () => {
                 lines.forEach((line) => {
                     const sanitizedLine = escapeXml(line);
                     contentY += (fontSize * 1.4);
-                    svgElements += `<text x="${padding}" y="${contentY}" font-family="${activeFontFamily}" font-size="${fontSize}" fill="#181717">${sanitizedLine}</text>\n`;
+                    svgElements += `<text x="${aligned.x}" y="${contentY}" text-anchor="${aligned.anchor}" font-family="${activeFontFamily}" font-size="${fontSize}" fill="#181717">${sanitizedLine}</text>\n`;
                 });
 
                 if (fontIndex < selectedFonts.length - 1) {
@@ -559,7 +616,7 @@ const App = () => {
                                         If you don't like a font feel free to deselect it above and try a new one out!
                                     </p>
                                 </div>
-                                <div className="flex items-center gap-3">
+                                <div className="flex items-center gap-3 flex-wrap">
                                     <label htmlFor="fontSizeSlider" className="text-sm font-medium text-slate-600">Size</label>
                                     <input
                                         id="fontSizeSlider"
@@ -572,6 +629,25 @@ const App = () => {
                                         className="w-32 lg:w-48 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
                                     />
                                     <span className="text-sm font-medium text-slate-600 w-12 text-left">{fontSize}px</span>
+
+                                    {/* Alignment icons (inline row) */}
+                                    <div className="ml-2 inline-flex rounded-lg border border-slate-300 overflow-hidden">
+                                        {(['left', 'center', 'right']).map((a) => (
+                                            <button
+                                                key={a}
+                                                type="button"
+                                                onClick={() => setTextAlign(a)}
+                                                className={`px-3 py-2 text-sm font-semibold transition-colors flex items-center justify-center ${textAlign === a
+                                                    ? 'bg-slate-700 text-white'
+                                                    : 'bg-white text-slate-600 hover:bg-slate-100'
+                                                    }`}
+                                                title={`Align ${a}`}
+                                                aria-label={`Align ${a}`}
+                                            >
+                                                <AlignIcon align={a} />
+                                            </button>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
 
@@ -636,7 +712,12 @@ const App = () => {
                                                 </div>
                                                 <p
                                                     className="text-slate-800 break-words whitespace-pre-wrap w-full"
-                                                    style={{ fontFamily: activeFontFamily, fontSize: `${fontSize}px`, lineHeight: 1.4 }}
+                                                    style={{
+                                                        fontFamily: activeFontFamily,
+                                                        fontSize: `${fontSize}px`,
+                                                        lineHeight: 1.4,
+                                                        textAlign: textAlign,
+                                                    }}
                                                     dir="auto"
                                                 >
                                                     {customText}
