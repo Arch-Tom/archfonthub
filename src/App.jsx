@@ -175,11 +175,7 @@ const App = () => {
     const [hebrewPaletteText, setHebrewPaletteText] = useState('');
     const [lastHebrewBaseChar, setLastHebrewBaseChar] = useState('א');
     const [isShifted, setIsShifted] = useState(false);
-    const [leftPaneWidth, setLeftPaneWidth] = useState(50);
-
     const textInputRef = useRef(null);
-    const splitPaneRef = useRef(null);
-    const isResizingRef = useRef(false);
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
@@ -194,33 +190,6 @@ const App = () => {
             setIsDataPrefilled(true);
         }
     }, []);
-
-    useEffect(() => {
-        const handleMouseMove = (e) => {
-            if (!isResizingRef.current || !splitPaneRef.current) return;
-            const rect = splitPaneRef.current.getBoundingClientRect();
-            const nextWidth = ((e.clientX - rect.left) / rect.width) * 100;
-            const clamped = Math.min(70, Math.max(30, nextWidth));
-            setLeftPaneWidth(clamped);
-        };
-
-        const handleMouseUp = () => {
-            isResizingRef.current = false;
-        };
-
-        window.addEventListener('mousemove', handleMouseMove);
-        window.addEventListener('mouseup', handleMouseUp);
-
-        return () => {
-            window.removeEventListener('mousemove', handleMouseMove);
-            window.removeEventListener('mouseup', handleMouseUp);
-        };
-    }, []);
-
-    const handleDividerMouseDown = (e) => {
-        e.preventDefault();
-        isResizingRef.current = true;
-    };
 
     const handleFontSelect = (font) => {
         const isSelected = selectedFonts.some(f => f.name === font.name);
@@ -541,8 +510,8 @@ const App = () => {
     const hebrewRegex = /[\u0590-\u05FF]/;
 
     return (
-        <div className="flex flex-col lg:flex-row min-h-screen bg-slate-100 font-sans">
-            <aside className="bg-[rgb(50,75,106)] text-white w-full lg:w-[400px] p-4 flex-shrink-0 flex flex-col shadow-xl lg:rounded-r-3xl lg:justify-start">
+        <div className="flex flex-col lg:flex-row min-h-screen lg:h-screen bg-slate-100 font-sans">
+            <aside className="bg-[rgb(50,75,106)] text-white w-full lg:w-[430px] p-4 flex-shrink-0 flex flex-col shadow-xl lg:rounded-r-3xl lg:justify-start lg:overflow-y-auto">
                 <div className="flex-shrink-0 pt-4 lg:pt-8">
                     <img
                         src="/images/Arch Vector Logo White.svg"
@@ -555,9 +524,46 @@ const App = () => {
                         Let's find your perfect font! Select a few options, preview them with your text, and submit your favorites. Our designers will use your selection to craft your proof. If you have another font in mind, let us know in the notes section below!
                     </p>
                 </div>
+                <section className="mt-6 bg-white rounded-2xl p-6 border border-slate-100 shadow-[0_10px_25px_-5px_rgba(50,75,106,0.2),_0_8px_10px_-6px_rgba(59,130,246,0.2)] text-slate-900">
+                    <h2 className="text-3xl font-bold text-slate-900 mb-2 tracking-normal" style={{ fontFamily: 'Alumni Sans Regular' }}>Font Selection</h2>
+                    <p className="text-slate-500 mb-6">
+                        Select up to 3 fonts you would like to preview. You may change your selected fonts here at any time. Try as many as you'd like before submitting your selection!
+                        <br />
+                        <br />
+                        Looking for Bold, Italic or other versions of a selected font? Check the live preview for available styles!
+                    </p>
+                    <div className="space-y-6 lg:overflow-y-auto lg:max-h-[calc(100vh-28rem)] lg:pr-2">
+                        {Object.entries(fontLibrary).map(([category, fonts]) => (
+                            <div key={category}>
+                                <h3 className="text-md font-semibold text-slate-700 border-b-2 border-slate-200 pb-2 mb-3 tracking-wide">{category}</h3>
+                                <div className="space-y-2">
+                                    {fonts.map((font) => {
+                                        const isScriptFont = scriptFontsToAdjust.includes(font.name);
+                                        let fontSizeClass = isScriptFont ? 'text-2xl' : 'text-lg';
+                                        if (font.name === 'Concerto Pro') fontSizeClass = 'text-4xl';
+                                        return (
+                                            <button
+                                                key={font.name}
+                                                onClick={() => handleFontSelect(font)}
+                                                className={`w-full px-4 py-3 rounded-xl font-semibold border-2 transition-colors duration-150 focus:outline-none text-left whitespace-normal break-words leading-tight ${fontSizeClass} ${selectedFonts.some(f => f.name === font.name) ? 'bg-[rgb(50,75,106)] text-white border-[rgb(50,75,106)] shadow-md' : 'bg-white text-[rgb(50,75,106)] border-[rgb(50,75,106)] hover:bg-[rgb(50,75,106)]/10'}`}
+                                                style={{
+                                                    fontFamily: font.name === 'Alumni Sans'
+                                                        ? 'Alumni Sans Regular'
+                                                        : font.styles[Object.keys(font.styles)[0]]
+                                                }}
+                                            >
+                                                {font.name}
+                                            </button>
+                                        )
+                                    })}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </section>
             </aside>
 
-            <main className="flex-1 p-4 sm:p-8 lg:p-12">
+            <main className="flex-1 p-4 sm:p-8 lg:p-12 lg:overflow-y-auto">
                 {isSubmissionComplete && (
                     <div className="fixed inset-0 bg-slate-100 bg-opacity-95 flex items-center justify-center z-30">
                         <div className="text-center p-8">
@@ -572,88 +578,31 @@ const App = () => {
                 )}
                 <div className="max-w-7xl mx-auto">
                     <div className="space-y-10">
-                        <div ref={splitPaneRef} className="space-y-10 lg:space-y-0 lg:flex lg:items-stretch lg:gap-0">
-                            <section
-                                className="bg-white rounded-2xl p-8 border border-slate-100 shadow-[0_10px_25px_-5px_rgba(50,75,106,0.2),_0_8px_10px_-6px_rgba(59,130,246,0.2)] lg:flex-none"
-                                style={{ flexBasis: `${leftPaneWidth}%` }}
-                            >
-                                <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center mb-6 gap-4">
-                                    <div>
-                                        <h2 className="text-3xl font-bold text-slate-900 tracking-normal" style={{ fontFamily: 'Alumni Sans Regular' }}>Custom Text</h2>
-                                        <p className="text-slate-500 mt-1">Type a sample of your order text to preview. You'll see this displayed in your font choices below.
-                                            <br />
-                                            Be sure to test out any special characters your order may have!</p>
-                                    </div>
-                                    <div className="flex flex-wrap items-center justify-center sm:justify-end gap-2">
-                                        <button onClick={() => setShowHebrewPalette(true)} className="px-5 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base">Hebrew</button>
-                                        <button onClick={() => setShowAccentPalette(true)} className="px-5 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base">Accented Characters</button>
-                                        <button onClick={() => setShowGlyphPalette(true)} className="px-5 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base">Symbols</button>
-                                    </div>
+                        <section className="bg-white rounded-2xl p-8 border border-slate-100 shadow-[0_10px_25px_-5px_rgba(50,75,106,0.2),_0_8px_10px_-6px_rgba(59,130,246,0.2)]">
+                            <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center mb-6 gap-4">
+                                <div>
+                                    <h2 className="text-3xl font-bold text-slate-900 tracking-normal" style={{ fontFamily: 'Alumni Sans Regular' }}>Custom Text</h2>
+                                    <p className="text-slate-500 mt-1">Type a sample of your order text to preview. You'll see this displayed in your font choices below.
+                                        <br />
+                                        Be sure to test out any special characters your order may have!</p>
                                 </div>
-                                <textarea ref={textInputRef} className="w-full p-5 border-2 border-slate-200 rounded-xl shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 min-h-[120px] text-xl" value={customText} onChange={handleTextChange} placeholder={DEFAULT_TEXT_PLACEHOLDER} dir="auto" />
-                            </section>
-
-                            <div
-                                className="hidden lg:flex items-stretch justify-center px-3 cursor-col-resize select-none"
-                                onMouseDown={handleDividerMouseDown}
-                                role="separator"
-                                aria-orientation="vertical"
-                                aria-label="Resize sections"
-                            >
-                                <div className="w-1 rounded-full bg-slate-300 hover:bg-blue-400 transition-colors" />
+                                <div className="flex flex-wrap items-center justify-center sm:justify-end gap-2">
+                                    <button onClick={() => setShowHebrewPalette(true)} className="px-5 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base">Hebrew</button>
+                                    <button onClick={() => setShowAccentPalette(true)} className="px-5 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base">Accented Characters</button>
+                                    <button onClick={() => setShowGlyphPalette(true)} className="px-5 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base">Symbols</button>
+                                </div>
                             </div>
-
-                            <section
-                                className="bg-white rounded-2xl p-8 border border-slate-100 shadow-[0_10px_25px_-5px_rgba(50,75,106,0.2),_0_8px_10px_-6px_rgba(59,130,246,0.2)] lg:flex-none"
-                                style={{ flexBasis: `${100 - leftPaneWidth}%` }}
-                            >
-                                <h2 className="text-3xl font-bold text-slate-900 mb-2 tracking-normal" style={{ fontFamily: 'Alumni Sans Regular' }}>Font Selection</h2>
-                                <p className="text-slate-500 mb-6">
-                                    Select up to 3 fonts you would like to preview. You may change your selected fonts here at any time. Try as many as you'd like before submitting your selection!
-                                    <br />
-                                    <br />
-                                    Looking for Bold, Italic or other versions of a selected font? Check the live preview for available styles!
-                                </p>
-                                <div className="space-y-6">
-                                    {Object.entries(fontLibrary).map(([category, fonts]) => (
-                                        <div key={category}>
-                                            <h3 className="text-md font-semibold text-slate-700 border-b-2 border-slate-200 pb-2 mb-3 tracking-wide">{category}</h3>
-                                            <div className="flex flex-wrap gap-3">
-                                                {fonts.map((font) => {
-                                                    const isScriptFont = scriptFontsToAdjust.includes(font.name);
-                                                    let fontSizeClass = isScriptFont ? 'text-2xl' : 'text-lg';
-                                                    if (font.name === 'Concerto Pro') fontSizeClass = 'text-4xl';
-                                                    return (
-                                                        <button
-                                                            key={font.name}
-                                                            onClick={() => handleFontSelect(font)}
-                                                            className={`px-5 py-3 rounded-xl font-semibold border-2 transition-all duration-150 transform hover:scale-105 focus:outline-none ${fontSizeClass} ${selectedFonts.some(f => f.name === font.name) ? 'bg-[rgb(50,75,106)] text-white border-[rgb(50,75,106)] shadow-md' : 'bg-white text-[rgb(50,75,106)] border-[rgb(50,75,106)] hover:bg-[rgb(50,75,106)]/10'}`}
-                                                            style={{
-                                                                fontFamily: font.name === 'Alumni Sans'
-                                                                    ? 'Alumni Sans Regular'
-                                                                    : font.styles[Object.keys(font.styles)[0]]
-                                                            }}
-                                                        >
-                                                            {font.name}
-                                                        </button>
-                                                    )
-                                                })}
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </section>
-                        </div>
-
-                        <div className="flex justify-end mt-4">
-                            <button
-                                className="px-6 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 shadow"
-                                onClick={() => setShowMonogramMaker(true)}
-                                type="button"
-                            >
-                                Open Monogram Maker
-                            </button>
-                        </div>
+                            <textarea ref={textInputRef} className="w-full p-5 border-2 border-slate-200 rounded-xl shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 min-h-[120px] text-xl" value={customText} onChange={handleTextChange} placeholder={DEFAULT_TEXT_PLACEHOLDER} dir="auto" />
+                            <div className="flex justify-end mt-4">
+                                <button
+                                    className="px-6 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 shadow"
+                                    onClick={() => setShowMonogramMaker(true)}
+                                    type="button"
+                                >
+                                    Open Monogram Maker
+                                </button>
+                            </div>
+                        </section>
 
                         <section className="bg-white rounded-2xl p-8 border border-slate-100 shadow-[0_10px_25px_-5px_rgba(50,75,106,0.2),_0_8px_10px_-6px_rgba(59,130,246,0.2)]">
                             <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center mb-6 gap-4">
