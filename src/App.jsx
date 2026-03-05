@@ -710,18 +710,42 @@ const App = () => {
                                                             ))}
                                                     </div>
                                                 </div>
-                                                <p
-                                                    className="text-slate-800 break-words whitespace-pre-wrap w-full"
-                                                    style={{
-                                                        fontFamily: activeFontFamily,
-                                                        fontSize: `${fontSize}px`,
-                                                        lineHeight: 1.4,
-                                                        textAlign: textAlign,
-                                                    }}
-                                                    dir="auto"
-                                                >
-                                                    {customText}
-                                                </p>
+                                                <div className="relative w-full">
+                                                    <p
+                                                        className="break-words whitespace-pre-wrap"
+                                                        style={{
+                                                            visibility: 'hidden',
+                                                            pointerEvents: 'none',
+                                                            maxWidth: '100%',
+                                                            fontFamily: activeFontFamily,
+                                                            fontSize: `${fontSize}px`,
+                                                            lineHeight: 1.4,
+                                                            textAlign: textAlign,
+                                                        }}
+                                                        dir="auto"
+                                                        aria-hidden="true"
+                                                    >
+                                                        {customText}
+                                                    </p>
+                                                    <p
+                                                        className="text-slate-800 break-words whitespace-pre-wrap inline-block"
+                                                        style={{
+                                                            position: 'absolute',
+                                                            top: 0,
+                                                            left: '50%',
+                                                            transform: 'translateX(-50%)',
+                                                            width: '100%',
+                                                            maxWidth: '100%',
+                                                            fontFamily: activeFontFamily,
+                                                            fontSize: `${fontSize}px`,
+                                                            lineHeight: 1.4,
+                                                            textAlign: textAlign,
+                                                        }}
+                                                        dir="auto"
+                                                    >
+                                                        {customText}
+                                                    </p>
+                                                </div>
                                             </div>
                                         );
                                     })
