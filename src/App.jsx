@@ -150,6 +150,8 @@ const App = () => {
 
     const [selectedFonts, setSelectedFonts] = useState([]);
     const [customText, setCustomText] = useState('');
+    const [lineSettings, setLineSettings] = useState([]);
+    const [openPreviewLineIndex, setOpenPreviewLineIndex] = useState(null);
     const [fontSize, setFontSize] = useState(36);
 
     // Alignment state
@@ -176,7 +178,53 @@ const App = () => {
     const [lastHebrewBaseChar, setLastHebrewBaseChar] = useState('א');
     const [isShifted, setIsShifted] = useState(false);
 
-    const textInputRef = useRef(null);
+    const customTextRef = useRef(null);
+
+    const getSortedStyleKeys = (styles) => Object.keys(styles).sort((a, b) => {
+        const indexA = styleSortOrder.indexOf(a.toLowerCase());
+        const indexB = styleSortOrder.indexOf(b.toLowerCase());
+        if (indexA === -1) return 1;
+        if (indexB === -1) return -1;
+        return indexA - indexB;
+    });
+
+    const getFontOptionByName = (fontName, fonts = selectedFonts) => fonts.find(font => font.name === fontName);
+
+    const getDefaultStyleKey = (fontName, fonts = selectedFonts) => {
+        const font = getFontOptionByName(fontName, fonts);
+        if (!font) return '';
+        const styleKeys = Object.keys(font.styles);
+        if (font.activeStyle && styleKeys.includes(font.activeStyle)) return font.activeStyle;
+        return styleKeys[0] || '';
+    };
+
+    const normalizeLineSelection = (line, fonts = selectedFonts) => {
+        if (fonts.length === 0) {
+            return { ...line, fontName: '', styleKey: '' };
+        }
+
+        const selectedFont = getFontOptionByName(line.fontName, fonts) || fonts[0];
+        const nextFontName = selectedFont.name;
+        const nextStyleKey = selectedFont.styles[line.styleKey]
+            ? line.styleKey
+            : getDefaultStyleKey(nextFontName, fonts);
+
+        return {
+            ...line,
+            fontName: nextFontName,
+            styleKey: nextStyleKey,
+        };
+    };
+
+    const derivedTextLines = customText === '' ? [] : customText.split(/\r?\n/);
+    const previewLines = derivedTextLines.map((text, index) => ({
+        lineIndex: index,
+        text,
+        ...normalizeLineSelection(lineSettings[index] || { fontName: '', styleKey: '' }),
+    }));
+    const populatedPreviewLines = previewLines.filter(line => line.text.trim() !== '');
+    const combinedText = customText;
+    const hasStandardSelection = selectedFonts.length > 0 && populatedPreviewLines.length > 0;
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
@@ -191,6 +239,33 @@ const App = () => {
             setIsDataPrefilled(true);
         }
     }, []);
+
+    useEffect(() => {
+        setLineSettings(prevSettings => {
+            const nextSettings = derivedTextLines.map((_, index) =>
+                normalizeLineSelection(prevSettings[index] || { fontName: '', styleKey: '' }, selectedFonts)
+            );
+
+            if (
+                nextSettings.length === prevSettings.length &&
+                nextSettings.every((setting, index) =>
+                    setting.fontName === prevSettings[index]?.fontName &&
+                    setting.styleKey === prevSettings[index]?.styleKey
+                )
+            ) {
+                return prevSettings;
+            }
+
+            return nextSettings;
+        });
+    }, [customText, selectedFonts]);
+
+    useEffect(() => {
+        if (openPreviewLineIndex == null) return;
+        if (openPreviewLineIndex >= previewLines.length) {
+            setOpenPreviewLineIndex(previewLines.length > 0 ? previewLines.length - 1 : null);
+        }
+    }, [openPreviewLineIndex, previewLines.length]);
 
     const handleFontSelect = (font) => {
         const isSelected = selectedFonts.some(f => f.name === font.name);
@@ -212,7 +287,6 @@ const App = () => {
         );
     };
 
-    const handleTextChange = (e) => setCustomText(e.target.value);
     const handleFontSizeChange = (e) => setFontSize(Number(e.target.value));
 
     const showMessage = (msg, duration = 4000) => {
@@ -224,19 +298,41 @@ const App = () => {
     const formatForFilename = (str) => str.trim().replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_-]/g, '');
 
     const handleGlyphInsert = (glyph) => {
-        const textarea = textInputRef.current;
-        if (!textarea) return;
+        const input = customTextRef.current;
+        const start = input?.selectionStart ?? customText.length;
+        const end = input?.selectionEnd ?? customText.length;
+        const newText = customText.substring(0, start) + glyph + customText.substring(end);
 
-        const start = textarea.selectionStart;
-        const end = textarea.selectionEnd;
-        const text = customText;
-        const newText = text.substring(0, start) + glyph + text.substring(end);
         setCustomText(newText);
 
-        textarea.focus();
+        input?.focus();
         setTimeout(() => {
-            textarea.selectionStart = textarea.selectionEnd = start + glyph.length;
+            const updatedInput = customTextRef.current;
+            if (updatedInput) {
+                updatedInput.selectionStart = updatedInput.selectionEnd = start + glyph.length;
+            }
         }, 0);
+    };
+
+    const handleLineFontChange = (lineIndex, fontName) => {
+        setLineSettings(prevSettings =>
+            prevSettings.map((line, index) => {
+                if (index !== lineIndex) return line;
+                return normalizeLineSelection({
+                    ...line,
+                    fontName,
+                    styleKey: getDefaultStyleKey(fontName),
+                });
+            })
+        );
+    };
+
+    const handleLineStyleChange = (lineIndex, styleKey) => {
+        setLineSettings(prevSettings =>
+            prevSettings.map((line, index) =>
+                index === lineIndex ? { ...line, styleKey } : line
+            )
+        );
     };
 
     const handleInsertToMain = () => {
@@ -272,14 +368,11 @@ const App = () => {
     };
 
     const generateSvgContent = () => {
-        const hasStandardSelection = selectedFonts.length > 0 && customText.trim() !== '';
-
         if (!monogramInfo && !hasStandardSelection) {
             showMessage('Please create a monogram, or select at least one font and enter some text to submit.');
             return null;
         }
 
-        const lines = customText.split('\n').filter(line => line.trim() !== '');
         let svgElements = '';
         const labelFontSize = 16;
         const padding = 20;
@@ -375,24 +468,18 @@ const App = () => {
         }
 
         let contentY = y + 40;
-        if (hasStandardSelection && lines.length > 0) {
-            selectedFonts.forEach((font, fontIndex) => {
-                const activeFontFamily = font.styles[font.activeStyle];
-                const styleName = font.activeStyle.charAt(0).toUpperCase() + font.activeStyle.slice(1);
+        if (hasStandardSelection) {
+            populatedPreviewLines.forEach((line, index) => {
+                const font = getFontOptionByName(line.fontName);
+                const activeFontFamily = font?.styles[line.styleKey] || font?.styles[getDefaultStyleKey(font?.name)] || 'inherit';
+                const styleName = line.styleKey
+                    ? line.styleKey.charAt(0).toUpperCase() + line.styleKey.slice(1)
+                    : 'No Style';
 
                 contentY += labelFontSize + 10;
-                svgElements += `<text x="${padding}" y="${contentY}" font-family="Arial" font-size="${labelFontSize}" fill="#6b7280" font-weight="600">${font.name} (${styleName})</text>\n`;
-                contentY += (fontSize * 1.4) * 0.5;
-
-                lines.forEach((line) => {
-                    const sanitizedLine = escapeXml(line);
-                    contentY += (fontSize * 1.4);
-                    svgElements += `<text x="${aligned.x}" y="${contentY}" text-anchor="${aligned.anchor}" font-family="${activeFontFamily}" font-size="${fontSize}" fill="#181717">${sanitizedLine}</text>\n`;
-                });
-
-                if (fontIndex < selectedFonts.length - 1) {
-                    contentY += (fontSize * 1.4) * 0.75;
-                }
+                svgElements += `<text x="${padding}" y="${contentY}" font-family="Arial" font-size="${labelFontSize}" fill="#6b7280" font-weight="600">Line ${index + 1}: ${escapeXml(font?.name || 'No Font')} (${escapeXml(styleName)})</text>\n`;
+                contentY += (fontSize * 1.4);
+                svgElements += `<text x="${aligned.x}" y="${contentY}" text-anchor="${aligned.anchor}" font-family="${escapeXml(activeFontFamily)}" font-size="${fontSize}" fill="#181717">${escapeXml(line.text)}</text>\n`;
             });
         }
 
@@ -604,7 +691,14 @@ const App = () => {
                                     <button onClick={() => setShowGlyphPalette(true)} className="px-5 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base">Symbols</button>
                                 </div>
                             </div>
-                            <textarea ref={textInputRef} className="w-full p-5 border-2 border-slate-200 rounded-xl shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 min-h-[120px] text-xl" value={customText} onChange={handleTextChange} placeholder={DEFAULT_TEXT_PLACEHOLDER} dir="auto" />
+                            <textarea
+                                ref={customTextRef}
+                                value={customText}
+                                onChange={(e) => setCustomText(e.target.value)}
+                                placeholder={DEFAULT_TEXT_PLACEHOLDER}
+                                dir="auto"
+                                className="w-full p-5 border-2 border-slate-200 rounded-xl shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 min-h-[160px] text-xl"
+                            />
                         </section>
 
                         <section className="bg-white rounded-2xl p-8 border border-slate-100 shadow-[0_10px_25px_-5px_rgba(50,75,106,0.2),_0_8px_10px_-6px_rgba(59,130,246,0.2)]">
@@ -658,7 +752,7 @@ const App = () => {
                                     </div>
                                 )}
 
-                                {hebrewRegex.test(customText) && (
+                                {hebrewRegex.test(combinedText) && (
                                     <div className="p-4 mb-6 bg-amber-50 border-l-4 border-amber-400 rounded-r-lg">
                                         <div className="flex">
                                             <div className="flex-shrink-0">
@@ -675,80 +769,84 @@ const App = () => {
                                     </div>
                                 )}
 
-                                {selectedFonts.length > 0 && customText.trim() !== '' ? (
-                                    selectedFonts.map((font) => {
-                                        const activeFontFamily = font.styles[font.activeStyle];
-                                        return (
-                                            <div key={`preview-${font.name}`} className="relative flex flex-col items-start gap-3">
-                                                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-2">
-                                                    <span
-                                                        className="bg-[rgb(50,75,106)] text-white px-4 py-1 rounded-full text-sm font-bold shadow-sm z-10"
-                                                        style={{ fontFamily: 'Arial' }}
-                                                    >
-                                                        {font.name}
-                                                    </span>
-                                                    <div className="flex flex-wrap gap-1">
-                                                        {Object.keys(font.styles)
-                                                            .sort((a, b) => {
-                                                                const indexA = styleSortOrder.indexOf(a.toLowerCase());
-                                                                const indexB = styleSortOrder.indexOf(b.toLowerCase());
-                                                                if (indexA === -1) return 1;
-                                                                if (indexB === -1) return -1;
-                                                                return indexA - indexB;
-                                                            })
-                                                            .map(styleKey => (
-                                                                <button
-                                                                    key={styleKey}
-                                                                    onClick={() => handleStyleChange(font.name, styleKey)}
-                                                                    className={`px-4 py-2 text-sm rounded-md border-2 transition-colors ${font.activeStyle === styleKey
-                                                                        ? 'bg-slate-700 text-white border-slate-700'
-                                                                        : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-100'
-                                                                        }`}
-                                                                >
-                                                                    {styleKey.charAt(0).toUpperCase() + styleKey.slice(1)}
-                                                                </button>
-                                                            ))}
+                                {hasStandardSelection ? (
+                                    <div className="space-y-2">
+                                        {previewLines.map((line, index) => {
+                                            const font = getFontOptionByName(line.fontName);
+                                            const activeFontFamily = font?.styles[line.styleKey] || font?.styles[getDefaultStyleKey(line.fontName)] || 'inherit';
+                                            const availableFont = getFontOptionByName(line.fontName);
+                                            const styleKeys = availableFont ? getSortedStyleKeys(availableFont.styles) : [];
+                                            const isControlsOpen = openPreviewLineIndex === line.lineIndex;
+                                            return (
+                                                <div key={`preview-line-${line.lineIndex}`} className="relative">
+                                                    <div className="flex items-start gap-2">
+                                                        <p
+                                                            className="min-w-0 flex-1 text-slate-800 break-words"
+                                                            style={{
+                                                                width: '100%',
+                                                                maxWidth: '100%',
+                                                                fontFamily: activeFontFamily,
+                                                                fontSize: `${fontSize}px`,
+                                                                lineHeight: 1.4,
+                                                                textAlign: textAlign,
+                                                            }}
+                                                            dir="auto"
+                                                        >
+                                                            {line.text || '\u00A0'}
+                                                        </p>
+                                                        <div className="relative flex-shrink-0 pt-1">
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => setOpenPreviewLineIndex(isControlsOpen ? null : line.lineIndex)}
+                                                                className={`flex h-7 w-7 items-center justify-center rounded-full border text-[11px] font-semibold transition-colors ${isControlsOpen
+                                                                    ? 'border-blue-300 bg-blue-50 text-blue-700'
+                                                                    : 'border-slate-200 bg-white/90 text-slate-400 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-600'
+                                                                    }`}
+                                                                aria-label={`${isControlsOpen ? 'Hide' : 'Show'} controls for line ${index + 1}`}
+                                                                title={`${isControlsOpen ? 'Hide' : 'Show'} controls for line ${index + 1}`}
+                                                            >
+                                                                {isControlsOpen ? '−' : '›'}
+                                                            </button>
+                                                        </div>
                                                     </div>
+                                                    {isControlsOpen && (
+                                                        <div className="absolute right-9 top-2 z-10 flex w-[min(17rem,calc(100vw-8rem))] flex-wrap items-center justify-end gap-1.5 rounded-xl border border-slate-200/90 bg-white/92 px-2 py-1.5 text-xs text-slate-600 shadow-[0_8px_20px_-10px_rgba(15,23,42,0.4)] backdrop-blur-sm">
+                                                            <select
+                                                                value={line.fontName}
+                                                                onChange={(e) => handleLineFontChange(line.lineIndex, e.target.value)}
+                                                                disabled={selectedFonts.length === 0}
+                                                                className="min-w-0 rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 disabled:bg-slate-100 disabled:text-slate-500"
+                                                            >
+                                                                {selectedFonts.length === 0 ? (
+                                                                    <option value="">Select fonts above first</option>
+                                                                ) : (
+                                                                    selectedFonts.map(selectedFont => (
+                                                                        <option key={selectedFont.name} value={selectedFont.name}>{selectedFont.name}</option>
+                                                                    ))
+                                                                )}
+                                                            </select>
+                                                            <select
+                                                                value={line.styleKey}
+                                                                onChange={(e) => handleLineStyleChange(line.lineIndex, e.target.value)}
+                                                                disabled={!availableFont}
+                                                                className="min-w-0 rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 disabled:bg-slate-100 disabled:text-slate-500"
+                                                            >
+                                                                {!availableFont ? (
+                                                                    <option value="">No styles available</option>
+                                                                ) : (
+                                                                    styleKeys.map(styleKey => (
+                                                                        <option key={styleKey} value={styleKey}>
+                                                                            {styleKey.charAt(0).toUpperCase() + styleKey.slice(1)}
+                                                                        </option>
+                                                                    ))
+                                                                )}
+                                                            </select>
+                                                        </div>
+                                                    )}
                                                 </div>
-                                                <div className="relative w-full">
-                                                    <p
-                                                        className="break-words whitespace-pre-wrap"
-                                                        style={{
-                                                            visibility: 'hidden',
-                                                            pointerEvents: 'none',
-                                                            maxWidth: '100%',
-                                                            fontFamily: activeFontFamily,
-                                                            fontSize: `${fontSize}px`,
-                                                            lineHeight: 1.4,
-                                                            textAlign: textAlign,
-                                                        }}
-                                                        dir="auto"
-                                                        aria-hidden="true"
-                                                    >
-                                                        {customText}
-                                                    </p>
-                                                    <p
-                                                        className="text-slate-800 break-words whitespace-pre-wrap inline-block"
-                                                        style={{
-                                                            position: 'absolute',
-                                                            top: 0,
-                                                            left: '50%',
-                                                            transform: 'translateX(-50%)',
-                                                            width: '100%',
-                                                            maxWidth: '100%',
-                                                            fontFamily: activeFontFamily,
-                                                            fontSize: `${fontSize}px`,
-                                                            lineHeight: 1.4,
-                                                            textAlign: textAlign,
-                                                        }}
-                                                        dir="auto"
-                                                    >
-                                                        {customText}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        );
-                                    })
+                                            );
+                                        })}
+                                    </div>
                                 ) : (
                                     !monogramInfo && <div className="flex items-center justify-center h-full"><p className="text-slate-500 italic">Select fonts and enter text to see a live preview.</p></div>
                                 )}
@@ -773,7 +871,7 @@ const App = () => {
                         <button
                             onClick={handleSubmitClick}
                             className="w-full px-10 py-4 bg-blue-600 text-white text-xl rounded-2xl font-bold hover:bg-blue-700 shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                            disabled={isSubmitting || (!monogramInfo && (selectedFonts.length === 0 || customText.trim() === ''))}
+                            disabled={isSubmitting || (!monogramInfo && !hasStandardSelection)}
                         >
                             {isSubmitting ? 'Submitting...' : 'Submit Selection'}
                         </button>
