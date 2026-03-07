@@ -2,6 +2,38 @@
 import MonogramMaker from './MonogramMaker';
 import CircularMonogram from './CircularMonogram'; // Still needed for font thumbnails
 
+import * as opentype from 'opentype.js';
+import fontCssText from './index.css?raw';
+
+const fontAssetMap = Array.from(
+    fontCssText.matchAll(/@font-face\s*{[\s\S]*?font-family:\s*'([^']+)'[\s\S]*?src:\s*url\('([^']+)'\)/g)
+).reduce((map, [, fontFamily, fontUrl]) => {
+    map[fontFamily] = fontUrl;
+    return map;
+}, {});
+
+const curveFontCache = new Map();
+
+const loadCurveFont = async (fontFamily) => {
+    if (!fontFamily || !fontAssetMap[fontFamily]) return null;
+    if (!curveFontCache.has(fontFamily)) {
+        curveFontCache.set(fontFamily, (async () => {
+            const response = await fetch(fontAssetMap[fontFamily]);
+            if (!response.ok) {
+                throw new Error(`Failed to load font asset for ${fontFamily}`);
+            }
+
+            const fontBuffer = await response.arrayBuffer();
+            return opentype.parse(fontBuffer);
+        })().catch(error => {
+            console.error(error);
+            return null;
+        }));
+    }
+
+    return curveFontCache.get(fontFamily);
+};
+
 // This component remains outside the main App component for good practice.
 const FormInput = ({ label, id, value, onChange, required = false, isOptional = false, disabled = false }) => (
     <div>
@@ -97,7 +129,7 @@ const App = () => {
             { name: 'Century Gothic', styles: { regular: 'Century Gothic Paneuropean', bold: 'Century Gothic Paneuropean Bold', boldItalic: 'Century Gothic Paneuropean Bold Italic' } },
             { name: 'Graphik', styles: { regular: 'Graphik', medium: 'Graphik Medium', semibold: 'Graphik Semibold', thin: 'Graphik Thin', regularItalic: 'Graphik Regular Italic', mediumItalic: 'Graphik Medium Italic', thinItalic: 'Graphik Thin Italic' } },
             { name: 'Rajdhani', styles: { regular: 'Rajdhani Regular', light: 'Rajdhani Light', medium: 'Rajdhani Medium', semibold: 'Rajdhani SemiBold', bold: 'Rajdhani Bold' } },
-            { name: 'Zapf Humanist', styles: { demi: 'Zapf Humanist 601 Demi BT' } },
+            { name: 'Zapf Humanist', styles: { demi: 'ZapfHumnst Dm BT' } },
         ],
         'Serif': [
             { name: 'Benguiat', styles: { regular: 'Benguiat', bold: 'Benguiat Bold BT', bookItalic: 'Benguiat Book Italic BT' } },
@@ -153,6 +185,7 @@ const App = () => {
     const [lineSettings, setLineSettings] = useState([]);
     const [openPreviewLineIndex, setOpenPreviewLineIndex] = useState(null);
     const [fontSize, setFontSize] = useState(36);
+    const [lineSpacing, setLineSpacing] = useState(1.4);
 
     // Alignment state
     const [textAlign, setTextAlign] = useState('left'); // 'left' | 'center' | 'right'
@@ -177,8 +210,11 @@ const App = () => {
     const [hebrewPaletteText, setHebrewPaletteText] = useState('');
     const [lastHebrewBaseChar, setLastHebrewBaseChar] = useState('א');
     const [isShifted, setIsShifted] = useState(false);
+    const [activeControlOffset, setActiveControlOffset] = useState(0);
 
     const customTextRef = useRef(null);
+    const previewCanvasRef = useRef(null);
+    const previewLineRefs = useRef({});
 
     const getSortedStyleKeys = (styles) => Object.keys(styles).sort((a, b) => {
         const indexA = styleSortOrder.indexOf(a.toLowerCase());
@@ -196,6 +232,30 @@ const App = () => {
         const styleKeys = Object.keys(font.styles);
         if (font.activeStyle && styleKeys.includes(font.activeStyle)) return font.activeStyle;
         return styleKeys[0] || '';
+    };
+
+    const exportFontFamilyMap = {
+        'Arial': 'ArialMT',
+        'Arial Bold': 'Arial-BoldMT',
+        'Arial Italic': 'Arial-ItalicMT',
+        'Arial Bold Italic': 'Arial-BoldItalicMT',
+        'Berlin Sans FB': 'BerlinSansFB-Reg',
+        'Berlin Sans FB Bold': 'BerlinSansFB-Bold',
+        'CopprplGoth BT Roman': 'CopperplateGothicBT-Roman',
+        'Cowboy Rodeo W01 Regular': 'CowboyRodeoW01-Regular',
+        'Graphik Medium Italic': 'Graphik-MediumItalic',
+        'Graphik Thin Italic': 'Graphik-ThinItalic',
+        'ITC Zapf Chancery Roman': 'ZapfChancery-Roman',
+        'Machine BT': 'MachineITCbyBT-Regular',
+        'Noto Rashi Hebrew Black': 'NotoRashiHebrew-Black',
+        'Noto Rashi Hebrew ExtraBold': 'NotoRashiHebrew-ExtraBold',
+        'Planscribe NF W01 Regular': 'PlanscribeNFW01-Regular',
+        'Times New Roman': 'TimesNewRomanPSMT',
+        'Times New Roman Bold': 'TimesNewRomanPS-BoldMT',
+        'Times New Roman Italic': 'TimesNewRomanPS-ItalicMT',
+        'Times New Roman Bold Italic': 'TimesNewRomanPS-BoldItalicMT',
+        'ZapfHumnst Dm BT': 'ZapfHumanist601BT-Demi',
+        'Zapf Humanist 601 Demi BT': 'ZapfHumanist601BT-Demi',
     };
 
     const normalizeLineSelection = (line, fonts = selectedFonts) => {
@@ -261,11 +321,42 @@ const App = () => {
     }, [customText, selectedFonts]);
 
     useEffect(() => {
-        if (openPreviewLineIndex == null) return;
+        if (previewLines.length === 0) {
+            if (openPreviewLineIndex !== null) {
+                setOpenPreviewLineIndex(null);
+            }
+            return;
+        }
+        if (openPreviewLineIndex == null) {
+            setOpenPreviewLineIndex(previewLines[0].lineIndex);
+            return;
+        }
         if (openPreviewLineIndex >= previewLines.length) {
             setOpenPreviewLineIndex(previewLines.length > 0 ? previewLines.length - 1 : null);
         }
     }, [openPreviewLineIndex, previewLines.length]);
+
+    useEffect(() => {
+        if (!hasStandardSelection) return undefined;
+
+        const updateActiveControlOffset = () => {
+            const canvas = previewCanvasRef.current;
+            const activeLine = previewLineRefs.current[openPreviewLineIndex];
+
+            if (!canvas || !activeLine) return;
+
+            const canvasRect = canvas.getBoundingClientRect();
+            const activeLineRect = activeLine.getBoundingClientRect();
+            const nextOffset = (activeLineRect.top - canvasRect.top) + (activeLineRect.height / 2);
+
+            setActiveControlOffset(nextOffset);
+        };
+
+        updateActiveControlOffset();
+        window.addEventListener('resize', updateActiveControlOffset);
+
+        return () => window.removeEventListener('resize', updateActiveControlOffset);
+    }, [customText, fontSize, hasStandardSelection, openPreviewLineIndex, selectedFonts, textAlign]);
 
     const handleFontSelect = (font) => {
         const isSelected = selectedFonts.some(f => f.name === font.name);
@@ -288,6 +379,7 @@ const App = () => {
     };
 
     const handleFontSizeChange = (e) => setFontSize(Number(e.target.value));
+    const handleLineSpacingChange = (e) => setLineSpacing(Number(e.target.value));
 
     const showMessage = (msg, duration = 4000) => {
         setMessage(msg);
@@ -367,13 +459,86 @@ const App = () => {
         }
     };
 
-    const generateSvgContent = () => {
+    const buildSvgTextElement = ({ x, y, anchor = 'start', fontFamily, fontSize, fill = '#181717', text, extraAttributes = '' }) =>
+        `<text x="${x}" y="${y}" text-anchor="${anchor}" font-family="${fontFamily}" font-size="${fontSize}" fill="${fill}"${extraAttributes}>${text}</text>\n`;
+
+    const getCurveBaselineY = (font, y, fontSize, verticalAlign) => {
+        if (verticalAlign !== 'middle') return y;
+        return y - (((font.ascender + font.descender) / 2) / font.unitsPerEm) * fontSize;
+    };
+
+    const buildCurveTextElement = async ({
+        text,
+        x,
+        y,
+        fontFamily,
+        fontSize,
+        fill = '#181717',
+        anchor = 'start',
+        verticalAlign = 'baseline',
+    }) => {
+        const font = await loadCurveFont(fontFamily);
+        if (!font) return null;
+
+        const width = font.getAdvanceWidth(text, fontSize, { kerning: true });
+        const startX = anchor === 'middle'
+            ? x - (width / 2)
+            : anchor === 'end'
+                ? x - width
+                : x;
+        const baselineY = getCurveBaselineY(font, y, fontSize, verticalAlign);
+        const pathData = font.getPath(text, startX, baselineY, fontSize, { kerning: true }).toPathData(2);
+
+        return `<path d="${pathData}" fill="${fill}" />\n`;
+    };
+
+    const buildArtworkTextElement = async ({
+        mode,
+        text,
+        x,
+        y,
+        fontFamily,
+        exportFontFamily,
+        fontSize,
+        fill = '#181717',
+        anchor = 'start',
+        verticalAlign = 'baseline',
+        escapeXml,
+    }) => {
+        if (mode === 'curves') {
+            const curveElement = await buildCurveTextElement({
+                text,
+                x,
+                y,
+                fontFamily,
+                fontSize,
+                fill,
+                anchor,
+                verticalAlign,
+            });
+
+            if (curveElement) return curveElement;
+        }
+
+        return buildSvgTextElement({
+            x,
+            y,
+            anchor,
+            fontFamily: escapeXml(exportFontFamily || fontFamily),
+            fontSize,
+            fill,
+            text: escapeXml(text),
+        });
+    };
+
+    const generateSvgContent = async (mode = 'editable') => {
         if (!monogramInfo && !hasStandardSelection) {
             showMessage('Please create a monogram, or select at least one font and enter some text to submit.');
             return null;
         }
 
         let svgElements = '';
+        let metadataElements = '';
         const labelFontSize = 16;
         const padding = 20;
         const svgWidth = 800;
@@ -408,7 +573,7 @@ const App = () => {
             const monogramBlockY = y + 150;
 
             if (data.isCircular) {
-                const [first, middle, last] = data.text.map(escapeXml);
+                const [first, middle, last] = data.text;
                 const frameStyle = data.frameStyle;
                 const textColor = (frameStyle === 'solid' || frameStyle === 'double') ? 'white' : 'black';
                 const baseFontSize = (data.fontSize || 100) * 1.5;
@@ -433,17 +598,49 @@ const App = () => {
                     </g>`;
                 }
 
-                const textSvg = `<text x="${svgCenterX}" y="${monogramBlockY}" text-anchor="middle" dominant-baseline="middle" fill="${textColor}" style="font-size: ${finalFontSize}px;">
-                    <tspan font-family="LeftCircleMonogram">${first}</tspan>
-                    <tspan font-family="MiddleCircleMonogram" dy="-0.02em">${middle}</tspan>
-                    <tspan font-family="RightCircleMonogram">${last}</tspan>
-                </text>`;
+                svgElements += frameSvg;
 
-                svgElements += frameSvg + textSvg;
+                if (mode === 'curves') {
+                    const letterConfigs = [
+                        { char: first, fontFamily: 'LeftCircleMonogram', yOffset: 0 },
+                        { char: middle, fontFamily: 'MiddleCircleMonogram', yOffset: -(finalFontSize * 0.02) },
+                        { char: last, fontFamily: 'RightCircleMonogram', yOffset: 0 },
+                    ];
+                    const measuredWidths = await Promise.all(letterConfigs.map(async ({ char, fontFamily }) => {
+                        const font = await loadCurveFont(fontFamily);
+                        return font ? font.getAdvanceWidth(char, finalFontSize, { kerning: true }) : finalFontSize * 0.7;
+                    }));
+
+                    let currentX = svgCenterX - (measuredWidths.reduce((sum, width) => sum + width, 0) / 2);
+                    for (const [index, config] of letterConfigs.entries()) {
+                        svgElements += await buildArtworkTextElement({
+                            mode,
+                            text: config.char,
+                            x: currentX,
+                            y: monogramBlockY + config.yOffset,
+                            fontFamily: config.fontFamily,
+                            exportFontFamily: config.fontFamily,
+                            fontSize: finalFontSize,
+                            fill: textColor,
+                            anchor: 'start',
+                            verticalAlign: 'middle',
+                            escapeXml,
+                        });
+                        currentX += measuredWidths[index];
+                    }
+                } else {
+                    const textSvg = `<text x="${svgCenterX}" y="${monogramBlockY}" text-anchor="middle" dominant-baseline="middle" fill="${textColor}" style="font-size: ${finalFontSize}px;">
+                    <tspan font-family="LeftCircleMonogram">${escapeXml(first)}</tspan>
+                    <tspan font-family="MiddleCircleMonogram" dy="-0.02em">${escapeXml(middle)}</tspan>
+                    <tspan font-family="RightCircleMonogram">${escapeXml(last)}</tspan>
+                </text>`;
+                    svgElements += textSvg;
+                }
+
                 y = monogramBlockY + 100;
 
             } else {
-                const [first, middle, last] = data.text.map(escapeXml);
+                const [first, middle, last] = data.text;
                 const fontFamily = data.font.styles[data.style];
                 const baseSize = data.fontSize || 100;
                 const sideScale = 1.2;
@@ -458,29 +655,84 @@ const App = () => {
                 const leftX = middleX - middleLetterHalfWidth - gap;
                 const rightX = middleX + middleLetterHalfWidth + gap;
 
-                svgElements += `<g dominant-baseline="middle" text-anchor="middle" font-family="${fontFamily}" fill="#181717">
-                    <text x="${leftX}" y="${monogramBlockY}" font-size="${sideSize}px">${first}</text>
-                    <text x="${middleX}" y="${monogramBlockY}" font-size="${middleSize}px">${middle}</text>
-                    <text x="${rightX}" y="${monogramBlockY}" font-size="${sideSize}px">${last}</text>
+                if (mode === 'curves') {
+                    svgElements += await buildArtworkTextElement({
+                        mode,
+                        text: first,
+                        x: leftX,
+                        y: monogramBlockY,
+                        fontFamily,
+                        exportFontFamily: fontFamily,
+                        fontSize: sideSize,
+                        anchor: 'middle',
+                        verticalAlign: 'middle',
+                        escapeXml,
+                    });
+                    svgElements += await buildArtworkTextElement({
+                        mode,
+                        text: middle,
+                        x: middleX,
+                        y: monogramBlockY,
+                        fontFamily,
+                        exportFontFamily: fontFamily,
+                        fontSize: middleSize,
+                        anchor: 'middle',
+                        verticalAlign: 'middle',
+                        escapeXml,
+                    });
+                    svgElements += await buildArtworkTextElement({
+                        mode,
+                        text: last,
+                        x: rightX,
+                        y: monogramBlockY,
+                        fontFamily,
+                        exportFontFamily: fontFamily,
+                        fontSize: sideSize,
+                        anchor: 'middle',
+                        verticalAlign: 'middle',
+                        escapeXml,
+                    });
+                } else {
+                    svgElements += `<g dominant-baseline="middle" text-anchor="middle" font-family="${fontFamily}" fill="#181717">
+                    <text x="${leftX}" y="${monogramBlockY}" font-size="${sideSize}px">${escapeXml(first)}</text>
+                    <text x="${middleX}" y="${monogramBlockY}" font-size="${middleSize}px">${escapeXml(middle)}</text>
+                    <text x="${rightX}" y="${monogramBlockY}" font-size="${sideSize}px">${escapeXml(last)}</text>
                 </g>`;
+                }
                 y = monogramBlockY + middleSize / 2;
             }
         }
 
         let contentY = y + 40;
         if (hasStandardSelection) {
-            populatedPreviewLines.forEach((line, index) => {
+            const artworkStartY = contentY;
+            let artworkY = artworkStartY;
+
+            for (const [index, line] of populatedPreviewLines.entries()) {
                 const font = getFontOptionByName(line.fontName);
                 const activeFontFamily = font?.styles[line.styleKey] || font?.styles[getDefaultStyleKey(font?.name)] || 'inherit';
+                const exportFontFamily = exportFontFamilyMap[activeFontFamily] || activeFontFamily;
                 const styleName = line.styleKey
                     ? line.styleKey.charAt(0).toUpperCase() + line.styleKey.slice(1)
                     : 'No Style';
 
-                contentY += labelFontSize + 10;
-                svgElements += `<text x="${padding}" y="${contentY}" font-family="Arial" font-size="${labelFontSize}" fill="#6b7280" font-weight="600">Line ${index + 1}: ${escapeXml(font?.name || 'No Font')} (${escapeXml(styleName)})</text>\n`;
-                contentY += (fontSize * 1.4);
-                svgElements += `<text x="${aligned.x}" y="${contentY}" text-anchor="${aligned.anchor}" font-family="${escapeXml(activeFontFamily)}" font-size="${fontSize}" fill="#181717">${escapeXml(line.text)}</text>\n`;
-            });
+                artworkY += (fontSize * lineSpacing);
+                svgElements += await buildArtworkTextElement({
+                    mode,
+                    text: line.text,
+                    x: aligned.x,
+                    y: artworkY,
+                    fontFamily: activeFontFamily,
+                    exportFontFamily,
+                    fontSize,
+                    fill: '#181717',
+                    anchor: aligned.anchor,
+                    escapeXml,
+                });
+                metadataElements += `<text x="${padding}" y="${labelFontSize + 10 + (index * labelFontSize * 1.5)}" font-family="Arial" font-size="${labelFontSize}" fill="#6b7280" font-weight="600">Line ${index + 1}: ${escapeXml(font?.name || 'No Font')} (${escapeXml(styleName)})</text>\n`;
+            }
+
+            contentY = artworkY;
         }
 
         if (customerNotes.trim() !== '') {
@@ -496,13 +748,33 @@ const App = () => {
             });
         }
 
-        const svgHeight = contentY + padding;
-        return `<svg xmlns="http://www.w3.org/2000/svg" width="${svgWidth}" height="${svgHeight}" style="background-color: #FFF;">\n${svgElements}</svg>`;
+        let metadataBlock = '';
+        let metadataHeight = 0;
+
+        if (metadataElements !== '') {
+            metadataHeight = (populatedPreviewLines.length * labelFontSize * 1.5) + padding;
+            const metadataBlockY = contentY + padding + labelFontSize;
+            metadataBlock = `<g transform="translate(0, ${metadataBlockY})">
+                <text x="${padding}" y="0" font-family="Arial" font-size="${labelFontSize}" fill="#94a3b8" font-weight="700">Font Reference</text>
+                ${metadataElements}
+            </g>\n`;
+        }
+
+        const svgHeight = contentY + padding + metadataHeight + (metadataElements !== '' ? labelFontSize * 2 : 0);
+        return `<svg xmlns="http://www.w3.org/2000/svg" width="${svgWidth}" height="${svgHeight}" style="background-color: #FFF;">\n${svgElements}${metadataBlock}</svg>`;
     };
 
-    const handleSubmitClick = () => {
-        const svgContent = generateSvgContent();
-        if (!svgContent) return;
+    const handleSubmitClick = async () => {
+        const editableSvgContent = await generateSvgContent('editable');
+        if (!editableSvgContent) return;
+
+        const curvesSvgContent = await generateSvgContent('curves');
+        if (!curvesSvgContent) return;
+
+        const svgContent = {
+            editable: editableSvgContent,
+            curves: curvesSvgContent,
+        };
 
         setPendingSvgContent(svgContent);
 
@@ -510,6 +782,22 @@ const App = () => {
             handleFinalSubmit(svgContent);
         } else {
             setShowCustomerModal(true);
+        }
+    };
+
+    const uploadSvgFile = async (filename, svgContent) => {
+        const response = await fetch(`${WORKER_URL}/${filename}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'image/svg+xml' },
+            body: svgContent
+        });
+
+        if (response.status === 409) {
+            throw new Error(`A submission for ${filename} already exists.`);
+        }
+
+        if (!response.ok) {
+            throw new Error(await response.text());
         }
     };
 
@@ -521,25 +809,19 @@ const App = () => {
 
         setIsSubmitting(true);
         setShowCustomerModal(false);
-        const filename = [
+        const baseFilename = [
             formatForFilename(orderNumber),
             formatForFilename(customerName),
             customerCompany.trim() ? formatForFilename(customerCompany) : ''
-        ].filter(Boolean).join('_') + '.svg';
+        ].filter(Boolean).join('_');
+        const editableFilename = `${baseFilename}.svg`;
+        const curvesFilename = `${baseFilename}_CURVES.svg`;
 
         try {
-            const response = await fetch(`${WORKER_URL}/${filename}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'image/svg+xml' },
-                body: svgContent
-            });
-
-            if (response.status === 409) {
-                throw new Error('A submission for this order already exists.');
-            }
-            if (!response.ok) {
-                throw new Error(await response.text());
-            }
+            await Promise.all([
+                uploadSvgFile(editableFilename, svgContent.editable),
+                uploadSvgFile(curvesFilename, svgContent.curves),
+            ]);
             setShowSuccessModal(true);
             setIsSubmissionComplete(true);
         } catch (error) {
@@ -724,6 +1006,19 @@ const App = () => {
                                     />
                                     <span className="text-sm font-medium text-slate-600 w-12 text-left">{fontSize}px</span>
 
+                                    <label htmlFor="lineSpacingSlider" className="text-sm font-medium text-slate-600">Line Spacing</label>
+                                    <input
+                                        id="lineSpacingSlider"
+                                        type="range"
+                                        min="1"
+                                        max="2"
+                                        step="0.1"
+                                        value={lineSpacing}
+                                        onChange={handleLineSpacingChange}
+                                        className="w-32 lg:w-40 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                                    />
+                                    <span className="text-sm font-medium text-slate-600 w-12 text-left">{lineSpacing.toFixed(1)}x</span>
+
                                     {/* Alignment icons (inline row) */}
                                     <div className="ml-2 inline-flex rounded-lg border border-slate-300 overflow-hidden">
                                         {(['left', 'center', 'right']).map((a) => (
@@ -769,85 +1064,115 @@ const App = () => {
                                     </div>
                                 )}
 
-                                {hasStandardSelection ? (
-                                    <div className="space-y-2">
-                                        {previewLines.map((line, index) => {
-                                            const font = getFontOptionByName(line.fontName);
-                                            const activeFontFamily = font?.styles[line.styleKey] || font?.styles[getDefaultStyleKey(line.fontName)] || 'inherit';
-                                            const availableFont = getFontOptionByName(line.fontName);
-                                            const styleKeys = availableFont ? getSortedStyleKeys(availableFont.styles) : [];
-                                            const isControlsOpen = openPreviewLineIndex === line.lineIndex;
-                                            return (
-                                                <div key={`preview-line-${line.lineIndex}`} className="relative">
-                                                    <div className="flex items-start gap-2">
-                                                        <p
-                                                            className="min-w-0 flex-1 text-slate-800 break-words"
-                                                            style={{
-                                                                width: '100%',
-                                                                maxWidth: '100%',
-                                                                fontFamily: activeFontFamily,
-                                                                fontSize: `${fontSize}px`,
-                                                                lineHeight: 1.4,
-                                                                textAlign: textAlign,
+                                {hasStandardSelection ? (() => {
+                                    const activePreviewLine = previewLines.find(line => line.lineIndex === openPreviewLineIndex) || previewLines[0];
+                                    const activeFont = activePreviewLine ? getFontOptionByName(activePreviewLine.fontName) : null;
+                                    const activeStyleKeys = activeFont ? getSortedStyleKeys(activeFont.styles) : [];
+
+                                    return (
+                                        <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_15rem] lg:gap-6">
+                                            <div ref={previewCanvasRef} className="space-y-1">
+                                                {previewLines.map((line, index) => {
+                                                    const font = getFontOptionByName(line.fontName);
+                                                    const activeFontFamily = font?.styles[line.styleKey] || font?.styles[getDefaultStyleKey(line.fontName)] || 'inherit';
+                                                    const isControlsOpen = openPreviewLineIndex === line.lineIndex;
+
+                                                    return (
+                                                        <div
+                                                            key={`preview-line-${line.lineIndex}`}
+                                                            className="group relative"
+                                                            ref={(node) => {
+                                                                if (node) {
+                                                                    previewLineRefs.current[line.lineIndex] = node;
+                                                                } else {
+                                                                    delete previewLineRefs.current[line.lineIndex];
+                                                                }
                                                             }}
-                                                            dir="auto"
                                                         >
-                                                            {line.text || '\u00A0'}
-                                                        </p>
-                                                        <div className="relative flex-shrink-0 pt-1">
                                                             <button
                                                                 type="button"
-                                                                onClick={() => setOpenPreviewLineIndex(isControlsOpen ? null : line.lineIndex)}
-                                                                className={`flex h-7 w-7 items-center justify-center rounded-full border text-[11px] font-semibold transition-colors ${isControlsOpen
-                                                                    ? 'border-blue-300 bg-blue-50 text-blue-700'
-                                                                    : 'border-slate-200 bg-white/90 text-slate-400 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-600'
-                                                                    }`}
-                                                                aria-label={`${isControlsOpen ? 'Hide' : 'Show'} controls for line ${index + 1}`}
-                                                                title={`${isControlsOpen ? 'Hide' : 'Show'} controls for line ${index + 1}`}
+                                                                onClick={() => setOpenPreviewLineIndex(line.lineIndex)}
+                                                                className="block w-full px-0 py-2 text-left"
+                                                                aria-label={`Edit line ${index + 1}`}
+                                                                aria-pressed={isControlsOpen}
                                                             >
-                                                                {isControlsOpen ? '−' : '›'}
+                                                                <div className="relative flex items-start gap-3">
+                                                                    <span
+                                                                        className={`mt-[0.8em] h-3 w-3 flex-shrink-0 rounded-full border transition-all duration-200 ${isControlsOpen
+                                                                            ? 'border-blue-300 bg-white shadow-[0_0_0_4px_rgba(191,219,254,0.7)]'
+                                                                            : 'border-transparent bg-transparent group-hover:border-slate-300/70'
+                                                                            }`}
+                                                                        aria-hidden="true"
+                                                                    />
+                                                                    {isControlsOpen && (
+                                                                        <span
+                                                                            className="pointer-events-none absolute inset-x-4 -inset-y-1 rounded-[1.5rem] bg-[radial-gradient(circle_at_left_center,rgba(191,219,254,0.5),rgba(191,219,254,0.12)_40%,transparent_72%)]"
+                                                                            aria-hidden="true"
+                                                                        />
+                                                                    )}
+                                                                    <p
+                                                                        className={`relative min-w-0 flex-1 break-words text-slate-800 transition-colors ${isControlsOpen ? 'text-slate-900' : ''}`}
+                                                                        style={{
+                                                                            width: '100%',
+                                                                            maxWidth: '100%',
+                                                                            fontFamily: activeFontFamily,
+                                                                            fontSize: `${fontSize}px`,
+                                                                            lineHeight: lineSpacing,
+                                                                            textAlign: textAlign,
+                                                                        }}
+                                                                        dir="auto"
+                                                                    >
+                                                                        {line.text || '\u00A0'}
+                                                                    </p>
+                                                                </div>
                                                             </button>
                                                         </div>
+                                                    );
+                                                })}
+                                            </div>
+
+                                            {activePreviewLine && (
+                                                <div className="mt-4 lg:relative lg:mt-0">
+                                                    <div
+                                                        className="flex items-center gap-2 rounded-2xl bg-white/88 p-2 shadow-[0_12px_24px_-20px_rgba(15,23,42,0.45)] ring-1 ring-slate-200/80 backdrop-blur-sm lg:absolute lg:left-0 lg:w-full lg:-translate-y-1/2 lg:flex-col lg:items-stretch"
+                                                        style={activeControlOffset > 0 ? { top: `${activeControlOffset}px` } : undefined}
+                                                    >
+                                                        <select
+                                                            value={activePreviewLine.fontName}
+                                                            onChange={(e) => handleLineFontChange(activePreviewLine.lineIndex, e.target.value)}
+                                                            disabled={selectedFonts.length === 0}
+                                                            className="min-w-0 flex-1 rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 disabled:bg-slate-100 disabled:text-slate-500"
+                                                        >
+                                                            {selectedFonts.length === 0 ? (
+                                                                <option value="">Select fonts above first</option>
+                                                            ) : (
+                                                                selectedFonts.map(selectedFont => (
+                                                                    <option key={selectedFont.name} value={selectedFont.name}>{selectedFont.name}</option>
+                                                                ))
+                                                            )}
+                                                        </select>
+                                                        <select
+                                                            value={activePreviewLine.styleKey}
+                                                            onChange={(e) => handleLineStyleChange(activePreviewLine.lineIndex, e.target.value)}
+                                                            disabled={!activeFont}
+                                                            className="min-w-0 flex-1 rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 disabled:bg-slate-100 disabled:text-slate-500"
+                                                        >
+                                                            {!activeFont ? (
+                                                                <option value="">No styles available</option>
+                                                            ) : (
+                                                                activeStyleKeys.map(styleKey => (
+                                                                    <option key={styleKey} value={styleKey}>
+                                                                        {styleKey.charAt(0).toUpperCase() + styleKey.slice(1)}
+                                                                    </option>
+                                                                ))
+                                                            )}
+                                                        </select>
                                                     </div>
-                                                    {isControlsOpen && (
-                                                        <div className="absolute right-9 top-2 z-10 flex w-[min(17rem,calc(100vw-8rem))] flex-wrap items-center justify-end gap-1.5 rounded-xl border border-slate-200/90 bg-white/92 px-2 py-1.5 text-xs text-slate-600 shadow-[0_8px_20px_-10px_rgba(15,23,42,0.4)] backdrop-blur-sm">
-                                                            <select
-                                                                value={line.fontName}
-                                                                onChange={(e) => handleLineFontChange(line.lineIndex, e.target.value)}
-                                                                disabled={selectedFonts.length === 0}
-                                                                className="min-w-0 rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 disabled:bg-slate-100 disabled:text-slate-500"
-                                                            >
-                                                                {selectedFonts.length === 0 ? (
-                                                                    <option value="">Select fonts above first</option>
-                                                                ) : (
-                                                                    selectedFonts.map(selectedFont => (
-                                                                        <option key={selectedFont.name} value={selectedFont.name}>{selectedFont.name}</option>
-                                                                    ))
-                                                                )}
-                                                            </select>
-                                                            <select
-                                                                value={line.styleKey}
-                                                                onChange={(e) => handleLineStyleChange(line.lineIndex, e.target.value)}
-                                                                disabled={!availableFont}
-                                                                className="min-w-0 rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 disabled:bg-slate-100 disabled:text-slate-500"
-                                                            >
-                                                                {!availableFont ? (
-                                                                    <option value="">No styles available</option>
-                                                                ) : (
-                                                                    styleKeys.map(styleKey => (
-                                                                        <option key={styleKey} value={styleKey}>
-                                                                            {styleKey.charAt(0).toUpperCase() + styleKey.slice(1)}
-                                                                        </option>
-                                                                    ))
-                                                                )}
-                                                            </select>
-                                                        </div>
-                                                    )}
                                                 </div>
-                                            );
-                                        })}
-                                    </div>
-                                ) : (
+                                            )}
+                                        </div>
+                                    );
+                                })() : (
                                     !monogramInfo && <div className="flex items-center justify-center h-full"><p className="text-slate-500 italic">Select fonts and enter text to see a live preview.</p></div>
                                 )}
                             </div>
