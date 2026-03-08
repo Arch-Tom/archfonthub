@@ -1,58 +1,13 @@
 ﻿import React, { useState, useRef, useEffect } from 'react';
 import MonogramMaker from './MonogramMaker';
 import CircularMonogram from './CircularMonogram'; // Still needed for font thumbnails
+import CustomerInfoModal from './components/modals/CustomerInfoModal';
+import MessageModal from './components/modals/MessageModal';
+import SuccessModal from './components/modals/SuccessModal';
+import { accentedCharacters, glyphs, hebrewCharacters, hebrewKeyboardLayout } from './constants/characterPalettes';
+import { exportFontFamilyMap, fontLibrary, scriptFontsToAdjust, styleSortOrder } from './constants/fontConfig';
 
-import * as opentype from 'opentype.js';
-import fontCssText from './index.css?raw';
-
-const fontAssetMap = Array.from(
-    fontCssText.matchAll(/@font-face\s*{[\s\S]*?font-family:\s*'([^']+)'[\s\S]*?src:\s*url\('([^']+)'\)/g)
-).reduce((map, [, fontFamily, fontUrl]) => {
-    map[fontFamily] = fontUrl;
-    return map;
-}, {});
-
-const curveFontCache = new Map();
-
-const loadCurveFont = async (fontFamily) => {
-    if (!fontFamily || !fontAssetMap[fontFamily]) return null;
-    if (!curveFontCache.has(fontFamily)) {
-        curveFontCache.set(fontFamily, (async () => {
-            const response = await fetch(fontAssetMap[fontFamily]);
-            if (!response.ok) {
-                throw new Error(`Failed to load font asset for ${fontFamily}`);
-            }
-
-            const fontBuffer = await response.arrayBuffer();
-            return opentype.parse(fontBuffer);
-        })().catch(error => {
-            console.error(error);
-            return null;
-        }));
-    }
-
-    return curveFontCache.get(fontFamily);
-};
-
-// This component remains outside the main App component for good practice.
-const FormInput = ({ label, id, value, onChange, required = false, isOptional = false, disabled = false }) => (
-    <div>
-        <label htmlFor={id} className="block text-sm font-medium text-slate-700 mb-1">
-            {label}
-            {required && <span className="text-red-500 ml-1">*</span>}
-            {isOptional && <span className="text-slate-500 text-xs ml-1">(Optional)</span>}
-        </label>
-        <input
-            id={id}
-            type="text"
-            value={value}
-            onChange={onChange}
-            required={required}
-            disabled={disabled}
-            className={`w-full px-3 py-2 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-400 text-base ${disabled ? 'bg-slate-100 text-slate-500 cursor-not-allowed' : 'border-slate-300'}`}
-        />
-    </div>
-);
+import { buildArtworkTextElement, loadCurveFont } from './utils/svgExport';
 
 // NEW: inline alignment icon (no external icon library)
 const AlignIcon = ({ align = 'left' }) => {
@@ -103,82 +58,6 @@ const AlignIcon = ({ align = 'left' }) => {
 const App = () => {
     const WORKER_URL = "https://customerfontselection-worker.tom-4a9.workers.dev";
     const DEFAULT_TEXT_PLACEHOLDER = 'Type your text here...';
-
-    const scriptFontsToAdjust = [
-        'Alumni Sans', 'Amatic SC', 'Amazone', 'BlackChancery', 'Clicker Script',
-        'Collegiate', 'Concerto Pro', 'Courgette', 'Cowboy Rodeo',
-        'Cutive Mono', 'Freebooter Script', 'French Script', 'Great Vibes',
-        'Honey Script', 'I Love Glitter', 'Machine BT', 'Monotype Corsiva', 'Murray Hill',
-        'Old English', 'Planscribe', 'Rajdhani', 'ITC Zapf Chancery'
-    ];
-
-    const fontLibrary = {
-        'Sans-serif': [
-            {
-                name: 'Alumni Sans', styles: {
-                    black: 'Alumni Sans Black', bold: 'Alumni Sans Bold', extrabold: 'Alumni Sans ExtraBold',
-                    italic: 'Alumni Sans Italic', light: 'Alumni Sans Light', lightItalic: 'Alumni Sans Light Italic',
-                    medium: 'Alumni Sans Medium', mediumItalic: 'Alumni Sans Medium Italic', regular: 'Alumni Sans Regular',
-                    semibold: 'Alumni Sans SemiBold', semiboldItalic: 'Alumni Sans SemiBold Italic'
-                }
-            },
-            { name: 'Arial', styles: { regular: 'Arial', bold: 'Arial Bold', italic: 'Arial Italic', boldItalic: 'Arial Bold Italic' } },
-            { name: 'Bebas Neue', styles: { regular: 'Bebas Neue Regular', bold: 'Bebas Neue Bold' } },
-            { name: 'Berlin Sans', styles: { regular: 'Berlin Sans FB', bold: 'Berlin Sans FB Bold' } },
-            { name: 'Calibri', styles: { regular: 'Calibri', bold: 'Calibri Bold', italic: 'Calibri Italic' } },
-            { name: 'Century Gothic', styles: { regular: 'Century Gothic Paneuropean', bold: 'Century Gothic Paneuropean Bold', boldItalic: 'Century Gothic Paneuropean Bold Italic' } },
-            { name: 'Graphik', styles: { regular: 'Graphik', medium: 'Graphik Medium', semibold: 'Graphik Semibold', thin: 'Graphik Thin', regularItalic: 'Graphik Regular Italic', mediumItalic: 'Graphik Medium Italic', thinItalic: 'Graphik Thin Italic' } },
-            { name: 'Rajdhani', styles: { regular: 'Rajdhani Regular', light: 'Rajdhani Light', medium: 'Rajdhani Medium', semibold: 'Rajdhani SemiBold', bold: 'Rajdhani Bold' } },
-            { name: 'Zapf Humanist', styles: { demi: 'ZapfHumnst Dm BT' } },
-        ],
-        'Serif': [
-            { name: 'Benguiat', styles: { regular: 'Benguiat', bold: 'Benguiat Bold BT', bookItalic: 'Benguiat Book Italic BT' } },
-            { name: 'Bookman Old Style', styles: { bold: 'Bookman Old Style Bold', italic: 'Bookman Old Style Italic', boldItalic: 'Bookman Old Style Bold Italic' } },
-            { name: 'Century Schoolbook', styles: { regular: 'Century Schoolbook', bold: 'Century Schoolbook Bold', boldItalic: 'Century Schoolbook Bold Italic' } },
-            { name: 'Copperplate', styles: { regular: 'CopprplGoth BT Roman' } },
-            { name: 'Cutive Mono', styles: { regular: 'Cutive Mono Regular' } },
-            { name: 'DejaVu Serif', styles: { regular: 'DejaVu Serif', bold: 'DejaVu Serif Bold', italic: 'DejaVu Serif Italic', boldItalic: 'DejaVu Serif Bold Italic', condensed: 'DejaVu Serif Condensed', condensedBold: 'DejaVu Serif Condensed Bold', condensedItalic: 'DejaVu Serif Condensed Italic', condensedBoldItalic: 'DejaVu Serif Condensed Bold Italic' } },
-            { name: 'Garamond', styles: { v1: 'Garamond', v2_bold: 'Garamond 3 LT Std Bold', v2_boldItalic: 'Garamond 3 LT Std Bold Italic', v2_italic: 'Garamond 3 LT Std Italic', v2_regular: 'Garamond 3 LT Std' } },
-            { name: 'Noto Rashi Hebrew', styles: { regular: 'Noto Rashi Hebrew Regular', thin: 'Noto Rashi Hebrew Thin', extralight: 'Noto Rashi Hebrew ExtraLight', light: 'Noto Rashi Hebrew Light', medium: 'Noto Rashi Hebrew Medium', semibold: 'Noto Rashi Hebrew SemiBold', bold: 'Noto Rashi Hebrew Bold', extrabold: 'Noto Rashi Hebrew ExtraBold', black: 'Noto Rashi Hebrew Black' } },
-            { name: 'Times New Roman', styles: { regular: 'Times New Roman', bold: 'Times New Roman Bold', italic: 'Times New Roman Italic', boldItalic: 'Times New Roman Bold Italic' } },
-        ],
-        'Script': [
-            { name: 'Amatic SC', styles: { regular: 'Amatic SC Regular', bold: 'Amatic SC Bold' } },
-            { name: 'Amazone', styles: { regular: 'Amazone BT' } },
-            { name: 'BlackChancery', styles: { regular: 'BlackChancery' } },
-            { name: 'Clicker Script', styles: { regular: 'Clicker Script' } },
-            { name: 'Concerto Pro', styles: { regular: 'ConcertoPro-Regular' } },
-            { name: 'Courgette', styles: { regular: 'Courgette Regular' } },
-            { name: 'Freebooter Script', styles: { regular: 'Freebooter Script' } },
-            { name: 'French Script', styles: { regular: 'French Script MT' } },
-            { name: 'Great Vibes', styles: { regular: 'Great Vibes' } },
-            { name: 'Honey Script', styles: { light: 'Honey Script Light', semiBold: 'Honey Script SemiBold' } },
-            { name: 'I Love Glitter', styles: { regular: 'I Love Glitter' } },
-            { name: 'ITC Zapf Chancery', styles: { regular: 'ITC Zapf Chancery Roman' } },
-            { name: 'Murray Hill', styles: { regular: 'Murray Hill Regular' } },
-            { name: 'Monotype Corsiva', styles: { regular: 'Monotype Corsiva' } },
-        ],
-        'Display': [
-            { name: 'Collegiate', styles: { black: 'CollegiateBlackFLF', outline: 'CollegiateOutlineFLF' } },
-            { name: 'Cowboy Rodeo', styles: { regular: 'Cowboy Rodeo W01 Regular' } },
-            { name: 'Machine BT', styles: { regular: 'Machine BT' } },
-            { name: 'Old English', styles: { regular: 'Old English Text MT' } },
-            { name: 'Planscribe', styles: { regular: 'Planscribe NF W01 Regular' } },
-        ],
-    };
-
-    const styleSortOrder = [
-        'thin', 'thinItalic',
-        'extralight', 'extralightItalic',
-        'light', 'lightItalic',
-        'regular', 'italic', 'book', 'bookItalic', 'roman',
-        'medium', 'mediumItalic',
-        'semibold', 'demi', 'semiboldItalic',
-        'bold', 'boldItalic',
-        'extrabold', 'extraboldItalic',
-        'black', 'blackItalic',
-        'outline', 'condensed', 'condensedBold', 'condensedItalic', 'condensedBoldItalic'
-    ];
 
     const [selectedFonts, setSelectedFonts] = useState([]);
     const [customText, setCustomText] = useState('');
@@ -232,30 +111,6 @@ const App = () => {
         const styleKeys = Object.keys(font.styles);
         if (font.activeStyle && styleKeys.includes(font.activeStyle)) return font.activeStyle;
         return styleKeys[0] || '';
-    };
-
-    const exportFontFamilyMap = {
-        'Arial': 'ArialMT',
-        'Arial Bold': 'Arial-BoldMT',
-        'Arial Italic': 'Arial-ItalicMT',
-        'Arial Bold Italic': 'Arial-BoldItalicMT',
-        'Berlin Sans FB': 'BerlinSansFB-Reg',
-        'Berlin Sans FB Bold': 'BerlinSansFB-Bold',
-        'CopprplGoth BT Roman': 'CopperplateGothicBT-Roman',
-        'Cowboy Rodeo W01 Regular': 'CowboyRodeoW01-Regular',
-        'Graphik Medium Italic': 'Graphik-MediumItalic',
-        'Graphik Thin Italic': 'Graphik-ThinItalic',
-        'ITC Zapf Chancery Roman': 'ZapfChancery-Roman',
-        'Machine BT': 'MachineITCbyBT-Regular',
-        'Noto Rashi Hebrew Black': 'NotoRashiHebrew-Black',
-        'Noto Rashi Hebrew ExtraBold': 'NotoRashiHebrew-ExtraBold',
-        'Planscribe NF W01 Regular': 'PlanscribeNFW01-Regular',
-        'Times New Roman': 'TimesNewRomanPSMT',
-        'Times New Roman Bold': 'TimesNewRomanPS-BoldMT',
-        'Times New Roman Italic': 'TimesNewRomanPS-ItalicMT',
-        'Times New Roman Bold Italic': 'TimesNewRomanPS-BoldItalicMT',
-        'ZapfHumnst Dm BT': 'ZapfHumanist601BT-Demi',
-        'Zapf Humanist 601 Demi BT': 'ZapfHumanist601BT-Demi',
     };
 
     const normalizeLineSelection = (line, fonts = selectedFonts) => {
@@ -457,78 +312,6 @@ const App = () => {
                 setLastHebrewBaseChar('א');
             }
         }
-    };
-
-    const buildSvgTextElement = ({ x, y, anchor = 'start', fontFamily, fontSize, fill = '#181717', text, extraAttributes = '' }) =>
-        `<text x="${x}" y="${y}" text-anchor="${anchor}" font-family="${fontFamily}" font-size="${fontSize}" fill="${fill}"${extraAttributes}>${text}</text>\n`;
-
-    const getCurveBaselineY = (font, y, fontSize, verticalAlign) => {
-        if (verticalAlign !== 'middle') return y;
-        return y - (((font.ascender + font.descender) / 2) / font.unitsPerEm) * fontSize;
-    };
-
-    const buildCurveTextElement = async ({
-        text,
-        x,
-        y,
-        fontFamily,
-        fontSize,
-        fill = '#181717',
-        anchor = 'start',
-        verticalAlign = 'baseline',
-    }) => {
-        const font = await loadCurveFont(fontFamily);
-        if (!font) return null;
-
-        const width = font.getAdvanceWidth(text, fontSize, { kerning: true });
-        const startX = anchor === 'middle'
-            ? x - (width / 2)
-            : anchor === 'end'
-                ? x - width
-                : x;
-        const baselineY = getCurveBaselineY(font, y, fontSize, verticalAlign);
-        const pathData = font.getPath(text, startX, baselineY, fontSize, { kerning: true }).toPathData(2);
-
-        return `<path d="${pathData}" fill="${fill}" />\n`;
-    };
-
-    const buildArtworkTextElement = async ({
-        mode,
-        text,
-        x,
-        y,
-        fontFamily,
-        exportFontFamily,
-        fontSize,
-        fill = '#181717',
-        anchor = 'start',
-        verticalAlign = 'baseline',
-        escapeXml,
-    }) => {
-        if (mode === 'curves') {
-            const curveElement = await buildCurveTextElement({
-                text,
-                x,
-                y,
-                fontFamily,
-                fontSize,
-                fill,
-                anchor,
-                verticalAlign,
-            });
-
-            if (curveElement) return curveElement;
-        }
-
-        return buildSvgTextElement({
-            x,
-            y,
-            anchor,
-            fontFamily: escapeXml(exportFontFamily || fontFamily),
-            fontSize,
-            fill,
-            text: escapeXml(text),
-        });
     };
 
     const generateSvgContent = async (mode = 'editable') => {
@@ -843,39 +626,6 @@ const App = () => {
         e.preventDefault();
         handleFinalSubmit(pendingSvgContent);
     };
-
-    const glyphs = ['©', '®', '™', '&', '#', '+', '–', '—', '…', '•', '°', '·', '♥', '♡', '♦', '♢', '♣', '♧', '♠', '♤', '★', '☆', '♪', '♫', '←', '→', '↑', '↓', '∞', '†', '✡\uFE0E', '✞', '✠', '±', '½', '¼', 'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ', 'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ρ', 'Σ', 'Τ', 'Υ', 'Φ', 'Χ', 'Ψ', 'Ω'];
-
-    const accentedCharacters = {
-        'A': ['À', 'à', 'Á', 'á', 'Â', 'â', 'Ã', 'ã', 'Ä', 'ä', 'Å', 'å', 'Æ', 'æ'], 'C': ['Ç', 'ç'],
-        'E': ['È', 'è', 'É', 'é', 'Ê', 'ê', 'Ë', 'ë'], 'I': ['Ì', 'ì', 'Í', 'í', 'Î', 'î', 'Ï', 'ï'],
-        'N': ['Ñ', 'ñ'], 'O': ['Ò', 'ò', 'Ó', 'ó', 'Ô', 'ô', 'Õ', 'õ', 'Ö', 'ö', 'Ø', 'ø', 'Œ', 'œ'],
-        'S': ['Š', 'š', 'ß'], 'U': ['Ù', 'ù', 'Ú', 'ú', 'Û', 'û', 'Ü', 'ü'],
-        'Y': ['Ý', 'ý', 'Ÿ', 'ÿ'], 'Z': ['Ž', 'ž']
-    };
-
-    const hebrewCharacters = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ', 'ך', 'ל', 'מ', 'ם', 'נ', 'ן', 'ס', 'ע', 'פ', 'ף', 'צ', 'ץ', 'ק', 'ר', 'ש', 'ת'];
-
-    const hebrewKeyboardLayout = [
-        [
-            { unshifted: '`', shifted: '~' },
-            { unshifted: '1', shifted: 'ְ', name: 'Shva' },
-            { unshifted: '2', shifted: 'ַ', name: 'Patah' },
-            { unshifted: '3', shifted: 'ָ', name: 'Qamats' },
-            { unshifted: '4', shifted: 'ֶ', name: 'Segol' },
-            { unshifted: '5', shifted: 'ֵ', name: 'Tsere' },
-            { unshifted: '6', shifted: 'ִ', name: 'Hiriq' },
-            { unshifted: '7', shifted: 'ֹ', name: 'Holam' },
-            { unshifted: '8', shifted: 'ּ', name: 'Dagesh' },
-            { unshifted: '9', shifted: 'ֻ', name: 'Qubuts' },
-            { unshifted: '0', shifted: 'ֿ', name: 'Rafe' },
-            { unshifted: '-', shifted: 'ׁ', name: 'Shin Dot' },
-            { unshifted: '=', shifted: 'ׂ', name: 'Sin Dot' },
-        ],
-        ['/', "'", 'ק', 'ר', 'א', 'ט', 'ו', 'ן', 'ם', 'פ', '[', ']'],
-        ['ש', 'д', 'ג', 'כ', 'ע', 'י', 'ח', 'ל', 'ך', 'ף', ','],
-        ['ז', 'ס', 'ב', 'ה', 'נ', 'מ', 'צ', 'ת', 'ץ', '.']
-    ];
 
     const hebrewRegex = /[\u0590-\u05FF]/;
 
@@ -1209,17 +959,7 @@ const App = () => {
                     <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-4xl animate-jump-in">
 
                         {showSuccessModal && (
-                            <div className="flex flex-col items-center text-center max-w-lg mx-auto">
-                                <img src="/images/Arch Vector Logo.svg" alt="Arch Engraving Logo" className="h-95 w-95 mb-6" />
-                                <h3 className="text-3xl font-bold text-slate-800 mb-2">Submission Successful!</h3>
-                                <p className="text-lg text-slate-600 mb-8">We Appreciate Your Business!</p>
-                                <button
-                                    onClick={() => setShowSuccessModal(false)}
-                                    className="px-12 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-semibold transition-colors shadow-sm text-base"
-                                >
-                                    Done
-                                </button>
-                            </div>
+                            <SuccessModal onClose={() => setShowSuccessModal(false)} />
                         )}
 
                         {showHebrewPalette && (
@@ -1324,24 +1064,21 @@ const App = () => {
                             </div>
                         )}
                         {showCustomerModal && (
-                            <form onSubmit={handleCustomerModalSubmit} className="space-y-8">
-                                <h3 className="text-2xl font-bold text-slate-900">Enter Customer Information to Save</h3>
-                                <FormInput label="Order Number" id="orderNumber" value={orderNumber} onChange={e => setOrderNumber(e.target.value)} required disabled={isDataPrefilled || isSubmitting} />
-                                <FormInput label="Customer Name" id="customerName" value={customerName} onChange={e => setCustomerName(e.target.value)} required disabled={isDataPrefilled || isSubmitting} />
-                                <FormInput label="Customer Company" id="customerCompany" value={customerCompany} onChange={e => setCustomerCompany(e.target.value)} isOptional disabled={isDataPrefilled || isSubmitting} />
-                                <div className="flex justify-end gap-4 pt-4">
-                                    <button type="button" className="px-6 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base" onClick={() => setShowCustomerModal(false)} disabled={isSubmitting}>Cancel</button>
-                                    <button type="submit" className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-semibold transition-colors shadow-sm text-base disabled:opacity-75 disabled:cursor-not-allowed" disabled={isSubmitting}>
-                                        {isSubmitting ? 'Submitting...' : 'Submit & Save'}
-                                    </button>
-                                </div>
-                            </form>
+                            <CustomerInfoModal
+                                onSubmit={handleCustomerModalSubmit}
+                                orderNumber={orderNumber}
+                                onOrderNumberChange={e => setOrderNumber(e.target.value)}
+                                customerName={customerName}
+                                onCustomerNameChange={e => setCustomerName(e.target.value)}
+                                customerCompany={customerCompany}
+                                onCustomerCompanyChange={e => setCustomerCompany(e.target.value)}
+                                isDataPrefilled={isDataPrefilled}
+                                isSubmitting={isSubmitting}
+                                onCancel={() => setShowCustomerModal(false)}
+                            />
                         )}
                         {showMessageBox && (
-                            <div className="text-center">
-                                <p className="text-slate-800 text-lg mb-8">{message}</p>
-                                <button onClick={() => setShowMessageBox(false)} className="px-12 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-semibold transition-colors shadow-sm text-base">OK</button>
-                            </div>
+                            <MessageModal message={message} onClose={() => setShowMessageBox(false)} />
                         )}
                     </div>
                 </div>
