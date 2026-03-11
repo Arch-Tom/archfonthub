@@ -90,11 +90,8 @@ const App = () => {
     const [hebrewPaletteText, setHebrewPaletteText] = useState('');
     const [lastHebrewBaseChar, setLastHebrewBaseChar] = useState('א');
     const [isShifted, setIsShifted] = useState(false);
-    const [activeControlOffset, setActiveControlOffset] = useState(0);
 
     const customTextRef = useRef(null);
-    const previewCanvasRef = useRef(null);
-    const previewLineRefs = useRef({});
 
     const getSortedStyleKeys = (styles) => Object.keys(styles).sort((a, b) => {
         const indexA = styleSortOrder.indexOf(a.toLowerCase());
@@ -201,28 +198,6 @@ const App = () => {
         }
     }, [openPreviewLineIndex, previewLines.length]);
 
-    useEffect(() => {
-        if (!hasStandardSelection) return undefined;
-
-        const updateActiveControlOffset = () => {
-            const canvas = previewCanvasRef.current;
-            const activeLine = previewLineRefs.current[openPreviewLineIndex];
-
-            if (!canvas || !activeLine) return;
-
-            const canvasRect = canvas.getBoundingClientRect();
-            const activeLineRect = activeLine.getBoundingClientRect();
-            const nextOffset = (activeLineRect.top - canvasRect.top) + (activeLineRect.height / 2);
-
-            setActiveControlOffset(nextOffset);
-        };
-
-        updateActiveControlOffset();
-        window.addEventListener('resize', updateActiveControlOffset);
-
-        return () => window.removeEventListener('resize', updateActiveControlOffset);
-    }, [customText, fontSize, hasStandardSelection, lineSettings, lineSpacing, openPreviewLineIndex, selectedFonts, textAlign]);
-
     const handleFontSelect = (font) => {
         const isSelected = selectedFonts.some(f => f.name === font.name);
         if (isSelected) {
@@ -271,14 +246,24 @@ const App = () => {
         }, 0);
     };
 
-    const handleLineFontChange = (lineIndex, fontName) => {
+    const handleApplyFontToActiveLine = (fontName) => {
+        if (openPreviewLineIndex == null) return;
+
         setLineSettings(prevSettings =>
             prevSettings.map((line, index) => {
-                if (index !== lineIndex) return line;
+                if (index !== openPreviewLineIndex) return line;
+
+                const nextFont = getFontOptionByName(fontName);
+                if (!nextFont) return line;
+
+                const nextStyleKey = nextFont.styles[line.styleKey]
+                    ? line.styleKey
+                    : getDefaultStyleKey(fontName);
+
                 return normalizeLineSelection({
                     ...line,
                     fontName,
-                    styleKey: getDefaultStyleKey(fontName),
+                    styleKey: nextStyleKey,
                 });
             })
         );
@@ -762,9 +747,6 @@ const App = () => {
                             previewLines={previewLines}
                             openPreviewLineIndex={openPreviewLineIndex}
                             setOpenPreviewLineIndex={setOpenPreviewLineIndex}
-                            previewCanvasRef={previewCanvasRef}
-                            previewLineRefs={previewLineRefs}
-                            activeControlOffset={activeControlOffset}
                             selectedFonts={selectedFonts}
                             getFontOptionByName={getFontOptionByName}
                             getDefaultStyleKey={getDefaultStyleKey}
@@ -775,7 +757,7 @@ const App = () => {
                             setTextAlign={setTextAlign}
                             handleFontSizeChange={handleFontSizeChange}
                             handleLineSpacingChange={handleLineSpacingChange}
-                            handleLineFontChange={handleLineFontChange}
+                            handleApplyFontToActiveLine={handleApplyFontToActiveLine}
                             handleLineStyleChange={handleLineStyleChange}
                             handleLineFontSizeOverrideChange={handleLineFontSizeOverrideChange}
                             AlignIcon={AlignIcon}

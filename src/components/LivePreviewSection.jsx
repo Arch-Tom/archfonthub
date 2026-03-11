@@ -8,9 +8,6 @@ const LivePreviewSection = ({
     previewLines,
     openPreviewLineIndex,
     setOpenPreviewLineIndex,
-    previewCanvasRef,
-    previewLineRefs,
-    activeControlOffset,
     selectedFonts,
     getFontOptionByName,
     getDefaultStyleKey,
@@ -21,7 +18,7 @@ const LivePreviewSection = ({
     setTextAlign,
     handleFontSizeChange,
     handleLineSpacingChange,
-    handleLineFontChange,
+    handleApplyFontToActiveLine,
     handleLineStyleChange,
     handleLineFontSizeOverrideChange,
     AlignIcon,
@@ -49,7 +46,7 @@ const LivePreviewSection = ({
                             <div className="flex items-center justify-between gap-3">
                                 <label htmlFor="fontSizeSlider" className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Size</label>
                                 <span className="inline-flex min-w-[4.25rem] items-center justify-center rounded-full border border-slate-200 bg-white px-3 py-1 text-sm font-semibold text-slate-700 shadow-sm">
-                                    {fontSize}pt
+                                    {fontSize}
                                 </span>
                             </div>
                             <input
@@ -68,7 +65,7 @@ const LivePreviewSection = ({
                             <div className="flex items-center justify-between gap-3">
                                 <label htmlFor="lineSpacingSlider" className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Spacing</label>
                                 <span className="inline-flex min-w-[4.25rem] items-center justify-center rounded-full border border-slate-200 bg-white px-3 py-1 text-sm font-semibold text-slate-700 shadow-sm">
-                                    {lineSpacing.toFixed(1)}x
+                                    {lineSpacing.toFixed(1)}
                                 </span>
                             </div>
                             <input
@@ -110,11 +107,12 @@ const LivePreviewSection = ({
                         </div>
                     </div>
                 </div>
+
             </div>
 
-            <div className="rounded-[1.35rem] border border-slate-200/80 bg-[linear-gradient(180deg,rgba(248,250,252,0.98),rgba(226,232,240,0.88))] p-5 sm:p-6 min-h-[150px] space-y-10 shadow-[inset_0_1px_0_rgba(255,255,255,0.72),0_14px_30px_-24px_rgba(15,23,42,0.35)] ring-1 ring-white/70">
+            <div className="space-y-5">
                 {monogramInfo && (
-                    <div className="mb-10 p-6 border border-blue-200 rounded-xl bg-blue-50 shadow flex justify-center items-center h-[200px]">
+                    <div className="rounded-[1.35rem] border border-blue-200 bg-blue-50 p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.72),0_14px_30px_-24px_rgba(15,23,42,0.22)] flex justify-center items-center h-[200px]">
                         <div className="w-full h-full" dangerouslySetInnerHTML={{ __html: monogramInfo.htmlString }} />
                     </div>
                 )}
@@ -137,8 +135,105 @@ const LivePreviewSection = ({
                 )}
 
                 {hasStandardSelection ? (
-                    <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_15rem] lg:gap-6">
-                        <div ref={previewCanvasRef} className="space-y-1">
+                    <>
+                        {activePreviewLine && (
+                            <div className="rounded-[1.2rem] border border-slate-200/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.97),rgba(248,250,252,0.94))] px-4 py-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.82),0_12px_26px_-24px_rgba(15,23,42,0.25)]">
+                                <div className="text-sm font-semibold text-slate-700">
+                                    Editing line {activePreviewLine.lineIndex + 1}
+                                </div>
+
+                                <div className="mt-2.5 space-y-2.5">
+                                    <div className="flex flex-wrap gap-2">
+                                        {selectedFonts.map((font) => {
+                                            const isActiveFont = activePreviewLine.fontName === font.name;
+
+                                            return (
+                                                <button
+                                                    key={font.name}
+                                                    type="button"
+                                                    onClick={() => handleApplyFontToActiveLine(font.name)}
+                                                    className={`min-w-[9.5rem] rounded-xl border px-3.5 py-2.5 text-left transition-all ${isActiveFont
+                                                        ? 'border-[rgb(50,75,106)] bg-[rgb(50,75,106)] text-white shadow-[0_10px_22px_-18px_rgba(50,75,106,0.8)]'
+                                                        : 'border-slate-200/90 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50'
+                                                        }`}
+                                                    aria-pressed={isActiveFont}
+                                                    title={`Apply ${font.name} to line ${activePreviewLine.lineIndex + 1}`}
+                                                >
+                                                    <div
+                                                        className={`text-base leading-tight ${isActiveFont ? 'text-white' : 'text-slate-800'}`}
+                                                        style={{
+                                                            fontFamily: font.name === 'Alumni Sans'
+                                                                ? 'Alumni Sans Regular'
+                                                                : font.styles[Object.keys(font.styles)[0]]
+                                                        }}
+                                                    >
+                                                        {font.name}
+                                                    </div>
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+
+                                    <div className="flex flex-wrap gap-1.5">
+                                        {activeStyleKeys.map((styleKey) => {
+                                            const isActiveStyle = activePreviewLine.styleKey === styleKey;
+
+                                            return (
+                                                <button
+                                                    key={styleKey}
+                                                    type="button"
+                                                    onClick={() => handleLineStyleChange(activePreviewLine.lineIndex, styleKey)}
+                                                    className={`rounded-full border px-2.5 py-1.5 text-xs font-medium transition-colors ${isActiveStyle
+                                                        ? 'border-slate-700 bg-slate-700 text-white'
+                                                        : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50'
+                                                        }`}
+                                                    aria-pressed={isActiveStyle}
+                                                >
+                                                    {styleKey.charAt(0).toUpperCase() + styleKey.slice(1)}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+
+                                    <div className="flex flex-wrap items-center gap-3">
+                                        <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Size</span>
+                                        <input
+                                            type="range"
+                                            min="12"
+                                            max="160"
+                                            step="1"
+                                            value={activeLineFontSize}
+                                            onChange={(e) => handleLineFontSizeOverrideChange(activePreviewLine.lineIndex, e.target.value)}
+                                            className="h-2 min-w-[10rem] flex-1 cursor-pointer appearance-none rounded-lg bg-slate-200 accent-blue-600"
+                                            aria-label={`Adjust size for line ${activePreviewLine.lineIndex + 1}`}
+                                        />
+                                        <input
+                                            type="number"
+                                            min="12"
+                                            step="1"
+                                            value={activeLineFontSize}
+                                            onChange={(e) => handleLineFontSizeOverrideChange(activePreviewLine.lineIndex, e.target.value)}
+                                            className="w-14 rounded-md border border-slate-200 bg-slate-50 px-2 py-1 text-sm font-semibold text-slate-700 focus:border-blue-400 focus:outline-none"
+                                            aria-label={`Size for line ${activePreviewLine.lineIndex + 1}`}
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => handleLineFontSizeOverrideChange(activePreviewLine.lineIndex, null)}
+                                            disabled={isUsingDefaultLineSize}
+                                            className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${isUsingDefaultLineSize
+                                                ? 'cursor-default bg-slate-100 text-slate-400'
+                                                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                                                }`}
+                                        >
+                                            Use Default
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        <div className="rounded-[1.35rem] border border-slate-200/80 bg-[linear-gradient(180deg,rgba(248,250,252,0.98),rgba(226,232,240,0.88))] p-5 sm:p-6 min-h-[150px] shadow-[inset_0_1px_0_rgba(255,255,255,0.72),0_14px_30px_-24px_rgba(15,23,42,0.35)] ring-1 ring-white/70">
+                            <div className="space-y-1">
                             {previewLines.map((line, index) => {
                                 const font = getFontOptionByName(line.fontName);
                                 const activeFontFamily = font?.styles[line.styleKey] || font?.styles[getDefaultStyleKey(line.fontName)] || 'inherit';
@@ -149,13 +244,6 @@ const LivePreviewSection = ({
                                     <div
                                         key={`preview-line-${line.lineIndex}`}
                                         className="group relative"
-                                        ref={(node) => {
-                                            if (node) {
-                                                previewLineRefs.current[line.lineIndex] = node;
-                                            } else {
-                                                delete previewLineRefs.current[line.lineIndex];
-                                            }
-                                        }}
                                     >
                                         <button
                                             type="button"
@@ -197,97 +285,17 @@ const LivePreviewSection = ({
                                     </div>
                                 );
                             })}
-                        </div>
-
-                        {activePreviewLine && (
-                            <div className="mt-4 lg:relative lg:mt-0">
-                                <div
-                                    className="flex items-center gap-2 rounded-2xl bg-white/88 p-2 shadow-[0_12px_24px_-20px_rgba(15,23,42,0.45)] ring-1 ring-slate-200/80 backdrop-blur-sm lg:absolute lg:left-0 lg:w-full lg:-translate-y-1/2 lg:flex-col lg:items-stretch"
-                                    style={activeControlOffset > 0 ? { top: `${activeControlOffset}px` } : undefined}
-                                >
-                                    <select
-                                        value={activePreviewLine.fontName}
-                                        onChange={(e) => handleLineFontChange(activePreviewLine.lineIndex, e.target.value)}
-                                        disabled={selectedFonts.length === 0}
-                                        className="min-w-0 flex-1 rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 disabled:bg-slate-100 disabled:text-slate-500"
-                                    >
-                                        {selectedFonts.length === 0 ? (
-                                            <option value="">Select fonts above first</option>
-                                        ) : (
-                                            selectedFonts.map(selectedFont => (
-                                                <option key={selectedFont.name} value={selectedFont.name}>{selectedFont.name}</option>
-                                            ))
-                                        )}
-                                    </select>
-                                    <select
-                                        value={activePreviewLine.styleKey}
-                                        onChange={(e) => handleLineStyleChange(activePreviewLine.lineIndex, e.target.value)}
-                                        disabled={!activeFont}
-                                        className="min-w-0 flex-1 rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 disabled:bg-slate-100 disabled:text-slate-500"
-                                    >
-                                        {!activeFont ? (
-                                            <option value="">No styles available</option>
-                                        ) : (
-                                            activeStyleKeys.map(styleKey => (
-                                                <option key={styleKey} value={styleKey}>
-                                                    {styleKey.charAt(0).toUpperCase() + styleKey.slice(1)}
-                                                </option>
-                                            ))
-                                        )}
-                                    </select>
-                                    <div className="min-w-0 rounded-xl border border-slate-300 bg-white px-3 py-2.5">
-                                        <div className="flex items-center justify-between gap-2">
-                                            <div>
-                                                <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Line Size</div>
-                                                <div className="mt-1 text-xs font-medium text-slate-500">
-                                                    {isUsingDefaultLineSize ? 'Using default size' : 'Custom size override'}
-                                                </div>
-                                            </div>
-                                            <button
-                                                type="button"
-                                                onClick={() => handleLineFontSizeOverrideChange(activePreviewLine.lineIndex, null)}
-                                                disabled={isUsingDefaultLineSize}
-                                                className={`rounded-lg border px-2.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] transition-colors ${isUsingDefaultLineSize
-                                                    ? 'cursor-default border-slate-200 bg-slate-100 text-slate-400'
-                                                    : 'border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100'
-                                                    }`}
-                                            >
-                                                Use Default
-                                            </button>
-                                        </div>
-                                        <div className="mt-2.5 flex items-center gap-3">
-                                            <div className="flex items-center gap-2 px-0.5 py-0.5">
-                                                <input
-                                                    type="number"
-                                                    min="12"
-                                                    step="1"
-                                                    value={activeLineFontSize}
-                                                    onChange={(e) => handleLineFontSizeOverrideChange(activePreviewLine.lineIndex, e.target.value)}
-                                                    className="w-16 border-0 bg-transparent p-0 text-sm font-semibold text-slate-700 focus:outline-none focus:ring-0"
-                                                    aria-label={`Font size for line ${activePreviewLine.lineIndex + 1}`}
-                                                />
-                                                <span className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
-                                                    pt
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <input
-                                            type="range"
-                                            min="12"
-                                            max="160"
-                                            step="1"
-                                            value={activeLineFontSize}
-                                            onChange={(e) => handleLineFontSizeOverrideChange(activePreviewLine.lineIndex, e.target.value)}
-                                            className="mt-2.5 h-2 w-full cursor-pointer appearance-none rounded-lg bg-slate-200 accent-blue-600"
-                                            aria-label={`Adjust font size for line ${activePreviewLine.lineIndex + 1}`}
-                                        />
-                                    </div>
-                                </div>
                             </div>
-                        )}
-                    </div>
+                        </div>
+                    </>
                 ) : (
-                    !monogramInfo && <div className="flex items-center justify-center h-full"><p className="text-slate-500 italic">Select fonts and enter text to see a live preview.</p></div>
+                    !monogramInfo && (
+                        <div className="rounded-[1.35rem] border border-slate-200/80 bg-[linear-gradient(180deg,rgba(248,250,252,0.98),rgba(226,232,240,0.88))] p-5 sm:p-6 min-h-[150px] shadow-[inset_0_1px_0_rgba(255,255,255,0.72),0_14px_30px_-24px_rgba(15,23,42,0.35)] ring-1 ring-white/70">
+                            <div className="flex items-center justify-center h-full">
+                                <p className="text-slate-500 italic">Select fonts and enter text to see a live preview.</p>
+                            </div>
+                        </div>
+                    )
                 )}
             </div>
         </section>
