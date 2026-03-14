@@ -24,8 +24,8 @@ const LivePreviewSection = ({
     getDefaultStyleKey,
     getSortedStyleKeys,
     fontSize = 36,
-    lineSpacing = 1.2,
-    textAlign = 'left',
+    lineSpacing = 1,
+    textAlign = 'center',
     setTextAlign,
     handleLineSpacingChange,
     handleApplyFontToActiveLine,
@@ -48,8 +48,11 @@ const LivePreviewSection = ({
     const showHebrewWarning = hebrewRegex instanceof RegExp && hebrewRegex.test(combinedText);
 
     return (
-        <section className="relative overflow-hidden rounded-[2rem] border border-slate-200/80 bg-[linear-gradient(180deg,rgba(252,253,255,0.98),rgba(245,248,252,0.97))] p-6 shadow-[0_30px_90px_-48px_rgba(15,23,42,0.22)] sm:p-7 xl:p-8">
-            <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+        <section className="relative overflow-visible rounded-[2rem] border border-slate-200/80 bg-[linear-gradient(180deg,rgba(252,253,255,0.98),rgba(245,248,252,0.97))] p-6 shadow-[0_30px_90px_-48px_rgba(15,23,42,0.22)] sm:p-7 xl:p-8">
+            <div
+                className="pointer-events-none absolute inset-0 overflow-hidden rounded-[2rem]"
+                aria-hidden="true"
+            >
                 <div className="absolute inset-x-0 top-0 h-36 bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.07),transparent_72%)]" />
                 <div className="absolute -left-20 top-20 h-56 w-56 rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.9),transparent_72%)] blur-3xl" />
                 <div className="absolute -right-16 bottom-0 h-64 w-64 rounded-full bg-[radial-gradient(circle,rgba(148,163,184,0.10),transparent_72%)] blur-3xl" />
@@ -124,270 +127,125 @@ const LivePreviewSection = ({
 
                 {hasStandardSelection ? (
                     <div className="space-y-4">
-                        <div className="overflow-hidden rounded-[1.55rem] border border-slate-200/80 bg-white/88 shadow-[inset_0_1px_0_rgba(255,255,255,0.92),0_18px_34px_-26px_rgba(15,23,42,0.16)] backdrop-blur">
-                            <div className="px-4 py-4 sm:px-5">
-                                <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
-                                    <div className="min-w-0 flex-1">
-                                        <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">
-                                            Selected fonts
-                                        </div>
-
-                                        <div className="mt-3 flex flex-wrap gap-2.5">
-                                            {safeSelectedFonts.map((font) => {
-                                                const isActiveFont =
-                                                    activePreviewLine?.fontName === font.name;
-
-                                                return (
-                                                    <button
-                                                        key={font.name}
-                                                        type="button"
-                                                        onClick={() =>
-                                                            handleApplyFontToActiveLine(font.name)
-                                                        }
-                                                        aria-pressed={isActiveFont}
-                                                        className={`rounded-full border px-4 py-2 text-sm font-medium transition-all duration-200 ${
-                                                            isActiveFont
-                                                                ? 'border-slate-900 bg-slate-900 text-white shadow-[0_14px_22px_-18px_rgba(15,23,42,0.42)]'
-                                                                : 'border-slate-300 bg-white text-slate-700 hover:-translate-y-px hover:border-slate-400 hover:bg-slate-50'
-                                                        }`}
-                                                        style={{
-                                                            fontFamily:
-                                                                getSafeFontFamilyPreview(font),
-                                                        }}
-                                                        title={
-                                                            activePreviewLine
-                                                                ? `Apply ${font.name} to line ${activePreviewLine.lineIndex + 1}`
-                                                                : font.name
-                                                        }
-                                                    >
-                                                        {font.name}
-                                                    </button>
-                                                );
-                                            })}
-                                        </div>
-                                    </div>
-
-                                    <div className="grid gap-4 md:grid-cols-2 xl:min-w-[28rem]">
-                                        <div>
-                                            <div className="mb-2 flex items-center justify-between gap-3">
-                                                <label
-                                                    htmlFor="lineSpacingSlider"
-                                                    className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500"
-                                                >
-                                                    Line spacing
-                                                </label>
-
-                                                <span className="inline-flex min-w-[4rem] items-center justify-center rounded-full border border-slate-200 bg-white px-3 py-1 text-sm font-semibold text-slate-700">
-                                                    {Number(lineSpacing).toFixed(1)}
-                                                </span>
-                                            </div>
-
-                                            <input
-                                                id="lineSpacingSlider"
-                                                type="range"
-                                                min="1"
-                                                max="2"
-                                                step="0.1"
-                                                value={lineSpacing}
-                                                onChange={handleLineSpacingChange}
-                                                className="h-2.5 w-full cursor-pointer appearance-none rounded-full bg-slate-200 accent-blue-600"
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <div className="mb-2 flex items-center justify-between gap-3">
-                                                <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">
-                                                    Alignment
-                                                </span>
-
-                                                {activePreviewLine && (
-                                                    <span className="inline-flex items-center gap-2 rounded-full border border-blue-200/80 bg-blue-50 px-3 py-1 text-[11px] font-semibold text-blue-700">
-                                                        <span className="h-2 w-2 rounded-full bg-blue-500" />
-                                                        Line {activePreviewLine.lineIndex + 1}
-                                                    </span>
-                                                )}
-                                            </div>
-
-                                            <div className="inline-flex rounded-[1rem] border border-slate-200 bg-slate-100/80 p-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
-                                                {['left', 'center', 'right'].map((alignment) => (
-                                                    <button
-                                                        key={alignment}
-                                                        type="button"
-                                                        onClick={() => setTextAlign(alignment)}
-                                                        title={`Align ${alignment}`}
-                                                        aria-label={`Align ${alignment}`}
-                                                        className={`flex h-10 w-10 items-center justify-center rounded-[0.8rem] transition-all duration-200 ${
-                                                            textAlign === alignment
-                                                                ? 'bg-slate-900 text-white shadow-[0_12px_20px_-16px_rgba(15,23,42,0.55)]'
-                                                                : 'text-slate-600 hover:bg-white hover:text-slate-900'
-                                                        }`}
-                                                    >
-                                                        <AlignIcon align={alignment} />
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
                         <div className="relative overflow-visible rounded-[1.75rem] border border-slate-200/80 bg-[linear-gradient(180deg,rgba(248,250,252,0.98),rgba(241,245,249,0.96))] shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_26px_50px_-36px_rgba(15,23,42,0.18)]">
-                            <div className="flex items-center justify-between border-b border-slate-200/80 px-5 py-4 sm:px-6">
-                                <div>
-                                    <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">
-                                        Composition
+                            <div className="relative border-b border-slate-200/80 px-5 py-4 sm:px-6">
+                                <div className="flex items-start justify-between gap-4">
+                                    <div>
+                                        <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">
+                                            Composition
+                                        </div>
+                                        <div className="mt-1 text-base font-semibold text-slate-900">
+                                            Live stage preview
+                                        </div>
                                     </div>
-                                    <div className="mt-1 text-base font-semibold text-slate-900">
-                                        Live stage preview
-                                    </div>
+
+                                    {activePreviewLine && (
+                                        <div className="hidden items-center gap-2 rounded-full border border-blue-200/80 bg-[linear-gradient(180deg,rgba(239,246,255,0.96),rgba(219,234,254,0.9))] px-3 py-1.5 text-xs font-semibold text-blue-800 shadow-[0_14px_24px_-20px_rgba(37,99,235,0.26)] sm:inline-flex">
+                                            <span className="h-2 w-2 rounded-full bg-blue-500" />
+                                            Click any line to switch focus
+                                        </div>
+                                    )}
                                 </div>
 
-                                {activePreviewLine && (
-                                    <div className="hidden items-center gap-2 rounded-full border border-blue-200/80 bg-[linear-gradient(180deg,rgba(239,246,255,0.96),rgba(219,234,254,0.9))] px-3 py-1.5 text-xs font-semibold text-blue-800 shadow-[0_14px_24px_-20px_rgba(37,99,235,0.26)] sm:inline-flex">
-                                        <span className="h-2 w-2 rounded-full bg-blue-500" />
-                                        Click any line to switch focus
+                                <div className="pointer-events-auto absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 xl:block">
+                                    <div>
+                                        <div className="mb-2 text-center text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">
+                                            Alignment
+                                        </div>
+
+                                        <div className="inline-flex rounded-[1rem] border border-slate-200 bg-slate-100/80 p-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
+                                            {['left', 'center', 'right'].map((alignment) => (
+                                                <button
+                                                    key={alignment}
+                                                    type="button"
+                                                    onClick={() => setTextAlign(alignment)}
+                                                    title={`Align ${alignment}`}
+                                                    aria-label={`Align ${alignment}`}
+                                                    className={`flex h-10 w-10 items-center justify-center rounded-[0.8rem] transition-all duration-200 ${
+                                                        textAlign === alignment
+                                                            ? 'bg-slate-900 text-white shadow-[0_12px_20px_-16px_rgba(15,23,42,0.55)]'
+                                                            : 'text-slate-600 hover:bg-white hover:text-slate-900'
+                                                    }`}
+                                                >
+                                                    <AlignIcon align={alignment} />
+                                                </button>
+                                            ))}
+                                        </div>
                                     </div>
-                                )}
+                                </div>
                             </div>
 
                             <div className="relative px-4 py-4 sm:px-5 sm:py-5 lg:px-6 lg:py-6">
                                 {activePreviewLine && (
                                     <div className="mb-4 lg:hidden">
-                                        <div className="rounded-[1.2rem] border border-slate-200/85 bg-white/96 p-4 shadow-[0_18px_32px_-26px_rgba(15,23,42,0.18)]">
-                                            <div className="flex flex-col gap-4">
-                                                <div className="flex flex-wrap items-center justify-between gap-3">
-                                                    <div>
-                                                        <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">
-                                                            Focus controls
-                                                        </div>
-                                                        <div className="mt-1 text-base font-semibold text-slate-950">
-                                                            Editing line {activePreviewLine.lineIndex + 1}
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600">
-                                                        {activePreviewLine.fontName}
-                                                    </div>
+                                        <div className="mb-4 flex items-center justify-center">
+                                            <div>
+                                                <div className="mb-2 text-center text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">
+                                                    Alignment
                                                 </div>
 
-                                                <div className="space-y-4">
-                                                    {activeStyleKeys.length > 0 && (
-                                                        <div>
-                                                            <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">
-                                                                Style
-                                                            </div>
-
-                                                            <div className="flex flex-wrap gap-2.5">
-                                                                {activeStyleKeys.map((styleKey) => {
-                                                                    const isActiveStyle =
-                                                                        activePreviewLine.styleKey ===
-                                                                        styleKey;
-
-                                                                    return (
-                                                                        <button
-                                                                            key={styleKey}
-                                                                            type="button"
-                                                                            onClick={() =>
-                                                                                handleLineStyleChange(
-                                                                                    activePreviewLine.lineIndex,
-                                                                                    styleKey
-                                                                                )
-                                                                            }
-                                                                            aria-pressed={isActiveStyle}
-                                                                            className={`rounded-full border px-3.5 py-2 text-sm font-medium transition-all duration-200 ${
-                                                                                isActiveStyle
-                                                                                    ? 'border-blue-500 bg-blue-600 text-white shadow-[0_14px_24px_-18px_rgba(37,99,235,0.46)]'
-                                                                                    : 'border-slate-200 bg-white text-slate-600 hover:-translate-y-px hover:border-slate-300 hover:bg-slate-50'
-                                                                            }`}
-                                                                        >
-                                                                            {formatStyleLabel(styleKey)}
-                                                                        </button>
-                                                                    );
-                                                                })}
-                                                            </div>
-                                                        </div>
-                                                    )}
-
-                                                    <div>
-                                                        <div className="mb-2 flex items-center justify-between gap-3">
-                                                            <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">
-                                                                Size
-                                                            </div>
-
-                                                            <button
-                                                                type="button"
-                                                                onClick={() =>
-                                                                    handleLineFontSizeOverrideChange(
-                                                                        activePreviewLine.lineIndex,
-                                                                        null
-                                                                    )
-                                                                }
-                                                                disabled={isUsingDefaultLineSize}
-                                                                className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-all duration-200 ${
-                                                                    isUsingDefaultLineSize
-                                                                        ? 'cursor-default bg-slate-100 text-slate-400'
-                                                                        : 'border border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50'
-                                                                }`}
-                                                            >
-                                                                Use default
-                                                            </button>
-                                                        </div>
-
-                                                        <div className="flex items-center gap-3 rounded-[1rem] border border-slate-200/80 bg-white px-3 py-3">
-                                                            <input
-                                                                type="range"
-                                                                min="12"
-                                                                max="160"
-                                                                step="1"
-                                                                value={activeLineFontSize}
-                                                                onChange={(e) =>
-                                                                    handleLineFontSizeOverrideChange(
-                                                                        activePreviewLine.lineIndex,
-                                                                        e.target.value
-                                                                    )
-                                                                }
-                                                                className="h-2.5 min-w-[8rem] flex-1 cursor-pointer appearance-none rounded-full bg-slate-200 accent-blue-600"
-                                                                aria-label={`Adjust size for line ${activePreviewLine.lineIndex + 1}`}
-                                                            />
-                                                            <input
-                                                                type="number"
-                                                                min="12"
-                                                                step="1"
-                                                                value={activeLineFontSize}
-                                                                onChange={(e) =>
-                                                                    handleLineFontSizeOverrideChange(
-                                                                        activePreviewLine.lineIndex,
-                                                                        e.target.value
-                                                                    )
-                                                                }
-                                                                className="w-20 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 focus:border-blue-400 focus:outline-none"
-                                                                aria-label={`Size for line ${activePreviewLine.lineIndex + 1}`}
-                                                            />
-                                                        </div>
-                                                    </div>
+                                                <div className="inline-flex rounded-[1rem] border border-slate-200 bg-slate-100/80 p-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
+                                                    {['left', 'center', 'right'].map((alignment) => (
+                                                        <button
+                                                            key={`mobile-${alignment}`}
+                                                            type="button"
+                                                            onClick={() => setTextAlign(alignment)}
+                                                            title={`Align ${alignment}`}
+                                                            aria-label={`Align ${alignment}`}
+                                                            className={`flex h-10 w-10 items-center justify-center rounded-[0.8rem] transition-all duration-200 ${
+                                                                textAlign === alignment
+                                                                    ? 'bg-slate-900 text-white shadow-[0_12px_20px_-16px_rgba(15,23,42,0.55)]'
+                                                                    : 'text-slate-600 hover:bg-white hover:text-slate-900'
+                                                            }`}
+                                                        >
+                                                            <AlignIcon align={alignment} />
+                                                        </button>
+                                                    ))}
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                )}
 
-                                {activePreviewLine && (
-                                    <div className="pointer-events-none absolute left-4 top-6 z-20 hidden lg:block lg:left-6">
-                                        <div className="pointer-events-auto w-[260px] rounded-[1.3rem] border border-slate-200/85 bg-white/96 p-4 shadow-[0_24px_50px_-28px_rgba(15,23,42,0.28)] backdrop-blur">
+                                        <div className="rounded-[1.2rem] border border-slate-200/85 bg-white/96 p-4 shadow-[0_18px_32px_-26px_rgba(15,23,42,0.18)]">
                                             <div className="flex flex-col gap-4">
-                                                <div className="flex flex-wrap items-center justify-between gap-3">
-                                                    <div>
-                                                        <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">
-                                                            Focus controls
-                                                        </div>
-                                                        <div className="mt-1 text-base font-semibold text-slate-950">
-                                                            Editing line {activePreviewLine.lineIndex + 1}
-                                                        </div>
+                                                <div>
+                                                    <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">
+                                                        Font
                                                     </div>
+                                                    <div className="flex flex-wrap gap-2.5">
+                                                        {safeSelectedFonts.map((font) => {
+                                                            const isActiveFont =
+                                                                activePreviewLine?.fontName === font.name;
 
-                                                    <div className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-600">
-                                                        {activePreviewLine.fontName}
+                                                            return (
+                                                                <button
+                                                                    key={`mobile-focus-font-${font.name}`}
+                                                                    type="button"
+                                                                    onClick={() =>
+                                                                        handleApplyFontToActiveLine(font.name)
+                                                                    }
+                                                                    aria-pressed={isActiveFont}
+                                                                    className={`rounded-full border px-3.5 py-2 text-sm font-medium transition-all duration-200 ${
+                                                                        isActiveFont
+                                                                            ? 'border-slate-900 bg-slate-900 text-white shadow-[0_14px_22px_-18px_rgba(15,23,42,0.32)]'
+                                                                            : 'border-slate-300 bg-white text-slate-700 hover:-translate-y-px hover:border-slate-400 hover:bg-slate-50'
+                                                                    }`}
+                                                                    style={{
+                                                                        fontFamily: getSafeFontFamilyPreview(font),
+                                                                    }}
+                                                                >
+                                                                    {font.name}
+                                                                </button>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                </div>
+
+                                                <div>
+                                                    <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">
+                                                        Focus controls
+                                                    </div>
+                                                    <div className="mt-1 text-base font-semibold text-slate-950">
+                                                        Editing line {activePreviewLine.lineIndex + 1}
                                                     </div>
                                                 </div>
 
@@ -400,8 +258,7 @@ const LivePreviewSection = ({
                                                         <div className="flex flex-wrap gap-2.5">
                                                             {activeStyleKeys.map((styleKey) => {
                                                                 const isActiveStyle =
-                                                                    activePreviewLine.styleKey ===
-                                                                    styleKey;
+                                                                    activePreviewLine.styleKey === styleKey;
 
                                                                 return (
                                                                     <button
@@ -453,7 +310,7 @@ const LivePreviewSection = ({
                                                         </button>
                                                     </div>
 
-                                                    <div className="space-y-3 rounded-[1rem] border border-slate-200/80 bg-slate-50/70 px-3 py-3">
+                                                    <div className="flex items-center gap-3 rounded-[1rem] border border-slate-200/80 bg-white px-3 py-3">
                                                         <input
                                                             type="range"
                                                             min="12"
@@ -466,7 +323,7 @@ const LivePreviewSection = ({
                                                                     e.target.value
                                                                 )
                                                             }
-                                                            className="h-2.5 w-full cursor-pointer appearance-none rounded-full bg-slate-200 accent-blue-600"
+                                                            className="h-2.5 min-w-[8rem] flex-1 cursor-pointer appearance-none rounded-full bg-slate-200 accent-blue-600"
                                                             aria-label={`Adjust size for line ${activePreviewLine.lineIndex + 1}`}
                                                         />
                                                         <input
@@ -480,7 +337,7 @@ const LivePreviewSection = ({
                                                                     e.target.value
                                                                 )
                                                             }
-                                                            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 focus:border-blue-400 focus:outline-none"
+                                                            className="w-20 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 focus:border-blue-400 focus:outline-none"
                                                             aria-label={`Size for line ${activePreviewLine.lineIndex + 1}`}
                                                         />
                                                     </div>
@@ -490,11 +347,182 @@ const LivePreviewSection = ({
                                     </div>
                                 )}
 
-                                <div className="rounded-[1.5rem] border border-white/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(248,250,252,0.88))] px-4 py-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.95)] sm:px-6 sm:py-8 lg:pl-[286px]">
+                                {activePreviewLine && (
+                                    <div className="pointer-events-none absolute top-6 z-[70] hidden xl:block xl:-left-[28.5rem] 2xl:-left-[29.5rem]">
+                                        <div className="pointer-events-auto w-[440px] rounded-[1.25rem] border border-slate-300 bg-[rgb(241,245,249)] p-4 shadow-[0_24px_54px_-28px_rgba(15,23,42,0.22)] ring-1 ring-white/70">
+                                            <div className="flex items-start gap-3">
+                                                <div className="min-w-0 flex-1 space-y-4">
+                                                    <div>
+                                                        <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">
+                                                            Font
+                                                        </div>
+                                                        <div className="grid grid-cols-3 gap-2">
+                                                            {safeSelectedFonts.map((font) => {
+                                                                const isActiveFont =
+                                                                    activePreviewLine?.fontName === font.name;
+
+                                                                return (
+                                                                    <button
+                                                                        key={`desktop-focus-font-${font.name}`}
+                                                                        type="button"
+                                                                        onClick={() =>
+                                                                            handleApplyFontToActiveLine(font.name)
+                                                                        }
+                                                                        aria-pressed={isActiveFont}
+                                                                        className={`rounded-full border px-2.5 py-2 text-sm font-medium transition-all duration-200 ${
+                                                                            isActiveFont
+                                                                                ? 'border-slate-900 bg-slate-900 text-white shadow-[0_14px_22px_-18px_rgba(15,23,42,0.32)]'
+                                                                                : 'border-slate-300 bg-white text-slate-700 hover:-translate-y-px hover:border-slate-400 hover:bg-slate-50'
+                                                                        }`}
+                                                                        style={{
+                                                                            fontFamily: getSafeFontFamilyPreview(font),
+                                                                        }}
+                                                                    >
+                                                                        {font.name}
+                                                                    </button>
+                                                                );
+                                                            })}
+                                                        </div>
+                                                    </div>
+
+                                                    <div>
+                                                        <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">
+                                                            Focus controls
+                                                        </div>
+                                                        <div className="mt-1 text-base font-semibold text-slate-900">
+                                                            Editing line {activePreviewLine.lineIndex + 1}
+                                                        </div>
+                                                    </div>
+
+                                                    {activeStyleKeys.length > 0 && (
+                                                        <div>
+                                                            <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">
+                                                                Style
+                                                            </div>
+
+                                                            <div className="flex flex-wrap gap-2.5">
+                                                                {activeStyleKeys.map((styleKey) => {
+                                                                    const isActiveStyle =
+                                                                        activePreviewLine.styleKey === styleKey;
+
+                                                                    return (
+                                                                        <button
+                                                                            key={styleKey}
+                                                                            type="button"
+                                                                            onClick={() =>
+                                                                                handleLineStyleChange(
+                                                                                    activePreviewLine.lineIndex,
+                                                                                    styleKey
+                                                                                )
+                                                                            }
+                                                                            aria-pressed={isActiveStyle}
+                                                                            className={`rounded-full border px-3.5 py-2 text-sm font-medium transition-all duration-200 ${
+                                                                                isActiveStyle
+                                                                                    ? 'border-blue-500 bg-blue-600 text-white shadow-[0_14px_24px_-18px_rgba(37,99,235,0.40)]'
+                                                                                    : 'border-slate-300 bg-white text-slate-700 hover:-translate-y-px hover:border-slate-400 hover:bg-slate-50'
+                                                                            }`}
+                                                                        >
+                                                                            {formatStyleLabel(styleKey)}
+                                                                        </button>
+                                                                    );
+                                                                })}
+                                                            </div>
+                                                        </div>
+                                                    )}
+
+                                                    <div>
+                                                        <div className="mb-2 flex items-center justify-between gap-3">
+                                                            <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">
+                                                                Size
+                                                            </div>
+
+                                                            <button
+                                                                type="button"
+                                                                onClick={() =>
+                                                                    handleLineFontSizeOverrideChange(
+                                                                        activePreviewLine.lineIndex,
+                                                                        null
+                                                                    )
+                                                                }
+                                                                disabled={isUsingDefaultLineSize}
+                                                                className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-all duration-200 ${
+                                                                    isUsingDefaultLineSize
+                                                                        ? 'cursor-default bg-slate-200 text-slate-400'
+                                                                        : 'border border-slate-300 bg-white text-slate-700 hover:border-slate-400 hover:bg-slate-50'
+                                                                }`}
+                                                            >
+                                                                Use default
+                                                            </button>
+                                                        </div>
+
+                                                        <div className="space-y-3 rounded-[1rem] border border-slate-200 bg-white px-3 py-3">
+                                                            <input
+                                                                type="range"
+                                                                min="12"
+                                                                max="160"
+                                                                step="1"
+                                                                value={activeLineFontSize}
+                                                                onChange={(e) =>
+                                                                    handleLineFontSizeOverrideChange(
+                                                                        activePreviewLine.lineIndex,
+                                                                        e.target.value
+                                                                    )
+                                                                }
+                                                                className="h-2.5 w-full cursor-pointer appearance-none rounded-full bg-slate-200 accent-blue-600"
+                                                                aria-label={`Adjust size for line ${activePreviewLine.lineIndex + 1}`}
+                                                            />
+                                                            <input
+                                                                type="number"
+                                                                min="12"
+                                                                step="1"
+                                                                value={activeLineFontSize}
+                                                                onChange={(e) =>
+                                                                    handleLineFontSizeOverrideChange(
+                                                                        activePreviewLine.lineIndex,
+                                                                        e.target.value
+                                                                    )
+                                                                }
+                                                                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-800 focus:border-blue-400 focus:outline-none"
+                                                                aria-label={`Size for line ${activePreviewLine.lineIndex + 1}`}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="flex min-h-[320px] w-[56px] flex-col items-center justify-between rounded-[1rem] border border-slate-200 bg-white px-2 py-3">
+                                                    <div className="text-center text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500 [writing-mode:vertical-rl] [text-orientation:mixed]">
+                                                        Spacing
+                                                    </div>
+
+                                                    <div className="flex flex-1 items-center justify-center">
+                                                        <input
+                                                            id="desktopLineSpacingSlider"
+                                                            type="range"
+                                                            min="0.05"
+                                                            max="3"
+                                                            step="0.05"
+                                                            value={lineSpacing}
+                                                            onChange={handleLineSpacingChange}
+                                                            className="h-2.5 w-[180px] cursor-pointer appearance-none rounded-full bg-slate-200 accent-blue-600 rotate-90"
+                                                            aria-label="Adjust line spacing"
+                                                        />
+                                                    </div>
+
+                                                    <span className="inline-flex min-w-[2.75rem] items-center justify-center rounded-full border border-slate-200 bg-slate-50 px-2 py-1 text-xs font-semibold text-slate-700">
+                                                        {Number(lineSpacing).toFixed(1)}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                <div className="rounded-[1.5rem] border border-white/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(248,250,252,0.88))] px-4 py-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.95)] sm:px-6 sm:py-8 ">
                                     <div className="min-h-[360px]">
                                         {safePreviewLines.map((line, index) => {
                                             const font = getFontOptionByName(line.fontName);
-                                            const fallbackStyleKey = getDefaultStyleKey(line.fontName);
+                                            const fallbackStyleKey =
+                                                getDefaultStyleKey(line.fontName);
                                             const activeFontFamily =
                                                 font?.styles?.[line.styleKey] ||
                                                 font?.styles?.[fallbackStyleKey] ||
@@ -533,15 +561,7 @@ const LivePreviewSection = ({
                                                             {index + 1}
                                                         </span>
 
-                                                        <div
-                                                            className={`w-full ${
-                                                                textAlign === 'center'
-                                                                    ? 'flex justify-center'
-                                                                    : textAlign === 'right'
-                                                                      ? 'flex justify-end'
-                                                                      : 'flex justify-start'
-                                                            }`}
-                                                        >
+                                                        <div className="mx-auto w-full max-w-[min(100%,52rem)]">
                                                             <p
                                                                 className={`max-w-full break-words whitespace-pre-wrap text-slate-900 transition-all duration-200 ${
                                                                     isSelected
@@ -562,7 +582,7 @@ const LivePreviewSection = ({
                                                                     ? line.text
                                                                     : line.text
                                                                       ? String(line.text)
-                                                                      : '\u00A0'}
+                                                                      : ' '}
                                                             </p>
                                                         </div>
                                                     </div>

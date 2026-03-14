@@ -65,7 +65,7 @@ const App = () => {
     const [lineSettings, setLineSettings] = useState([]);
     const [openPreviewLineIndex, setOpenPreviewLineIndex] = useState(null);
     const [fontSize, setFontSize] = useState(36);
-    const [lineSpacing, setLineSpacing] = useState(1.4);
+    const [lineSpacing, setLineSpacing] = useState(1);
 
     // Alignment state
     const [textAlign, setTextAlign] = useState('left'); // 'left' | 'center' | 'right'
