@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 const getSafeFontFamilyPreview = (font) => {
     if (!font) return 'inherit';
@@ -40,6 +40,7 @@ const LivePreviewSection = ({
     AlignIcon,
 }) => {
     const [isFontMixingMode, setIsFontMixingMode] = useState(false);
+    const [standardPreviewStyleMap, setStandardPreviewStyleMap] = useState({});
 
     const safePreviewLines = Array.isArray(previewLines) ? previewLines : [];
     const safeSelectedFonts = Array.isArray(selectedFonts) ? selectedFonts : [];
@@ -68,6 +69,36 @@ const LivePreviewSection = ({
 
         return [];
     }, [combinedText, safePreviewLines]);
+
+    useEffect(() => {
+        setStandardPreviewStyleMap((current) => {
+            const next = { ...current };
+            let hasChanges = false;
+
+            safeSelectedFonts.forEach((font) => {
+                if (!font?.name) return;
+
+                const styleKeys = getSortedStyleKeys(font.styles || {});
+                const fallbackStyleKey =
+                    getDefaultStyleKey(font.name) || styleKeys[0] || 'regular';
+
+                if (!next[font.name] || !styleKeys.includes(next[font.name])) {
+                    next[font.name] = fallbackStyleKey;
+                    hasChanges = true;
+                }
+            });
+
+            Object.keys(next).forEach((fontName) => {
+                const fontStillExists = safeSelectedFonts.some((font) => font?.name === fontName);
+                if (!fontStillExists) {
+                    delete next[fontName];
+                    hasChanges = true;
+                }
+            });
+
+            return hasChanges ? next : current;
+        });
+    }, [safeSelectedFonts, getDefaultStyleKey, getSortedStyleKeys]);
 
     const canUseFontMixing = hasStandardSelection && safePreviewLines.length > 0;
     const showFontMixingMode = isFontMixingMode && canUseFontMixing;
@@ -667,10 +698,17 @@ const LivePreviewSection = ({
                                     {safeSelectedFonts.length > 0 ? (
                                         <div className="space-y-8">
                                             {safeSelectedFonts.map((font, fontIndex) => {
-                                                const fontFamily = getSafeFontFamilyPreview(font);
+                                                const fallbackFontFamily = getSafeFontFamilyPreview(font);
                                                 const styleKeys = getSortedStyleKeys(font.styles || {});
                                                 const displayStyleKeys =
                                                     styleKeys.length > 0 ? styleKeys : ['regular'];
+                                                const selectedStyleKey =
+                                                    standardPreviewStyleMap[font.name] ||
+                                                    getDefaultStyleKey(font.name) ||
+                                                    displayStyleKeys[0];
+                                                const activeStandardFontFamily =
+                                                    font?.styles?.[selectedStyleKey] ||
+                                                    fallbackFontFamily;
                                                 const standardPreviewFontSize = Math.min(fontSize, 56);
 
                                                 return (
@@ -685,26 +723,36 @@ const LivePreviewSection = ({
                                                         <div className="flex flex-wrap items-center gap-2.5">
                                                             <div
                                                                 className="inline-flex rounded-full bg-slate-700 px-4 py-1.5 text-sm font-semibold text-white shadow-[0_10px_20px_-16px_rgba(15,23,42,0.4)]"
-                                                                style={{ fontFamily }}
+                                                                style={{
+                                                                    fontFamily: activeStandardFontFamily,
+                                                                }}
                                                             >
                                                                 {font.name}
                                                             </div>
 
                                                             {displayStyleKeys.map((styleKey) => {
-                                                                const isDefaultStyle =
-                                                                    styleKey === getDefaultStyleKey(font.name);
+                                                                const isActiveStyle =
+                                                                    styleKey === selectedStyleKey;
 
                                                                 return (
-                                                                    <span
+                                                                    <button
                                                                         key={`${font.name}-${styleKey}`}
-                                                                        className={`inline-flex rounded-[0.8rem] border px-3 py-1.5 text-xs font-medium ${
-                                                                            isDefaultStyle
-                                                                                ? 'border-slate-700 bg-slate-700 text-white'
-                                                                                : 'border-slate-300 bg-white text-slate-600'
+                                                                        type="button"
+                                                                        onClick={() =>
+                                                                            setStandardPreviewStyleMap((current) => ({
+                                                                                ...current,
+                                                                                [font.name]: styleKey,
+                                                                            }))
+                                                                        }
+                                                                        aria-pressed={isActiveStyle}
+                                                                        className={`inline-flex rounded-[0.8rem] border px-3 py-1.5 text-xs font-medium transition-all duration-200 ${
+                                                                            isActiveStyle
+                                                                                ? 'border-slate-700 bg-slate-700 text-white shadow-[0_10px_20px_-16px_rgba(15,23,42,0.28)]'
+                                                                                : 'border-slate-300 bg-white text-slate-600 hover:-translate-y-px hover:border-slate-400 hover:bg-slate-50'
                                                                         }`}
                                                                     >
                                                                         {formatStyleLabel(styleKey)}
-                                                                    </span>
+                                                                    </button>
                                                                 );
                                                             })}
                                                         </div>
@@ -714,7 +762,7 @@ const LivePreviewSection = ({
                                                                 <div
                                                                     className="max-w-[min(100%,34rem)] break-words whitespace-pre-wrap text-slate-900"
                                                                     style={{
-                                                                        fontFamily,
+                                                                        fontFamily: activeStandardFontFamily,
                                                                         fontSize: `${standardPreviewFontSize}px`,
                                                                         lineHeight: Math.max(lineSpacing, 0.9),
                                                                         textAlign: 'left',
