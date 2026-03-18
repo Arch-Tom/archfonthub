@@ -86,15 +86,41 @@ body {
     src: url('/fonts/AlumniSans-SemiBoldItalic.ttf') format('truetype');
 }
 
-/* --- Amatic SC --- */
+/* --- Montserrat --- */
 @font-face {
-    font-family: 'Amatic SC Bold';
-    src: url('/fonts/AmaticSC-Bold.ttf') format('truetype');
+    font-family: 'Montserrat Regular';
+    src: url('/fonts/montserrat-v31-latin-regular.woff2') format('woff2'),
+        url('/fonts/Montserrat-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
-    font-family: 'Amatic SC Regular';
-    src: url('/fonts/AmaticSC-Regular.ttf') format('truetype');
+    font-family: 'Montserrat Bold';
+    src: url('/fonts/montserrat-v31-latin-700.woff2') format('woff2'),
+        url('/fonts/Montserrat-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Montserrat Italic';
+    src: url('/fonts/montserrat-v31-latin-italic.woff2') format('woff2'),
+        url('/fonts/Montserrat-Italic.ttf') format('truetype');
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Montserrat Bold Italic';
+    src: url('/fonts/montserrat-v31-latin-700italic.woff2') format('woff2'),
+        url('/fonts/Montserrat-BoldItalic.ttf') format('truetype');
+    font-weight: 700;
+    font-style: italic;
+    font-display: swap;
 }
 
 /* --- Amazone --- */
@@ -335,28 +361,39 @@ body {
 
 /* --- Garamond --- */
 @font-face {
-    font-family: 'Garamond';
-    src: url('/fonts/GARA.TTF') format('truetype');
+    font-family: 'EB Garamond Regular';
+    src: url('/fonts/EBGaramond-Regular.woff2') format('woff2'),
+        url('/fonts/EBGaramond-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
-    font-family: 'Garamond 3 LT Std Bold';
-    src: url('/fonts/Garamond3LTStd-Bold.otf') format('opentype');
+    font-family: 'EB Garamond Bold';
+    src: url('/fonts/EBGaramond-Bold.woff2') format('woff2'),
+        url('/fonts/EBGaramond-Bold.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
-    font-family: 'Garamond 3 LT Std Bold Italic';
-    src: url('/fonts/Garamond3LTStd-BoldItalic.otf') format('opentype');
+    font-family: 'EB Garamond Italic';
+    src: url('/fonts/EBGaramond-Italic.woff2') format('woff2'),
+        url('/fonts/EBGaramond-Italic.woff') format('woff');
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
 }
 
 @font-face {
-    font-family: 'Garamond 3 LT Std Italic';
-    src: url('/fonts/Garamond3LTStd-Italic.otf') format('opentype');
-}
-
-@font-face {
-    font-family: 'Garamond 3 LT Std';
-    src: url('/fonts/Garamond3LTStd.otf') format('opentype');
+    font-family: 'EB Garamond Bold Italic';
+    src: url('/fonts/EBGaramond-BoldItalic.woff2') format('woff2'),
+        url('/fonts/EBGaramond-BoldItalic.woff') format('woff');
+    font-weight: 700;
+    font-style: italic;
+    font-display: swap;
 }
 
 /* --- Graphik --- */
@@ -552,8 +589,10 @@ body {
 
 /* --- Zapf Humanist --- */
 @font-face {
-    font-family: 'Zapf Humanist 601 Demi BT';
-    src: url('/fonts/ZapfHumanist601BT-Demi.woff2') format('woff2'), url('/fonts/ZapfHumanist601BT-Demi.woff') format('woff'), url('/fonts/ZHUM601D.TTF') format('truetype');
+    font-family: 'Zapf Humanist 601 W03 Demi';
+    src: url('/fonts/Zapf Humanist 601 W03 Demi.woff2') format('woff2'),
+        url('/fonts/Zapf Humanist 601 W03 Demi.woff') format('woff'),
+        url('/fonts/Zapf Humanist 601 W03 Demi.ttf') format('truetype');
     font-weight: 600;
     font-style: normal;
     font-display: swap;

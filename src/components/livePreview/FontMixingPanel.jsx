@@ -1,6 +1,5 @@
 import React from 'react';
 import ActiveLineControls from './ActiveLineControls';
-import AlignmentControl from './AlignmentControl';
 import PreviewLineList from './PreviewLineList';
 
 const FontMixingPanel = ({
@@ -25,8 +24,8 @@ const FontMixingPanel = ({
     textAlign,
 }) => (
     <div className="space-y-4">
-        <div className="relative overflow-visible rounded-[1.75rem] border border-slate-200/80 bg-[linear-gradient(180deg,rgba(248,250,252,0.98),rgba(241,245,249,0.96))] shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_26px_50px_-36px_rgba(15,23,42,0.18)]">
-            <div className="relative border-b border-slate-200/80 px-5 py-4 sm:px-6">
+        <div className="rounded-[1.75rem] border border-slate-200/80 bg-[linear-gradient(180deg,rgba(248,250,252,0.98),rgba(241,245,249,0.96))] shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_26px_50px_-36px_rgba(15,23,42,0.18)]">
+            <div className="border-b border-slate-200/80 px-5 py-4 sm:px-6">
                 <div className="flex items-start justify-between gap-4">
                     <div>
                         <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">
@@ -44,58 +43,25 @@ const FontMixingPanel = ({
                         </div>
                     )}
                 </div>
-
-                <div className="pointer-events-auto absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 xl:block">
-                    <AlignmentControl
-                        textAlign={textAlign}
-                        setTextAlign={setTextAlign}
-                        AlignIcon={AlignIcon}
-                    />
-                </div>
             </div>
 
-            <div className="relative px-4 py-4 sm:px-5 sm:py-5 lg:px-6 lg:py-6">
+            <div className="px-4 py-4 sm:px-5 sm:py-5 lg:px-6 lg:py-6">
                 {activePreviewLine && (
-                    <div className="mb-4 lg:hidden">
-                        <div className="mb-4 flex items-center justify-center">
-                            <AlignmentControl
-                                textAlign={textAlign}
-                                setTextAlign={setTextAlign}
-                                AlignIcon={AlignIcon}
-                                keyPrefix="mobile-"
-                            />
-                        </div>
-
+                    <div className="mb-4">
                         <ActiveLineControls
                             activeLineFontSize={activeLineFontSize}
                             activePreviewLine={activePreviewLine}
                             activeStyleKeys={activeStyleKeys}
+                            AlignIcon={AlignIcon}
                             handleApplyFontToActiveLine={handleApplyFontToActiveLine}
                             handleLineFontSizeOverrideChange={handleLineFontSizeOverrideChange}
                             handleLineSpacingChange={handleLineSpacingChange}
                             handleLineStyleChange={handleLineStyleChange}
                             isUsingDefaultLineSize={isUsingDefaultLineSize}
-                            layout="mobile"
                             lineSpacing={lineSpacing}
                             safeSelectedFonts={safeSelectedFonts}
-                        />
-                    </div>
-                )}
-
-                {activePreviewLine && (
-                    <div className="pointer-events-none absolute top-6 z-[70] hidden xl:block xl:-left-[28.5rem] 2xl:-left-[29.5rem]">
-                        <ActiveLineControls
-                            activeLineFontSize={activeLineFontSize}
-                            activePreviewLine={activePreviewLine}
-                            activeStyleKeys={activeStyleKeys}
-                            handleApplyFontToActiveLine={handleApplyFontToActiveLine}
-                            handleLineFontSizeOverrideChange={handleLineFontSizeOverrideChange}
-                            handleLineSpacingChange={handleLineSpacingChange}
-                            handleLineStyleChange={handleLineStyleChange}
-                            isUsingDefaultLineSize={isUsingDefaultLineSize}
-                            layout="desktop"
-                            lineSpacing={lineSpacing}
-                            safeSelectedFonts={safeSelectedFonts}
+                            setTextAlign={setTextAlign}
+                            textAlign={textAlign}
                         />
                     </div>
                 )}

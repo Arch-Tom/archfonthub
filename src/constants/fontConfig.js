@@ -1,5 +1,5 @@
 const scriptFontsToAdjust = [
-    'Alumni Sans', 'Amatic SC', 'Amazone', 'BlackChancery', 'Clicker Script',
+    'Alumni Sans', 'Amazone', 'BlackChancery', 'Clicker Script',
     'Collegiate', 'Concerto Pro', 'Courgette', 'Cowboy Rodeo',
     'Cutive Mono', 'Freebooter Script', 'French Script', 'Great Vibes',
     'Honey Script', 'I Love Glitter', 'Machine BT', 'Monotype Corsiva', 'Murray Hill',
@@ -22,8 +22,9 @@ const fontLibrary = {
         { name: 'Calibri', styles: { regular: 'Calibri', bold: 'Calibri Bold', italic: 'Calibri Italic' } },
         { name: 'Century Gothic', styles: { regular: 'Century Gothic Paneuropean', bold: 'Century Gothic Paneuropean Bold', boldItalic: 'Century Gothic Paneuropean Bold Italic' } },
         { name: 'Graphik', styles: { regular: 'Graphik', medium: 'Graphik Medium', semibold: 'Graphik Semibold', thin: 'Graphik Thin', regularItalic: 'Graphik Regular Italic', mediumItalic: 'Graphik Medium Italic', thinItalic: 'Graphik Thin Italic' } },
+        { name: 'Montserrat', styles: { regular: 'Montserrat Regular', bold: 'Montserrat Bold', italic: 'Montserrat Italic', boldItalic: 'Montserrat Bold Italic' } },
         { name: 'Rajdhani', styles: { regular: 'Rajdhani Regular', light: 'Rajdhani Light', medium: 'Rajdhani Medium', semibold: 'Rajdhani SemiBold', bold: 'Rajdhani Bold' } },
-        { name: 'Zapf Humanist', styles: { demi: 'ZapfHumnst Dm BT' } },
+        { name: 'Zapf Humanist', styles: { demi: 'Zapf Humanist 601 W03 Demi' } },
     ],
     'Serif': [
         { name: 'Benguiat', styles: { regular: 'Benguiat', bold: 'Benguiat Bold BT', bookItalic: 'Benguiat Book Italic BT' } },
@@ -32,12 +33,11 @@ const fontLibrary = {
         { name: 'Copperplate', styles: { regular: 'CopprplGoth BT Roman' } },
         { name: 'Cutive Mono', styles: { regular: 'Cutive Mono Regular' } },
         { name: 'DejaVu Serif', styles: { regular: 'DejaVu Serif', bold: 'DejaVu Serif Bold', italic: 'DejaVu Serif Italic', boldItalic: 'DejaVu Serif Bold Italic', condensed: 'DejaVu Serif Condensed', condensedBold: 'DejaVu Serif Condensed Bold', condensedItalic: 'DejaVu Serif Condensed Italic', condensedBoldItalic: 'DejaVu Serif Condensed Bold Italic' } },
-        { name: 'Garamond', styles: { v1: 'Garamond', v2_bold: 'Garamond 3 LT Std Bold', v2_boldItalic: 'Garamond 3 LT Std Bold Italic', v2_italic: 'Garamond 3 LT Std Italic', v2_regular: 'Garamond 3 LT Std' } },
+        { name: 'Garamond', styles: { regular: 'EB Garamond Regular', bold: 'EB Garamond Bold', italic: 'EB Garamond Italic', boldItalic: 'EB Garamond Bold Italic' } },
         { name: 'Noto Rashi Hebrew', styles: { regular: 'Noto Rashi Hebrew Regular', thin: 'Noto Rashi Hebrew Thin', extralight: 'Noto Rashi Hebrew ExtraLight', light: 'Noto Rashi Hebrew Light', medium: 'Noto Rashi Hebrew Medium', semibold: 'Noto Rashi Hebrew SemiBold', bold: 'Noto Rashi Hebrew Bold', extrabold: 'Noto Rashi Hebrew ExtraBold', black: 'Noto Rashi Hebrew Black' } },
         { name: 'Times New Roman', styles: { regular: 'Times New Roman', bold: 'Times New Roman Bold', italic: 'Times New Roman Italic', boldItalic: 'Times New Roman Bold Italic' } },
     ],
     'Script': [
-        { name: 'Amatic SC', styles: { regular: 'Amatic SC Regular', bold: 'Amatic SC Bold' } },
         { name: 'Amazone', styles: { regular: 'Amazone BT' } },
         { name: 'BlackChancery', styles: { regular: 'BlackChancery' } },
         { name: 'Clicker Script', styles: { regular: 'Clicker Script' } },
@@ -94,8 +94,7 @@ const exportFontFamilyMap = {
     'Times New Roman Bold': 'TimesNewRomanPS-BoldMT',
     'Times New Roman Italic': 'TimesNewRomanPS-ItalicMT',
     'Times New Roman Bold Italic': 'TimesNewRomanPS-BoldItalicMT',
-    'ZapfHumnst Dm BT': 'ZapfHumanist601BT-Demi',
-    'Zapf Humanist 601 Demi BT': 'ZapfHumanist601BT-Demi',
+    'Zapf Humanist 601 W03 Demi': 'Zapf Humanist 601 W03 Demi',
 };
 
 export {

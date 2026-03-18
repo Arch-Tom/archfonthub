@@ -163,14 +163,17 @@ const LivePreviewSection = ({
                         />
                     ) : (
                         <StandardPreviewPanel
+                            AlignIcon={AlignIcon}
                             fontSize={fontSize}
                             getDefaultStyleKey={getDefaultStyleKey}
                             getSortedStyleKeys={getSortedStyleKeys}
                             lineSpacing={lineSpacing}
                             safeSelectedFonts={safeSelectedFonts}
+                            setTextAlign={setTextAlign}
                             setStandardPreviewStyleMap={setStandardPreviewStyleMap}
                             standardPreviewLines={standardPreviewLines}
                             standardPreviewStyleMap={standardPreviewStyleMap}
+                            textAlign={textAlign}
                         />
                     )
                 ) : (

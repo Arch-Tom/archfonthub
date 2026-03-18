@@ -44,10 +44,10 @@
 }
 
 @font-face {
-    font-family: 'ZapfHumnst Dm BT';
-    src: url('ZapfHumanist601BT-Demi.woff2') format('woff2'),
-        url('ZapfHumanist601BT-Demi.woff') format('woff');
-    font-weight: normal;
+    font-family: 'Zapf Humanist 601 W03 Demi';
+    src: url('Zapf Humanist 601 W03 Demi.woff2') format('woff2'),
+        url('Zapf Humanist 601 W03 Demi.woff') format('woff');
+    font-weight: 600;
     font-style: normal;
     font-display: swap;
 }
@@ -71,11 +71,38 @@
 }
 
 @font-face {
-    font-family: 'Garamond';
-    src: url('Garamond.woff2') format('woff2'),
-        url('Garamond.woff') format('woff');
-    font-weight: normal;
+    font-family: 'EB Garamond Regular';
+    src: url('EBGaramond-Regular.woff2') format('woff2'),
+        url('EBGaramond-Regular.woff') format('woff');
+    font-weight: 400;
     font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'EB Garamond Bold';
+    src: url('EBGaramond-Bold.woff2') format('woff2'),
+        url('EBGaramond-Bold.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'EB Garamond Italic';
+    src: url('EBGaramond-Italic.woff2') format('woff2'),
+        url('EBGaramond-Italic.woff') format('woff');
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'EB Garamond Bold Italic';
+    src: url('EBGaramond-BoldItalic.woff2') format('woff2'),
+        url('EBGaramond-BoldItalic.woff') format('woff');
+    font-weight: 700;
+    font-style: italic;
     font-display: swap;
 }
 

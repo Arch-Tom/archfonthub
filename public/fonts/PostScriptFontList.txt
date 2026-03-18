@@ -125,25 +125,21 @@ Font Name:       Freebooter Script
 PostScript Name: FreebooterScript
 File Name:       freebooterscript.ttf
 -------------------------
-Font Name:       Garamond
-PostScript Name: Garamond
-File Name:       GARA.TTF
+Font Name:       EB Garamond
+PostScript Name: EBGaramond-Regular
+File Name:       EBGaramond-Regular.ttf
 -------------------------
-Font Name:       Garamond 3 LT Std
-PostScript Name: Garamond3LTStd-Bold
-File Name:       Garamond3LTStd-Bold.otf
+Font Name:       EB Garamond
+PostScript Name: EBGaramond-Bold
+File Name:       EBGaramond-Bold.ttf
 -------------------------
-Font Name:       Garamond 3 LT Std
-PostScript Name: Garamond3LTStd-BoldItalic
-File Name:       Garamond3LTStd-BoldItalic.otf
+Font Name:       EB Garamond
+PostScript Name: EBGaramond-BoldItalic
+File Name:       EBGaramond-BoldItalic.ttf
 -------------------------
-Font Name:       Garamond 3 LT Std
-PostScript Name: Garamond3LTStd-Italic
-File Name:       Garamond3LTStd-Italic.otf
--------------------------
-Font Name:       Garamond 3 LT Std
-PostScript Name: Garamond3LTStd
-File Name:       Garamond3LTStd.otf
+Font Name:       EB Garamond
+PostScript Name: EBGaramond-Italic
+File Name:       EBGaramond-Italic.ttf
 -------------------------
 Font Name:       Graphik Medium
 PostScript Name: Graphik-Medium
@@ -233,7 +229,7 @@ Font Name:       TinplateTitlingBlack
 PostScript Name: TinplateTitlingBlack
 File Name:       TinplateTitlingBlack.ttf
 -------------------------
-Font Name:       ZapfHumnst Dm BT
-PostScript Name: ZapfHumanist601BT-Demi
-File Name:       ZHUM601D.TTF
+Font Name:       Zapf Humanist 601 W03 Demi
+PostScript Name: Zapf Humanist 601 W03 Demi
+File Name:       Zapf Humanist 601 W03 Demi.ttf
 -------------------------

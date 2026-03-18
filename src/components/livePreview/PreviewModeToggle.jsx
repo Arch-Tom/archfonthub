@@ -22,11 +22,6 @@ const PreviewModeToggle = ({ showFontMixingMode, onToggle }) => (
             />
             {showFontMixingMode ? 'Font Mixing On' : 'Enable Font Mixing'}
         </button>
-        <p className="max-w-xs text-sm leading-6 text-slate-500 lg:text-right">
-            {showFontMixingMode
-                ? 'You are editing one custom composition.'
-                : 'Standard preview stays simple and shows all selected fonts.'}
-        </p>
     </div>
 );
 

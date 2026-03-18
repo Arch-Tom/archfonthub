@@ -1,15 +1,19 @@
 import React from 'react';
+import AlignmentControl from './AlignmentControl';
 import { formatStyleLabel, getSafeFontFamilyPreview } from './utils';
 
 const StandardPreviewPanel = ({
+    AlignIcon,
     fontSize,
     getDefaultStyleKey,
     getSortedStyleKeys,
     lineSpacing,
     safeSelectedFonts,
+    setTextAlign,
     setStandardPreviewStyleMap,
     standardPreviewLines,
     standardPreviewStyleMap,
+    textAlign,
 }) => (
     <div className="space-y-4">
         <div className="rounded-[1.75rem] border border-slate-200/80 bg-[linear-gradient(180deg,rgba(248,250,252,0.98),rgba(241,245,249,0.96))] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_26px_50px_-36px_rgba(15,23,42,0.18)] sm:p-6">
@@ -22,10 +26,15 @@ const StandardPreviewPanel = ({
                         Compare your selected fonts
                     </div>
                 </div>
-                <p className="max-w-xl text-sm leading-6 text-slate-500">
-                    This keeps the live-site comparison style front and center, while Font Mixing
-                    stays available as the custom composition view.
-                </p>
+            </div>
+
+            <div className="mt-5 flex justify-center sm:justify-end">
+                <AlignmentControl
+                    textAlign={textAlign}
+                    setTextAlign={setTextAlign}
+                    AlignIcon={AlignIcon}
+                    keyPrefix="standard-"
+                />
             </div>
 
             <div className="mt-5 overflow-hidden rounded-[1.5rem] border border-slate-200/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(248,250,252,0.88))] px-5 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.95)] sm:px-6 sm:py-6">
@@ -94,7 +103,7 @@ const StandardPreviewPanel = ({
                                                     fontFamily: activeStandardFontFamily,
                                                     fontSize: `${standardPreviewFontSize}px`,
                                                     lineHeight: Math.max(lineSpacing, 0.9),
-                                                    textAlign: 'left',
+                                                    textAlign,
                                                     overflowWrap: 'anywhere',
                                                 }}
                                                 dir="auto"
