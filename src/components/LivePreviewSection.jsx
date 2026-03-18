@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 import FontMixingPanel from './livePreview/FontMixingPanel';
 import HebrewSupportWarning from './livePreview/HebrewSupportWarning';
 import MonogramPreview from './livePreview/MonogramPreview';
-import PreviewModeToggle from './livePreview/PreviewModeToggle';
 import StandardPreviewPanel from './livePreview/StandardPreviewPanel';
 import { normalizePreviewText } from './livePreview/utils';
 
@@ -22,6 +21,7 @@ const LivePreviewSection = ({
     lineSpacing = 1,
     textAlign = 'center',
     setTextAlign,
+    handleFontSizeChange,
     handleLineSpacingChange,
     handleApplyFontToActiveLine,
     handleLineStyleChange,
@@ -92,6 +92,11 @@ const LivePreviewSection = ({
     const canUseFontMixing = hasStandardSelection && safePreviewLines.length > 0;
     const showFontMixingMode = isFontMixingMode && canUseFontMixing;
 
+    const modeLabel = showFontMixingMode ? 'Font Mixing Mode' : 'Standard Mode';
+    const modeDescription = showFontMixingMode
+        ? 'Edit each line independently for a polished multi-font composition.'
+        : 'Compare selected fonts side by side before building a mixed layout.';
+
     return (
         <section className="relative overflow-visible rounded-[2rem] border border-slate-200/80 bg-[linear-gradient(180deg,rgba(252,253,255,0.98),rgba(245,248,252,0.97))] p-6 shadow-[0_30px_90px_-48px_rgba(15,23,42,0.22)] sm:p-7 xl:p-8">
             <div
@@ -103,34 +108,76 @@ const LivePreviewSection = ({
                 <div className="absolute -right-16 bottom-0 h-64 w-64 rounded-full bg-[radial-gradient(circle,rgba(148,163,184,0.10),transparent_72%)] blur-3xl" />
             </div>
 
-            <div className="relative space-y-5">
-                <header className="space-y-4">
-                    <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                        <div className="max-w-[50rem]">
+            <div className="relative space-y-6">
+                <header className="rounded-[1.7rem] border border-slate-200/80 bg-white/70 px-5 py-5 shadow-[0_18px_34px_-28px_rgba(15,23,42,0.2)] backdrop-blur-sm sm:px-6 sm:py-6">
+                    <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
+                        <div className="max-w-[46rem]">
                             <div className="inline-flex items-center rounded-full border border-slate-200/80 bg-white/95 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-500 shadow-[0_10px_22px_-18px_rgba(15,23,42,0.28)]">
                                 Preview Studio
                             </div>
 
-                            <h2
-                                className="mt-4 text-[2rem] font-bold tracking-tight text-slate-950 sm:text-[2.2rem]"
-                                style={{ fontFamily: 'Alumni Sans Regular' }}
-                            >
-                                Live Preview
-                            </h2>
+                            <div className="mt-4 flex flex-wrap items-center gap-3">
+                                <h2
+                                    className="text-[2rem] font-bold tracking-tight text-slate-950 sm:text-[2.2rem]"
+                                    style={{ fontFamily: 'Alumni Sans Regular' }}
+                                >
+                                    Live Preview
+                                </h2>
 
-                            <p className="mt-2 max-w-[44rem] text-[15px] leading-7 text-slate-600">
-                                {showFontMixingMode
-                                    ? 'Mix fonts line by line with focused controls for composition, spacing, alignment, and size.'
-                                    : 'Compare your selected fonts using the standard preview first. Turn on Font Mixing only when you want to build a custom multi-font composition.'}
+                                <span className="inline-flex items-center rounded-full border border-blue-100 bg-blue-50/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-blue-700">
+                                    {modeLabel}
+                                </span>
+                            </div>
+
+                            <p className="mt-2 max-w-[42rem] text-[15px] leading-7 text-slate-600">
+                                {modeDescription}
                             </p>
                         </div>
 
-                        {hasStandardSelection && (
-                            <PreviewModeToggle
-                                showFontMixingMode={showFontMixingMode}
-                                onToggle={() => setIsFontMixingMode((current) => !current)}
-                            />
-                        )}
+                        <div className="xl:min-w-[18rem]">
+                            <div className="rounded-[1.35rem] border border-slate-200/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(247,250,252,0.96))] p-3 shadow-[0_18px_28px_-24px_rgba(15,23,42,0.22)]">
+                                <div className="mb-2 px-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-500">
+                                    Preview Mode
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-2 rounded-[1.1rem] bg-slate-100/80 p-1.5">
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsFontMixingMode(false)}
+                                        className={`rounded-[0.95rem] px-4 py-2.5 text-sm font-semibold transition-all ${
+                                            !showFontMixingMode
+                                                ? 'bg-white text-slate-900 shadow-[0_12px_22px_-18px_rgba(15,23,42,0.35)] ring-1 ring-slate-200'
+                                                : 'text-slate-600 hover:bg-white/70 hover:text-slate-900'
+                                        }`}
+                                        aria-pressed={!showFontMixingMode}
+                                    >
+                                        Standard
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        onClick={() => canUseFontMixing && setIsFontMixingMode(true)}
+                                        disabled={!canUseFontMixing}
+                                        className={`rounded-[0.95rem] px-4 py-2.5 text-sm font-semibold transition-all ${
+                                            showFontMixingMode
+                                                ? 'bg-slate-900 text-white shadow-[0_14px_26px_-18px_rgba(15,23,42,0.45)]'
+                                                : canUseFontMixing
+                                                    ? 'text-slate-600 hover:bg-white/70 hover:text-slate-900'
+                                                    : 'cursor-not-allowed text-slate-400'
+                                        }`}
+                                        aria-pressed={showFontMixingMode}
+                                        aria-disabled={!canUseFontMixing}
+                                    >
+                                        Font Mixing
+                                    </button>
+                                </div>
+
+                                <p className="mt-3 px-1 text-xs leading-5 text-slate-500">
+                                    Start in Standard, then switch to Font Mixing when you want
+                                    line-by-line control.
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </header>
 
@@ -168,6 +215,8 @@ const LivePreviewSection = ({
                             getDefaultStyleKey={getDefaultStyleKey}
                             getSortedStyleKeys={getSortedStyleKeys}
                             lineSpacing={lineSpacing}
+                            onFontSizeChange={handleFontSizeChange}
+                            onLineSpacingChange={handleLineSpacingChange}
                             safeSelectedFonts={safeSelectedFonts}
                             setTextAlign={setTextAlign}
                             setStandardPreviewStyleMap={setStandardPreviewStyleMap}

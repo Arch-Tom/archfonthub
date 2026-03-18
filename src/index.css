@@ -123,6 +123,25 @@ body {
     font-display: swap;
 }
 
+/* --- Optima --- */
+@font-face {
+    font-family: 'Optima';
+    src: url('/fonts/Optima.woff2') format('woff2'),
+        url('/fonts/Optima.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Optima Bold';
+    src: url('/fonts/Optima-Bold.woff2') format('woff2'),
+        url('/fonts/Optima-Bold.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
 /* --- Amazone --- */
 @font-face {
     font-family: 'Amazone BT';
@@ -585,17 +604,6 @@ body {
 @font-face {
     font-family: 'ITC Zapf Chancery Roman';
     src: url('/fonts/Zapf Chancery Font.otf') format('opentype');
-}
-
-/* --- Zapf Humanist --- */
-@font-face {
-    font-family: 'Zapf Humanist 601 W03 Demi';
-    src: url('/fonts/Zapf Humanist 601 W03 Demi.woff2') format('woff2'),
-        url('/fonts/Zapf Humanist 601 W03 Demi.woff') format('woff'),
-        url('/fonts/Zapf Humanist 601 W03 Demi.ttf') format('truetype');
-    font-weight: 600;
-    font-style: normal;
-    font-display: swap;
 }
 
 @font-face {

@@ -44,10 +44,19 @@
 }
 
 @font-face {
-    font-family: 'Zapf Humanist 601 W03 Demi';
-    src: url('Zapf Humanist 601 W03 Demi.woff2') format('woff2'),
-        url('Zapf Humanist 601 W03 Demi.woff') format('woff');
-    font-weight: 600;
+    font-family: 'Optima';
+    src: url('Optima.woff2') format('woff2'),
+        url('Optima.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Optima Bold';
+    src: url('Optima-Bold.woff2') format('woff2'),
+        url('Optima-Bold.woff') format('woff');
+    font-weight: 700;
     font-style: normal;
     font-display: swap;
 }

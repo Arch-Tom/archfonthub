@@ -23,8 +23,8 @@ const fontLibrary = {
         { name: 'Century Gothic', styles: { regular: 'Century Gothic Paneuropean', bold: 'Century Gothic Paneuropean Bold', boldItalic: 'Century Gothic Paneuropean Bold Italic' } },
         { name: 'Graphik', styles: { regular: 'Graphik', medium: 'Graphik Medium', semibold: 'Graphik Semibold', thin: 'Graphik Thin', regularItalic: 'Graphik Regular Italic', mediumItalic: 'Graphik Medium Italic', thinItalic: 'Graphik Thin Italic' } },
         { name: 'Montserrat', styles: { regular: 'Montserrat Regular', bold: 'Montserrat Bold', italic: 'Montserrat Italic', boldItalic: 'Montserrat Bold Italic' } },
+        { name: 'Optima', styles: { regular: 'Optima', bold: 'Optima Bold' } },
         { name: 'Rajdhani', styles: { regular: 'Rajdhani Regular', light: 'Rajdhani Light', medium: 'Rajdhani Medium', semibold: 'Rajdhani SemiBold', bold: 'Rajdhani Bold' } },
-        { name: 'Zapf Humanist', styles: { demi: 'Zapf Humanist 601 W03 Demi' } },
     ],
     'Serif': [
         { name: 'Benguiat', styles: { regular: 'Benguiat', bold: 'Benguiat Bold BT', bookItalic: 'Benguiat Book Italic BT' } },
@@ -94,7 +94,6 @@ const exportFontFamilyMap = {
     'Times New Roman Bold': 'TimesNewRomanPS-BoldMT',
     'Times New Roman Italic': 'TimesNewRomanPS-ItalicMT',
     'Times New Roman Bold Italic': 'TimesNewRomanPS-BoldItalicMT',
-    'Zapf Humanist 601 W03 Demi': 'Zapf Humanist 601 W03 Demi',
 };
 
 export {

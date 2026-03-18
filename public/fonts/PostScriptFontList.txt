@@ -229,7 +229,11 @@ Font Name:       TinplateTitlingBlack
 PostScript Name: TinplateTitlingBlack
 File Name:       TinplateTitlingBlack.ttf
 -------------------------
-Font Name:       Zapf Humanist 601 W03 Demi
-PostScript Name: Zapf Humanist 601 W03 Demi
-File Name:       Zapf Humanist 601 W03 Demi.ttf
+Font Name:       Optima
+PostScript Name: Optima
+File Name:       OPTIMA.TTF
+-------------------------
+Font Name:       Optima
+PostScript Name: Optima-Bold
+File Name:       OPTIMA_0.TTF
 -------------------------
