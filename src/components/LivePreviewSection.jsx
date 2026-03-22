@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import FontMixingPanel from './livePreview/FontMixingPanel';
 import HebrewSupportWarning from './livePreview/HebrewSupportWarning';
 import MonogramPreview from './livePreview/MonogramPreview';
+import PreviewLayoutControls from './livePreview/PreviewLayoutControls';
 import StandardPreviewPanel from './livePreview/StandardPreviewPanel';
 import { normalizePreviewText } from './livePreview/utils';
 
@@ -186,45 +187,53 @@ const LivePreviewSection = ({
                 {showHebrewWarning && <HebrewSupportWarning />}
 
                 {hasStandardSelection ? (
-                    showFontMixingMode ? (
-                        <FontMixingPanel
+                    <>
+                        <PreviewLayoutControls
                             activeLineFontSize={activeLineFontSize}
                             activePreviewLine={activePreviewLine}
-                            activeStyleKeys={activeStyleKeys}
                             AlignIcon={AlignIcon}
                             fontSize={fontSize}
-                            getDefaultStyleKey={getDefaultStyleKey}
-                            getFontOptionByName={getFontOptionByName}
-                            handleApplyFontToActiveLine={handleApplyFontToActiveLine}
+                            handleFontSizeChange={handleFontSizeChange}
                             handleLineFontSizeOverrideChange={handleLineFontSizeOverrideChange}
                             handleLineSpacingChange={handleLineSpacingChange}
-                            handleLineStyleChange={handleLineStyleChange}
+                            isFontMixingMode={showFontMixingMode}
                             isUsingDefaultLineSize={isUsingDefaultLineSize}
                             lineSpacing={lineSpacing}
-                            openPreviewLineIndex={openPreviewLineIndex}
-                            safePreviewLines={safePreviewLines}
-                            safeSelectedFonts={safeSelectedFonts}
-                            setOpenPreviewLineIndex={setOpenPreviewLineIndex}
                             setTextAlign={setTextAlign}
                             textAlign={textAlign}
                         />
-                    ) : (
-                        <StandardPreviewPanel
-                            AlignIcon={AlignIcon}
-                            fontSize={fontSize}
-                            getDefaultStyleKey={getDefaultStyleKey}
-                            getSortedStyleKeys={getSortedStyleKeys}
-                            lineSpacing={lineSpacing}
-                            onFontSizeChange={handleFontSizeChange}
-                            onLineSpacingChange={handleLineSpacingChange}
-                            safeSelectedFonts={safeSelectedFonts}
-                            setTextAlign={setTextAlign}
-                            setStandardPreviewStyleMap={setStandardPreviewStyleMap}
-                            standardPreviewLines={standardPreviewLines}
-                            standardPreviewStyleMap={standardPreviewStyleMap}
-                            textAlign={textAlign}
-                        />
-                    )
+
+                        {showFontMixingMode ? (
+                            <FontMixingPanel
+                                activeLineFontSize={activeLineFontSize}
+                                activePreviewLine={activePreviewLine}
+                                activeStyleKeys={activeStyleKeys}
+                                fontSize={fontSize}
+                                getDefaultStyleKey={getDefaultStyleKey}
+                                getFontOptionByName={getFontOptionByName}
+                                handleApplyFontToActiveLine={handleApplyFontToActiveLine}
+                                handleLineStyleChange={handleLineStyleChange}
+                                lineSpacing={lineSpacing}
+                                openPreviewLineIndex={openPreviewLineIndex}
+                                safePreviewLines={safePreviewLines}
+                                safeSelectedFonts={safeSelectedFonts}
+                                setOpenPreviewLineIndex={setOpenPreviewLineIndex}
+                                textAlign={textAlign}
+                            />
+                        ) : (
+                            <StandardPreviewPanel
+                                fontSize={fontSize}
+                                getDefaultStyleKey={getDefaultStyleKey}
+                                getSortedStyleKeys={getSortedStyleKeys}
+                                lineSpacing={lineSpacing}
+                                safeSelectedFonts={safeSelectedFonts}
+                                setStandardPreviewStyleMap={setStandardPreviewStyleMap}
+                                standardPreviewLines={standardPreviewLines}
+                                standardPreviewStyleMap={standardPreviewStyleMap}
+                                textAlign={textAlign}
+                            />
+                        )}
+                    </>
                 ) : (
                     !monogramInfo && (
                         <div className="min-h-[170px] rounded-[1.55rem] border border-slate-200/75 bg-[linear-gradient(180deg,rgba(247,249,252,0.98),rgba(239,243,248,0.94))] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.84),0_24px_40px_-34px_rgba(15,23,42,0.22)]">

@@ -1,18 +1,12 @@
 import React from 'react';
-import AlignmentControl from './AlignmentControl';
-import PreviewRangeControl from './PreviewRangeControl';
 import { formatStyleLabel, getSafeFontFamilyPreview } from './utils';
 
 const StandardPreviewPanel = ({
-    AlignIcon,
     fontSize,
     getDefaultStyleKey,
     getSortedStyleKeys,
     lineSpacing,
-    onFontSizeChange,
-    onLineSpacingChange,
     safeSelectedFonts,
-    setTextAlign,
     setStandardPreviewStyleMap,
     standardPreviewLines,
     standardPreviewStyleMap,
@@ -38,44 +32,6 @@ const StandardPreviewPanel = ({
                     <div className="inline-flex items-center gap-2 self-start rounded-full border border-slate-200/90 bg-white/90 px-3 py-1.5 text-xs font-semibold text-slate-600 shadow-[0_14px_24px_-20px_rgba(15,23,42,0.18)]">
                         <span className="h-2 w-2 rounded-full bg-slate-400" />
                         Browse and compare selected fonts
-                    </div>
-                </div>
-
-                <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
-                    <div className="grid gap-4 md:grid-cols-2 xl:flex-1">
-                        <PreviewRangeControl
-                            id="standard-size"
-                            label="Preview Size"
-                            value={fontSize}
-                            min={18}
-                            max={72}
-                            step={1}
-                            onChange={onFontSizeChange}
-                            showNumberInput
-                            numberInputAriaLabel="Preview size"
-                        />
-
-                        <PreviewRangeControl
-                            id="standard-spacing"
-                            label="Line Spacing"
-                            value={lineSpacing}
-                            min={0.8}
-                            max={3}
-                            step={0.05}
-                            onChange={onLineSpacingChange}
-                            formatValue={(value) => Number(value).toFixed(1)}
-                        />
-                    </div>
-
-                    <div className="flex justify-start xl:justify-end">
-                        <div className="rounded-[1rem] border border-slate-200/80 bg-white/90 p-1.5 shadow-[0_12px_24px_-20px_rgba(15,23,42,0.2)]">
-                            <AlignmentControl
-                                textAlign={textAlign}
-                                setTextAlign={setTextAlign}
-                                AlignIcon={AlignIcon}
-                                keyPrefix="standard-"
-                            />
-                        </div>
                     </div>
                 </div>
             </div>

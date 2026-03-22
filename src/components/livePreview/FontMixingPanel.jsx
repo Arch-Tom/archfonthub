@@ -20,21 +20,16 @@ const FontMixingPanel = ({
     activeLineFontSize,
     activePreviewLine,
     activeStyleKeys,
-    AlignIcon,
     fontSize,
     getDefaultStyleKey,
     getFontOptionByName,
     handleApplyFontToActiveLine,
-    handleLineFontSizeOverrideChange,
-    handleLineSpacingChange,
     handleLineStyleChange,
-    isUsingDefaultLineSize,
     lineSpacing,
     openPreviewLineIndex,
     safePreviewLines,
     safeSelectedFonts,
     setOpenPreviewLineIndex,
-    setTextAlign,
     textAlign,
 }) => {
     const mixingSampleText = renderMixingSampleText(activePreviewLine, safePreviewLines);
@@ -53,7 +48,7 @@ const FontMixingPanel = ({
                             </div>
                             <p className="mt-1.5 text-sm leading-6 text-slate-500">
                                 The composition stays in the same flow. Select a line, tune its
-                                settings, then apply fonts from the shared font area below.
+                                style here, then apply fonts from the shared font area below.
                             </p>
                         </div>
 
@@ -67,17 +62,9 @@ const FontMixingPanel = ({
 
                     {activePreviewLine && (
                         <ActiveLineControls
-                            activeLineFontSize={activeLineFontSize}
                             activePreviewLine={activePreviewLine}
                             activeStyleKeys={activeStyleKeys}
-                            AlignIcon={AlignIcon}
-                            handleLineFontSizeOverrideChange={handleLineFontSizeOverrideChange}
-                            handleLineSpacingChange={handleLineSpacingChange}
                             handleLineStyleChange={handleLineStyleChange}
-                            isUsingDefaultLineSize={isUsingDefaultLineSize}
-                            lineSpacing={lineSpacing}
-                            setTextAlign={setTextAlign}
-                            textAlign={textAlign}
                         />
                     )}
                 </div>
@@ -110,9 +97,8 @@ const FontMixingPanel = ({
                                     </div>
 
                                     <p className="max-w-md text-xs leading-5 text-slate-500">
-                                        Same area, different behavior: in Standard this is for
-                                        comparison, in Font Mixing it assigns fonts to the selected
-                                        line.
+                                        The shared controls stay above this panel, so you can assign
+                                        fonts without the layout controls moving around.
                                     </p>
                                 </div>
 
@@ -122,8 +108,7 @@ const FontMixingPanel = ({
                                         getDefaultStyleKey(font.name) || 'regular';
                                     const sampleFontFamily =
                                         font?.styles?.[fallbackStyleKey] || fallbackFontFamily;
-                                    const isActiveFont =
-                                        activePreviewLine?.fontName === font.name;
+                                    const isActiveFont = activePreviewLine?.fontName === font.name;
 
                                     return (
                                         <section
@@ -165,8 +150,8 @@ const FontMixingPanel = ({
                                                             !activePreviewLine
                                                                 ? 'cursor-not-allowed bg-slate-100 text-slate-400'
                                                                 : isActiveFont
-                                                                  ? 'border border-blue-200 bg-white text-blue-700 hover:bg-blue-50'
-                                                                  : 'bg-slate-900 text-white shadow-[0_12px_22px_-18px_rgba(15,23,42,0.34)] hover:-translate-y-px'
+                                                                    ? 'border border-blue-200 bg-white text-blue-700 hover:bg-blue-50'
+                                                                    : 'bg-slate-900 text-white shadow-[0_12px_22px_-18px_rgba(15,23,42,0.34)] hover:-translate-y-px'
                                                         }`}
                                                     >
                                                         {activePreviewLine

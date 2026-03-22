@@ -1,26 +1,12 @@
 import React from 'react';
-import AlignmentControl from './AlignmentControl';
-import PreviewRangeControl from './PreviewRangeControl';
 import { formatStyleLabel } from './utils';
 
-const ActiveLineControls = ({
-    activeLineFontSize,
-    activePreviewLine,
-    activeStyleKeys,
-    AlignIcon,
-    handleLineFontSizeOverrideChange,
-    handleLineSpacingChange,
-    handleLineStyleChange,
-    isUsingDefaultLineSize,
-    lineSpacing,
-    setTextAlign,
-    textAlign,
-}) => {
+const ActiveLineControls = ({ activePreviewLine, activeStyleKeys, handleLineStyleChange }) => {
     if (!activePreviewLine) return null;
 
     return (
         <div className="space-y-4">
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
                 <div className="max-w-[38rem]">
                     <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">
                         Focus Controls
@@ -37,21 +23,9 @@ const ActiveLineControls = ({
                     </div>
 
                     <p className="mt-1.5 max-w-[34rem] text-sm leading-6 text-slate-500">
-                        Refine the selected line’s style, size, spacing, and alignment. Font
-                        assignment happens in the shared font area below so the layout stays
-                        consistent between modes.
+                        Choose the style for the selected line here, then apply fonts in the shared
+                        font area below without the layout controls jumping around.
                     </p>
-                </div>
-
-                <div className="flex justify-center lg:justify-end">
-                    <div className="rounded-[0.9rem] border border-slate-200/75 bg-white/88 p-1 shadow-[0_10px_20px_-18px_rgba(15,23,42,0.16)]">
-                        <AlignmentControl
-                            textAlign={textAlign}
-                            setTextAlign={setTextAlign}
-                            AlignIcon={AlignIcon}
-                            keyPrefix="mixing-inline-"
-                        />
-                    </div>
                 </div>
             </div>
 
@@ -70,10 +44,7 @@ const ActiveLineControls = ({
                                     key={styleKey}
                                     type="button"
                                     onClick={() =>
-                                        handleLineStyleChange(
-                                            activePreviewLine.lineIndex,
-                                            styleKey
-                                        )
+                                        handleLineStyleChange(activePreviewLine.lineIndex, styleKey)
                                     }
                                     aria-pressed={isActiveStyle}
                                     className={`rounded-full border px-3.5 py-1.5 text-sm font-medium transition-all duration-200 ${
@@ -89,55 +60,6 @@ const ActiveLineControls = ({
                     </div>
                 </div>
             )}
-
-            <div className="grid gap-3 lg:grid-cols-2">
-                <PreviewRangeControl
-                    id={`mixing-size-${activePreviewLine.lineIndex}`}
-                    label="Size"
-                    value={activeLineFontSize}
-                    min={12}
-                    max={160}
-                    step={1}
-                    onChange={(e) =>
-                        handleLineFontSizeOverrideChange(
-                            activePreviewLine.lineIndex,
-                            e.target.value
-                        )
-                    }
-                    showNumberInput
-                    numberInputAriaLabel={`Size for line ${activePreviewLine.lineIndex + 1}`}
-                    secondaryAction={
-                        <button
-                            type="button"
-                            onClick={() =>
-                                handleLineFontSizeOverrideChange(
-                                    activePreviewLine.lineIndex,
-                                    null
-                                )
-                            }
-                            disabled={isUsingDefaultLineSize}
-                            className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-all duration-200 ${
-                                isUsingDefaultLineSize
-                                    ? 'cursor-default bg-slate-100 text-slate-400'
-                                    : 'border border-slate-200/90 bg-white/95 text-slate-600 hover:border-slate-300 hover:bg-slate-50'
-                            }`}
-                        >
-                            Use default
-                        </button>
-                    }
-                />
-
-                <PreviewRangeControl
-                    id="mixing-spacing"
-                    label="Spacing"
-                    value={lineSpacing}
-                    min={0.05}
-                    max={3}
-                    step={0.05}
-                    onChange={handleLineSpacingChange}
-                    formatValue={(value) => Number(value).toFixed(1)}
-                />
-            </div>
         </div>
     );
 };
