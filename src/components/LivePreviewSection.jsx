@@ -163,8 +163,8 @@ const LivePreviewSection = ({
                                             showFontMixingMode
                                                 ? 'bg-slate-900 text-white shadow-[0_14px_26px_-18px_rgba(15,23,42,0.45)]'
                                                 : canUseFontMixing
-                                                    ? 'text-slate-600 hover:bg-white/70 hover:text-slate-900'
-                                                    : 'cursor-not-allowed text-slate-400'
+                                                  ? 'text-slate-600 hover:bg-white/70 hover:text-slate-900'
+                                                  : 'cursor-not-allowed text-slate-400'
                                         }`}
                                         aria-pressed={showFontMixingMode}
                                         aria-disabled={!canUseFontMixing}
