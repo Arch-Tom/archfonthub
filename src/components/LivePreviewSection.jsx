@@ -95,60 +95,60 @@ const LivePreviewSection = ({
 
     const modeLabel = showFontMixingMode ? 'Font Mixing Mode' : 'Standard Mode';
     const modeDescription = showFontMixingMode
-        ? 'Edit each line independently for a polished multi-font composition.'
-        : 'Compare selected fonts side by side before building a mixed layout.';
+        ? 'Shape a custom multi-font composition with line-by-line control.'
+        : 'Compare each selected font in a dramatic specimen-style gallery.';
 
     return (
-        <section className="relative overflow-visible rounded-[2rem] border border-slate-200/80 bg-[linear-gradient(180deg,rgba(252,253,255,0.98),rgba(245,248,252,0.97))] p-6 shadow-[0_30px_90px_-48px_rgba(15,23,42,0.22)] sm:p-7 xl:p-8">
+        <section className="relative overflow-visible rounded-[2.2rem] border border-white/10 bg-[linear-gradient(135deg,rgba(2,6,23,0.98),rgba(15,23,42,0.97)_48%,rgba(49,46,129,0.9)_100%)] p-6 shadow-[0_40px_90px_-48px_rgba(15,23,42,0.95)] sm:p-7 xl:p-8">
             <div
-                className="pointer-events-none absolute inset-0 overflow-hidden rounded-[2rem]"
+                className="pointer-events-none absolute inset-0 overflow-hidden rounded-[2.2rem]"
                 aria-hidden="true"
             >
-                <div className="absolute inset-x-0 top-0 h-36 bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.07),transparent_72%)]" />
-                <div className="absolute -left-20 top-20 h-56 w-56 rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.9),transparent_72%)] blur-3xl" />
-                <div className="absolute -right-16 bottom-0 h-64 w-64 rounded-full bg-[radial-gradient(circle,rgba(148,163,184,0.10),transparent_72%)] blur-3xl" />
+                <div className="absolute inset-x-0 top-0 h-40 bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.14),transparent_72%)]" />
+                <div className="absolute -left-20 top-16 h-56 w-56 rounded-full bg-[radial-gradient(circle,rgba(168,85,247,0.16),transparent_72%)] blur-3xl" />
+                <div className="absolute -right-20 bottom-0 h-72 w-72 rounded-full bg-[radial-gradient(circle,rgba(37,99,235,0.16),transparent_72%)] blur-3xl" />
             </div>
 
             <div className="relative space-y-6">
-                <header className="rounded-[1.7rem] border border-slate-200/80 bg-white/70 px-5 py-5 shadow-[0_18px_34px_-28px_rgba(15,23,42,0.2)] backdrop-blur-sm sm:px-6 sm:py-6">
+                <header className="rounded-[1.8rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.48),rgba(30,41,59,0.36))] px-5 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] backdrop-blur-sm sm:px-6 sm:py-6">
                     <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
                         <div className="max-w-[46rem]">
-                            <div className="inline-flex items-center rounded-full border border-slate-200/80 bg-white/95 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-500 shadow-[0_10px_22px_-18px_rgba(15,23,42,0.28)]">
+                            <div className="inline-flex items-center rounded-full border border-sky-300/15 bg-sky-400/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-sky-100 shadow-sm">
                                 Preview Studio
                             </div>
 
                             <div className="mt-4 flex flex-wrap items-center gap-3">
                                 <h2
-                                    className="text-[2rem] font-bold tracking-tight text-slate-950 sm:text-[2.2rem]"
+                                    className="text-[2rem] font-bold tracking-tight text-white sm:text-[2.35rem]"
                                     style={{ fontFamily: 'Alumni Sans Regular' }}
                                 >
                                     Live Preview
                                 </h2>
 
-                                <span className="inline-flex items-center rounded-full border border-blue-100 bg-blue-50/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-blue-700">
+                                <span className="inline-flex items-center rounded-full border border-fuchsia-300/15 bg-fuchsia-400/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-fuchsia-100">
                                     {modeLabel}
                                 </span>
                             </div>
 
-                            <p className="mt-2 max-w-[42rem] text-[15px] leading-7 text-slate-600">
+                            <p className="mt-2 max-w-[42rem] text-[15px] leading-7 text-slate-300">
                                 {modeDescription}
                             </p>
                         </div>
 
                         <div className="xl:min-w-[18rem]">
-                            <div className="rounded-[1.35rem] border border-slate-200/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(247,250,252,0.96))] p-3 shadow-[0_18px_28px_-24px_rgba(15,23,42,0.22)]">
-                                <div className="mb-2 px-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-500">
+                            <div className="rounded-[1.35rem] border border-white/10 bg-black/15 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+                                <div className="mb-2 px-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-400">
                                     Preview Mode
                                 </div>
 
-                                <div className="grid grid-cols-2 gap-2 rounded-[1.1rem] bg-slate-100/80 p-1.5">
+                                <div className="grid grid-cols-2 gap-2 rounded-[1.1rem] bg-white/[0.04] p-1.5">
                                     <button
                                         type="button"
                                         onClick={() => setIsFontMixingMode(false)}
                                         className={`rounded-[0.95rem] px-4 py-2.5 text-sm font-semibold transition-all ${
                                             !showFontMixingMode
-                                                ? 'bg-white text-slate-900 shadow-[0_12px_22px_-18px_rgba(15,23,42,0.35)] ring-1 ring-slate-200'
-                                                : 'text-slate-600 hover:bg-white/70 hover:text-slate-900'
+                                                ? 'bg-[linear-gradient(180deg,#38bdf8,#2563eb)] text-white shadow-[0_14px_24px_-18px_rgba(37,99,235,0.85)]'
+                                                : 'text-slate-300 hover:bg-white/8 hover:text-white'
                                         }`}
                                         aria-pressed={!showFontMixingMode}
                                     >
@@ -161,10 +161,10 @@ const LivePreviewSection = ({
                                         disabled={!canUseFontMixing}
                                         className={`rounded-[0.95rem] px-4 py-2.5 text-sm font-semibold transition-all ${
                                             showFontMixingMode
-                                                ? 'bg-slate-900 text-white shadow-[0_14px_26px_-18px_rgba(15,23,42,0.45)]'
+                                                ? 'bg-[linear-gradient(180deg,#d946ef,#7c3aed)] text-white shadow-[0_14px_24px_-18px_rgba(168,85,247,0.85)]'
                                                 : canUseFontMixing
-                                                  ? 'text-slate-600 hover:bg-white/70 hover:text-slate-900'
-                                                  : 'cursor-not-allowed text-slate-400'
+                                                  ? 'text-slate-300 hover:bg-white/8 hover:text-white'
+                                                  : 'cursor-not-allowed text-slate-500'
                                         }`}
                                         aria-pressed={showFontMixingMode}
                                         aria-disabled={!canUseFontMixing}
@@ -173,9 +173,8 @@ const LivePreviewSection = ({
                                     </button>
                                 </div>
 
-                                <p className="mt-3 px-1 text-xs leading-5 text-slate-500">
-                                    Start in Standard, then switch to Font Mixing when you want
-                                    line-by-line control.
+                                <p className="mt-3 px-1 text-xs leading-5 text-slate-400">
+                                    Standard is for bold comparison. Font Mixing is for composition.
                                 </p>
                             </div>
                         </div>
@@ -236,13 +235,13 @@ const LivePreviewSection = ({
                     </>
                 ) : (
                     !monogramInfo && (
-                        <div className="min-h-[170px] rounded-[1.55rem] border border-slate-200/75 bg-[linear-gradient(180deg,rgba(247,249,252,0.98),rgba(239,243,248,0.94))] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.84),0_24px_40px_-34px_rgba(15,23,42,0.22)]">
+                        <div className="min-h-[170px] rounded-[1.55rem] border border-white/10 bg-white/[0.03] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
                             <div className="flex h-full min-h-[110px] flex-col items-center justify-center text-center">
-                                <div className="rounded-full border border-slate-200 bg-white/92 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-400 shadow-sm">
+                                <div className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-400 shadow-sm">
                                     Waiting for input
                                 </div>
-                                <p className="mt-4 max-w-md text-sm leading-6 text-slate-500">
-                                    Select fonts and enter text above to see your live preview here.
+                                <p className="mt-4 max-w-md text-sm leading-6 text-slate-400">
+                                    Select fonts and enter text above to bring the preview studio to life.
                                 </p>
                             </div>
                         </div>

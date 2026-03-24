@@ -1,16 +1,23 @@
-﻿import React, { useState, useRef, useEffect } from 'react';
+﻿import React, { useState, useRef, useEffect, useMemo } from 'react';
 import MonogramMaker from './MonogramMaker';
-import CircularMonogram from './CircularMonogram'; // Still needed for font thumbnails
 import LivePreviewSection from './components/LivePreviewSection';
 import CustomerInfoModal from './components/modals/CustomerInfoModal';
 import MessageModal from './components/modals/MessageModal';
 import SuccessModal from './components/modals/SuccessModal';
-import { accentedCharacters, glyphs, hebrewCharacters, hebrewKeyboardLayout } from './constants/characterPalettes';
-import { exportFontFamilyMap, fontLibrary, scriptFontsToAdjust, styleSortOrder } from './constants/fontConfig';
-
+import {
+    accentedCharacters,
+    glyphs,
+    hebrewCharacters,
+    hebrewKeyboardLayout,
+} from './constants/characterPalettes';
+import {
+    exportFontFamilyMap,
+    fontLibrary,
+    scriptFontsToAdjust,
+    styleSortOrder,
+} from './constants/fontConfig';
 import { buildArtworkTextElement, loadCurveFont } from './utils/svgExport';
 
-// NEW: inline alignment icon (no external icon library)
 const AlignIcon = ({ align = 'left' }) => {
     const isLeft = align === 'left';
     const isCenter = align === 'center';
@@ -25,7 +32,6 @@ const AlignIcon = ({ align = 'left' }) => {
             focusable="false"
             className="block"
         >
-            {/* top line */}
             <rect
                 x={isLeft ? 3 : isCenter ? 5 : 7}
                 y="5"
@@ -34,7 +40,6 @@ const AlignIcon = ({ align = 'left' }) => {
                 rx="1.1"
                 fill="currentColor"
             />
-            {/* middle line */}
             <rect
                 x={isLeft ? 3 : isCenter ? 7 : 9}
                 y="11"
@@ -43,7 +48,6 @@ const AlignIcon = ({ align = 'left' }) => {
                 rx="1.1"
                 fill="currentColor"
             />
-            {/* bottom line */}
             <rect
                 x={isLeft ? 3 : isCenter ? 5 : 7}
                 y="17"
@@ -56,8 +60,92 @@ const AlignIcon = ({ align = 'left' }) => {
     );
 };
 
+const SectionShell = ({
+    eyebrow,
+    title,
+    description,
+    action = null,
+    children,
+    tone = 'soft',
+}) => {
+    const toneClasses =
+        tone === 'light'
+            ? 'border-slate-200/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(248,250,252,0.96))] shadow-[0_24px_60px_-36px_rgba(15,23,42,0.14)]'
+            : 'border-slate-200/60 bg-[linear-gradient(180deg,rgba(245,248,255,0.84),rgba(234,241,251,0.76))] shadow-[0_30px_70px_-40px_rgba(30,41,59,0.18)] backdrop-blur-sm';
+
+    const eyebrowClasses =
+        tone === 'light'
+            ? 'text-slate-500 bg-slate-100/90 border-slate-200/80'
+            : 'text-blue-700 bg-blue-50/80 border-blue-100/80';
+
+    const titleClasses = 'text-slate-950';
+    const descriptionClasses = 'text-slate-600';
+
+    return (
+        <section
+            className={`relative overflow-hidden rounded-[2rem] border p-6 sm:p-8 ${toneClasses}`}
+        >
+            <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+                <div className="absolute inset-x-0 top-0 h-24 bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.06),transparent_72%)]" />
+                <div className="absolute -right-16 bottom-0 h-56 w-56 rounded-full bg-[radial-gradient(circle,rgba(148,163,184,0.10),transparent_72%)] blur-3xl" />
+            </div>
+
+            <div className="relative">
+                {(eyebrow || title || description || action) && (
+                    <div className="mb-6 flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
+                        <div className="max-w-[48rem]">
+                            {eyebrow && (
+                                <div
+                                    className={`inline-flex items-center rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] shadow-sm ${eyebrowClasses}`}
+                                >
+                                    {eyebrow}
+                                </div>
+                            )}
+                            {title && (
+                                <h2
+                                    className={`mt-3 text-[2rem] font-bold tracking-tight sm:text-[2.35rem] ${titleClasses}`}
+                                    style={{ fontFamily: 'Alumni Sans Regular' }}
+                                >
+                                    {title}
+                                </h2>
+                            )}
+                            {description && (
+                                <p className={`mt-2 text-[15px] leading-7 ${descriptionClasses}`}>
+                                    {description}
+                                </p>
+                            )}
+                        </div>
+
+                        {action ? <div className="xl:shrink-0">{action}</div> : null}
+                    </div>
+                )}
+
+                {children}
+            </div>
+        </section>
+    );
+};
+
+const StatusPill = ({ children, tone = 'slate' }) => {
+    const tones = {
+        slate: 'border-slate-200 bg-white/90 text-slate-600',
+        blue: 'border-blue-100 bg-blue-50/90 text-blue-700',
+        violet: 'border-violet-100 bg-violet-50/90 text-violet-700',
+        emerald: 'border-emerald-100 bg-emerald-50/90 text-emerald-700',
+        amber: 'border-amber-100 bg-amber-50/90 text-amber-700',
+    };
+
+    return (
+        <span
+            className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold shadow-sm ${tones[tone] || tones.slate}`}
+        >
+            {children}
+        </span>
+    );
+};
+
 const App = () => {
-    const WORKER_URL = "https://customerfontselection-worker.tom-4a9.workers.dev";
+    const WORKER_URL = 'https://customerfontselection-worker.tom-4a9.workers.dev';
     const DEFAULT_TEXT_PLACEHOLDER = 'Type your text here...';
 
     const [selectedFonts, setSelectedFonts] = useState([]);
@@ -66,10 +154,7 @@ const App = () => {
     const [openPreviewLineIndex, setOpenPreviewLineIndex] = useState(null);
     const [fontSize, setFontSize] = useState(36);
     const [lineSpacing, setLineSpacing] = useState(1);
-
-    // Alignment state
-    const [textAlign, setTextAlign] = useState('left'); // 'left' | 'center' | 'right'
-
+    const [textAlign, setTextAlign] = useState('left');
     const [customerNotes, setCustomerNotes] = useState('');
     const [message, setMessage] = useState('');
     const [showMessageBox, setShowMessageBox] = useState(false);
@@ -93,15 +178,17 @@ const App = () => {
 
     const customTextRef = useRef(null);
 
-    const getSortedStyleKeys = (styles) => Object.keys(styles).sort((a, b) => {
-        const indexA = styleSortOrder.indexOf(a.toLowerCase());
-        const indexB = styleSortOrder.indexOf(b.toLowerCase());
-        if (indexA === -1) return 1;
-        if (indexB === -1) return -1;
-        return indexA - indexB;
-    });
+    const getSortedStyleKeys = (styles) =>
+        Object.keys(styles).sort((a, b) => {
+            const indexA = styleSortOrder.indexOf(a.toLowerCase());
+            const indexB = styleSortOrder.indexOf(b.toLowerCase());
+            if (indexA === -1) return 1;
+            if (indexB === -1) return -1;
+            return indexA - indexB;
+        });
 
-    const getFontOptionByName = (fontName, fonts = selectedFonts) => fonts.find(font => font.name === fontName);
+    const getFontOptionByName = (fontName, fonts = selectedFonts) =>
+        fonts.find((font) => font.name === fontName);
 
     const getDefaultStyleKey = (fontName, fonts = selectedFonts) => {
         const font = getFontOptionByName(fontName, fonts);
@@ -120,7 +207,12 @@ const App = () => {
 
     const normalizeLineSelection = (line, fonts = selectedFonts) => {
         if (fonts.length === 0) {
-            return { ...line, fontName: '', styleKey: '', fontSizeOverride: normalizeFontSizeOverride(line.fontSizeOverride) };
+            return {
+                ...line,
+                fontName: '',
+                styleKey: '',
+                fontSizeOverride: normalizeFontSizeOverride(line.fontSizeOverride),
+            };
         }
 
         const selectedFont = getFontOptionByName(line.fontName, fonts) || fonts[0];
@@ -141,11 +233,20 @@ const App = () => {
     const previewLines = derivedTextLines.map((text, index) => ({
         lineIndex: index,
         text,
-        ...normalizeLineSelection(lineSettings[index] || { fontName: '', styleKey: '', fontSizeOverride: null }),
+        ...normalizeLineSelection(
+            lineSettings[index] || { fontName: '', styleKey: '', fontSizeOverride: null }
+        ),
     }));
-    const populatedPreviewLines = previewLines.filter(line => line.text.trim() !== '');
+    const populatedPreviewLines = previewLines.filter((line) => line.text.trim() !== '');
     const combinedText = customText;
     const hasStandardSelection = selectedFonts.length > 0 && populatedPreviewLines.length > 0;
+    const hasReadySubmission = Boolean(monogramInfo || hasStandardSelection);
+
+    const selectedFontNames = useMemo(
+        () => selectedFonts.map((font) => font.name),
+        [selectedFonts]
+    );
+    const textLineCount = populatedPreviewLines.length;
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
@@ -162,17 +263,18 @@ const App = () => {
     }, []);
 
     useEffect(() => {
-        setLineSettings(prevSettings => {
+        setLineSettings((prevSettings) => {
             const nextSettings = derivedTextLines.map((_, index) =>
                 normalizeLineSelection(prevSettings[index] || { fontName: '', styleKey: '' }, selectedFonts)
             );
 
             if (
                 nextSettings.length === prevSettings.length &&
-                nextSettings.every((setting, index) =>
-                    setting.fontName === prevSettings[index]?.fontName &&
-                    setting.styleKey === prevSettings[index]?.styleKey &&
-                    setting.fontSizeOverride === prevSettings[index]?.fontSizeOverride
+                nextSettings.every(
+                    (setting, index) =>
+                        setting.fontName === prevSettings[index]?.fontName &&
+                        setting.styleKey === prevSettings[index]?.styleKey &&
+                        setting.fontSizeOverride === prevSettings[index]?.fontSizeOverride
                 )
             ) {
                 return prevSettings;
@@ -199,23 +301,17 @@ const App = () => {
     }, [openPreviewLineIndex, previewLines.length]);
 
     const handleFontSelect = (font) => {
-        const isSelected = selectedFonts.some(f => f.name === font.name);
+        const isSelected = selectedFonts.some((f) => f.name === font.name);
         if (isSelected) {
-            setSelectedFonts(prev => prev.filter(f => f.name !== font.name));
+            setSelectedFonts((prev) => prev.filter((f) => f.name !== font.name));
         } else if (selectedFonts.length < 3) {
             const defaultStyleKey = Object.keys(font.styles)[0];
-            setSelectedFonts(prev => [...prev, { ...font, activeStyle: defaultStyleKey }]);
+            setSelectedFonts((prev) => [...prev, { ...font, activeStyle: defaultStyleKey }]);
         } else {
-            showMessage('You may select a maximum of 3 fonts. Please deselect a font to choose a new one.');
+            showMessage(
+                'You may select a maximum of 3 fonts. Please deselect a font to choose a new one.'
+            );
         }
-    };
-
-    const handleStyleChange = (fontName, newStyle) => {
-        setSelectedFonts(prev =>
-            prev.map(font =>
-                font.name === fontName ? { ...font, activeStyle: newStyle } : font
-            )
-        );
     };
 
     const handleFontSizeChange = (e) => setFontSize(Number(e.target.value));
@@ -227,7 +323,8 @@ const App = () => {
         setTimeout(() => setShowMessageBox(false), duration);
     };
 
-    const formatForFilename = (str) => str.trim().replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_-]/g, '');
+    const formatForFilename = (str) =>
+        str.trim().replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_-]/g, '');
 
     const handleGlyphInsert = (glyph) => {
         const input = customTextRef.current;
@@ -249,7 +346,7 @@ const App = () => {
     const handleApplyFontToActiveLine = (fontName) => {
         if (openPreviewLineIndex == null) return;
 
-        setLineSettings(prevSettings =>
+        setLineSettings((prevSettings) =>
             prevSettings.map((line, index) => {
                 if (index !== openPreviewLineIndex) return line;
 
@@ -270,7 +367,7 @@ const App = () => {
     };
 
     const handleLineStyleChange = (lineIndex, styleKey) => {
-        setLineSettings(prevSettings =>
+        setLineSettings((prevSettings) =>
             prevSettings.map((line, index) =>
                 index === lineIndex ? { ...line, styleKey } : line
             )
@@ -278,7 +375,7 @@ const App = () => {
     };
 
     const handleLineFontSizeOverrideChange = (lineIndex, value) => {
-        setLineSettings(prevSettings =>
+        setLineSettings((prevSettings) =>
             prevSettings.map((line, index) =>
                 index === lineIndex
                     ? { ...line, fontSizeOverride: normalizeFontSizeOverride(value) }
@@ -291,7 +388,7 @@ const App = () => {
         if (!hebrewPaletteText) return;
         handleGlyphInsert(hebrewPaletteText);
         setHebrewPaletteText('');
-        setLastHebrewBaseChar('א'); // Reset on close
+        setLastHebrewBaseChar('א');
         setShowHebrewPalette(false);
     };
 
@@ -299,7 +396,7 @@ const App = () => {
         if (hebrewPaletteText.length === 0) return;
 
         const segmenter = new Intl.Segmenter('he', { granularity: 'grapheme' });
-        const graphemes = Array.from(segmenter.segment(hebrewPaletteText)).map(s => s.segment);
+        const graphemes = Array.from(segmenter.segment(hebrewPaletteText)).map((s) => s.segment);
 
         graphemes.pop();
         const newText = graphemes.join('');
@@ -321,7 +418,9 @@ const App = () => {
 
     const generateSvgContent = async (mode = 'editable') => {
         if (!monogramInfo && !hasStandardSelection) {
-            showMessage('Please create a monogram, or select at least one font and enter some text to submit.');
+            showMessage(
+                'Please create a monogram, or select at least one font and enter some text to submit.'
+            );
             return null;
         }
 
@@ -338,16 +437,23 @@ const App = () => {
             return { x: padding, anchor: 'start' };
         })();
 
-        const escapeXml = (unsafe) => unsafe.replace(/[<>&'"]/g, c => {
-            switch (c) {
-                case '<': return '&lt;';
-                case '>': return '&gt;';
-                case '&': return '&amp;';
-                case '\'': return '&apos;';
-                case '"': return '&quot;';
-                default: return c;
-            }
-        });
+        const escapeXml = (unsafe) =>
+            unsafe.replace(/[<>&'"]/g, (c) => {
+                switch (c) {
+                    case '<':
+                        return '&lt;';
+                    case '>':
+                        return '&gt;';
+                    case '&':
+                        return '&amp;';
+                    case "'":
+                        return '&apos;';
+                    case '"':
+                        return '&quot;';
+                    default:
+                        return c;
+                }
+            });
 
         if (monogramInfo) {
             const data = monogramInfo.data;
@@ -363,7 +469,8 @@ const App = () => {
             if (data.isCircular) {
                 const [first, middle, last] = data.text;
                 const frameStyle = data.frameStyle;
-                const textColor = (frameStyle === 'solid' || frameStyle === 'double') ? 'white' : 'black';
+                const textColor =
+                    frameStyle === 'solid' || frameStyle === 'double' ? 'white' : 'black';
                 const baseFontSize = (data.fontSize || 100) * 1.5;
                 const finalFontSize = baseFontSize * 0.9875;
 
@@ -391,15 +498,24 @@ const App = () => {
                 if (mode === 'curves') {
                     const letterConfigs = [
                         { char: first, fontFamily: 'LeftCircleMonogram', yOffset: 0 },
-                        { char: middle, fontFamily: 'MiddleCircleMonogram', yOffset: -(finalFontSize * 0.02) },
+                        {
+                            char: middle,
+                            fontFamily: 'MiddleCircleMonogram',
+                            yOffset: -(finalFontSize * 0.02),
+                        },
                         { char: last, fontFamily: 'RightCircleMonogram', yOffset: 0 },
                     ];
-                    const measuredWidths = await Promise.all(letterConfigs.map(async ({ char, fontFamily }) => {
-                        const font = await loadCurveFont(fontFamily);
-                        return font ? font.getAdvanceWidth(char, finalFontSize, { kerning: true }) : finalFontSize * 0.7;
-                    }));
+                    const measuredWidths = await Promise.all(
+                        letterConfigs.map(async ({ char, fontFamily }) => {
+                            const font = await loadCurveFont(fontFamily);
+                            return font
+                                ? font.getAdvanceWidth(char, finalFontSize, { kerning: true })
+                                : finalFontSize * 0.7;
+                        })
+                    );
 
-                    let currentX = svgCenterX - (measuredWidths.reduce((sum, width) => sum + width, 0) / 2);
+                    let currentX =
+                        svgCenterX - measuredWidths.reduce((sum, width) => sum + width, 0) / 2;
                     for (const [index, config] of letterConfigs.entries()) {
                         svgElements += await buildArtworkTextElement({
                             mode,
@@ -426,7 +542,6 @@ const App = () => {
                 }
 
                 y = monogramBlockY + 100;
-
             } else {
                 const [first, middle, last] = data.text;
                 const fontFamily = data.font.styles[data.style];
@@ -493,19 +608,21 @@ const App = () => {
 
         let contentY = y + 40;
         if (hasStandardSelection) {
-            const artworkStartY = contentY;
-            let artworkY = artworkStartY;
+            let artworkY = contentY;
 
             for (const [index, line] of populatedPreviewLines.entries()) {
                 const font = getFontOptionByName(line.fontName);
-                const activeFontFamily = font?.styles[line.styleKey] || font?.styles[getDefaultStyleKey(font?.name)] || 'inherit';
+                const activeFontFamily =
+                    font?.styles[line.styleKey] ||
+                    font?.styles[getDefaultStyleKey(font?.name)] ||
+                    'inherit';
                 const exportFontFamily = exportFontFamilyMap[activeFontFamily] || activeFontFamily;
                 const effectiveFontSize = line.fontSizeOverride ?? fontSize;
                 const styleName = line.styleKey
                     ? line.styleKey.charAt(0).toUpperCase() + line.styleKey.slice(1)
                     : 'No Style';
 
-                artworkY += (effectiveFontSize * lineSpacing);
+                artworkY += effectiveFontSize * lineSpacing;
                 svgElements += await buildArtworkTextElement({
                     mode,
                     text: line.text,
@@ -518,19 +635,23 @@ const App = () => {
                     anchor: aligned.anchor,
                     escapeXml,
                 });
-                metadataElements += `<text x="${padding}" y="${labelFontSize + 10 + (index * labelFontSize * 1.5)}" font-family="Arial" font-size="${labelFontSize}" fill="#6b7280" font-weight="600">Line ${index + 1}: ${escapeXml(font?.name || 'No Font')} (${escapeXml(styleName)})</text>\n`;
+                metadataElements += `<text x="${padding}" y="${
+                    labelFontSize + 10 + index * labelFontSize * 1.5
+                }" font-family="Arial" font-size="${labelFontSize}" fill="#6b7280" font-weight="600">Line ${
+                    index + 1
+                }: ${escapeXml(font?.name || 'No Font')} (${escapeXml(styleName)})</text>\n`;
             }
 
             contentY = artworkY;
         }
 
         if (customerNotes.trim() !== '') {
-            contentY += (fontSize * 1.4);
+            contentY += fontSize * 1.4;
             svgElements += `<text x="${padding}" y="${contentY}" font-family="Arial" font-size="${labelFontSize}" fill="#6b7280" font-weight="600">Customer Notes</text>\n`;
             contentY += labelFontSize * 0.5;
 
-            const noteLines = customerNotes.split('\n').filter(line => line.trim() !== '');
-            noteLines.forEach(noteLine => {
+            const noteLines = customerNotes.split('\n').filter((line) => line.trim() !== '');
+            noteLines.forEach((noteLine) => {
                 const sanitizedNoteLine = escapeXml(noteLine);
                 contentY += labelFontSize * 1.4;
                 svgElements += `<text x="${padding}" y="${contentY}" font-family="Arial" font-size="${labelFontSize}" fill="#181717">${sanitizedNoteLine}</text>\n`;
@@ -541,7 +662,7 @@ const App = () => {
         let metadataHeight = 0;
 
         if (metadataElements !== '') {
-            metadataHeight = (populatedPreviewLines.length * labelFontSize * 1.5) + padding;
+            metadataHeight = populatedPreviewLines.length * labelFontSize * 1.5 + padding;
             const metadataBlockY = contentY + padding + labelFontSize;
             metadataBlock = `<g transform="translate(0, ${metadataBlockY})">
                 <text x="${padding}" y="0" font-family="Arial" font-size="${labelFontSize}" fill="#94a3b8" font-weight="700">Font Reference</text>
@@ -549,7 +670,8 @@ const App = () => {
             </g>\n`;
         }
 
-        const svgHeight = contentY + padding + metadataHeight + (metadataElements !== '' ? labelFontSize * 2 : 0);
+        const svgHeight =
+            contentY + padding + metadataHeight + (metadataElements !== '' ? labelFontSize * 2 : 0);
         return `<svg xmlns="http://www.w3.org/2000/svg" width="${svgWidth}" height="${svgHeight}" style="background-color: #FFF;">\n${svgElements}${metadataBlock}</svg>`;
     };
 
@@ -578,7 +700,7 @@ const App = () => {
         const response = await fetch(`${WORKER_URL}/${filename}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'image/svg+xml' },
-            body: svgContent
+            body: svgContent,
         });
 
         if (response.status === 409) {
@@ -601,8 +723,10 @@ const App = () => {
         const baseFilename = [
             formatForFilename(orderNumber),
             formatForFilename(customerName),
-            customerCompany.trim() ? formatForFilename(customerCompany) : ''
-        ].filter(Boolean).join('_');
+            customerCompany.trim() ? formatForFilename(customerCompany) : '',
+        ]
+            .filter(Boolean)
+            .join('_');
         const editableFilename = `${baseFilename}.svg`;
         const curvesFilename = `${baseFilename}_CURVES.svg`;
 
@@ -636,163 +760,420 @@ const App = () => {
     const hebrewRegex = /[\u0590-\u05FF]/;
 
     return (
-        <div className="flex flex-col lg:flex-row min-h-screen bg-slate-100 font-sans">
-            <aside className="bg-[rgb(50,75,106)] text-white w-full lg:w-[400px] p-4 flex-shrink-0 flex flex-col shadow-xl lg:rounded-r-3xl lg:justify-start">
-                <div className="flex-shrink-0 pt-4 lg:pt-8">
-                    <img
-                        src="/images/Arch Vector Logo White.svg"
-                        alt="Arch Font Hub Logo"
-                        className="object-contain drop-shadow-lg h-48 w-48 mx-auto lg:h-auto lg:w-[350px]"
-                    />
-                </div>
-                <div className="flex-grow flex items-center justify-center lg:flex-grow-0 lg:items-start lg:mt-4">
-                    <p className="text-center lg:text-left text-slate-200 text-xs lg:text-base lg:max-w-sm px-2">
-                        Let's find your perfect font! Select a few options, preview them with your text, and submit your favorites. Our designers will use your selection to craft your proof. If you have another font in mind, let us know in the notes section below!
-                    </p>
-                </div>
-            </aside>
+        <div className="min-h-screen bg-transparent text-slate-900">
+            <div className="pointer-events-none fixed inset-0 overflow-hidden" aria-hidden="true">
+                <div className="absolute left-[-10rem] top-[-6rem] h-[24rem] w-[24rem] rounded-full bg-[radial-gradient(circle,rgba(59,130,246,0.12),transparent_70%)] blur-3xl" />
+                <div className="absolute right-[-10rem] top-[18rem] h-[26rem] w-[26rem] rounded-full bg-[radial-gradient(circle,rgba(129,140,248,0.12),transparent_72%)] blur-3xl" />
+                <div className="absolute bottom-[-10rem] left-[28%] h-[24rem] w-[24rem] rounded-full bg-[radial-gradient(circle,rgba(148,163,184,0.12),transparent_72%)] blur-3xl" />
+            </div>
 
-            <main className="flex-1 p-4 sm:p-8 lg:p-12">
-                {isSubmissionComplete && (
-                    <div className="fixed inset-0 bg-slate-100 bg-opacity-95 flex items-center justify-center z-30">
-                        <div className="text-center p-8">
-                            <h2 className="text-4xl font-bold text-slate-700" style={{ fontFamily: 'Alumni Sans Regular' }}>
-                                Submission Complete
-                            </h2>
-                            <p className="text-xl text-slate-600 mt-4">
-                                Thank you for your submission! You may now close this window.
-                            </p>
-                        </div>
-                    </div>
-                )}
-                <div className="max-w-7xl mx-auto">
-                    <div className="space-y-10">
-                        <section className="bg-white rounded-2xl p-8 border border-slate-100 shadow-[0_10px_25px_-5px_rgba(50,75,106,0.2),_0_8px_10px_-6px_rgba(59,130,246,0.2)]">
-                            <h2 className="text-3xl font-bold text-slate-900 mb-2 tracking-normal" style={{ fontFamily: 'Alumni Sans Regular' }}>Font Selection</h2>
-                            <p className="text-slate-500 mb-6">
-                                Select up to 3 fonts you would like to preview. You may change your selected fonts here at any time. Try as many as you'd like before submitting your selection!
-                                <br />
-                                <br />
-                                Looking for Bold, Italic or other versions of a selected font? Check the live preview for available styles!
-                            </p>
-                            <div className="space-y-6">
-                                {Object.entries(fontLibrary).map(([category, fonts]) => (
-                                    <div key={category}>
-                                        <h3 className="text-md font-semibold text-slate-700 border-b-2 border-slate-200 pb-2 mb-3 tracking-wide">{category}</h3>
-                                        <div className="flex flex-wrap gap-3">
-                                            {fonts.map((font) => {
-                                                const isScriptFont = scriptFontsToAdjust.includes(font.name);
-                                                let fontSizeClass = isScriptFont ? 'text-2xl' : 'text-lg';
-                                                if (font.name === 'Concerto Pro') fontSizeClass = 'text-4xl';
-                                                return (
-                                                    <button
-                                                        key={font.name}
-                                                        onClick={() => handleFontSelect(font)}
-                                                        className={`px-5 py-3 rounded-xl font-semibold border-2 transition-all duration-150 transform hover:scale-105 focus:outline-none ${fontSizeClass} ${selectedFonts.some(f => f.name === font.name) ? 'bg-[rgb(50,75,106)] text-white border-[rgb(50,75,106)] shadow-md' : 'bg-white text-[rgb(50,75,106)] border-[rgb(50,75,106)] hover:bg-[rgb(50,75,106)]/10'}`}
-                                                        style={{
-                                                            fontFamily: font.name === 'Alumni Sans'
-                                                                ? 'Alumni Sans Regular'
-                                                                : font.styles[Object.keys(font.styles)[0]]
-                                                        }}
-                                                    >
-                                                        {font.name}
-                                                    </button>
-                                                )
-                                            })}
+            <div className="relative mx-auto max-w-[1650px] px-4 py-4 sm:px-6 lg:px-8 lg:py-6">
+                <div className="grid min-h-[calc(100vh-2rem)] gap-6 xl:grid-cols-[350px_minmax(0,1fr)]">
+                    <aside className="xl:sticky xl:top-6 xl:h-[calc(100vh-3rem)]">
+                        <div className="flex h-full flex-col overflow-hidden rounded-[2.15rem] border border-slate-200/70 bg-[linear-gradient(180deg,rgba(236,242,252,0.96),rgba(227,236,248,0.94)_50%,rgba(219,230,246,0.92)_100%)] p-6 shadow-[0_28px_70px_-36px_rgba(30,41,59,0.18)] sm:p-7">
+                            <div className="rounded-[1.6rem] border border-white/60 bg-[linear-gradient(180deg,rgba(255,255,255,0.85),rgba(241,245,251,0.78))] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
+                                <img
+                                    src="/images/Arch Vector Logo White.svg"
+                                    alt="Arch Font Hub Logo"
+                                    className="mx-auto h-28 w-28 object-contain drop-shadow-lg sm:h-32 sm:w-32"
+                                />
+                                <div className="mt-5 text-center">
+                                    <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-slate-500">
+                                        Premium Font Studio
+                                    </div>
+                                    <h1
+                                        className="mt-2 text-[2.4rem] font-bold tracking-tight text-slate-900"
+                                        style={{ fontFamily: 'Alumni Sans Regular' }}
+                                    >
+                                        Arch Font Hub
+                                    </h1>
+                                    <p className="mt-3 text-sm leading-6 text-slate-600">
+                                        Explore fonts, shape specimens, test hierarchy, and submit a selection that feels deliberate.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="mt-5 space-y-4">
+                                <div className="rounded-[1.45rem] border border-white/70 bg-white/60 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.75)]">
+                                    <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-500">
+                                        Workspace status
+                                    </div>
+
+                                    <div className="mt-4 space-y-2.5">
+                                        <div className="flex items-center justify-between rounded-xl border border-slate-200/80 bg-white/80 px-3 py-2.5">
+                                            <span className="text-sm text-slate-700">Fonts selected</span>
+                                            <StatusPill tone="blue">{selectedFonts.length}/3</StatusPill>
+                                        </div>
+
+                                        <div className="flex items-center justify-between rounded-xl border border-slate-200/80 bg-white/80 px-3 py-2.5">
+                                            <span className="text-sm text-slate-700">Preview lines</span>
+                                            <StatusPill tone="violet">{textLineCount}</StatusPill>
+                                        </div>
+
+                                        <div className="flex items-center justify-between rounded-xl border border-slate-200/80 bg-white/80 px-3 py-2.5">
+                                            <span className="text-sm text-slate-700">Monogram</span>
+                                            <StatusPill tone={monogramInfo ? 'amber' : 'slate'}>
+                                                {monogramInfo ? 'Ready' : 'Optional'}
+                                            </StatusPill>
                                         </div>
                                     </div>
-                                ))}
-                            </div>
-                        </section>
+                                </div>
 
-                        <div className="flex justify-end mt-4">
-                            <button
-                                className="px-6 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 shadow"
-                                onClick={() => setShowMonogramMaker(true)}
-                                type="button"
-                            >
-                                Open Monogram Maker
-                            </button>
+                                <div className="rounded-[1.45rem] border border-white/70 bg-white/60 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.75)]">
+                                    <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-500">
+                                        Best flow
+                                    </div>
+
+                                    <ol className="mt-4 space-y-3 text-sm text-slate-700">
+                                        <li className="flex gap-3">
+                                            <span className="mt-0.5 inline-flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 text-xs font-bold text-blue-700">
+                                                1
+                                            </span>
+                                            <span>Choose up to three strong contenders.</span>
+                                        </li>
+                                        <li className="flex gap-3">
+                                            <span className="mt-0.5 inline-flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-violet-100 text-xs font-bold text-violet-700">
+                                                2
+                                            </span>
+                                            <span>Type realistic wording from the actual order.</span>
+                                        </li>
+                                        <li className="flex gap-3">
+                                            <span className="mt-0.5 inline-flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-emerald-100 text-xs font-bold text-emerald-700">
+                                                3
+                                            </span>
+                                            <span>Compare in Standard mode, then mix lines if needed.</span>
+                                        </li>
+                                    </ol>
+                                </div>
+
+                                <div className="rounded-[1.45rem] border border-blue-100/80 bg-[linear-gradient(180deg,rgba(239,246,255,0.8),rgba(245,247,255,0.74))] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.78)]">
+                                    <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-500">
+                                        Submission state
+                                    </div>
+                                    <p className="mt-3 text-sm leading-6 text-slate-700">
+                                        {hasReadySubmission
+                                            ? 'You have enough information to submit whenever you are ready.'
+                                            : 'Choose at least one font and enter preview text to unlock submission.'}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="mt-auto pt-5">
+                                <button
+                                    className="w-full rounded-[1.15rem] border border-blue-100 bg-[linear-gradient(180deg,#60a5fa,#2563eb)] px-5 py-3.5 text-sm font-bold text-white shadow-[0_18px_26px_-16px_rgba(37,99,235,0.45)] transition-all hover:-translate-y-px hover:shadow-[0_22px_30px_-14px_rgba(37,99,235,0.55)]"
+                                    onClick={() => setShowMonogramMaker(true)}
+                                    type="button"
+                                >
+                                    Open Monogram Maker
+                                </button>
+                            </div>
                         </div>
+                    </aside>
 
-                        <section className="bg-white rounded-2xl p-8 border border-slate-100 shadow-[0_10px_25px_-5px_rgba(50,75,106,0.2),_0_8px_10px_-6px_rgba(59,130,246,0.2)]">
-                            <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center mb-6 gap-4">
-                                <div>
-                                    <h2 className="text-3xl font-bold text-slate-900 tracking-normal" style={{ fontFamily: 'Alumni Sans Regular' }}>Custom Text</h2>
-                                    <p className="text-slate-500 mt-1">Type a sample of your order text to preview. You'll see this displayed in your font choices below.
-                                        <br />
-                                        Be sure to test out any special characters your order may have!</p>
-                                </div>
-                                <div className="flex flex-wrap items-center justify-center sm:justify-end gap-2">
-                                    <button onClick={() => setShowHebrewPalette(true)} className="px-5 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base">Hebrew</button>
-                                    <button onClick={() => setShowAccentPalette(true)} className="px-5 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base">Accented Characters</button>
-                                    <button onClick={() => setShowGlyphPalette(true)} className="px-5 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base">Symbols</button>
+                    <main className="min-w-0 pb-10">
+                        {isSubmissionComplete && (
+                            <div className="fixed inset-0 z-30 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm">
+                                <div className="rounded-[2rem] border border-slate-200 bg-white p-10 text-center shadow-[0_30px_80px_-40px_rgba(15,23,42,0.25)]">
+                                    <h2
+                                        className="text-4xl font-bold text-slate-900"
+                                        style={{ fontFamily: 'Alumni Sans Regular' }}
+                                    >
+                                        Submission Complete
+                                    </h2>
+                                    <p className="mt-4 text-lg text-slate-600">
+                                        Thank you for your submission. You may now close this window.
+                                    </p>
                                 </div>
                             </div>
-                            <textarea
-                                ref={customTextRef}
-                                value={customText}
-                                onChange={(e) => setCustomText(e.target.value)}
-                                placeholder={DEFAULT_TEXT_PLACEHOLDER}
-                                dir="auto"
-                                className="w-full p-5 border-2 border-slate-200 rounded-xl shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 min-h-[160px] text-xl"
+                        )}
+
+                        <div className="space-y-6">
+                            <SectionShell
+                                eyebrow="Studio overview"
+                                title="Build a font selection that actually feels premium"
+                                description="This workspace is designed to help you compare fonts, shape text hierarchy, and submit a cleaner, more intentional direction for the final proof."
+                                action={
+                                    <div className="flex flex-wrap gap-2">
+                                        <StatusPill tone={selectedFonts.length > 0 ? 'blue' : 'slate'}>
+                                            {selectedFonts.length > 0
+                                                ? `${selectedFonts.length} font${
+                                                      selectedFonts.length === 1 ? '' : 's'
+                                                  } selected`
+                                                : 'No fonts selected'}
+                                        </StatusPill>
+                                        <StatusPill tone={textLineCount > 0 ? 'emerald' : 'slate'}>
+                                            {textLineCount > 0
+                                                ? `${textLineCount} preview line${
+                                                      textLineCount === 1 ? '' : 's'
+                                                  }`
+                                                : 'No preview text'}
+                                        </StatusPill>
+                                        <StatusPill tone={monogramInfo ? 'amber' : 'slate'}>
+                                            {monogramInfo ? 'Monogram included' : 'Monogram optional'}
+                                        </StatusPill>
+                                    </div>
+                                }
+                            >
+                                <div className="grid gap-4 lg:grid-cols-[minmax(0,1.35fr)_minmax(320px,0.95fr)]">
+                                    <div className="rounded-[1.5rem] border border-slate-200/80 bg-white/72 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.75)]">
+                                        <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">
+                                            Selected fonts
+                                        </div>
+
+                                        <div className="mt-4 flex min-h-[58px] flex-wrap gap-2.5">
+                                            {selectedFontNames.length > 0 ? (
+                                                selectedFontNames.map((name, index) => {
+                                                    const tones = ['blue', 'violet', 'amber'];
+                                                    return (
+                                                        <StatusPill
+                                                            key={name}
+                                                            tone={tones[index % tones.length]}
+                                                        >
+                                                            {name}
+                                                        </StatusPill>
+                                                    );
+                                                })
+                                            ) : (
+                                                <div className="flex items-center text-sm text-slate-500">
+                                                    Your chosen fonts will show up here.
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    <div className="rounded-[1.5rem] border border-slate-200/80 bg-[linear-gradient(180deg,rgba(239,246,255,0.78),rgba(248,250,255,0.72))] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.78)]">
+                                        <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">
+                                            Quick tools
+                                        </div>
+
+                                        <div className="mt-4 flex flex-wrap gap-2.5">
+                                            <button
+                                                onClick={() => setShowHebrewPalette(true)}
+                                                className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition-all hover:-translate-y-px hover:bg-slate-50"
+                                                type="button"
+                                            >
+                                                Hebrew Keyboard
+                                            </button>
+                                            <button
+                                                onClick={() => setShowAccentPalette(true)}
+                                                className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition-all hover:-translate-y-px hover:bg-slate-50"
+                                                type="button"
+                                            >
+                                                Accents
+                                            </button>
+                                            <button
+                                                onClick={() => setShowGlyphPalette(true)}
+                                                className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition-all hover:-translate-y-px hover:bg-slate-50"
+                                                type="button"
+                                            >
+                                                Symbols
+                                            </button>
+                                        </div>
+
+                                        <p className="mt-3 text-sm leading-6 text-slate-600">
+                                            Use these while composing text so the preview better matches the real job.
+                                        </p>
+                                    </div>
+                                </div>
+                            </SectionShell>
+
+                            <SectionShell
+                                eyebrow="Step 1"
+                                title="Choose up to three fonts"
+                                description="Pick a tight shortlist. The comparison tools work best when you’re choosing between a few genuinely strong directions."
+                            >
+                                <div className="space-y-7">
+                                    {Object.entries(fontLibrary).map(([category, fonts]) => (
+                                        <div key={category}>
+                                            <div className="mb-4 flex items-center justify-between gap-4 border-b border-slate-200/70 pb-3">
+                                                <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-600">
+                                                    {category}
+                                                </h3>
+                                                <span className="text-xs font-medium text-slate-400">
+                                                    Tap to add or remove
+                                                </span>
+                                            </div>
+
+                                            <div className="flex flex-wrap gap-3">
+                                                {fonts.map((font) => {
+                                                    const isSelected = selectedFonts.some(
+                                                        (f) => f.name === font.name
+                                                    );
+                                                    const isScriptFont = scriptFontsToAdjust.includes(
+                                                        font.name
+                                                    );
+                                                    let fontSizeClass = isScriptFont
+                                                        ? 'text-2xl'
+                                                        : 'text-lg';
+                                                    if (font.name === 'Concerto Pro')
+                                                        fontSizeClass = 'text-4xl';
+
+                                                    return (
+                                                        <button
+                                                            key={font.name}
+                                                            onClick={() => handleFontSelect(font)}
+                                                            className={`group relative overflow-hidden rounded-[1.2rem] border px-5 py-3.5 font-semibold transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 ${fontSizeClass} ${
+                                                                isSelected
+                                                                    ? 'border-blue-200 bg-[linear-gradient(135deg,rgba(239,246,255,0.95),rgba(237,233,254,0.92))] text-slate-900 shadow-[0_20px_30px_-22px_rgba(59,130,246,0.28)]'
+                                                                    : 'border-slate-200 bg-[linear-gradient(180deg,rgba(255,255,255,0.94),rgba(248,250,252,0.92))] text-slate-800 shadow-[0_18px_28px_-24px_rgba(15,23,42,0.10)] hover:-translate-y-px hover:border-slate-300 hover:bg-white'
+                                                            }`}
+                                                            style={{
+                                                                fontFamily:
+                                                                    font.name === 'Alumni Sans'
+                                                                        ? 'Alumni Sans Regular'
+                                                                        : font.styles[
+                                                                              Object.keys(font.styles)[0]
+                                                                          ],
+                                                            }}
+                                                            type="button"
+                                                        >
+                                                            <span className="relative z-10 flex items-center gap-3">
+                                                                <span>{font.name}</span>
+                                                                {isSelected && (
+                                                                    <span className="rounded-full border border-blue-100 bg-white/90 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.16em] text-blue-700">
+                                                                        Selected
+                                                                    </span>
+                                                                )}
+                                                            </span>
+                                                        </button>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </SectionShell>
+
+                            <SectionShell
+                                eyebrow="Step 2"
+                                title="Enter your preview text"
+                                description="Use real wording from the order whenever possible. Multiple lines are perfect for testing size hierarchy, spacing, and mixed-font layouts."
+                                action={
+                                    <div className="flex flex-wrap items-center justify-end gap-2">
+                                        <button
+                                            onClick={() => setShowHebrewPalette(true)}
+                                            className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition-all hover:-translate-y-px hover:bg-slate-50"
+                                            type="button"
+                                        >
+                                            Hebrew
+                                        </button>
+                                        <button
+                                            onClick={() => setShowAccentPalette(true)}
+                                            className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition-all hover:-translate-y-px hover:bg-slate-50"
+                                            type="button"
+                                        >
+                                            Accents
+                                        </button>
+                                        <button
+                                            onClick={() => setShowGlyphPalette(true)}
+                                            className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition-all hover:-translate-y-px hover:bg-slate-50"
+                                            type="button"
+                                        >
+                                            Symbols
+                                        </button>
+                                    </div>
+                                }
+                            >
+                                <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_300px]">
+                                    <div className="rounded-[1.55rem] border border-slate-200/80 bg-white/72 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.75)] sm:p-5">
+                                        <textarea
+                                            ref={customTextRef}
+                                            value={customText}
+                                            onChange={(e) => setCustomText(e.target.value)}
+                                            placeholder={DEFAULT_TEXT_PLACEHOLDER}
+                                            dir="auto"
+                                            className="min-h-[230px] w-full rounded-[1.3rem] border border-slate-200 bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(244,247,251,0.96))] px-5 py-4 text-xl text-slate-900 shadow-inner transition-all placeholder:text-slate-400 focus:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-200/60"
+                                        />
+                                    </div>
+
+                                    <div className="space-y-4">
+                                        <div className="rounded-[1.5rem] border border-slate-200/80 bg-white/72 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.75)]">
+                                            <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">
+                                                Live stats
+                                            </div>
+                                            <div className="mt-4 space-y-3 text-sm text-slate-700">
+                                                <div className="flex items-center justify-between rounded-xl border border-slate-200/80 bg-white/85 px-3 py-2.5">
+                                                    <span>Lines with text</span>
+                                                    <strong>{textLineCount}</strong>
+                                                </div>
+                                                <div className="flex items-center justify-between rounded-xl border border-slate-200/80 bg-white/85 px-3 py-2.5">
+                                                    <span>Characters</span>
+                                                    <strong>{customText.length}</strong>
+                                                </div>
+                                                <div className="flex items-center justify-between rounded-xl border border-slate-200/80 bg-white/85 px-3 py-2.5">
+                                                    <span>Alignment</span>
+                                                    <strong className="capitalize">{textAlign}</strong>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="rounded-[1.5rem] border border-blue-100/80 bg-[linear-gradient(180deg,rgba(239,246,255,0.78),rgba(248,250,255,0.72))] p-5 text-sm leading-6 text-slate-600 shadow-[inset_0_1px_0_rgba(255,255,255,0.78)]">
+                                            Standard mode is for stable comparison.
+                                            Font Mixing is for tailoring each line like a custom specimen.
+                                        </div>
+                                    </div>
+                                </div>
+                            </SectionShell>
+
+                            <LivePreviewSection
+                                monogramInfo={monogramInfo}
+                                combinedText={combinedText}
+                                hebrewRegex={hebrewRegex}
+                                hasStandardSelection={hasStandardSelection}
+                                previewLines={previewLines}
+                                openPreviewLineIndex={openPreviewLineIndex}
+                                setOpenPreviewLineIndex={setOpenPreviewLineIndex}
+                                selectedFonts={selectedFonts}
+                                getFontOptionByName={getFontOptionByName}
+                                getDefaultStyleKey={getDefaultStyleKey}
+                                getSortedStyleKeys={getSortedStyleKeys}
+                                fontSize={fontSize}
+                                lineSpacing={lineSpacing}
+                                textAlign={textAlign}
+                                setTextAlign={setTextAlign}
+                                handleFontSizeChange={handleFontSizeChange}
+                                handleLineSpacingChange={handleLineSpacingChange}
+                                handleApplyFontToActiveLine={handleApplyFontToActiveLine}
+                                handleLineStyleChange={handleLineStyleChange}
+                                handleLineFontSizeOverrideChange={handleLineFontSizeOverrideChange}
+                                AlignIcon={AlignIcon}
                             />
-                        </section>
 
-                        <LivePreviewSection
-                            monogramInfo={monogramInfo}
-                            combinedText={combinedText}
-                            hebrewRegex={hebrewRegex}
-                            hasStandardSelection={hasStandardSelection}
-                            previewLines={previewLines}
-                            openPreviewLineIndex={openPreviewLineIndex}
-                            setOpenPreviewLineIndex={setOpenPreviewLineIndex}
-                            selectedFonts={selectedFonts}
-                            getFontOptionByName={getFontOptionByName}
-                            getDefaultStyleKey={getDefaultStyleKey}
-                            getSortedStyleKeys={getSortedStyleKeys}
-                            fontSize={fontSize}
-                            lineSpacing={lineSpacing}
-                            textAlign={textAlign}
-                            setTextAlign={setTextAlign}
-                            handleFontSizeChange={handleFontSizeChange}
-                            handleLineSpacingChange={handleLineSpacingChange}
-                            handleApplyFontToActiveLine={handleApplyFontToActiveLine}
-                            handleLineStyleChange={handleLineStyleChange}
-                            handleLineFontSizeOverrideChange={handleLineFontSizeOverrideChange}
-                            AlignIcon={AlignIcon}
-                        />
+                            <SectionShell
+                                eyebrow="Step 3"
+                                title="Notes for the designer"
+                                description="Use this for special instructions, preferred alternatives, hierarchy notes, or anything that should travel with the submission."
+                            >
+                                <textarea
+                                    className="min-h-[160px] w-full rounded-[1.3rem] border border-slate-200 bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(244,247,251,0.96))] px-5 py-4 text-lg text-slate-900 shadow-inner transition-all placeholder:text-slate-400 focus:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-200/60"
+                                    value={customerNotes}
+                                    onChange={(e) => setCustomerNotes(e.target.value)}
+                                    placeholder="e.g., Please use Gotham if available, keep the first line more prominent, and make sure the accented characters match the proof style."
+                                />
+                            </SectionShell>
 
-                        <section className="bg-white rounded-2xl p-8 border border-slate-100 shadow-[0_10px_25px_-5px_rgba(50,75,106,0.2),_0_8px_10px_-6px_rgba(59,130,246,0.2)]">
-                            <h2 className="text-3xl font-bold text-slate-900 mb-2 tracking-normal" style={{ fontFamily: 'Alumni Sans Regular' }}>Notes for Designer</h2>
-                            <p className="text-slate-500 mb-6">
-                                Have a specific font in mind not listed above? Or any other special requests? Let us know here!
-                            </p>
-                            <textarea
-                                className="w-full p-5 border-2 border-slate-200 rounded-xl shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 min-h-[120px] text-xl"
-                                value={customerNotes}
-                                onChange={(e) => setCustomerNotes(e.target.value)}
-                                placeholder="e.g., Please use the font 'Gotham' if available. Also, make the first line larger than the second..."
-                            />
-                        </section>
-                    </div>
-
-                    <div className="mt-10">
-                        <button
-                            onClick={handleSubmitClick}
-                            className="w-full px-10 py-4 bg-blue-600 text-white text-xl rounded-2xl font-bold hover:bg-blue-700 shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                            disabled={isSubmitting || (!monogramInfo && !hasStandardSelection)}
-                        >
-                            {isSubmitting ? 'Submitting...' : 'Submit Selection'}
-                        </button>
-                    </div>
+                            <div className="flex justify-end pt-1">
+                                <button
+                                    onClick={handleSubmitClick}
+                                    className="rounded-[1.25rem] bg-[linear-gradient(180deg,#60a5fa,#2563eb)] px-8 py-3.5 text-lg font-bold text-white shadow-[0_18px_28px_-16px_rgba(37,99,235,0.4)] transition-all hover:-translate-y-px hover:shadow-[0_22px_32px_-14px_rgba(37,99,235,0.48)] disabled:cursor-not-allowed disabled:opacity-50"
+                                    disabled={isSubmitting || !hasReadySubmission}
+                                >
+                                    {isSubmitting ? 'Submitting...' : 'Submit Selection'}
+                                </button>
+                            </div>
+                        </div>
+                    </main>
                 </div>
-            </main>
+            </div>
 
-            {(showCustomerModal || showMessageBox || showGlyphPalette || showAccentPalette || showHebrewPalette || showSuccessModal) && (
-                <div className="fixed inset-0 bg-slate-900 bg-opacity-75 flex items-center justify-center p-4 z-50 transition-opacity animate-fade-in">
-                    <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-4xl animate-jump-in">
-
+            {(showCustomerModal ||
+                showMessageBox ||
+                showGlyphPalette ||
+                showAccentPalette ||
+                showHebrewPalette ||
+                showSuccessModal) && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-sm animate-fade-in">
+                    <div className="w-full max-w-4xl rounded-[2rem] border border-slate-200 bg-white p-8 shadow-[0_32px_90px_-40px_rgba(15,23,42,0.28)] animate-jump-in">
                         {showSuccessModal && (
                             <SuccessModal onClose={() => setShowSuccessModal(false)} />
                         )}
@@ -800,17 +1181,27 @@ const App = () => {
                         {showHebrewPalette && (
                             <div className="space-y-4">
                                 <h3 className="text-2xl font-bold text-slate-900">Hebrew Keyboard</h3>
-                                <p className="text-slate-600 pb-2">
-                                    Please use the virtual keyboard below to compose your Hebrew text. When finished, click the 'Insert Text' button. Your text will be added to the main input area, allowing you to preview it in your chosen fonts.
+                                <p className="text-slate-600">
+                                    Compose your Hebrew text below, then insert it into the main text area.
                                 </p>
                                 <div className="pt-2">
-                                    <div className="flex justify-between items-center mb-2">
-                                        <label className="block text-sm font-medium text-slate-700">Preview</label>
-                                        <button onClick={() => { setHebrewPaletteText(''); setLastHebrewBaseChar('א'); }} className="px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200 text-sm font-semibold">Clear</button>
+                                    <div className="mb-2 flex justify-between items-center">
+                                        <label className="block text-sm font-medium text-slate-700">
+                                            Preview
+                                        </label>
+                                        <button
+                                            onClick={() => {
+                                                setHebrewPaletteText('');
+                                                setLastHebrewBaseChar('א');
+                                            }}
+                                            className="px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200 text-sm font-semibold"
+                                        >
+                                            Clear
+                                        </button>
                                     </div>
                                     <textarea
                                         readOnly
-                                        className="w-full p-3 border-2 border-slate-200 rounded-xl shadow-inner bg-slate-50 min-h-[100px] text-2xl cursor-default"
+                                        className="w-full p-3 border border-slate-200 rounded-xl shadow-inner bg-slate-50 min-h-[100px] text-2xl cursor-default text-slate-900"
                                         value={hebrewPaletteText}
                                         dir="rtl"
                                         style={{ fontFamily: 'Noto Rashi Hebrew Regular' }}
@@ -820,13 +1211,21 @@ const App = () => {
                                     {hebrewKeyboardLayout.map((row, rowIndex) => (
                                         <div key={rowIndex} className="flex justify-center gap-1.5">
                                             {row.map((key, keyIndex) => {
-                                                const char = typeof key === 'object' ? (isShifted ? key.shifted : key.unshifted) : key;
+                                                const char =
+                                                    typeof key === 'object'
+                                                        ? isShifted
+                                                            ? key.shifted
+                                                            : key.unshifted
+                                                        : key;
                                                 return (
                                                     <button
                                                         key={keyIndex}
                                                         onClick={() => {
-                                                            setHebrewPaletteText(prev => prev + char);
-                                                            if (!isShifted && hebrewCharacters.includes(char)) {
+                                                            setHebrewPaletteText((prev) => prev + char);
+                                                            if (
+                                                                !isShifted &&
+                                                                hebrewCharacters.includes(char)
+                                                            ) {
                                                                 setLastHebrewBaseChar(char);
                                                             }
                                                             setIsShifted(false);
@@ -840,33 +1239,69 @@ const App = () => {
                                         </div>
                                     ))}
                                     <div className="flex justify-center gap-1.5">
-                                        <button onClick={() => setIsShifted(prev => !prev)} className={`h-12 w-24 flex items-center justify-center rounded-lg text-slate-800 text-lg font-semibold shadow-sm transition-colors ${isShifted ? 'bg-blue-500 text-white' : 'bg-white hover:bg-blue-100'}`}>
+                                        <button
+                                            onClick={() => setIsShifted((prev) => !prev)}
+                                            className={`h-12 w-24 flex items-center justify-center rounded-lg text-slate-800 text-lg font-semibold shadow-sm transition-colors ${
+                                                isShifted
+                                                    ? 'bg-blue-500 text-white'
+                                                    : 'bg-white hover:bg-blue-100'
+                                            }`}
+                                        >
                                             Shift
                                         </button>
-                                        <button onClick={() => setHebrewPaletteText(prev => prev + ' ')} className="h-12 flex-1 flex items-center justify-center rounded-lg bg-white hover:bg-blue-100 text-slate-800 text-xl font-semibold shadow-sm transition-colors">
+                                        <button
+                                            onClick={() =>
+                                                setHebrewPaletteText((prev) => prev + ' ')
+                                            }
+                                            className="h-12 flex-1 flex items-center justify-center rounded-lg bg-white hover:bg-blue-100 text-slate-800 text-xl font-semibold shadow-sm transition-colors"
+                                        >
                                             Space
                                         </button>
-                                        <button onClick={handleHebrewBackspace} className="h-12 w-24 flex items-center justify-center rounded-lg bg-white hover:bg-blue-100 text-slate-800 text-lg font-semibold shadow-sm transition-colors">
+                                        <button
+                                            onClick={handleHebrewBackspace}
+                                            className="h-12 w-24 flex items-center justify-center rounded-lg bg-white hover:bg-blue-100 text-slate-800 text-lg font-semibold shadow-sm transition-colors"
+                                        >
                                             Backspace
                                         </button>
                                     </div>
                                 </div>
                                 <div className="flex justify-between items-center pt-4">
-                                    <button type="button" className="px-6 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base flex-shrink-0" onClick={() => { setShowHebrewPalette(false); setIsShifted(false); setHebrewPaletteText(''); setLastHebrewBaseChar('א'); }}>Close</button>
-                                    <button type="button" className="px-8 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-bold transition-colors shadow-sm text-base flex-shrink-0" onClick={handleInsertToMain}>Insert Text</button>
+                                    <button
+                                        type="button"
+                                        className="px-6 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base flex-shrink-0"
+                                        onClick={() => {
+                                            setShowHebrewPalette(false);
+                                            setIsShifted(false);
+                                            setHebrewPaletteText('');
+                                            setLastHebrewBaseChar('א');
+                                        }}
+                                    >
+                                        Close
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="px-8 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-bold transition-colors shadow-sm text-base flex-shrink-0"
+                                        onClick={handleInsertToMain}
+                                    >
+                                        Insert Text
+                                    </button>
                                 </div>
                             </div>
                         )}
 
                         {showAccentPalette && (
                             <div className="space-y-6">
-                                <h3 className="text-2xl font-bold text-slate-900">Accented Character Palette</h3>
+                                <h3 className="text-2xl font-bold text-slate-900">
+                                    Accented Character Palette
+                                </h3>
                                 <div className="space-y-4 bg-slate-50 p-4 rounded-lg max-h-[60vh] overflow-y-auto">
                                     {Object.entries(accentedCharacters).map(([baseLetter, chars]) => (
                                         <div key={baseLetter} className="flex items-start gap-4">
-                                            <div className="font-bold text-lg text-slate-600 w-8 text-center pt-2">{baseLetter}</div>
+                                            <div className="font-bold text-lg text-slate-600 w-8 text-center pt-2">
+                                                {baseLetter}
+                                            </div>
                                             <div className="flex flex-wrap gap-2 flex-1">
-                                                {chars.map(char => (
+                                                {chars.map((char) => (
                                                     <button
                                                         key={char}
                                                         onClick={() => handleGlyphInsert(char)}
@@ -881,39 +1316,70 @@ const App = () => {
                                     ))}
                                 </div>
                                 <div className="flex justify-between items-center pt-4">
-                                    <p className="text-sm text-slate-600 pr-4">Note: Character support varies by font. Please confirm the appearance in the live preview.</p>
-                                    <button type="button" className="px-6 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base flex-shrink-0" onClick={() => setShowAccentPalette(false)}>Close</button>
+                                    <p className="text-sm text-slate-600 pr-4">
+                                        Character support varies by font. Confirm the final appearance in the live preview.
+                                    </p>
+                                    <button
+                                        type="button"
+                                        className="px-6 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base flex-shrink-0"
+                                        onClick={() => setShowAccentPalette(false)}
+                                    >
+                                        Close
+                                    </button>
                                 </div>
                             </div>
                         )}
+
                         {showGlyphPalette && (
                             <div className="space-y-6">
                                 <h3 className="text-2xl font-bold text-slate-900">Symbol Palette</h3>
-                                <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-12 gap-2 bg-slate-100 p-4 rounded-lg">
-                                    {glyphs.map(glyph => (<button key={glyph} onClick={() => handleGlyphInsert(glyph)} className="flex items-center justify-center h-12 w-full bg-white rounded-lg shadow-sm text-2xl text-slate-700 hover:bg-blue-100 hover:text-blue-700 transition-colors" title={`Insert ${glyph}`}>{glyph}</button>))}
+                                <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-12 gap-2 bg-slate-50 p-4 rounded-lg">
+                                    {glyphs.map((glyph) => (
+                                        <button
+                                            key={glyph}
+                                            onClick={() => handleGlyphInsert(glyph)}
+                                            className="flex items-center justify-center h-12 w-full bg-white rounded-lg shadow-sm text-2xl text-slate-700 hover:bg-blue-100 hover:text-blue-700 transition-colors"
+                                            title={`Insert ${glyph}`}
+                                        >
+                                            {glyph}
+                                        </button>
+                                    ))}
                                 </div>
                                 <div className="flex justify-between items-center pt-4">
-                                    <p className="text-sm text-slate-600 pr-4">Note: Character support varies by font. Please confirm the appearance in the live preview.</p>
-                                    <button type="button" className="px-6 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base flex-shrink-0" onClick={() => setShowGlyphPalette(false)}>Close</button>
+                                    <p className="text-sm text-slate-600 pr-4">
+                                        Character support varies by font. Confirm the final appearance in the live preview.
+                                    </p>
+                                    <button
+                                        type="button"
+                                        className="px-6 py-3 bg-slate-200 text-slate-800 rounded-xl hover:bg-slate-300 font-semibold transition-colors text-base flex-shrink-0"
+                                        onClick={() => setShowGlyphPalette(false)}
+                                    >
+                                        Close
+                                    </button>
                                 </div>
                             </div>
                         )}
+
                         {showCustomerModal && (
                             <CustomerInfoModal
                                 onSubmit={handleCustomerModalSubmit}
                                 orderNumber={orderNumber}
-                                onOrderNumberChange={e => setOrderNumber(e.target.value)}
+                                onOrderNumberChange={(e) => setOrderNumber(e.target.value)}
                                 customerName={customerName}
-                                onCustomerNameChange={e => setCustomerName(e.target.value)}
+                                onCustomerNameChange={(e) => setCustomerName(e.target.value)}
                                 customerCompany={customerCompany}
-                                onCustomerCompanyChange={e => setCustomerCompany(e.target.value)}
+                                onCustomerCompanyChange={(e) => setCustomerCompany(e.target.value)}
                                 isDataPrefilled={isDataPrefilled}
                                 isSubmitting={isSubmitting}
                                 onCancel={() => setShowCustomerModal(false)}
                             />
                         )}
+
                         {showMessageBox && (
-                            <MessageModal message={message} onClose={() => setShowMessageBox(false)} />
+                            <MessageModal
+                                message={message}
+                                onClose={() => setShowMessageBox(false)}
+                            />
                         )}
                     </div>
                 </div>

@@ -19,55 +19,56 @@ const PreviewLayoutControls = ({
     const controlLabel = isFontMixingMode ? 'Focused Layout Controls' : 'Layout Controls';
     const controlTitle = isFontMixingMode
         ? activePreviewLine
-            ? `Line ${activePreviewLine.lineIndex + 1} layout`
+            ? `Line ${activePreviewLine.lineIndex + 1} controls`
             : 'Choose a line to edit'
-        : 'Standard preview layout';
+        : 'Standard preview controls';
+
     const controlDescription = isFontMixingMode
         ? activePreviewLine
-            ? 'Size, spacing, and alignment stay anchored here while you switch lines below.'
-            : 'Select a line below to activate the line-specific size control.'
-        : 'Size, spacing, and alignment stay in one place while you compare every selected font.';
+            ? 'Tune the active line without breaking the overall composition.'
+            : 'Select a line below to unlock line-specific controls.'
+        : 'Adjust the specimen view once, then compare every selected font in the same layout.';
 
     return (
-        <div className="rounded-[1.75rem] border border-slate-200/80 bg-[linear-gradient(180deg,rgba(248,250,252,0.98),rgba(241,245,249,0.96))] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_26px_50px_-36px_rgba(15,23,42,0.18)] sm:p-6">
+        <div className="rounded-[1.9rem] border border-white/10 bg-[linear-gradient(135deg,rgba(15,23,42,0.96),rgba(30,41,59,0.92)_55%,rgba(17,24,39,0.96))] p-5 shadow-[0_32px_70px_-42px_rgba(15,23,42,0.85)] sm:p-6">
             <div className="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
                 <div className="max-w-[40rem]">
-                    <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">
+                    <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-sky-300/80">
                         {controlLabel}
                     </div>
 
                     <div className="mt-1 flex flex-wrap items-center gap-2.5">
-                        <h3 className="text-lg font-semibold tracking-tight text-slate-950">
+                        <h3 className="text-xl font-semibold tracking-tight text-white">
                             {controlTitle}
                         </h3>
 
                         <span
                             className={`inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] ${
                                 isFontMixingMode
-                                    ? 'border border-blue-100/80 bg-blue-50/75 text-blue-700'
-                                    : 'border border-slate-200/90 bg-white/90 text-slate-600'
+                                    ? 'border border-sky-400/20 bg-sky-400/10 text-sky-200'
+                                    : 'border border-fuchsia-400/20 bg-fuchsia-400/10 text-fuchsia-200'
                             }`}
                         >
                             {isFontMixingMode
                                 ? activePreviewLine
-                                    ? 'Active line controls'
-                                    : 'Waiting for line selection'
-                                : 'Applies to every standard preview'}
+                                    ? 'Active line'
+                                    : 'Waiting for selection'
+                                : 'Applies to all standard previews'}
                         </span>
                     </div>
 
-                    <p className="mt-1.5 max-w-[36rem] text-sm leading-6 text-slate-500">
+                    <p className="mt-2 max-w-[36rem] text-sm leading-6 text-slate-300">
                         {controlDescription}
                     </p>
                 </div>
 
-                <div className="grid gap-4 md:grid-cols-2 xl:min-w-[44rem] xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] xl:items-end">
+                <div className="grid gap-4 md:grid-cols-2 xl:min-w-[46rem] xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] xl:items-end">
                     <PreviewRangeControl
                         id={isFontMixingMode ? 'mixing-size-shared' : 'standard-size-shared'}
                         label={isFontMixingMode ? 'Line Size' : 'Preview Size'}
                         value={isFontMixingMode ? activeLineFontSize : fontSize}
                         min={isFontMixingMode ? 12 : 18}
-                        max={isFontMixingMode ? 160 : 72}
+                        max={isFontMixingMode ? 160 : 88}
                         step={1}
                         onChange={
                             isFontMixingMode
@@ -100,8 +101,8 @@ const PreviewLayoutControls = ({
                                     disabled={!activePreviewLine || isUsingDefaultLineSize}
                                     className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-all duration-200 ${
                                         !activePreviewLine || isUsingDefaultLineSize
-                                            ? 'cursor-default bg-slate-100 text-slate-400'
-                                            : 'border border-slate-200/90 bg-white/95 text-slate-600 hover:border-slate-300 hover:bg-slate-50'
+                                            ? 'cursor-default bg-slate-800 text-slate-500'
+                                            : 'border border-white/10 bg-slate-950/80 text-slate-200 hover:border-slate-500 hover:bg-slate-900'
                                     }`}
                                 >
                                     Use default
@@ -122,14 +123,12 @@ const PreviewLayoutControls = ({
                     />
 
                     <div className="flex justify-start md:col-span-2 xl:col-span-1 xl:justify-end">
-                        <div className="rounded-[1rem] border border-slate-200/80 bg-white/90 p-1.5 shadow-[0_12px_24px_-20px_rgba(15,23,42,0.2)]">
-                            <AlignmentControl
-                                textAlign={textAlign}
-                                setTextAlign={setTextAlign}
-                                AlignIcon={AlignIcon}
-                                keyPrefix={isFontMixingMode ? 'mixing-shared-' : 'standard-shared-'}
-                            />
-                        </div>
+                        <AlignmentControl
+                            textAlign={textAlign}
+                            setTextAlign={setTextAlign}
+                            AlignIcon={AlignIcon}
+                            keyPrefix={isFontMixingMode ? 'mixing-shared-' : 'standard-shared-'}
+                        />
                     </div>
                 </div>
             </div>

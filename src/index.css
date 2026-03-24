@@ -4,15 +4,31 @@
 
 /* --- Base Styles & Animations --- */
 :root {
-    --main-bg: #f8fafc;
-    --sidebar-bg: #0f172a;
+    --main-bg: #eaf1fa;
+    --sidebar-bg: #dfe8f5;
     --card-bg: #fff;
     --accent: #2563eb;
     --radius: 1.5rem;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
-    background: var(--main-bg);
+    margin: 0;
+    background:
+        radial-gradient(circle at top, rgba(59, 130, 246, 0.12), transparent 28%),
+        radial-gradient(circle at 85% 20%, rgba(99, 102, 241, 0.08), transparent 22%),
+        linear-gradient(180deg, #edf3fb 0%, #e6eef8 42%, #eef4fb 100%);
+    color: #0f172a;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+    background: rgba(59, 130, 246, 0.2);
+    color: #0f172a;
 }
 
 .animate-fade-in {
@@ -58,8 +74,8 @@ body {
     margin-top: -0.25rem;
     border: 2px solid #ffffff;
     border-radius: 9999px;
-    background: #2563eb;
-    box-shadow: 0 8px 18px -8px rgba(37, 99, 235, 0.65);
+    background: linear-gradient(180deg, #60a5fa 0%, #2563eb 100%);
+    box-shadow: 0 8px 18px -8px rgba(37, 99, 235, 0.42);
     -webkit-appearance: none;
     appearance: none;
 }
@@ -81,8 +97,8 @@ body {
     height: 1rem;
     border: 2px solid #ffffff;
     border-radius: 9999px;
-    background: #2563eb;
-    box-shadow: 0 8px 18px -8px rgba(37, 99, 235, 0.65);
+    background: linear-gradient(180deg, #60a5fa 0%, #2563eb 100%);
+    box-shadow: 0 8px 18px -8px rgba(37, 99, 235, 0.42);
 }
 
 /* --- Alumni Sans --- */
