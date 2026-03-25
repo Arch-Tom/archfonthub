@@ -1,4 +1,4 @@
-﻿import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import MonogramMaker from './MonogramMaker';
 import LivePreviewSection from './components/LivePreviewSection';
 import CustomerInfoModal from './components/modals/CustomerInfoModal';
@@ -438,7 +438,7 @@ const App = () => {
         })();
 
         const escapeXml = (unsafe) =>
-            unsafe.replace(/[<>&'"]/g, (c) => {
+            unsafe.replace(/[<>&'\"]/g, (c) => {
                 switch (c) {
                     case '<':
                         return '&lt;';
@@ -448,7 +448,7 @@ const App = () => {
                         return '&amp;';
                     case "'":
                         return '&apos;';
-                    case '"':
+                    case '\"':
                         return '&quot;';
                     default:
                         return c;
@@ -478,19 +478,13 @@ const App = () => {
                 if (frameStyle === 'solid') {
                     frameSvg = `<circle cx="${svgCenterX}" cy="${monogramBlockY}" r="64" fill="black" />`;
                 } else if (frameStyle === 'double') {
-                    frameSvg = `<g>
-                        <circle cx="${svgCenterX}" cy="${monogramBlockY}" r="64" fill="black" />
-                        <circle cx="${svgCenterX}" cy="${monogramBlockY}" r="59" fill="none" stroke="white" stroke-width="3" />
-                    </g>`;
+                    frameSvg = `<g>\n                        <circle cx="${svgCenterX}" cy="${monogramBlockY}" r="64" fill="black" />\n                        <circle cx="${svgCenterX}" cy="${monogramBlockY}" r="59" fill="none" stroke="white" stroke-width="3" />\n                    </g>`;
                 } else if (frameStyle === 'dotted') {
                     frameSvg = `<circle cx="${svgCenterX}" cy="${monogramBlockY}" r="64" fill="none" stroke="black" stroke-width="4" stroke-dasharray="10 10" />`;
                 } else if (frameStyle === 'outline') {
                     frameSvg = `<circle cx="${svgCenterX}" cy="${monogramBlockY}" r="64" fill="none" stroke="black" stroke-width="2" />`;
                 } else if (frameStyle === 'thick-thin') {
-                    frameSvg = `<g>
-                        <circle cx="${svgCenterX}" cy="${monogramBlockY}" r="65" fill="none" stroke="black" stroke-width="5" />
-                        <circle cx="${svgCenterX}" cy="${monogramBlockY}" r="57" fill="none" stroke="black" stroke-width="2" />
-                    </g>`;
+                    frameSvg = `<g>\n                        <circle cx="${svgCenterX}" cy="${monogramBlockY}" r="65" fill="none" stroke="black" stroke-width="5" />\n                        <circle cx="${svgCenterX}" cy="${monogramBlockY}" r="57" fill="none" stroke="black" stroke-width="2" />\n                    </g>`;
                 }
 
                 svgElements += frameSvg;
@@ -533,11 +527,7 @@ const App = () => {
                         currentX += measuredWidths[index];
                     }
                 } else {
-                    const textSvg = `<text x="${svgCenterX}" y="${monogramBlockY}" text-anchor="middle" dominant-baseline="middle" fill="${textColor}" style="font-size: ${finalFontSize}px;">
-                    <tspan font-family="LeftCircleMonogram">${escapeXml(first)}</tspan>
-                    <tspan font-family="MiddleCircleMonogram" dy="-0.02em">${escapeXml(middle)}</tspan>
-                    <tspan font-family="RightCircleMonogram">${escapeXml(last)}</tspan>
-                </text>`;
+                    const textSvg = `<text x="${svgCenterX}" y="${monogramBlockY}" text-anchor="middle" dominant-baseline="middle" fill="${textColor}" style="font-size: ${finalFontSize}px;">\n                    <tspan font-family="LeftCircleMonogram">${escapeXml(first)}</tspan>\n                    <tspan font-family="MiddleCircleMonogram" dy="-0.02em">${escapeXml(middle)}</tspan>\n                    <tspan font-family="RightCircleMonogram">${escapeXml(last)}</tspan>\n                </text>`;
                     svgElements += textSvg;
                 }
 
@@ -596,11 +586,7 @@ const App = () => {
                         escapeXml,
                     });
                 } else {
-                    svgElements += `<g dominant-baseline="middle" text-anchor="middle" font-family="${fontFamily}" fill="#181717">
-                    <text x="${leftX}" y="${monogramBlockY}" font-size="${sideSize}px">${escapeXml(first)}</text>
-                    <text x="${middleX}" y="${monogramBlockY}" font-size="${middleSize}px">${escapeXml(middle)}</text>
-                    <text x="${rightX}" y="${monogramBlockY}" font-size="${sideSize}px">${escapeXml(last)}</text>
-                </g>`;
+                    svgElements += `<g dominant-baseline="middle" text-anchor="middle" font-family="${fontFamily}" fill="#181717">\n                    <text x="${leftX}" y="${monogramBlockY}" font-size="${sideSize}px">${escapeXml(first)}</text>\n                    <text x="${middleX}" y="${monogramBlockY}" font-size="${middleSize}px">${escapeXml(middle)}</text>\n                    <text x="${rightX}" y="${monogramBlockY}" font-size="${sideSize}px">${escapeXml(last)}</text>\n                </g>`;
                 }
                 y = monogramBlockY + middleSize / 2;
             }
@@ -664,10 +650,7 @@ const App = () => {
         if (metadataElements !== '') {
             metadataHeight = populatedPreviewLines.length * labelFontSize * 1.5 + padding;
             const metadataBlockY = contentY + padding + labelFontSize;
-            metadataBlock = `<g transform="translate(0, ${metadataBlockY})">
-                <text x="${padding}" y="0" font-family="Arial" font-size="${labelFontSize}" fill="#94a3b8" font-weight="700">Font Reference</text>
-                ${metadataElements}
-            </g>\n`;
+            metadataBlock = `<g transform="translate(0, ${metadataBlockY})">\n                <text x="${padding}" y="0" font-family="Arial" font-size="${labelFontSize}" fill="#94a3b8" font-weight="700">Font Reference</text>\n                ${metadataElements}\n            </g>\n`;
         }
 
         const svgHeight =
@@ -793,69 +776,15 @@ const App = () => {
                                 </div>
                             </div>
 
-                            <div className="mt-5 space-y-4">
-                                <div className="rounded-[1.45rem] border border-white/70 bg-white/60 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.75)]">
-                                    <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-500">
-                                        Workspace status
-                                    </div>
-
-                                    <div className="mt-4 space-y-2.5">
-                                        <div className="flex items-center justify-between rounded-xl border border-slate-200/80 bg-white/80 px-3 py-2.5">
-                                            <span className="text-sm text-slate-700">Fonts selected</span>
-                                            <StatusPill tone="blue">{selectedFonts.length}/3</StatusPill>
-                                        </div>
-
-                                        <div className="flex items-center justify-between rounded-xl border border-slate-200/80 bg-white/80 px-3 py-2.5">
-                                            <span className="text-sm text-slate-700">Preview lines</span>
-                                            <StatusPill tone="violet">{textLineCount}</StatusPill>
-                                        </div>
-
-                                        <div className="flex items-center justify-between rounded-xl border border-slate-200/80 bg-white/80 px-3 py-2.5">
-                                            <span className="text-sm text-slate-700">Monogram</span>
-                                            <StatusPill tone={monogramInfo ? 'amber' : 'slate'}>
-                                                {monogramInfo ? 'Ready' : 'Optional'}
-                                            </StatusPill>
-                                        </div>
-                                    </div>
+                            <div className="mt-5 rounded-[1.45rem] border border-blue-100/80 bg-[linear-gradient(180deg,rgba(239,246,255,0.8),rgba(245,247,255,0.74))] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.78)]">
+                                <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-500">
+                                    Submission state
                                 </div>
-
-                                <div className="rounded-[1.45rem] border border-white/70 bg-white/60 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.75)]">
-                                    <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-500">
-                                        Best flow
-                                    </div>
-
-                                    <ol className="mt-4 space-y-3 text-sm text-slate-700">
-                                        <li className="flex gap-3">
-                                            <span className="mt-0.5 inline-flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 text-xs font-bold text-blue-700">
-                                                1
-                                            </span>
-                                            <span>Choose up to three strong contenders.</span>
-                                        </li>
-                                        <li className="flex gap-3">
-                                            <span className="mt-0.5 inline-flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-violet-100 text-xs font-bold text-violet-700">
-                                                2
-                                            </span>
-                                            <span>Type realistic wording from the actual order.</span>
-                                        </li>
-                                        <li className="flex gap-3">
-                                            <span className="mt-0.5 inline-flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-emerald-100 text-xs font-bold text-emerald-700">
-                                                3
-                                            </span>
-                                            <span>Compare in Standard mode, then mix lines if needed.</span>
-                                        </li>
-                                    </ol>
-                                </div>
-
-                                <div className="rounded-[1.45rem] border border-blue-100/80 bg-[linear-gradient(180deg,rgba(239,246,255,0.8),rgba(245,247,255,0.74))] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.78)]">
-                                    <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-500">
-                                        Submission state
-                                    </div>
-                                    <p className="mt-3 text-sm leading-6 text-slate-700">
-                                        {hasReadySubmission
-                                            ? 'You have enough information to submit whenever you are ready.'
-                                            : 'Choose at least one font and enter preview text to unlock submission.'}
-                                    </p>
-                                </div>
+                                <p className="mt-3 text-sm leading-6 text-slate-700">
+                                    {hasReadySubmission
+                                        ? 'You have enough information to submit whenever you are ready.'
+                                        : 'Choose at least one font and enter preview text to unlock submission.'}
+                                </p>
                             </div>
 
                             <div className="mt-auto pt-5">
@@ -1074,44 +1003,15 @@ const App = () => {
                                     </div>
                                 }
                             >
-                                <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_300px]">
-                                    <div className="rounded-[1.55rem] border border-slate-200/80 bg-white/72 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.75)] sm:p-5">
-                                        <textarea
-                                            ref={customTextRef}
-                                            value={customText}
-                                            onChange={(e) => setCustomText(e.target.value)}
-                                            placeholder={DEFAULT_TEXT_PLACEHOLDER}
-                                            dir="auto"
-                                            className="min-h-[230px] w-full rounded-[1.3rem] border border-slate-200 bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(244,247,251,0.96))] px-5 py-4 text-xl text-slate-900 shadow-inner transition-all placeholder:text-slate-400 focus:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-200/60"
-                                        />
-                                    </div>
-
-                                    <div className="space-y-4">
-                                        <div className="rounded-[1.5rem] border border-slate-200/80 bg-white/72 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.75)]">
-                                            <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">
-                                                Live stats
-                                            </div>
-                                            <div className="mt-4 space-y-3 text-sm text-slate-700">
-                                                <div className="flex items-center justify-between rounded-xl border border-slate-200/80 bg-white/85 px-3 py-2.5">
-                                                    <span>Lines with text</span>
-                                                    <strong>{textLineCount}</strong>
-                                                </div>
-                                                <div className="flex items-center justify-between rounded-xl border border-slate-200/80 bg-white/85 px-3 py-2.5">
-                                                    <span>Characters</span>
-                                                    <strong>{customText.length}</strong>
-                                                </div>
-                                                <div className="flex items-center justify-between rounded-xl border border-slate-200/80 bg-white/85 px-3 py-2.5">
-                                                    <span>Alignment</span>
-                                                    <strong className="capitalize">{textAlign}</strong>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div className="rounded-[1.5rem] border border-blue-100/80 bg-[linear-gradient(180deg,rgba(239,246,255,0.78),rgba(248,250,255,0.72))] p-5 text-sm leading-6 text-slate-600 shadow-[inset_0_1px_0_rgba(255,255,255,0.78)]">
-                                            Standard mode is for stable comparison.
-                                            Font Mixing is for tailoring each line like a custom specimen.
-                                        </div>
-                                    </div>
+                                <div className="rounded-[1.55rem] border border-slate-200/80 bg-white/72 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.75)] sm:p-5">
+                                    <textarea
+                                        ref={customTextRef}
+                                        value={customText}
+                                        onChange={(e) => setCustomText(e.target.value)}
+                                        placeholder={DEFAULT_TEXT_PLACEHOLDER}
+                                        dir="auto"
+                                        className="min-h-[230px] w-full rounded-[1.3rem] border border-slate-200 bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(244,247,251,0.96))] px-5 py-4 text-xl text-slate-900 shadow-inner transition-all placeholder:text-slate-400 focus:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-200/60"
+                                    />
                                 </div>
                             </SectionShell>
 
