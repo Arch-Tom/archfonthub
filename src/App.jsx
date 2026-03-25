@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import MonogramMaker from './MonogramMaker';
 import LivePreviewSection from './components/LivePreviewSection';
 import CustomerInfoModal from './components/modals/CustomerInfoModal';
@@ -16,7 +16,7 @@ import {
   scriptFontsToAdjust,
   styleSortOrder,
 } from './constants/fontConfig';
-import { buildArtworkTextElement, isCorelSafeEditableFont, loadCurveFont } from './utils/svgExport';
+import { buildArtworkTextElement, loadCurveFont } from './utils/svgExport';
 
 const AlignIcon = ({ align = 'left' }) => {
   const isLeft = align === 'left';
@@ -312,13 +312,6 @@ const App = () => {
 
     const escapeXml = (unsafe) => unsafe.replace(/[<>&'\"]/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', "'": '&apos;', '"': '&quot;' }[c] || c));
 
-    const getEditableModeForFont = (fontFamily) => {
-      if (mode !== 'editable') return mode;
-      return isCorelSafeEditableFont(fontFamily) ? 'editable' : 'curves';
-    };
-
-    const getEditableExportFamily = (fontFamily) => exportFontFamilyMap[fontFamily] || fontFamily;
-
     if (monogramInfo) {
       const data = monogramInfo.data;
       y += labelFontSize + 10;
@@ -339,7 +332,7 @@ const App = () => {
         else if (frameStyle === 'outline') frameSvg = `<circle cx="${svgCenterX}" cy="${monogramBlockY}" r="64" fill="none" stroke="black" stroke-width="2" />`;
         else if (frameStyle === 'thick-thin') frameSvg = `<g><circle cx="${svgCenterX}" cy="${monogramBlockY}" r="65" fill="none" stroke="black" stroke-width="5" /><circle cx="${svgCenterX}" cy="${monogramBlockY}" r="57" fill="none" stroke="black" stroke-width="2" /></g>`;
         svgElements += frameSvg;
-        if (mode === 'curves' || mode === 'editable') {
+        if (mode === 'curves') {
           const letterConfigs = [
             { char: first, fontFamily: 'LeftCircleMonogram', yOffset: 0 },
             { char: middle, fontFamily: 'MiddleCircleMonogram', yOffset: -(finalFontSize * 0.02) },
@@ -351,16 +344,16 @@ const App = () => {
           }));
           let currentX = svgCenterX - measuredWidths.reduce((sum, width) => sum + width, 0) / 2;
           for (const [index, config] of letterConfigs.entries()) {
-            svgElements += await buildArtworkTextElement({ mode: 'curves', text: config.char, x: currentX, y: monogramBlockY + config.yOffset, fontFamily: config.fontFamily, exportFontFamily: config.fontFamily, fontSize: finalFontSize, fill: textColor, anchor: 'start', verticalAlign: 'middle', escapeXml });
+            svgElements += await buildArtworkTextElement({ mode, text: config.char, x: currentX, y: monogramBlockY + config.yOffset, fontFamily: config.fontFamily, exportFontFamily: config.fontFamily, fontSize: finalFontSize, fill: textColor, anchor: 'start', verticalAlign: 'middle', escapeXml });
             currentX += measuredWidths[index];
           }
+        } else {
+          svgElements += `<text x="${svgCenterX}" y="${monogramBlockY}" text-anchor="middle" dominant-baseline="middle" fill="${textColor}" style="font-size: ${finalFontSize}px;"><tspan font-family="LeftCircleMonogram">${escapeXml(first)}</tspan><tspan font-family="MiddleCircleMonogram" dy="-0.02em">${escapeXml(middle)}</tspan><tspan font-family="RightCircleMonogram">${escapeXml(last)}</tspan></text>`;
         }
         y = monogramBlockY + 100;
       } else {
         const [first, middle, last] = data.text;
         const fontFamily = data.font.styles[data.style];
-        const monogramMode = getEditableModeForFont(fontFamily);
-        const exportFamily = getEditableExportFamily(fontFamily);
         const baseSize = data.fontSize || 100;
         const sideScale = 1.2;
         const middleScale = 1.6;
@@ -371,9 +364,13 @@ const App = () => {
         const middleX = svgCenterX;
         const leftX = middleX - middleLetterHalfWidth - gap;
         const rightX = middleX + middleLetterHalfWidth + gap;
-        svgElements += await buildArtworkTextElement({ mode: monogramMode, text: first, x: leftX, y: monogramBlockY, fontFamily, exportFontFamily: exportFamily, fontSize: sideSize, anchor: 'middle', verticalAlign: 'middle', escapeXml });
-        svgElements += await buildArtworkTextElement({ mode: monogramMode, text: middle, x: middleX, y: monogramBlockY, fontFamily, exportFontFamily: exportFamily, fontSize: middleSize, anchor: 'middle', verticalAlign: 'middle', escapeXml });
-        svgElements += await buildArtworkTextElement({ mode: monogramMode, text: last, x: rightX, y: monogramBlockY, fontFamily, exportFontFamily: exportFamily, fontSize: sideSize, anchor: 'middle', verticalAlign: 'middle', escapeXml });
+        if (mode === 'curves') {
+          svgElements += await buildArtworkTextElement({ mode, text: first, x: leftX, y: monogramBlockY, fontFamily, exportFontFamily: fontFamily, fontSize: sideSize, anchor: 'middle', verticalAlign: 'middle', escapeXml });
+          svgElements += await buildArtworkTextElement({ mode, text: middle, x: middleX, y: monogramBlockY, fontFamily, exportFontFamily: fontFamily, fontSize: middleSize, anchor: 'middle', verticalAlign: 'middle', escapeXml });
+          svgElements += await buildArtworkTextElement({ mode, text: last, x: rightX, y: monogramBlockY, fontFamily, exportFontFamily: fontFamily, fontSize: sideSize, anchor: 'middle', verticalAlign: 'middle', escapeXml });
+        } else {
+          svgElements += `<g dominant-baseline="middle" text-anchor="middle" font-family="${fontFamily}" fill="#181717"><text x="${leftX}" y="${monogramBlockY}" font-size="${sideSize}px">${escapeXml(first)}</text><text x="${middleX}" y="${monogramBlockY}" font-size="${middleSize}px">${escapeXml(middle)}</text><text x="${rightX}" y="${monogramBlockY}" font-size="${sideSize}px">${escapeXml(last)}</text></g>`;
+        }
         y = monogramBlockY + middleSize / 2;
       }
     }
@@ -384,12 +381,11 @@ const App = () => {
       for (const [index, line] of populatedPreviewLines.entries()) {
         const font = getFontOptionByName(line.fontName);
         const activeFontFamily = font?.styles[line.styleKey] || font?.styles[getDefaultStyleKey(font?.name)] || 'inherit';
-        const exportFontFamily = getEditableExportFamily(activeFontFamily);
+        const exportFontFamily = exportFontFamilyMap[activeFontFamily] || activeFontFamily;
         const effectiveFontSize = line.fontSizeOverride ?? fontSize;
         const styleName = line.styleKey ? line.styleKey.charAt(0).toUpperCase() + line.styleKey.slice(1) : 'No Style';
-        const artworkMode = getEditableModeForFont(activeFontFamily);
         artworkY += effectiveFontSize * lineSpacing;
-        svgElements += await buildArtworkTextElement({ mode: artworkMode, text: line.text, x: aligned.x, y: artworkY, fontFamily: activeFontFamily, exportFontFamily, fontSize: effectiveFontSize, fill: '#181717', anchor: aligned.anchor, escapeXml });
+        svgElements += await buildArtworkTextElement({ mode, text: line.text, x: aligned.x, y: artworkY, fontFamily: activeFontFamily, exportFontFamily, fontSize: effectiveFontSize, fill: '#181717', anchor: aligned.anchor, escapeXml });
         metadataElements += `<text x="${padding}" y="${labelFontSize + 10 + index * labelFontSize * 1.5}" font-family="Arial" font-size="${labelFontSize}" fill="#6b7280" font-weight="600">Line ${index + 1}: ${escapeXml(font?.name || 'No Font')} (${escapeXml(styleName)})</text>\n`;
       }
       contentY = artworkY;
