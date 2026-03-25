@@ -16,7 +16,7 @@ import {
   scriptFontsToAdjust,
   styleSortOrder,
 } from './constants/fontConfig';
-import { buildArtworkTextElement, loadCurveFont } from './utils/svgExport';
+import { buildArtworkTextElement, buildEmbeddedFontFaceCss, loadCurveFont } from './utils/svgExport';
 
 const AlignIcon = ({ align = 'left' }) => {
   const isLeft = align === 'left';
@@ -312,6 +312,39 @@ const App = () => {
 
     const escapeXml = (unsafe) => unsafe.replace(/[<>&'\"]/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', "'": '&apos;', '"': '&quot;' }[c] || c));
 
+    const getEditableExportFamily = (sourceFontFamily, embeddedFontFamilyMap = {}) => {
+      return embeddedFontFamilyMap[sourceFontFamily] || embeddedFontFamilyMap[exportFontFamilyMap[sourceFontFamily]] || exportFontFamilyMap[sourceFontFamily] || sourceFontFamily;
+    };
+
+    let embeddedFontCss = '';
+    let embeddedFontFamilyMap = {};
+
+    if (mode !== 'curves') {
+      const fontFamiliesToEmbed = [];
+
+      if (monogramInfo) {
+        const data = monogramInfo.data;
+        if (data.isCircular) {
+          fontFamiliesToEmbed.push('LeftCircleMonogram', 'MiddleCircleMonogram', 'RightCircleMonogram');
+        } else {
+          fontFamiliesToEmbed.push(data.font.styles[data.style]);
+        }
+      }
+
+      if (hasStandardSelection) {
+        populatedPreviewLines.forEach((line) => {
+          const font = getFontOptionByName(line.fontName);
+          const activeFontFamily =
+            font?.styles[line.styleKey] || font?.styles[getDefaultStyleKey(font?.name)] || '';
+          if (activeFontFamily) fontFamiliesToEmbed.push(activeFontFamily);
+        });
+      }
+
+      const embeddedFonts = await buildEmbeddedFontFaceCss(fontFamiliesToEmbed);
+      embeddedFontCss = embeddedFonts.cssText;
+      embeddedFontFamilyMap = embeddedFonts.familyMap;
+    }
+
     if (monogramInfo) {
       const data = monogramInfo.data;
       y += labelFontSize + 10;
@@ -348,12 +381,16 @@ const App = () => {
             currentX += measuredWidths[index];
           }
         } else {
-          svgElements += `<text x="${svgCenterX}" y="${monogramBlockY}" text-anchor="middle" dominant-baseline="middle" fill="${textColor}" style="font-size: ${finalFontSize}px;"><tspan font-family="LeftCircleMonogram">${escapeXml(first)}</tspan><tspan font-family="MiddleCircleMonogram" dy="-0.02em">${escapeXml(middle)}</tspan><tspan font-family="RightCircleMonogram">${escapeXml(last)}</tspan></text>`;
+          const leftFamily = getEditableExportFamily('LeftCircleMonogram', embeddedFontFamilyMap);
+          const middleFamily = getEditableExportFamily('MiddleCircleMonogram', embeddedFontFamilyMap);
+          const rightFamily = getEditableExportFamily('RightCircleMonogram', embeddedFontFamilyMap);
+          svgElements += `<text x="${svgCenterX}" y="${monogramBlockY}" text-anchor="middle" dominant-baseline="middle" fill="${textColor}" style="font-size: ${finalFontSize}px;"><tspan font-family="${escapeXml(leftFamily)}">${escapeXml(first)}</tspan><tspan font-family="${escapeXml(middleFamily)}" dy="-0.02em">${escapeXml(middle)}</tspan><tspan font-family="${escapeXml(rightFamily)}">${escapeXml(last)}</tspan></text>`;
         }
         y = monogramBlockY + 100;
       } else {
         const [first, middle, last] = data.text;
         const fontFamily = data.font.styles[data.style];
+        const editableMonogramFamily = getEditableExportFamily(fontFamily, embeddedFontFamilyMap);
         const baseSize = data.fontSize || 100;
         const sideScale = 1.2;
         const middleScale = 1.6;
@@ -369,7 +406,7 @@ const App = () => {
           svgElements += await buildArtworkTextElement({ mode, text: middle, x: middleX, y: monogramBlockY, fontFamily, exportFontFamily: fontFamily, fontSize: middleSize, anchor: 'middle', verticalAlign: 'middle', escapeXml });
           svgElements += await buildArtworkTextElement({ mode, text: last, x: rightX, y: monogramBlockY, fontFamily, exportFontFamily: fontFamily, fontSize: sideSize, anchor: 'middle', verticalAlign: 'middle', escapeXml });
         } else {
-          svgElements += `<g dominant-baseline="middle" text-anchor="middle" font-family="${fontFamily}" fill="#181717"><text x="${leftX}" y="${monogramBlockY}" font-size="${sideSize}px">${escapeXml(first)}</text><text x="${middleX}" y="${monogramBlockY}" font-size="${middleSize}px">${escapeXml(middle)}</text><text x="${rightX}" y="${monogramBlockY}" font-size="${sideSize}px">${escapeXml(last)}</text></g>`;
+          svgElements += `<g dominant-baseline="middle" text-anchor="middle" font-family="${escapeXml(editableMonogramFamily)}" fill="#181717"><text x="${leftX}" y="${monogramBlockY}" font-size="${sideSize}px">${escapeXml(first)}</text><text x="${middleX}" y="${monogramBlockY}" font-size="${middleSize}px">${escapeXml(middle)}</text><text x="${rightX}" y="${monogramBlockY}" font-size="${sideSize}px">${escapeXml(last)}</text></g>`;
         }
         y = monogramBlockY + middleSize / 2;
       }
@@ -381,11 +418,11 @@ const App = () => {
       for (const [index, line] of populatedPreviewLines.entries()) {
         const font = getFontOptionByName(line.fontName);
         const activeFontFamily = font?.styles[line.styleKey] || font?.styles[getDefaultStyleKey(font?.name)] || 'inherit';
-        const exportFontFamily = exportFontFamilyMap[activeFontFamily] || activeFontFamily;
+        const editableFontFamily = getEditableExportFamily(activeFontFamily, embeddedFontFamilyMap);
         const effectiveFontSize = line.fontSizeOverride ?? fontSize;
         const styleName = line.styleKey ? line.styleKey.charAt(0).toUpperCase() + line.styleKey.slice(1) : 'No Style';
         artworkY += effectiveFontSize * lineSpacing;
-        svgElements += await buildArtworkTextElement({ mode, text: line.text, x: aligned.x, y: artworkY, fontFamily: activeFontFamily, exportFontFamily, fontSize: effectiveFontSize, fill: '#181717', anchor: aligned.anchor, escapeXml });
+        svgElements += await buildArtworkTextElement({ mode, text: line.text, x: aligned.x, y: artworkY, fontFamily: activeFontFamily, exportFontFamily: editableFontFamily, fontSize: effectiveFontSize, fill: '#181717', anchor: aligned.anchor, escapeXml });
         metadataElements += `<text x="${padding}" y="${labelFontSize + 10 + index * labelFontSize * 1.5}" font-family="Arial" font-size="${labelFontSize}" fill="#6b7280" font-weight="600">Line ${index + 1}: ${escapeXml(font?.name || 'No Font')} (${escapeXml(styleName)})</text>\n`;
       }
       contentY = artworkY;
@@ -409,8 +446,9 @@ const App = () => {
       const metadataBlockY = contentY + padding + labelFontSize;
       metadataBlock = `<g transform="translate(0, ${metadataBlockY})"><text x="${padding}" y="0" font-family="Arial" font-size="${labelFontSize}" fill="#94a3b8" font-weight="700">Font Reference</text>${metadataElements}</g>`;
     }
+    const defsBlock = embeddedFontCss ? `<defs><style><![CDATA[${embeddedFontCss}]]></style></defs>` : '';
     const svgHeight = contentY + padding + metadataHeight + (metadataElements !== '' ? labelFontSize * 2 : 0);
-    return `<svg xmlns="http://www.w3.org/2000/svg" width="${svgWidth}" height="${svgHeight}" style="background-color: #FFF;">${svgElements}${metadataBlock}</svg>`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="${svgWidth}" height="${svgHeight}" style="background-color: #FFF;">${defsBlock}${svgElements}${metadataBlock}</svg>`;
   };
 
   const handleSubmitClick = async () => {
