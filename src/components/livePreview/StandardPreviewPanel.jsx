@@ -12,9 +12,9 @@ const StandardPreviewPanel = ({
   standardPreviewStyleMap,
   textAlign,
 }) => (
-  <div className="space-y-4">
+  <div className="rounded-[1.35rem] border border-slate-200 bg-[linear-gradient(180deg,rgba(248,250,252,0.95),rgba(241,245,249,0.92))] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)] sm:p-6">
     {safeSelectedFonts.length > 0 ? (
-      <div className="grid gap-4 xl:grid-cols-2">
+      <div className="space-y-8">
         {safeSelectedFonts.map((font) => {
           const fallbackFontFamily = getSafeFontFamilyPreview(font);
           const styleKeys = getSortedStyleKeys(font.styles || {});
@@ -25,87 +25,72 @@ const StandardPreviewPanel = ({
             displayStyleKeys[0];
           const activeStandardFontFamily =
             font?.styles?.[selectedStyleKey] || fallbackFontFamily;
-          const standardPreviewFontSize = Math.min(fontSize, 82);
 
           return (
-            <section
-              key={`standard-preview-${font.name}`}
-              className="overflow-hidden rounded-[1.35rem] border border-slate-200 bg-white shadow-[0_18px_36px_-30px_rgba(15,23,42,0.12)]"
-            >
-              <div className="border-b border-slate-200 bg-slate-50 px-4 py-4 sm:px-5">
-                <div className="flex flex-col gap-3">
-                  <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div className="flex flex-wrap items-center gap-2.5">
-                      <div
-                        className="inline-flex rounded-full border border-slate-200 bg-white px-4 py-1.5 text-sm font-semibold text-slate-800 shadow-sm"
-                        style={{ fontFamily: activeStandardFontFamily }}
+            <div key={`standard-preview-${font.name}`} className="relative flex flex-col items-start gap-3">
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+                <span
+                  className="bg-slate-900 text-white px-4 py-1 rounded-full text-sm font-bold shadow-sm"
+                  style={{ fontFamily: 'Arial' }}
+                >
+                  {font.name}
+                </span>
+                <div className="flex flex-wrap gap-1.5">
+                  {displayStyleKeys.map((styleKey) => {
+                    const isActiveStyle = styleKey === selectedStyleKey;
+
+                    return (
+                      <button
+                        key={`${font.name}-${styleKey}`}
+                        type="button"
+                        onClick={() =>
+                          setStandardPreviewStyleMap((current) => ({
+                            ...current,
+                            [font.name]: styleKey,
+                          }))
+                        }
+                        aria-pressed={isActiveStyle}
+                        className={`px-4 py-2 text-sm rounded-md border transition-colors ${
+                          isActiveStyle
+                            ? 'bg-slate-700 text-white border-slate-700'
+                            : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-100 hover:text-slate-900'
+                        }`}
                       >
-                        {font.name}
-                      </div>
-
-                      <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">
-                        Styles
-                      </div>
-                    </div>
-
-                    <div className="flex flex-wrap gap-2">
-                      {displayStyleKeys.map((styleKey) => {
-                        const isActiveStyle = styleKey === selectedStyleKey;
-
-                        return (
-                          <button
-                            key={`${font.name}-${styleKey}`}
-                            type="button"
-                            onClick={() =>
-                              setStandardPreviewStyleMap((current) => ({
-                                ...current,
-                                [font.name]: styleKey,
-                              }))
-                            }
-                            aria-pressed={isActiveStyle}
-                            className={`inline-flex rounded-full border px-3.5 py-1.5 text-xs font-medium transition-all duration-200 ${
-                              isActiveStyle
-                                ? 'border-slate-900 bg-slate-900 text-white'
-                                : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:text-slate-900'
-                            }`}
-                          >
-                            {formatStyleLabel(styleKey)}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
+                        {formatStyleLabel(styleKey)}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
-              <div className="bg-white px-5 py-5 sm:px-6 sm:py-6">
+              <div className="w-full rounded-[1rem] border border-slate-200 bg-white px-5 py-5 shadow-[0_12px_28px_-24px_rgba(15,23,42,0.16)]">
                 {standardPreviewLines.length > 0 ? (
-                  <div
-                    className="min-h-[220px] max-w-full break-words whitespace-pre-wrap text-slate-950"
+                  <p
+                    className="w-full break-words whitespace-pre-wrap text-slate-800"
                     style={{
                       fontFamily: activeStandardFontFamily,
-                      fontSize: `${standardPreviewFontSize}px`,
+                      fontSize: `${fontSize}px`,
                       lineHeight: Math.max(lineSpacing, 0.9),
                       textAlign,
                       overflowWrap: 'anywhere',
-                      color: '#0f172a',
+                      color: '#1f2937',
                     }}
                     dir="auto"
                   >
                     {standardPreviewLines.join('\n')}
-                  </div>
+                  </p>
                 ) : (
-                  <div className="max-w-sm text-sm leading-6 text-slate-400">
+                  <p className="text-sm leading-6 text-slate-400">
                     Enter text above to preview it in {font.name}.
-                  </div>
+                  </p>
                 )}
               </div>
-            </section>
+            </div>
           );
         })}
       </div>
     ) : (
-      <div className="flex min-h-[240px] items-center justify-center rounded-[1.35rem] border border-slate-200 bg-slate-50 text-center">
+      <div className="flex min-h-[240px] items-center justify-center rounded-[1.15rem] border border-slate-200 bg-white text-center">
         <div className="max-w-xs text-sm leading-6 text-slate-500">
           Select fonts and enter text above to compare them here.
         </div>
