@@ -16,15 +16,15 @@ const PreviewLineList = ({
     setOpenPreviewLineIndex,
     textAlign,
 }) => (
-    <div className="relative overflow-hidden rounded-[1.8rem] border border-white/10 bg-[linear-gradient(180deg,rgba(2,6,23,0.88),rgba(15,23,42,0.82))] px-4 py-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] sm:px-6 sm:py-7">
+    <div className="relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-[linear-gradient(180deg,rgba(9,14,26,0.9),rgba(15,23,42,0.84))] px-4 py-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] sm:px-6 sm:py-7">
         <div className="pointer-events-none absolute inset-0" aria-hidden="true">
-            <div className="absolute inset-x-0 top-0 h-24 bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.18),transparent_72%)]" />
-            <div className="absolute bottom-0 left-1/2 h-44 w-[70%] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(168,85,247,0.12),transparent_72%)] blur-3xl" />
+            <div className="absolute inset-x-0 top-0 h-24 bg-[radial-gradient(circle_at_top,rgba(125,211,252,0.14),transparent_72%)]" />
+            <div className="absolute bottom-0 left-1/2 h-44 w-[70%] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(99,102,241,0.08),transparent_72%)] blur-3xl" />
         </div>
 
         <div className="relative min-h-[320px]">
             {safePreviewLines.length > 0 ? (
-                <div className="rounded-[1.45rem] border border-white/8 bg-[linear-gradient(180deg,rgba(15,23,42,0.56),rgba(30,41,59,0.4))] px-4 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] sm:px-6 sm:py-6">
+                <div className="rounded-[1.35rem] border border-white/8 bg-[linear-gradient(180deg,rgba(15,23,42,0.56),rgba(30,41,59,0.4))] px-4 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] sm:px-6 sm:py-6">
                     <div className="mb-4 flex items-center justify-between gap-4">
                         <div>
                             <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-400">
@@ -57,9 +57,9 @@ const PreviewLineList = ({
                                     onClick={() => setOpenPreviewLineIndex(line.lineIndex)}
                                     aria-label={`Select line ${index + 1} for editing`}
                                     aria-pressed={isSelected}
-                                    className={`group relative block w-full overflow-hidden rounded-[1.2rem] border text-left outline-none transition-all duration-200 focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 ${
+                                    className={`group relative block w-full overflow-hidden rounded-[1.1rem] border text-left outline-none transition-all duration-200 focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 ${
                                         isSelected
-                                            ? 'border-sky-400/25 bg-[linear-gradient(135deg,rgba(14,165,233,0.18),rgba(37,99,235,0.12),rgba(168,85,247,0.12))] shadow-[0_22px_34px_-28px_rgba(56,189,248,0.55)]'
+                                            ? 'border-sky-400/20 bg-[linear-gradient(135deg,rgba(14,165,233,0.12),rgba(37,99,235,0.08),rgba(99,102,241,0.1))] shadow-[0_18px_30px_-26px_rgba(56,189,248,0.42)]'
                                             : 'border-white/6 bg-white/[0.03] hover:border-white/12 hover:bg-white/[0.05]'
                                     }`}
                                 >
@@ -93,7 +93,7 @@ const PreviewLineList = ({
                                             </div>
 
                                             <div
-                                                className={`relative rounded-[1rem] px-3 py-3 transition-all duration-200 ${
+                                                className={`relative rounded-[0.95rem] px-3 py-3 transition-all duration-200 ${
                                                     isSelected
                                                         ? 'bg-slate-950/45 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]'
                                                         : 'bg-black/10 group-hover:bg-black/15'
@@ -101,7 +101,7 @@ const PreviewLineList = ({
                                             >
                                                 {isSelected && (
                                                     <div
-                                                        className="pointer-events-none absolute inset-y-2 left-0 w-[3px] rounded-full bg-[linear-gradient(180deg,#38bdf8,#2563eb,#a855f7)]"
+                                                        className="pointer-events-none absolute inset-y-2 left-0 w-[3px] rounded-full bg-[linear-gradient(180deg,#7dd3fc,#2563eb,#6366f1)]"
                                                         aria-hidden="true"
                                                     />
                                                 )}

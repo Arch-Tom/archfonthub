@@ -25,12 +25,12 @@ const PreviewLayoutControls = ({
 
     const controlDescription = isFontMixingMode
         ? activePreviewLine
-            ? 'Tune the active line without breaking the overall composition.'
+            ? 'Tune the active line without throwing off the overall composition.'
             : 'Select a line below to unlock line-specific controls.'
         : 'Adjust the specimen view once, then compare every selected font in the same layout.';
 
     return (
-        <div className="rounded-[1.9rem] border border-white/10 bg-[linear-gradient(135deg,rgba(15,23,42,0.96),rgba(30,41,59,0.92)_55%,rgba(17,24,39,0.96))] p-5 shadow-[0_32px_70px_-42px_rgba(15,23,42,0.85)] sm:p-6">
+        <div className="rounded-[1.8rem] border border-white/10 bg-[linear-gradient(180deg,rgba(10,15,28,0.98),rgba(18,25,40,0.95)_56%,rgba(14,20,33,0.96))] p-5 shadow-[0_28px_60px_-40px_rgba(15,23,42,0.8)] sm:p-6">
             <div className="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
                 <div className="max-w-[40rem]">
                     <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-sky-300/80">
@@ -46,7 +46,7 @@ const PreviewLayoutControls = ({
                             className={`inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] ${
                                 isFontMixingMode
                                     ? 'border border-sky-400/20 bg-sky-400/10 text-sky-200'
-                                    : 'border border-fuchsia-400/20 bg-fuchsia-400/10 text-fuchsia-200'
+                                    : 'border border-white/10 bg-white/[0.05] text-slate-200'
                             }`}
                         >
                             {isFontMixingMode

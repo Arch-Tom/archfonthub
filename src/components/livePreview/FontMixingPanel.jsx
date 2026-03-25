@@ -36,28 +36,29 @@ const FontMixingPanel = ({
     const activeFontName = activePreviewLine?.fontName || null;
 
     return (
-        <div className="rounded-[1.9rem] border border-white/10 bg-[linear-gradient(135deg,rgba(2,6,23,0.98),rgba(15,23,42,0.96)_45%,rgba(49,46,129,0.88)_100%)] p-4 shadow-[0_36px_80px_-44px_rgba(15,23,42,0.9)] sm:p-5">
+        <div className="rounded-[1.85rem] border border-white/10 bg-[linear-gradient(180deg,rgba(8,13,24,0.98),rgba(15,23,42,0.96)_52%,rgba(20,27,44,0.94)_100%)] p-4 shadow-[0_34px_76px_-44px_rgba(15,23,42,0.88)] sm:p-5">
             <div className="space-y-4">
                 <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                     <div className="max-w-[34rem]">
-                        <div className="text-[10px] font-semibold uppercase tracking-[0.24em] text-fuchsia-200/80">
+                        <div className="text-[10px] font-semibold uppercase tracking-[0.24em] text-indigo-200/75">
                             Font Mixing
                         </div>
                         <div className="mt-1 text-lg font-semibold tracking-tight text-white sm:text-[1.1rem]">
-                            Build a custom composition line by line
+                            Build a tailored composition line by line
                         </div>
                         <p className="mt-1.5 text-sm leading-6 text-slate-300">
-                            Select a line, assign a font, change its style, and shape the composition like a real specimen layout.
+                            Select a line, assign a font, change its style, and shape the final
+                            composition without losing the overall layout.
                         </p>
                     </div>
 
-                    <div className="inline-flex items-center gap-2 self-start rounded-full border border-fuchsia-300/15 bg-fuchsia-400/10 px-3 py-1.5 text-[11px] font-semibold text-fuchsia-100 shadow-[0_12px_20px_-16px_rgba(192,38,211,0.45)]">
-                        <span className="h-1.5 w-1.5 rounded-full bg-fuchsia-300" />
+                    <div className="inline-flex items-center gap-2 self-start rounded-full border border-white/10 bg-white/[0.05] px-3 py-1.5 text-[11px] font-semibold text-slate-200 shadow-[0_12px_20px_-16px_rgba(15,23,42,0.45)]">
+                        <span className="h-1.5 w-1.5 rounded-full bg-sky-300" />
                         {activePreviewLine ? `Editing line ${activeLineNumber}` : 'Select a line'}
                     </div>
                 </div>
 
-                <div className="rounded-[1.5rem] border border-white/10 bg-black/15 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] sm:p-5">
+                <div className="rounded-[1.45rem] border border-white/10 bg-black/15 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] sm:p-5">
                     <div className="space-y-4">
                         <div className="flex flex-col gap-3">
                             <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
@@ -102,7 +103,7 @@ const FontMixingPanel = ({
                                                     aria-pressed={isActiveStyle}
                                                     className={`rounded-full border px-3 py-1.5 text-[11px] font-medium transition-all duration-200 ${
                                                         isActiveStyle
-                                                            ? 'border-fuchsia-300/25 bg-[linear-gradient(180deg,#a855f7,#7c3aed)] text-white shadow-[0_12px_18px_-16px_rgba(168,85,247,0.8)]'
+                                                            ? 'border-indigo-300/20 bg-[linear-gradient(180deg,rgba(129,140,248,0.96),rgba(79,70,229,0.96))] text-white shadow-[0_12px_18px_-16px_rgba(99,102,241,0.6)]'
                                                             : 'border-white/10 bg-white/5 text-slate-300 hover:border-white/16 hover:bg-white/8 hover:text-white'
                                                     }`}
                                                 >
@@ -122,8 +123,7 @@ const FontMixingPanel = ({
                                             getDefaultStyleKey(font.name) || 'regular';
                                         const sampleFontFamily =
                                             font?.styles?.[fallbackStyleKey] || fallbackFontFamily;
-                                        const isActiveFont =
-                                            activePreviewLine?.fontName === font.name;
+                                        const isActiveFont = activePreviewLine?.fontName === font.name;
 
                                         return (
                                             <button
@@ -135,11 +135,11 @@ const FontMixingPanel = ({
                                                 }
                                                 disabled={!activePreviewLine}
                                                 aria-pressed={isActiveFont}
-                                                className={`group overflow-hidden rounded-[1.15rem] border p-3 text-left transition-all duration-200 ${
+                                                className={`group overflow-hidden rounded-[1.05rem] border p-3 text-left transition-all duration-200 ${
                                                     !activePreviewLine
                                                         ? 'cursor-not-allowed border-white/8 bg-white/[0.03] opacity-70'
                                                         : isActiveFont
-                                                          ? 'border-sky-300/20 bg-[linear-gradient(135deg,rgba(14,165,233,0.14),rgba(59,130,246,0.12),rgba(168,85,247,0.14))] shadow-[0_20px_28px_-24px_rgba(56,189,248,0.55)]'
+                                                          ? 'border-sky-300/20 bg-[linear-gradient(180deg,rgba(14,165,233,0.1),rgba(59,130,246,0.08),rgba(99,102,241,0.12))] shadow-[0_18px_28px_-24px_rgba(56,189,248,0.42)]'
                                                           : 'border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] hover:-translate-y-px hover:border-white/14 hover:bg-white/[0.06]'
                                                 }`}
                                             >
@@ -148,7 +148,7 @@ const FontMixingPanel = ({
                                                         <span
                                                             className={`inline-flex rounded-full px-2.5 py-1 text-[12px] font-semibold shadow-[0_10px_18px_-16px_rgba(15,23,42,0.5)] ${
                                                                 isActiveFont
-                                                                    ? 'border border-sky-300/25 bg-slate-950/85 text-white'
+                                                                    ? 'border border-sky-300/25 bg-slate-950/88 text-white'
                                                                     : 'border border-white/10 bg-slate-950/80 text-white'
                                                             }`}
                                                             style={{ fontFamily: sampleFontFamily }}
@@ -177,7 +177,7 @@ const FontMixingPanel = ({
                                                                         0.42,
                                                                     16
                                                                 ),
-                                                                26
+                                                                24
                                                             )}px`,
                                                             lineHeight: Math.max(lineSpacing, 0.96),
                                                             textAlign,
