@@ -30,8 +30,17 @@ const loadCurveFont = async (fontFamily) => {
     return curveFontCache.get(fontFamily);
 };
 
-const buildSvgTextElement = ({ x, y, anchor = 'start', fontFamily, fontSize, fill = '#181717', text, extraAttributes = '' }) =>
-    `<text x="${x}" y="${y}" text-anchor="${anchor}" font-family="${fontFamily}" font-size="${fontSize}" fill="${fill}"${extraAttributes}>${text}</text>\n`;
+const buildSvgTextElement = ({
+    x,
+    y,
+    anchor = 'start',
+    fontFamily,
+    fontSize,
+    fill = '#181717',
+    text,
+    extraAttributes = '',
+}) =>
+    `<text x="${x}" y="${y}" text-anchor="${anchor}" font-family="${fontFamily}" font-size="${fontSize}" fill="${fill}" xml:space="preserve" text-rendering="geometricPrecision" font-kerning="normal" kerning="auto" stroke="none"${extraAttributes}>${text}</text>\n`;
 
 const getCurveBaselineY = (font, y, fontSize, verticalAlign) => {
     if (verticalAlign !== 'middle') return y;
@@ -58,9 +67,9 @@ const buildCurveTextElement = async ({
             ? x - width
             : x;
     const baselineY = getCurveBaselineY(font, y, fontSize, verticalAlign);
-    const pathData = font.getPath(text, startX, baselineY, fontSize, { kerning: true }).toPathData(2);
+    const pathData = font.getPath(text, startX, baselineY, fontSize, { kerning: true }).toPathData(4);
 
-    return `<path d="${pathData}" fill="${fill}" />\n`;
+    return `<path d="${pathData}" fill="${fill}" fill-rule="nonzero" stroke="none" />\n`;
 };
 
 const buildArtworkTextElement = async ({
