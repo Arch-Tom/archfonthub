@@ -9,69 +9,31 @@ const fontAssetMap = Array.from(
 }, {});
 
 const curveFontCache = new Map();
-const fontDataUriCache = new Map();
 
-const getFontMimeType = (fontUrl) => {
-    if (!fontUrl) return 'font/ttf';
-    const lower = fontUrl.toLowerCase();
-    if (lower.endsWith('.woff2')) return 'font/woff2';
-    if (lower.endsWith('.woff')) return 'font/woff';
-    if (lower.endsWith('.otf')) return 'font/otf';
-    if (lower.endsWith('.ttf')) return 'font/ttf';
-    return 'application/octet-stream';
-};
+const COREL_SAFE_EDITABLE_FONTS = new Set([
+    'Arial',
+    'Arial Bold',
+    'Arial Italic',
+    'Arial Bold Italic',
+    'Calibri',
+    'Calibri Bold',
+    'Calibri Italic',
+    'Times New Roman',
+    'Times New Roman Bold',
+    'Times New Roman Italic',
+    'Times New Roman Bold Italic',
+    'Monotype Corsiva',
+    'French Script MT',
+    'Old English Text MT',
+    'Bookman Old Style Bold',
+    'Bookman Old Style Italic',
+    'Bookman Old Style Bold Italic',
+    'Century Schoolbook',
+    'Century Schoolbook Bold',
+    'Century Schoolbook Bold Italic',
+]);
 
-const toBase64 = (arrayBuffer) => {
-    let binary = '';
-    const bytes = new Uint8Array(arrayBuffer);
-    const chunkSize = 0x8000;
-    for (let index = 0; index < bytes.length; index += chunkSize) {
-        const chunk = bytes.subarray(index, index + chunkSize);
-        binary += String.fromCharCode(...chunk);
-    }
-    return btoa(binary);
-};
-
-const getEmbeddedFontDataUri = async (fontFamily) => {
-    if (!fontFamily || !fontAssetMap[fontFamily]) return null;
-    if (!fontDataUriCache.has(fontFamily)) {
-        fontDataUriCache.set(fontFamily, (async () => {
-            const fontUrl = fontAssetMap[fontFamily];
-            const response = await fetch(fontUrl);
-            if (!response.ok) {
-                throw new Error(`Failed to load font asset for ${fontFamily}`);
-            }
-            const fontBuffer = await response.arrayBuffer();
-            const mimeType = getFontMimeType(fontUrl);
-            const base64 = toBase64(fontBuffer);
-            return `data:${mimeType};base64,${base64}`;
-        })().catch((error) => {
-            console.error(error);
-            return null;
-        }));
-    }
-
-    return fontDataUriCache.get(fontFamily);
-};
-
-const buildEmbeddedFontFaceCss = async (fontFamilies = []) => {
-    const uniqueFamilies = Array.from(new Set(fontFamilies.filter(Boolean)));
-    const rules = [];
-    const familyMap = {};
-
-    for (const fontFamily of uniqueFamilies) {
-        const dataUri = await getEmbeddedFontDataUri(fontFamily);
-        if (!dataUri) continue;
-        const embeddedFamily = `AFH-${fontFamily.replace(/[^a-zA-Z0-9_-]/g, '_')}`;
-        familyMap[fontFamily] = embeddedFamily;
-        rules.push(`@font-face { font-family: '${embeddedFamily}'; src: url('${dataUri}'); }`);
-    }
-
-    return {
-        cssText: rules.join('\n'),
-        familyMap,
-    };
-};
+const isCorelSafeEditableFont = (fontFamily) => COREL_SAFE_EDITABLE_FONTS.has(fontFamily);
 
 const loadCurveFont = async (fontFamily) => {
     if (!fontFamily || !fontAssetMap[fontFamily]) return null;
@@ -177,10 +139,8 @@ const buildArtworkTextElement = async ({
 export {
     fontAssetMap,
     curveFontCache,
-    fontDataUriCache,
     loadCurveFont,
-    buildEmbeddedFontFaceCss,
-    getEmbeddedFontDataUri,
+    isCorelSafeEditableFont,
     buildSvgTextElement,
     getCurveBaselineY,
     buildCurveTextElement,
