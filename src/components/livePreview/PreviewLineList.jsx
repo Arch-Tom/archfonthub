@@ -16,25 +16,20 @@ const PreviewLineList = ({
     setOpenPreviewLineIndex,
     textAlign,
 }) => (
-    <div className="relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-[linear-gradient(180deg,rgba(9,14,26,0.9),rgba(15,23,42,0.84))] px-4 py-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] sm:px-6 sm:py-7">
-        <div className="pointer-events-none absolute inset-0" aria-hidden="true">
-            <div className="absolute inset-x-0 top-0 h-24 bg-[radial-gradient(circle_at_top,rgba(125,211,252,0.14),transparent_72%)]" />
-            <div className="absolute bottom-0 left-1/2 h-44 w-[70%] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(99,102,241,0.08),transparent_72%)] blur-3xl" />
-        </div>
-
-        <div className="relative min-h-[320px]">
+    <div className="relative overflow-hidden rounded-[1.45rem] border border-slate-200 bg-white px-4 py-5 shadow-[0_18px_40px_-34px_rgba(15,23,42,0.12)] sm:px-5 sm:py-6">
+        <div className="relative min-h-[300px]">
             {safePreviewLines.length > 0 ? (
-                <div className="rounded-[1.35rem] border border-white/8 bg-[linear-gradient(180deg,rgba(15,23,42,0.56),rgba(30,41,59,0.4))] px-4 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] sm:px-6 sm:py-6">
+                <div className="rounded-[1.15rem] border border-slate-200 bg-slate-50 px-4 py-5 sm:px-5 sm:py-5">
                     <div className="mb-4 flex items-center justify-between gap-4">
                         <div>
-                            <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-400">
+                            <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">
                                 Composition Canvas
                             </div>
-                            <p className="mt-1 text-sm text-slate-300">
+                            <p className="mt-1 text-sm text-slate-600">
                                 Pick a line to make it the active editing target.
                             </p>
                         </div>
-                        <span className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-300">
+                        <span className="inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-600">
                             {safePreviewLines.length} lines
                         </span>
                     </div>
@@ -57,10 +52,10 @@ const PreviewLineList = ({
                                     onClick={() => setOpenPreviewLineIndex(line.lineIndex)}
                                     aria-label={`Select line ${index + 1} for editing`}
                                     aria-pressed={isSelected}
-                                    className={`group relative block w-full overflow-hidden rounded-[1.1rem] border text-left outline-none transition-all duration-200 focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 ${
+                                    className={`group relative block w-full overflow-hidden rounded-[1rem] border text-left outline-none transition-all duration-200 focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
                                         isSelected
-                                            ? 'border-sky-400/20 bg-[linear-gradient(135deg,rgba(14,165,233,0.12),rgba(37,99,235,0.08),rgba(99,102,241,0.1))] shadow-[0_18px_30px_-26px_rgba(56,189,248,0.42)]'
-                                            : 'border-white/6 bg-white/[0.03] hover:border-white/12 hover:bg-white/[0.05]'
+                                            ? 'border-slate-900 bg-white shadow-[0_14px_30px_-28px_rgba(15,23,42,0.28)]'
+                                            : 'border-slate-200 bg-white hover:border-slate-300'
                                     }`}
                                 >
                                     <div className="relative flex items-start gap-3 px-3 py-3.5 sm:px-4">
@@ -68,8 +63,8 @@ const PreviewLineList = ({
                                             <span
                                                 className={`inline-flex min-w-[1.55rem] items-center justify-center rounded-full border px-1.5 py-0.5 text-[10px] font-semibold transition-all duration-200 ${
                                                     isSelected
-                                                        ? 'border-sky-300/30 bg-slate-950/80 text-sky-200'
-                                                        : 'border-white/8 bg-slate-950/60 text-slate-400 group-hover:text-slate-300'
+                                                        ? 'border-slate-900 bg-slate-900 text-white'
+                                                        : 'border-slate-200 bg-slate-50 text-slate-500 group-hover:text-slate-700'
                                                 }`}
                                                 aria-hidden="true"
                                             >
@@ -80,38 +75,27 @@ const PreviewLineList = ({
                                         <div className="min-w-0 flex-1">
                                             <div className="mb-2 flex flex-wrap items-center gap-2">
                                                 {line.fontName ? (
-                                                    <span className="inline-flex items-center rounded-full border border-white/10 bg-slate-950/70 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-300">
+                                                    <span className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-600">
                                                         {line.fontName}
                                                     </span>
                                                 ) : null}
 
                                                 {isSelected ? (
-                                                    <span className="inline-flex items-center rounded-full border border-sky-300/25 bg-sky-400/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-sky-200">
+                                                    <span className="inline-flex items-center rounded-full border border-slate-900 bg-slate-900 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-white">
                                                         Active line
                                                     </span>
                                                 ) : null}
                                             </div>
 
                                             <div
-                                                className={`relative rounded-[0.95rem] px-3 py-3 transition-all duration-200 ${
+                                                className={`relative rounded-[0.9rem] border px-3 py-3 transition-all duration-200 ${
                                                     isSelected
-                                                        ? 'bg-slate-950/45 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]'
-                                                        : 'bg-black/10 group-hover:bg-black/15'
+                                                        ? 'border-slate-900/10 bg-slate-50'
+                                                        : 'border-slate-200 bg-slate-50/70 group-hover:bg-slate-50'
                                                 }`}
                                             >
-                                                {isSelected && (
-                                                    <div
-                                                        className="pointer-events-none absolute inset-y-2 left-0 w-[3px] rounded-full bg-[linear-gradient(180deg,#7dd3fc,#2563eb,#6366f1)]"
-                                                        aria-hidden="true"
-                                                    />
-                                                )}
-
                                                 <p
-                                                    className={`max-w-full break-words whitespace-pre-wrap text-white transition-all duration-200 ${
-                                                        isSelected
-                                                            ? 'opacity-100'
-                                                            : 'opacity-90 group-hover:opacity-100'
-                                                    }`}
+                                                    className="max-w-full break-words whitespace-pre-wrap text-slate-900"
                                                     style={{
                                                         fontFamily: activeFontFamily,
                                                         fontSize: `${effectiveFontSize}px`,
@@ -120,6 +104,7 @@ const PreviewLineList = ({
                                                         width: '100%',
                                                         maxWidth: '100%',
                                                         overflowWrap: 'anywhere',
+                                                        color: '#0f172a',
                                                     }}
                                                     dir="auto"
                                                 >
@@ -134,12 +119,12 @@ const PreviewLineList = ({
                     </div>
                 </div>
             ) : (
-                <div className="flex min-h-[320px] items-center justify-center text-center">
+                <div className="flex min-h-[300px] items-center justify-center text-center">
                     <div className="max-w-md">
-                        <div className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-400 shadow-sm">
+                        <div className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500 shadow-sm">
                             Composition canvas
                         </div>
-                        <p className="mt-4 text-sm leading-6 text-slate-400">
+                        <p className="mt-4 text-sm leading-6 text-slate-500">
                             Add text and selected fonts above to start building your mixed-font
                             preview here.
                         </p>

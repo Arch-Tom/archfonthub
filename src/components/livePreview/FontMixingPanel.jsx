@@ -36,49 +36,49 @@ const FontMixingPanel = ({
     const activeFontName = activePreviewLine?.fontName || null;
 
     return (
-        <div className="rounded-[1.85rem] border border-white/10 bg-[linear-gradient(180deg,rgba(8,13,24,0.98),rgba(15,23,42,0.96)_52%,rgba(20,27,44,0.94)_100%)] p-4 shadow-[0_34px_76px_-44px_rgba(15,23,42,0.88)] sm:p-5">
+        <div className="rounded-[1.6rem] border border-slate-200 bg-white p-4 shadow-[0_22px_48px_-36px_rgba(15,23,42,0.18)] sm:p-5">
             <div className="space-y-4">
                 <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                     <div className="max-w-[34rem]">
-                        <div className="text-[10px] font-semibold uppercase tracking-[0.24em] text-indigo-200/75">
+                        <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-slate-500">
                             Font Mixing
                         </div>
-                        <div className="mt-1 text-lg font-semibold tracking-tight text-white sm:text-[1.1rem]">
-                            Build a tailored composition line by line
+                        <div className="mt-1 text-lg font-semibold tracking-tight text-slate-900 sm:text-[1.1rem]">
+                            Build the layout one line at a time
                         </div>
-                        <p className="mt-1.5 text-sm leading-6 text-slate-300">
-                            Select a line, assign a font, change its style, and shape the final
-                            composition without losing the overall layout.
+                        <p className="mt-1.5 text-sm leading-6 text-slate-600">
+                            Select a line, apply a font, and adjust its style while keeping the full
+                            composition easy to read.
                         </p>
                     </div>
 
-                    <div className="inline-flex items-center gap-2 self-start rounded-full border border-white/10 bg-white/[0.05] px-3 py-1.5 text-[11px] font-semibold text-slate-200 shadow-[0_12px_20px_-16px_rgba(15,23,42,0.45)]">
-                        <span className="h-1.5 w-1.5 rounded-full bg-sky-300" />
+                    <div className="inline-flex items-center gap-2 self-start rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-700">
+                        <span className="h-1.5 w-1.5 rounded-full bg-slate-900" />
                         {activePreviewLine ? `Editing line ${activeLineNumber}` : 'Select a line'}
                     </div>
                 </div>
 
-                <div className="rounded-[1.45rem] border border-white/10 bg-black/15 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] sm:p-5">
+                <div className="rounded-[1.25rem] border border-slate-200 bg-slate-50 p-4 sm:p-5">
                     <div className="space-y-4">
                         <div className="flex flex-col gap-3">
-                            <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
+                            <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
                                 <div className="flex flex-wrap items-center gap-2">
-                                    <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-400">
+                                    <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">
                                         Active target
                                     </span>
 
                                     {activePreviewLine ? (
-                                        <span className="inline-flex items-center rounded-full border border-sky-300/20 bg-sky-400/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-sky-200">
+                                        <span className="inline-flex items-center rounded-full border border-slate-300 bg-white px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-700">
                                             Line {activeLineNumber}
                                         </span>
                                     ) : (
-                                        <span className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400">
+                                        <span className="inline-flex items-center rounded-full border border-slate-200 bg-white px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">
                                             No line selected
                                         </span>
                                     )}
 
                                     {activeFontName && (
-                                        <span className="inline-flex items-center rounded-full border border-white/10 bg-slate-950/70 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-300">
+                                        <span className="inline-flex items-center rounded-full border border-slate-200 bg-white px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-600">
                                             {activeFontName}
                                         </span>
                                     )}
@@ -103,8 +103,8 @@ const FontMixingPanel = ({
                                                     aria-pressed={isActiveStyle}
                                                     className={`rounded-full border px-3 py-1.5 text-[11px] font-medium transition-all duration-200 ${
                                                         isActiveStyle
-                                                            ? 'border-indigo-300/20 bg-[linear-gradient(180deg,rgba(129,140,248,0.96),rgba(79,70,229,0.96))] text-white shadow-[0_12px_18px_-16px_rgba(99,102,241,0.6)]'
-                                                            : 'border-white/10 bg-white/5 text-slate-300 hover:border-white/16 hover:bg-white/8 hover:text-white'
+                                                            ? 'border-slate-900 bg-slate-900 text-white'
+                                                            : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:text-slate-900'
                                                     }`}
                                                 >
                                                     {formatStyleLabel(styleKey)}
@@ -135,21 +135,21 @@ const FontMixingPanel = ({
                                                 }
                                                 disabled={!activePreviewLine}
                                                 aria-pressed={isActiveFont}
-                                                className={`group overflow-hidden rounded-[1.05rem] border p-3 text-left transition-all duration-200 ${
+                                                className={`group overflow-hidden rounded-[1rem] border p-3 text-left transition-all duration-200 ${
                                                     !activePreviewLine
-                                                        ? 'cursor-not-allowed border-white/8 bg-white/[0.03] opacity-70'
+                                                        ? 'cursor-not-allowed border-slate-200 bg-white opacity-70'
                                                         : isActiveFont
-                                                          ? 'border-sky-300/20 bg-[linear-gradient(180deg,rgba(14,165,233,0.1),rgba(59,130,246,0.08),rgba(99,102,241,0.12))] shadow-[0_18px_28px_-24px_rgba(56,189,248,0.42)]'
-                                                          : 'border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] hover:-translate-y-px hover:border-white/14 hover:bg-white/[0.06]'
+                                                          ? 'border-slate-900 bg-white shadow-[0_14px_28px_-24px_rgba(15,23,42,0.3)]'
+                                                          : 'border-slate-200 bg-white hover:-translate-y-px hover:border-slate-300'
                                                 }`}
                                             >
                                                 <div className="flex h-full flex-col gap-3">
                                                     <div className="flex flex-wrap items-center justify-between gap-2">
                                                         <span
-                                                            className={`inline-flex rounded-full px-2.5 py-1 text-[12px] font-semibold shadow-[0_10px_18px_-16px_rgba(15,23,42,0.5)] ${
+                                                            className={`inline-flex rounded-full border px-2.5 py-1 text-[12px] font-semibold ${
                                                                 isActiveFont
-                                                                    ? 'border border-sky-300/25 bg-slate-950/88 text-white'
-                                                                    : 'border border-white/10 bg-slate-950/80 text-white'
+                                                                    ? 'border-slate-900 bg-slate-900 text-white'
+                                                                    : 'border-slate-200 bg-slate-50 text-slate-700'
                                                             }`}
                                                             style={{ fontFamily: sampleFontFamily }}
                                                         >
@@ -157,35 +157,37 @@ const FontMixingPanel = ({
                                                         </span>
 
                                                         {isActiveFont ? (
-                                                            <span className="inline-flex items-center rounded-full border border-sky-300/20 bg-sky-400/10 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-sky-200">
+                                                            <span className="inline-flex items-center rounded-full border border-slate-900 bg-slate-900 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-white">
                                                                 Applied
                                                             </span>
                                                         ) : (
-                                                            <span className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-slate-400 transition-colors group-hover:text-slate-300">
+                                                            <span className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-slate-500 transition-colors group-hover:text-slate-700">
                                                                 Select
                                                             </span>
                                                         )}
                                                     </div>
 
-                                                    <div
-                                                        className="line-clamp-2 min-h-[2.65rem] break-words whitespace-pre-wrap text-white"
-                                                        style={{
-                                                            fontFamily: sampleFontFamily,
-                                                            fontSize: `${Math.min(
-                                                                Math.max(
-                                                                    (activeLineFontSize || fontSize) *
-                                                                        0.42,
-                                                                    16
-                                                                ),
-                                                                24
-                                                            )}px`,
-                                                            lineHeight: Math.max(lineSpacing, 0.96),
-                                                            textAlign,
-                                                            overflowWrap: 'anywhere',
-                                                        }}
-                                                        dir="auto"
-                                                    >
-                                                        {mixingSampleText}
+                                                    <div className="rounded-[0.9rem] border border-slate-200 bg-white px-3 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
+                                                        <div
+                                                            className="line-clamp-2 min-h-[2.65rem] break-words whitespace-pre-wrap text-slate-900"
+                                                            style={{
+                                                                fontFamily: sampleFontFamily,
+                                                                fontSize: `${Math.min(
+                                                                    Math.max(
+                                                                        (activeLineFontSize || fontSize) * 0.42,
+                                                                        16
+                                                                    ),
+                                                                    24
+                                                                )}px`,
+                                                                lineHeight: Math.max(lineSpacing, 0.96),
+                                                                textAlign,
+                                                                overflowWrap: 'anywhere',
+                                                                color: '#0f172a',
+                                                            }}
+                                                            dir="auto"
+                                                        >
+                                                            {mixingSampleText}
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </button>
@@ -193,15 +195,15 @@ const FontMixingPanel = ({
                                     })}
                                 </div>
                             ) : (
-                                <div className="flex min-h-[68px] items-center justify-center rounded-[0.95rem] border border-dashed border-white/10 bg-white/[0.03] px-4 text-center">
-                                    <div className="max-w-xs text-sm leading-5 text-slate-400">
+                                <div className="flex min-h-[68px] items-center justify-center rounded-[0.95rem] border border-dashed border-slate-200 bg-white px-4 text-center">
+                                    <div className="max-w-xs text-sm leading-5 text-slate-500">
                                         Select fonts above to assign them to preview lines.
                                     </div>
                                 </div>
                             )}
                         </div>
 
-                        <div className="border-t border-white/8 pt-4">
+                        <div className="border-t border-slate-200 pt-4">
                             <PreviewLineList
                                 fontSize={fontSize}
                                 getDefaultStyleKey={getDefaultStyleKey}
