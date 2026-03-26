@@ -12,7 +12,7 @@ const StandardPreviewPanel = ({
   standardPreviewStyleMap,
   textAlign,
 }) => (
-  <div className="rounded-[1.35rem] border border-slate-200 bg-[linear-gradient(180deg,rgba(249,250,251,0.96),rgba(241,245,249,0.94))] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)] sm:p-6">
+  <div className="rounded-[1.35rem] border border-[rgba(197,184,161,0.28)] bg-[linear-gradient(180deg,rgba(249,247,242,0.96),rgba(240,235,226,0.94))] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)] sm:p-6">
     {safeSelectedFonts.length > 0 ? (
       <div className="space-y-8">
         {safeSelectedFonts.map((font) => {
@@ -30,7 +30,7 @@ const StandardPreviewPanel = ({
             <div key={`standard-preview-${font.name}`} className="relative flex flex-col items-start gap-3">
               <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
                 <span
-                  className="rounded-full bg-slate-700 px-4 py-1 text-sm font-bold text-white shadow-sm"
+                  className="rounded-full border border-[rgba(58,79,106,0.3)] bg-[linear-gradient(180deg,rgba(247,249,252,0.98),rgba(229,236,244,0.96))] px-4 py-1 text-sm font-bold text-slate-800 shadow-sm"
                   style={{ fontFamily: 'Arial' }}
                 >
                   {font.name}
@@ -52,8 +52,8 @@ const StandardPreviewPanel = ({
                         aria-pressed={isActiveStyle}
                         className={`px-4 py-2 text-sm rounded-md border transition-colors ${
                           isActiveStyle
-                            ? 'bg-slate-600 text-white border-slate-600'
-                            : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-100 hover:text-slate-900'
+                            ? 'border-[rgba(58,79,106,0.65)] bg-[linear-gradient(180deg,#47617e_0%,#2f4258_100%)] text-white'
+                            : 'bg-white text-slate-600 border-[rgba(197,184,161,0.34)] hover:bg-[rgba(247,244,238,0.95)] hover:text-slate-900'
                         }`}
                       >
                         {formatStyleLabel(styleKey)}
@@ -63,7 +63,7 @@ const StandardPreviewPanel = ({
                 </div>
               </div>
 
-              <div className="w-full rounded-[1rem] border border-slate-200 bg-white px-5 py-5 shadow-[0_12px_28px_-24px_rgba(15,23,42,0.12)]">
+              <div className="w-full rounded-[1rem] border border-[rgba(197,184,161,0.26)] bg-[linear-gradient(180deg,rgba(255,255,255,0.995),rgba(249,246,239,0.985))] px-5 py-5 shadow-[0_14px_30px_-26px_rgba(15,23,42,0.12)]">
                 {standardPreviewLines.length > 0 ? (
                   <p
                     className="w-full break-words whitespace-pre-wrap text-slate-800"
@@ -90,7 +90,7 @@ const StandardPreviewPanel = ({
         })}
       </div>
     ) : (
-      <div className="flex min-h-[240px] items-center justify-center rounded-[1.15rem] border border-slate-200 bg-white text-center">
+      <div className="flex min-h-[240px] items-center justify-center rounded-[1.15rem] border border-[rgba(197,184,161,0.28)] bg-white text-center">
         <div className="max-w-xs text-sm leading-6 text-slate-500">
           Select fonts and enter text above to compare them here.
         </div>

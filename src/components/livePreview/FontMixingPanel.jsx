@@ -21,7 +21,7 @@ const FontMixingPanel = ({
 
   return (
     <div className="space-y-4">
-      <div className="rounded-[1.25rem] border border-slate-200 bg-slate-50/90 p-4 sm:p-5">
+      <div className="rounded-[1.25rem] border border-[rgba(197,184,161,0.28)] bg-[linear-gradient(180deg,rgba(251,249,244,0.98),rgba(242,237,228,0.95))] p-4 sm:p-5">
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
             <div className="max-w-[34rem]">
@@ -36,8 +36,8 @@ const FontMixingPanel = ({
               </p>
             </div>
 
-            <div className="inline-flex items-center gap-2 self-start rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-semibold text-slate-700">
-              <span className="h-1.5 w-1.5 rounded-full bg-slate-900" />
+            <div className="inline-flex items-center gap-2 self-start rounded-full border border-[rgba(197,184,161,0.28)] bg-white px-3 py-1.5 text-[11px] font-semibold text-slate-700 shadow-sm">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#2f4258]" />
               {activePreviewLine ? `Editing line ${activeLineNumber}` : 'Select a line in the preview'}
             </div>
           </div>
@@ -54,8 +54,8 @@ const FontMixingPanel = ({
                     aria-pressed={isActiveStyle}
                     className={`px-4 py-2 text-sm rounded-md border transition-colors ${
                       isActiveStyle
-                        ? 'bg-slate-600 text-white border-slate-600'
-                        : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-100 hover:text-slate-900'
+                        ? 'border-[rgba(58,79,106,0.65)] bg-[linear-gradient(180deg,#47617e_0%,#2f4258_100%)] text-white'
+                        : 'bg-white text-slate-600 border-[rgba(197,184,161,0.34)] hover:bg-[rgba(247,244,238,0.95)] hover:text-slate-900'
                     }`}
                   >
                     {formatStyleLabel(styleKey)}
@@ -78,10 +78,10 @@ const FontMixingPanel = ({
                     disabled={!activePreviewLine}
                     className={`px-5 py-3 rounded-xl font-semibold border transition-all duration-150 ${
                       !activePreviewLine
-                        ? 'cursor-not-allowed border-slate-200 bg-white text-slate-400'
+                        ? 'cursor-not-allowed border-[rgba(197,184,161,0.26)] bg-white text-slate-400'
                         : isActiveFont
-                          ? 'bg-slate-700 text-white border-slate-700 shadow-md'
-                          : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100 hover:border-slate-400'
+                          ? 'border-[rgba(58,79,106,0.65)] bg-[linear-gradient(180deg,#47617e_0%,#2f4258_100%)] text-white shadow-[0_18px_26px_-20px_rgba(47,66,88,0.48)]'
+                          : 'bg-white text-slate-700 border-[rgba(197,184,161,0.34)] hover:bg-[rgba(247,244,238,0.95)] hover:border-[rgba(83,103,130,0.34)]'
                     }`}
                     style={{ fontFamily }}
                   >

@@ -30,7 +30,7 @@ const PreviewLayoutControls = ({
     : 'These controls apply across the full standard specimen view.';
 
   return (
-    <div className="rounded-[1.35rem] border border-slate-200 bg-slate-50/90 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] sm:p-5">
+    <div className="rounded-[1.35rem] border border-[rgba(197,184,161,0.28)] bg-[linear-gradient(180deg,rgba(251,249,244,0.98),rgba(242,237,228,0.95))] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.82)] sm:p-5">
       <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
         <div className="max-w-[34rem]">
           <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">
@@ -41,8 +41,8 @@ const PreviewLayoutControls = ({
             <span
               className={`inline-flex items-center rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] ${
                 isFontMixingMode
-                  ? 'border-slate-300 bg-white text-slate-700'
-                  : 'border-slate-200 bg-white text-slate-600'
+                  ? 'border-[rgba(83,103,130,0.18)] bg-white text-slate-700'
+                  : 'border-[rgba(197,184,161,0.28)] bg-white text-slate-600'
               }`}
             >
               {isFontMixingMode
@@ -90,8 +90,8 @@ const PreviewLayoutControls = ({
                   disabled={!activePreviewLine || isUsingDefaultLineSize}
                   className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-all duration-200 ${
                     !activePreviewLine || isUsingDefaultLineSize
-                      ? 'cursor-default bg-slate-200 text-slate-400'
-                      : 'border border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:text-slate-900'
+                      ? 'cursor-default bg-[rgba(227,223,216,0.9)] text-slate-400'
+                      : 'border border-[rgba(197,184,161,0.28)] bg-white text-slate-700 hover:border-[rgba(83,103,130,0.28)] hover:text-slate-900'
                   }`}
                 >
                   Use default

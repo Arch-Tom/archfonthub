@@ -24,9 +24,9 @@ const PreviewLineList = ({
         : 'items-start text-left';
 
   return (
-    <div className="rounded-[1.2rem] border border-slate-200 bg-[linear-gradient(180deg,rgba(248,250,252,0.95),rgba(241,245,249,0.92))] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.85)] sm:p-6">
+    <div className="rounded-[1.2rem] border border-[rgba(197,184,161,0.28)] bg-[linear-gradient(180deg,rgba(249,247,242,0.96),rgba(240,235,226,0.93))] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.85)] sm:p-6">
       {safePreviewLines.length > 0 ? (
-        <div className="rounded-[1rem] border border-slate-200 bg-white px-5 py-5 shadow-[0_12px_28px_-24px_rgba(15,23,42,0.16)] sm:px-6 sm:py-6">
+        <div className="rounded-[1.1rem] border border-[rgba(197,184,161,0.28)] bg-[linear-gradient(180deg,rgba(255,255,255,0.995),rgba(249,246,239,0.985))] px-5 py-5 shadow-[0_16px_30px_-24px_rgba(30,41,59,0.14)] sm:px-6 sm:py-6">
           <div className={`flex min-h-[240px] w-full flex-col ${alignmentClass}`}>
             {safePreviewLines.map((line, index) => {
               const font = getFontOptionByName(line.fontName);
@@ -43,8 +43,8 @@ const PreviewLineList = ({
                   onClick={() => setOpenPreviewLineIndex(line.lineIndex)}
                   aria-label={`Select line ${index + 1} for editing`}
                   aria-pressed={isSelected}
-                  className={`group w-full rounded-[0.8rem] px-2 py-1 transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-900/20 ${
-                    isSelected ? 'bg-slate-100/80' : 'hover:bg-slate-50/70'
+                  className={`group relative w-full rounded-[0.95rem] px-3 py-2 transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-900/20 ${
+                    isSelected ? 'bg-[linear-gradient(180deg,rgba(233,239,246,0.9),rgba(240,236,228,0.82))]' : 'hover:bg-[rgba(246,243,236,0.72)]'
                   }`}
                   style={{
                     marginTop: index === 0 ? 0 : `${Math.max((lineSpacing - 1) * effectiveFontSize, 0)}px`,
@@ -72,7 +72,7 @@ const PreviewLineList = ({
           </div>
         </div>
       ) : (
-        <div className="flex min-h-[240px] items-center justify-center rounded-[1rem] border border-slate-200 bg-white text-center">
+        <div className="flex min-h-[240px] items-center justify-center rounded-[1rem] border border-[rgba(197,184,161,0.28)] bg-white text-center">
           <div className="max-w-xs text-sm leading-6 text-slate-500">
             Add text and selected fonts above to start building your mixed-font preview here.
           </div>
