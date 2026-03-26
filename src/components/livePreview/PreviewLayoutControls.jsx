@@ -30,10 +30,10 @@ const PreviewLayoutControls = ({
     : 'These controls apply across the full standard specimen view.';
 
   return (
-    <div className="rounded-[1.45rem] border border-[rgba(58,79,106,0.16)] bg-[linear-gradient(180deg,rgba(39,52,69,0.96),rgba(52,69,91,0.94))] p-4 text-white shadow-[0_24px_50px_-34px_rgba(15,23,42,0.4),inset_0_1px_0_rgba(255,255,255,0.08)] sm:p-5">
+    <div className="rounded-[1.45rem] border border-[rgba(47,87,76,0.2)] bg-[linear-gradient(180deg,rgba(20,47,42,0.97),rgba(29,66,58,0.95))] p-4 text-white shadow-[0_24px_50px_-34px_rgba(9,27,23,0.42),inset_0_1px_0_rgba(255,255,255,0.08)] sm:p-5">
       <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
         <div className="max-w-[34rem]">
-          <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-300/88">
+          <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-emerald-100/78">
             {controlLabel}
           </div>
           <div className="mt-1 flex flex-wrap items-center gap-2.5">
@@ -41,8 +41,8 @@ const PreviewLayoutControls = ({
             <span
               className={`inline-flex items-center rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] ${
                 isFontMixingMode
-                  ? 'border-[rgba(212,194,161,0.3)] bg-[rgba(245,234,210,0.12)] text-[rgba(247,234,207,0.92)]'
-                  : 'border-white/12 bg-white/10 text-slate-200'
+                  ? 'border-[rgba(221,210,188,0.26)] bg-[rgba(246,239,225,0.12)] text-[rgba(244,237,223,0.92)]'
+                  : 'border-white/12 bg-white/10 text-emerald-50/84'
               }`}
             >
               {isFontMixingMode
@@ -52,7 +52,7 @@ const PreviewLayoutControls = ({
                 : 'Visible in all specimens'}
             </span>
           </div>
-          <p className="mt-2 max-w-[32rem] text-sm leading-6 text-slate-200/84">
+          <p className="mt-2 max-w-[32rem] text-sm leading-6 text-emerald-50/78">
             {controlDescription}
           </p>
         </div>
@@ -90,8 +90,8 @@ const PreviewLayoutControls = ({
                   disabled={!activePreviewLine || isUsingDefaultLineSize}
                   className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-all duration-200 ${
                     !activePreviewLine || isUsingDefaultLineSize
-                      ? 'cursor-default bg-white/10 text-slate-400'
-                      : 'border border-[rgba(212,194,161,0.24)] bg-[rgba(245,234,210,0.12)] text-[rgba(247,234,207,0.92)] hover:bg-[rgba(245,234,210,0.2)] hover:text-white'
+                      ? 'cursor-default bg-white/10 text-emerald-200/40'
+                      : 'border border-[rgba(221,210,188,0.22)] bg-[rgba(246,239,225,0.12)] text-[rgba(244,237,223,0.92)] hover:bg-[rgba(246,239,225,0.2)] hover:text-white'
                   }`}
                 >
                   Use default
