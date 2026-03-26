@@ -96,17 +96,12 @@ const LivePreviewSection = ({
     : 'Compare your selected fonts in a bright specimen view before mixing lines.';
 
   return (
-    <section className="relative overflow-visible rounded-[2rem] border border-white/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.985),rgba(250,247,242,0.955)_54%,rgba(246,243,248,0.94)_100%)] p-5 shadow-[0_28px_72px_-42px_rgba(51,65,85,0.16)] sm:p-6 xl:p-7">
-      <div className="pointer-events-none absolute inset-0" aria-hidden="true">
-        <div className="absolute inset-x-0 top-0 h-24 bg-[radial-gradient(circle_at_top,rgba(245,158,11,0.06),transparent_70%)]" />
-        <div className="absolute -right-12 top-16 h-52 w-52 rounded-full bg-[radial-gradient(circle,rgba(167,139,250,0.08),transparent_72%)] blur-3xl" />
-      </div>
-
+    <section className="relative overflow-visible rounded-[2rem] border border-slate-200/85 bg-[linear-gradient(180deg,rgba(255,255,255,0.985),rgba(247,249,251,0.965))] p-5 shadow-[0_28px_72px_-48px_rgba(51,65,85,0.14)] sm:p-6 xl:p-7">
       <div className="relative space-y-4">
-        <header className="rounded-[1.5rem] border border-white/85 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(251,248,244,0.92))] px-5 py-5 shadow-[0_18px_40px_-34px_rgba(15,23,42,0.12)] sm:px-6">
+        <header className="rounded-[1.5rem] border border-slate-200/85 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(248,249,251,0.94))] px-5 py-5 shadow-[0_18px_40px_-34px_rgba(15,23,42,0.1)] sm:px-6">
           <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
             <div className="max-w-[44rem]">
-              <div className="inline-flex items-center rounded-full border border-amber-200/70 bg-amber-50/85 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-amber-700">
+              <div className="inline-flex items-center rounded-full border border-slate-200 bg-slate-100/90 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-600">
                 Preview Studio
               </div>
 
@@ -129,7 +124,7 @@ const LivePreviewSection = ({
             </div>
 
             <div className="w-full xl:w-auto xl:min-w-[19rem]">
-              <div className="inline-flex w-full rounded-[1rem] border border-stone-200 bg-[linear-gradient(180deg,rgba(255,252,247,0.94),rgba(247,244,248,0.9))] p-1.5 shadow-sm xl:w-auto">
+              <div className="inline-flex w-full rounded-[1rem] border border-stone-200 bg-[linear-gradient(180deg,rgba(249,250,251,0.98),rgba(241,245,249,0.95))] p-1.5 shadow-sm xl:w-auto">
                 <button
                   type="button"
                   onClick={() => setIsFontMixingMode(false)}
@@ -169,7 +164,7 @@ const LivePreviewSection = ({
         {showHebrewWarning && <HebrewSupportWarning />}
 
         {hasStandardSelection ? (
-          <div className="space-y-4 rounded-[1.6rem] border border-white/85 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(251,248,244,0.92))] p-4 shadow-[0_20px_44px_-36px_rgba(15,23,42,0.12)] sm:p-5">
+          <div className="space-y-4 rounded-[1.6rem] border border-slate-200/85 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(248,249,251,0.94))] p-4 shadow-[0_20px_44px_-36px_rgba(15,23,42,0.1)] sm:p-5">
             <PreviewLayoutControls
               activeLineFontSize={activeLineFontSize}
               activePreviewLine={activePreviewLine}
@@ -218,7 +213,7 @@ const LivePreviewSection = ({
           </div>
         ) : (
           !monogramInfo && (
-            <div className="min-h-[170px] rounded-[1.5rem] border border-white/85 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(251,248,244,0.92))] p-6 shadow-[0_18px_40px_-34px_rgba(15,23,42,0.1)]">
+            <div className="min-h-[170px] rounded-[1.5rem] border border-slate-200/85 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(248,249,251,0.94))] p-6 shadow-[0_18px_40px_-34px_rgba(15,23,42,0.08)]">
               <div className="flex h-full min-h-[110px] flex-col items-center justify-center text-center">
                 <div className="rounded-full border border-stone-200 bg-white/92 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-stone-500 shadow-sm">
                   Waiting for input

@@ -12,7 +12,7 @@ const StandardPreviewPanel = ({
   standardPreviewStyleMap,
   textAlign,
 }) => (
-  <div className="rounded-[1.35rem] border border-slate-200 bg-[linear-gradient(180deg,rgba(248,250,252,0.95),rgba(241,245,249,0.92))] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)] sm:p-6">
+  <div className="rounded-[1.35rem] border border-slate-200 bg-[linear-gradient(180deg,rgba(249,250,251,0.96),rgba(241,245,249,0.94))] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)] sm:p-6">
     {safeSelectedFonts.length > 0 ? (
       <div className="space-y-8">
         {safeSelectedFonts.map((font) => {
@@ -30,7 +30,7 @@ const StandardPreviewPanel = ({
             <div key={`standard-preview-${font.name}`} className="relative flex flex-col items-start gap-3">
               <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
                 <span
-                  className="bg-slate-900 text-white px-4 py-1 rounded-full text-sm font-bold shadow-sm"
+                  className="rounded-full bg-slate-700 px-4 py-1 text-sm font-bold text-white shadow-sm"
                   style={{ fontFamily: 'Arial' }}
                 >
                   {font.name}
@@ -52,7 +52,7 @@ const StandardPreviewPanel = ({
                         aria-pressed={isActiveStyle}
                         className={`px-4 py-2 text-sm rounded-md border transition-colors ${
                           isActiveStyle
-                            ? 'bg-slate-700 text-white border-slate-700'
+                            ? 'bg-slate-600 text-white border-slate-600'
                             : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-100 hover:text-slate-900'
                         }`}
                       >
@@ -63,7 +63,7 @@ const StandardPreviewPanel = ({
                 </div>
               </div>
 
-              <div className="w-full rounded-[1rem] border border-slate-200 bg-white px-5 py-5 shadow-[0_12px_28px_-24px_rgba(15,23,42,0.16)]">
+              <div className="w-full rounded-[1rem] border border-slate-200 bg-white px-5 py-5 shadow-[0_12px_28px_-24px_rgba(15,23,42,0.12)]">
                 {standardPreviewLines.length > 0 ? (
                   <p
                     className="w-full break-words whitespace-pre-wrap text-slate-800"

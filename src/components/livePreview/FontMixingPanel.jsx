@@ -21,7 +21,7 @@ const FontMixingPanel = ({
 
   return (
     <div className="space-y-4">
-      <div className="rounded-[1.25rem] border border-slate-200 bg-slate-50 p-4 sm:p-5">
+      <div className="rounded-[1.25rem] border border-slate-200 bg-slate-50/90 p-4 sm:p-5">
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
             <div className="max-w-[34rem]">
@@ -54,7 +54,7 @@ const FontMixingPanel = ({
                     aria-pressed={isActiveStyle}
                     className={`px-4 py-2 text-sm rounded-md border transition-colors ${
                       isActiveStyle
-                        ? 'bg-slate-700 text-white border-slate-700'
+                        ? 'bg-slate-600 text-white border-slate-600'
                         : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-100 hover:text-slate-900'
                     }`}
                   >
@@ -80,7 +80,7 @@ const FontMixingPanel = ({
                       !activePreviewLine
                         ? 'cursor-not-allowed border-slate-200 bg-white text-slate-400'
                         : isActiveFont
-                          ? 'bg-slate-900 text-white border-slate-900 shadow-md'
+                          ? 'bg-slate-700 text-white border-slate-700 shadow-md'
                           : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100 hover:border-slate-400'
                     }`}
                     style={{ fontFamily }}
