@@ -480,9 +480,9 @@ const App = () => {
               </div>
 
               <div className="relative rounded-[1.7rem] border border-white/12 bg-[linear-gradient(180deg,rgba(255,255,255,0.16),rgba(255,255,255,0.07))] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] backdrop-blur-sm">
-                <div className="rounded-[1.45rem] border border-white/55 bg-[radial-gradient(circle_at_center,rgba(255,255,255,1),rgba(248,244,236,0.98)_58%,rgba(235,228,215,0.96)_100%)] px-4 py-6 shadow-[0_22px_42px_-28px_rgba(15,23,42,0.38),inset_0_1px_0_rgba(255,255,255,0.95)]">
-                  <div className="rounded-[1.1rem] border border-[rgba(58,79,106,0.16)] bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.98),rgba(248,245,239,0.94))] px-3 py-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.95)]">
-                    <img src="/images/Arch Vector Logo.svg" alt="Arch Font Hub Logo" className="mx-auto h-36 w-36 object-contain drop-shadow-[0_6px_12px_rgba(255,255,255,0.38)] sm:h-40 sm:w-40" />
+                <div className="rounded-[1.45rem] border border-white/16 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08),rgba(255,255,255,0.03)_62%,rgba(0,0,0,0.06)_100%)] px-4 py-6 shadow-[0_22px_42px_-28px_rgba(15,23,42,0.42),inset_0_1px_0_rgba(255,255,255,0.08)]">
+                  <div className="rounded-[1.1rem] border border-white/10 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.07),rgba(255,255,255,0.02))] px-3 py-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
+                    <img src="/images/Arch Vector Logo White.svg" alt="Arch Font Hub Logo" className="mx-auto h-36 w-36 object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.22)] sm:h-40 sm:w-40" />
                   </div>
                 </div>
                 <div className="mt-5 text-center">
