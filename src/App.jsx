@@ -480,23 +480,25 @@ const App = () => {
               </div>
 
               <div className="relative rounded-[1.7rem] border border-white/12 bg-[linear-gradient(180deg,rgba(255,255,255,0.16),rgba(255,255,255,0.07))] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] backdrop-blur-sm">
-                <div className="rounded-[1.35rem] border border-[rgba(204,191,165,0.34)] bg-[linear-gradient(180deg,rgba(252,249,243,0.98),rgba(243,237,226,0.96))] px-4 py-5 shadow-[0_18px_34px_-28px_rgba(15,23,42,0.35)]">
-                  <img src="/images/Arch Vector Logo.svg" alt="Arch Font Hub Logo" className="mx-auto h-28 w-28 object-contain sm:h-32 sm:w-32" />
+                <div className="rounded-[1.45rem] border border-white/55 bg-[radial-gradient(circle_at_center,rgba(255,255,255,1),rgba(248,244,236,0.98)_58%,rgba(235,228,215,0.96)_100%)] px-4 py-6 shadow-[0_22px_42px_-28px_rgba(15,23,42,0.38),inset_0_1px_0_rgba(255,255,255,0.95)]">
+                  <div className="rounded-[1.1rem] border border-[rgba(58,79,106,0.16)] bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.98),rgba(248,245,239,0.94))] px-3 py-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.95)]">
+                    <img src="/images/Arch Vector Logo.svg" alt="Arch Font Hub Logo" className="mx-auto h-36 w-36 object-contain drop-shadow-[0_6px_12px_rgba(255,255,255,0.38)] sm:h-40 sm:w-40" />
+                  </div>
                 </div>
                 <div className="mt-5 text-center">
-                  <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-200/72">Premium Font Studio</div>
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-200/72">Font Selection</div>
                   <h1 className="mt-2 text-[2.55rem] font-bold tracking-tight text-white" style={{ fontFamily: 'Alumni Sans Regular' }}>Arch Font Hub</h1>
-                  <p className="mt-3 text-sm leading-6 text-slate-200/82">Explore fonts, shape specimens, test hierarchy, and submit a selection that feels deliberate.</p>
+                  <p className="mt-3 text-sm leading-6 text-slate-200/82">Browse fonts, preview your wording, and choose the style you like best.</p>
                 </div>
               </div>
 
               <div className="relative mt-6 rounded-[1.55rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.12),rgba(255,255,255,0.04))] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]">
-                <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-200/72">Workspace</div>
-                <p className="mt-3 text-sm leading-6 text-slate-100/88">Choose a shortlist, refine the live preview, and use the detailed tools from the main workspace without losing your place.</p>
+                <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-200/72">How It Works</div>
+                <p className="mt-3 text-sm leading-6 text-slate-100/88">Choose up to three fonts, preview your text, and add any notes before submitting your selection.</p>
               </div>
 
               <div className="mt-auto pt-5 text-sm leading-6 text-slate-200/82">
-                The main panel holds font selection, preview controls, monogram access, and final submission.
+                When you're ready, complete the steps in the main area to submit your selection.
               </div>
             </div>
           </aside>
@@ -506,7 +508,7 @@ const App = () => {
               <div className="fixed inset-0 z-30 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm">
                 <div className="rounded-[2rem] border border-slate-200/85 bg-[linear-gradient(180deg,rgba(255,255,255,0.99),rgba(248,246,242,0.97))] p-10 text-center shadow-[0_34px_90px_-44px_rgba(15,23,42,0.18)]">
                   <h2 className="text-4xl font-bold text-slate-900" style={{ fontFamily: 'Alumni Sans Regular' }}>Submission Complete</h2>
-                  <p className="mt-4 text-lg text-slate-600">Thank you for your submission. You may now close this window.</p>
+                  <p className="mt-4 text-lg text-slate-600">Thank you for your selection. You may now close this window.</p>
                 </div>
               </div>
             )}
@@ -515,7 +517,7 @@ const App = () => {
               <SectionShell
                 eyebrow="Step 1"
                 title="Choose up to three fonts"
-                description="Pick a tight shortlist. The comparison tools work best when you’re choosing between a few genuinely strong directions."
+                description="Select a few favorites to compare. You may choose up to three fonts."
                 action={
                   <div className="rounded-[1.4rem] border border-[rgba(197,184,161,0.35)] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(244,240,232,0.94))] p-3 shadow-[0_18px_34px_-24px_rgba(26,38,54,0.14)]">
                     <button
@@ -523,9 +525,9 @@ const App = () => {
                       onClick={() => setShowMonogramMaker(true)}
                       type="button"
                     >
-                      Open Monogram Maker
+                      Create a Monogram
                     </button>
-                    <p className="mt-2 text-xs leading-5 text-slate-500">Create or insert a monogram right from the main workflow.</p>
+                    <p className="mt-2 text-xs leading-5 text-slate-500">Create or insert a monogram if you would like to include one with your selection.</p>
                   </div>
                 }
               >
@@ -534,7 +536,7 @@ const App = () => {
                     <div key={category}>
                       <div className="mb-4 flex items-center justify-between gap-4 border-b border-[rgba(197,184,161,0.28)] pb-3">
                         <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-600">{category}</h3>
-                        <span className="text-xs font-medium text-slate-400">Tap to add or remove</span>
+                        <span className="text-xs font-medium text-slate-400">Select up to 3</span>
                       </div>
                       <div className="flex flex-wrap gap-3">
                         {fonts.map((font) => {
@@ -555,7 +557,7 @@ const App = () => {
                 </div>
               </SectionShell>
 
-              <SectionShell eyebrow="Step 2" title="Enter your preview text" description="Use real wording from the order whenever possible. Multiple lines are perfect for testing size hierarchy, spacing, and mixed-font layouts." action={<div className="flex flex-wrap items-center justify-end gap-2"><button onClick={() => setShowHebrewPalette(true)} className="rounded-xl border border-[rgba(205,193,170,0.4)] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(245,241,234,0.94))] px-4 py-2 text-sm font-semibold text-slate-700 transition-all hover:-translate-y-px hover:bg-white" type="button">Hebrew</button><button onClick={() => setShowAccentPalette(true)} className="rounded-xl border border-[rgba(205,193,170,0.4)] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(245,241,234,0.94))] px-4 py-2 text-sm font-semibold text-slate-700 transition-all hover:-translate-y-px hover:bg-white" type="button">Accents</button><button onClick={() => setShowGlyphPalette(true)} className="rounded-xl border border-[rgba(205,193,170,0.4)] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(245,241,234,0.94))] px-4 py-2 text-sm font-semibold text-slate-700 transition-all hover:-translate-y-px hover:bg-white" type="button">Symbols</button></div>}>
+              <SectionShell eyebrow="Step 2" title="Enter your preview text" description="Enter the wording you would like to preview. Multiple lines work well for names, titles, and message layouts." action={<div className="flex flex-wrap items-center justify-end gap-2"><button onClick={() => setShowHebrewPalette(true)} className="rounded-xl border border-[rgba(205,193,170,0.4)] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(245,241,234,0.94))] px-4 py-2 text-sm font-semibold text-slate-700 transition-all hover:-translate-y-px hover:bg-white" type="button">Hebrew</button><button onClick={() => setShowAccentPalette(true)} className="rounded-xl border border-[rgba(205,193,170,0.4)] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(245,241,234,0.94))] px-4 py-2 text-sm font-semibold text-slate-700 transition-all hover:-translate-y-px hover:bg-white" type="button">Accents</button><button onClick={() => setShowGlyphPalette(true)} className="rounded-xl border border-[rgba(205,193,170,0.4)] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(245,241,234,0.94))] px-4 py-2 text-sm font-semibold text-slate-700 transition-all hover:-translate-y-px hover:bg-white" type="button">Symbols</button></div>}>
                 <div className="rounded-[1.55rem] border border-[rgba(205,193,170,0.34)] bg-[linear-gradient(180deg,rgba(255,255,255,0.95),rgba(245,242,236,0.92))] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.82)] sm:p-5">
                   <textarea ref={customTextRef} value={customText} onChange={(e) => setCustomText(e.target.value)} placeholder={DEFAULT_TEXT_PLACEHOLDER} dir="auto" className="min-h-[230px] w-full rounded-[1.3rem] border border-[rgba(197,184,161,0.34)] bg-[linear-gradient(180deg,rgba(255,255,255,0.995),rgba(250,247,242,0.985))] px-5 py-4 text-xl text-slate-900 shadow-[inset_0_2px_7px_rgba(15,23,42,0.03)] transition-all placeholder:text-stone-400 focus:border-[rgba(83,103,130,0.45)] focus:outline-none focus:ring-2 focus:ring-[rgba(126,151,180,0.18)]" />
                 </div>
@@ -563,8 +565,8 @@ const App = () => {
 
               <LivePreviewSection monogramInfo={monogramInfo} combinedText={combinedText} hebrewRegex={hebrewRegex} hasStandardSelection={hasStandardSelection} previewLines={previewLines} openPreviewLineIndex={openPreviewLineIndex} setOpenPreviewLineIndex={setOpenPreviewLineIndex} selectedFonts={selectedFonts} getFontOptionByName={getFontOptionByName} getDefaultStyleKey={getDefaultStyleKey} getSortedStyleKeys={getSortedStyleKeys} fontSize={fontSize} lineSpacing={lineSpacing} textAlign={textAlign} setTextAlign={setTextAlign} handleFontSizeChange={handleFontSizeChange} handleLineSpacingChange={handleLineSpacingChange} handleApplyFontToActiveLine={handleApplyFontToActiveLine} handleLineStyleChange={handleLineStyleChange} handleLineFontSizeOverrideChange={handleLineFontSizeOverrideChange} AlignIcon={AlignIcon} />
 
-              <SectionShell eyebrow="Step 3" title="Notes for the designer" description="Use this for special instructions, preferred alternatives, hierarchy notes, or anything that should travel with the submission.">
-                <textarea className="min-h-[160px] w-full rounded-[1.3rem] border border-[rgba(197,184,161,0.34)] bg-[linear-gradient(180deg,rgba(255,255,255,0.995),rgba(250,247,242,0.985))] px-5 py-4 text-lg text-slate-900 shadow-[inset_0_2px_7px_rgba(15,23,42,0.03)] transition-all placeholder:text-stone-400 focus:border-[rgba(83,103,130,0.45)] focus:outline-none focus:ring-2 focus:ring-[rgba(126,151,180,0.18)]" value={customerNotes} onChange={(e) => setCustomerNotes(e.target.value)} placeholder="e.g., Please use Gotham if available, keep the first line more prominent, and make sure the accented characters match the proof style." />
+              <SectionShell eyebrow="Step 3" title="Additional Notes" description="Add any preferences or special instructions you would like us to consider with your selection.">
+                <textarea className="min-h-[160px] w-full rounded-[1.3rem] border border-[rgba(197,184,161,0.34)] bg-[linear-gradient(180deg,rgba(255,255,255,0.995),rgba(250,247,242,0.985))] px-5 py-4 text-lg text-slate-900 shadow-[inset_0_2px_7px_rgba(15,23,42,0.03)] transition-all placeholder:text-stone-400 focus:border-[rgba(83,103,130,0.45)] focus:outline-none focus:ring-2 focus:ring-[rgba(126,151,180,0.18)]" value={customerNotes} onChange={(e) => setCustomerNotes(e.target.value)} placeholder="e.g., Make the first line more prominent, keep the layout centered, or match the style shown on my proof." />
               </SectionShell>
 
               <div className="flex justify-end pt-1">
