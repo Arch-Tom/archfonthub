@@ -12,7 +12,7 @@ const StandardPreviewPanel = ({
   standardPreviewStyleMap,
   textAlign,
 }) => (
-  <div className="rounded-[1.35rem] border border-[rgba(197,184,161,0.28)] bg-[linear-gradient(180deg,rgba(249,247,242,0.96),rgba(240,235,226,0.94))] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)] sm:p-6">
+  <div className="rounded-[1.45rem] border border-[rgba(197,184,161,0.28)] bg-[linear-gradient(180deg,rgba(252,249,243,0.98),rgba(241,235,225,0.94))] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_18px_38px_-30px_rgba(15,23,42,0.12)] sm:p-6">
     {safeSelectedFonts.length > 0 ? (
       <div className="space-y-8">
         {safeSelectedFonts.map((font) => {
@@ -30,7 +30,7 @@ const StandardPreviewPanel = ({
             <div key={`standard-preview-${font.name}`} className="relative flex flex-col items-start gap-3">
               <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
                 <span
-                  className="rounded-full border border-[rgba(58,79,106,0.3)] bg-[linear-gradient(180deg,rgba(247,249,252,0.98),rgba(229,236,244,0.96))] px-4 py-1 text-sm font-bold text-slate-800 shadow-sm"
+                  className="rounded-full border border-[rgba(212,194,161,0.34)] bg-[linear-gradient(180deg,#2f4258_0%,#213142_100%)] px-4 py-1 text-sm font-bold text-white shadow-[0_14px_22px_-18px_rgba(33,49,66,0.52)]"
                   style={{ fontFamily: 'Arial' }}
                 >
                   {font.name}
@@ -52,7 +52,7 @@ const StandardPreviewPanel = ({
                         aria-pressed={isActiveStyle}
                         className={`px-4 py-2 text-sm rounded-md border transition-colors ${
                           isActiveStyle
-                            ? 'border-[rgba(58,79,106,0.65)] bg-[linear-gradient(180deg,#47617e_0%,#2f4258_100%)] text-white'
+                            ? 'border-[rgba(212,194,161,0.36)] bg-[linear-gradient(180deg,#2f4258_0%,#213142_100%)] text-white shadow-[0_14px_22px_-18px_rgba(33,49,66,0.52)]'
                             : 'bg-white text-slate-600 border-[rgba(197,184,161,0.34)] hover:bg-[rgba(247,244,238,0.95)] hover:text-slate-900'
                         }`}
                       >
@@ -63,7 +63,7 @@ const StandardPreviewPanel = ({
                 </div>
               </div>
 
-              <div className="w-full rounded-[1rem] border border-[rgba(197,184,161,0.26)] bg-[linear-gradient(180deg,rgba(255,255,255,0.995),rgba(249,246,239,0.985))] px-5 py-5 shadow-[0_14px_30px_-26px_rgba(15,23,42,0.12)]">
+              <div className="w-full rounded-[1.15rem] border border-[rgba(197,184,161,0.26)] bg-[linear-gradient(180deg,rgba(255,255,255,0.998),rgba(249,246,239,0.992))] px-5 py-5 shadow-[0_16px_32px_-26px_rgba(15,23,42,0.12)]">
                 {standardPreviewLines.length > 0 ? (
                   <p
                     className="w-full break-words whitespace-pre-wrap text-slate-800"

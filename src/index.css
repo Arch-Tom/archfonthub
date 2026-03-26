@@ -68,7 +68,8 @@ body {
 .preview-range::-webkit-slider-runnable-track {
     height: 0.5rem;
     border-radius: 9999px;
-    background: transparent;
+    background: linear-gradient(90deg, rgba(233, 226, 214, 0.9), rgba(196, 208, 223, 0.92));
+    box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.08);
 }
 
 .preview-range::-webkit-slider-thumb {
@@ -77,8 +78,8 @@ body {
     margin-top: -0.25rem;
     border: 2px solid #ffffff;
     border-radius: 9999px;
-    background: linear-gradient(180deg, #6e86a3 0%, #2f4258 100%);
-    box-shadow: 0 8px 18px -8px rgba(47, 66, 88, 0.42);
+    background: linear-gradient(180deg, #d8c097 0%, #8a7148 36%, #2f4258 100%);
+    box-shadow: 0 10px 22px -10px rgba(47, 66, 88, 0.5);
     -webkit-appearance: none;
     appearance: none;
 }
@@ -86,13 +87,14 @@ body {
 .preview-range::-moz-range-track {
     height: 0.5rem;
     border-radius: 9999px;
-    background: transparent;
+    background: linear-gradient(90deg, rgba(233, 226, 214, 0.9), rgba(196, 208, 223, 0.92));
+    box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.08);
 }
 
 .preview-range::-moz-range-progress {
     height: 0.5rem;
     border-radius: 9999px;
-    background: transparent;
+    background: linear-gradient(90deg, rgba(216, 192, 151, 0.95), rgba(111, 137, 166, 0.95));
 }
 
 .preview-range::-moz-range-thumb {
@@ -100,8 +102,8 @@ body {
     height: 1rem;
     border: 2px solid #ffffff;
     border-radius: 9999px;
-    background: linear-gradient(180deg, #6e86a3 0%, #2f4258 100%);
-    box-shadow: 0 8px 18px -8px rgba(47, 66, 88, 0.42);
+    background: linear-gradient(180deg, #d8c097 0%, #8a7148 36%, #2f4258 100%);
+    box-shadow: 0 10px 22px -10px rgba(47, 66, 88, 0.5);
 }
 
 /* --- Alumni Sans --- */

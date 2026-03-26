@@ -21,7 +21,7 @@ const FontMixingPanel = ({
 
   return (
     <div className="space-y-4">
-      <div className="rounded-[1.25rem] border border-[rgba(197,184,161,0.28)] bg-[linear-gradient(180deg,rgba(251,249,244,0.98),rgba(242,237,228,0.95))] p-4 sm:p-5">
+      <div className="rounded-[1.35rem] border border-[rgba(197,184,161,0.28)] bg-[linear-gradient(180deg,rgba(253,250,245,0.98),rgba(241,235,225,0.95))] p-4 shadow-[0_22px_42px_-32px_rgba(15,23,42,0.14)] sm:p-5">
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
             <div className="max-w-[34rem]">
@@ -36,8 +36,8 @@ const FontMixingPanel = ({
               </p>
             </div>
 
-            <div className="inline-flex items-center gap-2 self-start rounded-full border border-[rgba(197,184,161,0.28)] bg-white px-3 py-1.5 text-[11px] font-semibold text-slate-700 shadow-sm">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#2f4258]" />
+            <div className="inline-flex items-center gap-2 self-start rounded-full border border-[rgba(58,79,106,0.18)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(234,239,245,0.96))] px-3 py-1.5 text-[11px] font-semibold text-slate-700 shadow-sm">
+              <span className="h-2 w-2 rounded-full bg-[linear-gradient(180deg,#c9ae75_0%,#8c7348_100%)] shadow-[0_0_0_3px_rgba(201,174,117,0.16)]" />
               {activePreviewLine ? `Editing line ${activeLineNumber}` : 'Select a line in the preview'}
             </div>
           </div>
@@ -54,7 +54,7 @@ const FontMixingPanel = ({
                     aria-pressed={isActiveStyle}
                     className={`px-4 py-2 text-sm rounded-md border transition-colors ${
                       isActiveStyle
-                        ? 'border-[rgba(58,79,106,0.65)] bg-[linear-gradient(180deg,#47617e_0%,#2f4258_100%)] text-white'
+                        ? 'border-[rgba(212,194,161,0.36)] bg-[linear-gradient(180deg,#2f4258_0%,#213142_100%)] text-white shadow-[0_14px_22px_-18px_rgba(33,49,66,0.52)]'
                         : 'bg-white text-slate-600 border-[rgba(197,184,161,0.34)] hover:bg-[rgba(247,244,238,0.95)] hover:text-slate-900'
                     }`}
                   >
@@ -80,8 +80,8 @@ const FontMixingPanel = ({
                       !activePreviewLine
                         ? 'cursor-not-allowed border-[rgba(197,184,161,0.26)] bg-white text-slate-400'
                         : isActiveFont
-                          ? 'border-[rgba(58,79,106,0.65)] bg-[linear-gradient(180deg,#47617e_0%,#2f4258_100%)] text-white shadow-[0_18px_26px_-20px_rgba(47,66,88,0.48)]'
-                          : 'bg-white text-slate-700 border-[rgba(197,184,161,0.34)] hover:bg-[rgba(247,244,238,0.95)] hover:border-[rgba(83,103,130,0.34)]'
+                          ? 'border-[rgba(212,194,161,0.38)] bg-[linear-gradient(180deg,#2f4258_0%,#213142_100%)] text-white shadow-[0_18px_28px_-18px_rgba(33,49,66,0.56)]'
+                          : 'bg-[linear-gradient(180deg,rgba(255,255,255,0.99),rgba(246,242,235,0.97))] text-slate-700 border-[rgba(197,184,161,0.34)] hover:bg-white hover:border-[rgba(83,103,130,0.34)]'
                     }`}
                     style={{ fontFamily }}
                   >
