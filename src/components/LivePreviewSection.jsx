@@ -104,45 +104,45 @@ const LivePreviewSection = ({
       </div>
 
       <div className="relative space-y-4">
-        <header className="overflow-hidden rounded-[1.75rem] border border-[rgba(148,180,193,0.18)] bg-[linear-gradient(140deg,#213448_0%,#2d4a61_48%,#547792_100%)] px-5 py-5 shadow-[0_28px_56px_-34px_rgba(17,21,26,0.52)] sm:px-6">
+        <header className="overflow-hidden rounded-[1.75rem] border border-[rgba(148,180,193,0.18)] bg-[linear-gradient(135deg,rgba(255,255,255,0.98),rgba(236,239,202,0.88)_34%,rgba(148,180,193,0.34)_72%,rgba(255,255,255,0.95)_100%)] px-5 py-5 shadow-[0_24px_50px_-34px_rgba(17,21,26,0.16)] sm:px-6">
           <div className="pointer-events-none absolute inset-0" aria-hidden="true">
-            <div className="absolute inset-x-0 top-0 h-24 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),transparent)]" />
-            <div className="absolute -right-10 top-3 h-32 w-32 rounded-full bg-[radial-gradient(circle,rgba(236,239,202,0.18),transparent_72%)]" />
+            <div className="absolute inset-x-0 top-0 h-24 bg-[linear-gradient(180deg,rgba(255,255,255,0.42),transparent)]" />
+            <div className="absolute -right-10 top-3 h-32 w-32 rounded-full bg-[radial-gradient(circle,rgba(236,239,202,0.22),transparent_72%)]" />
           </div>
 
           <div className="relative flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
             <div className="max-w-[44rem]">
-              <div className="inline-flex items-center rounded-full border border-[rgba(236,239,202,0.18)] bg-[rgba(236,239,202,0.12)] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-[rgba(236,239,202,0.86)] shadow-sm backdrop-blur-sm">
+              <div className="inline-flex items-center rounded-full border border-[rgba(148,180,193,0.18)] bg-[rgba(255,255,255,0.64)] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#213448] shadow-sm backdrop-blur-sm">
                 Preview Studio
               </div>
 
               <div className="mt-3 flex flex-wrap items-center gap-3">
                 <h2
-                  className="text-[1.95rem] font-bold tracking-tight text-white sm:text-[2.25rem]"
+                  className="text-[1.95rem] font-bold tracking-tight text-slate-900 sm:text-[2.25rem]"
                   style={{ fontFamily: 'Alumni Sans Regular' }}
                 >
                   Live Preview
                 </h2>
 
-                <span className="inline-flex items-center rounded-full border border-white/12 bg-white/8 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-100 shadow-sm backdrop-blur-sm">
+                <span className="inline-flex items-center rounded-full border border-[rgba(84,119,146,0.18)] bg-[rgba(255,255,255,0.68)] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#213448] shadow-sm backdrop-blur-sm">
                   {modeTitle}
                 </span>
               </div>
 
-              <p className="mt-2 max-w-[40rem] text-[15px] leading-7 text-slate-100/84">
+              <p className="mt-2 max-w-[40rem] text-[15px] leading-7 text-slate-700">
                 {modeDescription}
               </p>
             </div>
 
             <div className="w-full xl:w-auto xl:min-w-[19rem]">
-              <div className="inline-flex w-full rounded-[1.1rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.11),rgba(255,255,255,0.04))] p-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] xl:w-auto backdrop-blur-sm">
+              <div className="inline-flex w-full rounded-[1.1rem] border border-[rgba(148,180,193,0.18)] bg-[rgba(255,255,255,0.62)] p-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] xl:w-auto backdrop-blur-sm">
                 <button
                   type="button"
                   onClick={() => setIsFontMixingMode(false)}
                   className={`flex-1 rounded-[0.9rem] px-4 py-2.5 text-sm font-semibold transition-all xl:min-w-[9rem] ${
                     !showFontMixingMode
-                      ? 'border border-[rgba(148,180,193,0.24)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(236,239,202,0.9))] text-[#213448] shadow-[0_12px_24px_-18px_rgba(148,180,193,0.42)]'
-                      : 'text-slate-100/82 hover:text-white'
+                      ? 'border border-[rgba(148,180,193,0.24)] bg-[linear-gradient(135deg,#547792_0%,#213448_100%)] text-white shadow-[0_12px_24px_-18px_rgba(84,119,146,0.34)]'
+                      : 'text-slate-700 hover:text-slate-900'
                   }`}
                   aria-pressed={!showFontMixingMode}
                 >
@@ -155,10 +155,10 @@ const LivePreviewSection = ({
                   disabled={!canUseFontMixing}
                   className={`flex-1 rounded-[0.9rem] px-4 py-2.5 text-sm font-semibold transition-all xl:min-w-[9rem] ${
                     showFontMixingMode
-                      ? 'border border-[rgba(148,180,193,0.24)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(236,239,202,0.9))] text-[#213448] shadow-[0_12px_24px_-18px_rgba(148,180,193,0.42)]'
+                      ? 'border border-[rgba(148,180,193,0.24)] bg-[linear-gradient(135deg,#547792_0%,#213448_100%)] text-white shadow-[0_12px_24px_-18px_rgba(84,119,146,0.34)]'
                       : canUseFontMixing
-                        ? 'text-slate-100/82 hover:text-white'
-                        : 'cursor-not-allowed text-slate-300/34'
+                        ? 'text-slate-700 hover:text-slate-900'
+                        : 'cursor-not-allowed text-slate-400/80'
                   }`}
                   aria-pressed={showFontMixingMode}
                   aria-disabled={!canUseFontMixing}

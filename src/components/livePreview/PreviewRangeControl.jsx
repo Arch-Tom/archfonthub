@@ -37,16 +37,16 @@ const PreviewRangeControl = ({
 
     return (
         <div
-            className={`rounded-[1.25rem] border px-4 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_20px_28px_-24px_rgba(15,23,42,0.48)] ${
+            className={`rounded-[1.25rem] border px-4 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.68),0_20px_28px_-24px_rgba(15,23,42,0.1)] ${
                 disabled
-                    ? 'border-white/8 bg-slate-900/40 opacity-70'
-                    : 'border-[rgba(120,145,163,0.14)] bg-[linear-gradient(180deg,rgba(29,40,49,0.82),rgba(43,57,69,0.76))] backdrop-blur-sm'
+                    ? 'border-[rgba(148,180,193,0.12)] bg-slate-100/70 opacity-70'
+                    : 'border-[rgba(148,180,193,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(244,248,249,0.94))]'
             }`}
         >
             <div className="mb-2 flex items-center justify-between gap-3">
                 <label
                     htmlFor={id}
-                    className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[rgba(225,235,242,0.72)]"
+                    className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500"
                 >
                     {label}
                 </label>
@@ -61,10 +61,10 @@ const PreviewRangeControl = ({
                             value={value}
                             onChange={onChange}
                             disabled={disabled}
-                            className={`w-20 rounded-full border px-3 py-1 text-sm font-semibold shadow-sm transition-colors focus:border-[rgba(158,184,199,0.4)] focus:outline-none ${
+                            className={`w-20 rounded-full border px-3 py-1 text-sm font-semibold shadow-sm transition-colors focus:border-[rgba(84,119,146,0.36)] focus:outline-none ${
                                 disabled
-                                    ? 'cursor-not-allowed border-white/10 bg-slate-800 text-slate-500'
-                                    : 'border-[rgba(120,145,163,0.22)] bg-slate-950/76 text-white'
+                                    ? 'cursor-not-allowed border-[rgba(148,180,193,0.16)] bg-slate-100 text-slate-400'
+                                    : 'border-[rgba(148,180,193,0.2)] bg-white text-slate-800'
                             }`}
                             aria-label={numberInputAriaLabel}
                         />
@@ -72,8 +72,8 @@ const PreviewRangeControl = ({
                         <span
                             className={`inline-flex min-w-[3rem] items-center justify-center rounded-full border px-2.5 py-1 text-xs font-semibold shadow-sm ${
                                 disabled
-                                    ? 'border-white/10 bg-slate-800 text-slate-500'
-                                    : 'border-[rgba(120,145,163,0.22)] bg-slate-950/76 text-white'
+                                    ? 'border-[rgba(148,180,193,0.16)] bg-slate-100 text-slate-400'
+                                    : 'border-[rgba(148,180,193,0.2)] bg-white text-slate-800'
                             }`}
                         >
                             {displayValue}
@@ -84,12 +84,12 @@ const PreviewRangeControl = ({
             </div>
 
             <div className="relative py-1">
-                <div className="pointer-events-none absolute inset-x-0 top-1/2 h-2 -translate-y-1/2 rounded-full bg-white/10" />
+                <div className="pointer-events-none absolute inset-x-0 top-1/2 h-2 -translate-y-1/2 rounded-full bg-[rgba(148,180,193,0.18)]" />
                 <div
                     className={`pointer-events-none absolute left-0 top-1/2 h-2 -translate-y-1/2 rounded-full ${
                         disabled
-                            ? 'bg-slate-500/40'
-                            : 'bg-[linear-gradient(90deg,#dfe8ee_0%,#8ba2b1_58%,#546b7c_100%)]'
+                            ? 'bg-slate-300/80'
+                            : 'bg-[linear-gradient(90deg,#ecefca_0%,#94b4c1_55%,#547792_100%)]'
                     }`}
                     style={{ width: `${percent}%` }}
                 />
