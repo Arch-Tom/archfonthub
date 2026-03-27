@@ -24,15 +24,50 @@ const AlignIcon = ({ align = 'left' }) => {
   const isRight = align === 'right';
 
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false" className="block">
-      <rect x={isLeft ? 3 : isCenter ? 5 : 7} y="5" width="14" height="2.2" rx="1.1" fill="currentColor" />
-      <rect x={isLeft ? 3 : isCenter ? 7 : 9} y="11" width="10" height="2.2" rx="1.1" fill="currentColor" />
-      <rect x={isLeft ? 3 : isCenter ? 5 : 7} y="17" width="14" height="2.2" rx="1.1" fill="currentColor" />
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      focusable="false"
+      className="block"
+    >
+      <rect
+        x={isLeft ? 3 : isCenter ? 5 : 7}
+        y="5"
+        width="14"
+        height="2.2"
+        rx="1.1"
+        fill="currentColor"
+      />
+      <rect
+        x={isLeft ? 3 : isCenter ? 7 : 9}
+        y="11"
+        width="10"
+        height="2.2"
+        rx="1.1"
+        fill="currentColor"
+      />
+      <rect
+        x={isLeft ? 3 : isCenter ? 5 : 7}
+        y="17"
+        width="14"
+        height="2.2"
+        rx="1.1"
+        fill="currentColor"
+      />
     </svg>
   );
 };
 
-const SectionShell = ({ eyebrow, title, description, action = null, children, tone = 'soft' }) => {
+const SectionShell = ({
+  eyebrow,
+  title,
+  description,
+  action = null,
+  children,
+  tone = 'soft',
+}) => {
   const toneClasses =
     tone === 'light'
       ? 'border-[rgba(148,180,193,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.996),rgba(244,248,249,0.988))] shadow-[0_30px_70px_-46px_rgba(28,35,41,0.1)]'
@@ -44,7 +79,9 @@ const SectionShell = ({ eyebrow, title, description, action = null, children, to
       : 'text-[#213448] bg-[rgba(236,239,202,0.72)] border-[rgba(148,180,193,0.22)]';
 
   return (
-    <section className={`relative overflow-hidden rounded-[2rem] border p-6 sm:p-8 ${toneClasses}`}>
+    <section
+      className={`relative overflow-hidden rounded-[2rem] border p-6 sm:p-8 ${toneClasses}`}
+    >
       <div className="pointer-events-none absolute inset-0" aria-hidden="true">
         <div className="absolute inset-x-0 top-0 h-24 bg-[linear-gradient(180deg,rgba(255,255,255,0.78),transparent)]" />
         <div className="absolute -right-24 top-0 h-44 w-44 rounded-full bg-[radial-gradient(circle,rgba(148,180,193,0.18),transparent_72%)]" />
@@ -56,16 +93,25 @@ const SectionShell = ({ eyebrow, title, description, action = null, children, to
           <div className="mb-6 flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
             <div className="max-w-[48rem]">
               {eyebrow && (
-                <div className={`inline-flex items-center rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] shadow-sm ${eyebrowClasses}`}>
+                <div
+                  className={`inline-flex items-center rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] shadow-sm ${eyebrowClasses}`}
+                >
                   {eyebrow}
                 </div>
               )}
               {title && (
-                <h2 className="mt-3 text-[2rem] font-bold tracking-tight sm:text-[2.35rem] text-slate-950" style={{ fontFamily: 'Alumni Sans Regular' }}>
+                <h2
+                  className="mt-3 text-[2rem] font-bold tracking-tight sm:text-[2.35rem] text-slate-950"
+                  style={{ fontFamily: 'Alumni Sans Regular' }}
+                >
                   {title}
                 </h2>
               )}
-              {description && <p className="mt-2 text-[15px] leading-7 text-slate-600">{description}</p>}
+              {description && (
+                <p className="mt-2 text-[15px] leading-7 text-slate-600">
+                  {description}
+                </p>
+              )}
             </div>
             {action ? <div className="xl:shrink-0">{action}</div> : null}
           </div>
@@ -126,7 +172,9 @@ const App = () => {
     const font = getFontOptionByName(fontName, fonts);
     if (!font) return '';
     const styleKeys = Object.keys(font.styles);
-    if (font.activeStyle && styleKeys.includes(font.activeStyle)) return font.activeStyle;
+    if (font.activeStyle && styleKeys.includes(font.activeStyle)) {
+      return font.activeStyle;
+    }
     return styleKeys[0] || '';
   };
 
@@ -139,25 +187,46 @@ const App = () => {
 
   const normalizeLineSelection = (line, fonts = selectedFonts) => {
     if (fonts.length === 0) {
-      return { ...line, fontName: '', styleKey: '', fontSizeOverride: normalizeFontSizeOverride(line.fontSizeOverride) };
+      return {
+        ...line,
+        fontName: '',
+        styleKey: '',
+        fontSizeOverride: normalizeFontSizeOverride(line.fontSizeOverride),
+      };
     }
 
     const selectedFont = getFontOptionByName(line.fontName, fonts) || fonts[0];
     const nextFontName = selectedFont.name;
-    const nextStyleKey = selectedFont.styles[line.styleKey] ? line.styleKey : getDefaultStyleKey(nextFontName, fonts);
+    const nextStyleKey = selectedFont.styles[line.styleKey]
+      ? line.styleKey
+      : getDefaultStyleKey(nextFontName, fonts);
 
-    return { ...line, fontName: nextFontName, styleKey: nextStyleKey, fontSizeOverride: normalizeFontSizeOverride(line.fontSizeOverride) };
+    return {
+      ...line,
+      fontName: nextFontName,
+      styleKey: nextStyleKey,
+      fontSizeOverride: normalizeFontSizeOverride(line.fontSizeOverride),
+    };
   };
 
   const derivedTextLines = customText === '' ? [] : customText.split(/\r?\n/);
+
   const previewLines = derivedTextLines.map((text, index) => ({
     lineIndex: index,
     text,
-    ...normalizeLineSelection(lineSettings[index] || { fontName: '', styleKey: '', fontSizeOverride: null }),
+    ...normalizeLineSelection(lineSettings[index] || {
+      fontName: '',
+      styleKey: '',
+      fontSizeOverride: null,
+    }),
   }));
-  const populatedPreviewLines = previewLines.filter((line) => line.text.trim() !== '');
+
+  const populatedPreviewLines = previewLines.filter(
+    (line) => line.text.trim() !== ''
+  );
   const combinedText = customText;
-  const hasStandardSelection = selectedFonts.length > 0 && populatedPreviewLines.length > 0;
+  const hasStandardSelection =
+    selectedFonts.length > 0 && populatedPreviewLines.length > 0;
   const hasReadySubmission = Boolean(monogramInfo || hasStandardSelection);
 
   useEffect(() => {
@@ -177,7 +246,10 @@ const App = () => {
   useEffect(() => {
     setLineSettings((prevSettings) => {
       const nextSettings = derivedTextLines.map((_, index) =>
-        normalizeLineSelection(prevSettings[index] || { fontName: '', styleKey: '' }, selectedFonts)
+        normalizeLineSelection(
+          prevSettings[index] || { fontName: '', styleKey: '' },
+          selectedFonts
+        )
       );
 
       if (
@@ -186,7 +258,8 @@ const App = () => {
           (setting, index) =>
             setting.fontName === prevSettings[index]?.fontName &&
             setting.styleKey === prevSettings[index]?.styleKey &&
-            setting.fontSizeOverride === prevSettings[index]?.fontSizeOverride
+            setting.fontSizeOverride ===
+              prevSettings[index]?.fontSizeOverride
         )
       ) {
         return prevSettings;
@@ -201,24 +274,34 @@ const App = () => {
       if (openPreviewLineIndex !== null) setOpenPreviewLineIndex(null);
       return;
     }
+
     if (openPreviewLineIndex == null) {
       setOpenPreviewLineIndex(previewLines[0].lineIndex);
       return;
     }
+
     if (openPreviewLineIndex >= previewLines.length) {
-      setOpenPreviewLineIndex(previewLines.length > 0 ? previewLines.length - 1 : null);
+      setOpenPreviewLineIndex(
+        previewLines.length > 0 ? previewLines.length - 1 : null
+      );
     }
   }, [openPreviewLineIndex, previewLines.length]);
 
   const handleFontSelect = (font) => {
     const isSelected = selectedFonts.some((f) => f.name === font.name);
+
     if (isSelected) {
       setSelectedFonts((prev) => prev.filter((f) => f.name !== font.name));
     } else if (selectedFonts.length < 3) {
       const defaultStyleKey = Object.keys(font.styles)[0];
-      setSelectedFonts((prev) => [...prev, { ...font, activeStyle: defaultStyleKey }]);
+      setSelectedFonts((prev) => [
+        ...prev,
+        { ...font, activeStyle: defaultStyleKey },
+      ]);
     } else {
-      showMessage('You may select a maximum of 3 fonts. Please deselect a font to choose a new one.');
+      showMessage(
+        'You may select a maximum of 3 fonts. Please deselect a font to choose a new one.'
+      );
     }
   };
 
@@ -231,42 +314,68 @@ const App = () => {
     setTimeout(() => setShowMessageBox(false), duration);
   };
 
-  const formatForFilename = (str) => str.trim().replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_-]/g, '');
+  const formatForFilename = (str) =>
+    str
+      .trim()
+      .replace(/\s+/g, '_')
+      .replace(/[^a-zA-Z0-9_-]/g, '');
 
   const handleGlyphInsert = (glyph) => {
     const input = customTextRef.current;
     const start = input?.selectionStart ?? customText.length;
     const end = input?.selectionEnd ?? customText.length;
-    const newText = customText.substring(0, start) + glyph + customText.substring(end);
+    const newText =
+      customText.substring(0, start) + glyph + customText.substring(end);
+
     setCustomText(newText);
     input?.focus();
+
     setTimeout(() => {
       const updatedInput = customTextRef.current;
-      if (updatedInput) updatedInput.selectionStart = updatedInput.selectionEnd = start + glyph.length;
+      if (updatedInput) {
+        updatedInput.selectionStart = updatedInput.selectionEnd =
+          start + glyph.length;
+      }
     }, 0);
   };
 
   const handleApplyFontToActiveLine = (fontName) => {
     if (openPreviewLineIndex == null) return;
+
     setLineSettings((prevSettings) =>
       prevSettings.map((line, index) => {
         if (index !== openPreviewLineIndex) return line;
+
         const nextFont = getFontOptionByName(fontName);
         if (!nextFont) return line;
-        const nextStyleKey = nextFont.styles[line.styleKey] ? line.styleKey : getDefaultStyleKey(fontName);
-        return normalizeLineSelection({ ...line, fontName, styleKey: nextStyleKey });
+
+        const nextStyleKey = nextFont.styles[line.styleKey]
+          ? line.styleKey
+          : getDefaultStyleKey(fontName);
+
+        return normalizeLineSelection({
+          ...line,
+          fontName,
+          styleKey: nextStyleKey,
+        });
       })
     );
   };
 
   const handleLineStyleChange = (lineIndex, styleKey) => {
-    setLineSettings((prevSettings) => prevSettings.map((line, index) => (index === lineIndex ? { ...line, styleKey } : line)));
+    setLineSettings((prevSettings) =>
+      prevSettings.map((line, index) =>
+        index === lineIndex ? { ...line, styleKey } : line
+      )
+    );
   };
 
   const handleLineFontSizeOverrideChange = (lineIndex, value) => {
     setLineSettings((prevSettings) =>
       prevSettings.map((line, index) =>
-        index === lineIndex ? { ...line, fontSizeOverride: normalizeFontSizeOverride(value) } : line
+        index === lineIndex
+          ? { ...line, fontSizeOverride: normalizeFontSizeOverride(value) }
+          : line
       )
     );
   };
@@ -281,23 +390,34 @@ const App = () => {
 
   const handleHebrewBackspace = () => {
     if (hebrewPaletteText.length === 0) return;
+
     const segmenter = new Intl.Segmenter('he', { granularity: 'grapheme' });
-    const graphemes = Array.from(segmenter.segment(hebrewPaletteText)).map((s) => s.segment);
+    const graphemes = Array.from(segmenter.segment(hebrewPaletteText)).map(
+      (s) => s.segment
+    );
+
     graphemes.pop();
     const newText = graphemes.join('');
     setHebrewPaletteText(newText);
+
     if (newText.length === 0) {
       setLastHebrewBaseChar('א');
     } else {
       const hebrewBaseRegex = /[אבגדהוזחטיכךלמםנןסעפףצץקרשת]/g;
       const baseCharsInNewText = newText.match(hebrewBaseRegex);
-      setLastHebrewBaseChar(baseCharsInNewText ? baseCharsInNewText[baseCharsInNewText.length - 1] : 'א');
+      setLastHebrewBaseChar(
+        baseCharsInNewText
+          ? baseCharsInNewText[baseCharsInNewText.length - 1]
+          : 'א'
+      );
     }
   };
 
   const generateSvgContent = async (mode = 'editable') => {
     if (!monogramInfo && !hasStandardSelection) {
-      showMessage('Please create a monogram, or select at least one font and enter some text to submit.');
+      showMessage(
+        'Please create a monogram, or select at least one font and enter some text to submit.'
+      );
       return null;
     }
 
@@ -308,48 +428,125 @@ const App = () => {
     const svgWidth = 800;
     let y = padding;
 
-    const aligned = textAlign === 'center' ? { x: svgWidth / 2, anchor: 'middle' } : textAlign === 'right' ? { x: svgWidth - padding, anchor: 'end' } : { x: padding, anchor: 'start' };
+    const aligned =
+      textAlign === 'center'
+        ? { x: svgWidth / 2, anchor: 'middle' }
+        : textAlign === 'right'
+        ? { x: svgWidth - padding, anchor: 'end' }
+        : { x: padding, anchor: 'start' };
 
-    const escapeXml = (unsafe) => unsafe.replace(/[<>&'\\"]/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', "'": '&apos;', '"': '&quot;' }[c] || c));
+    const escapeXml = (unsafe) =>
+      unsafe.replace(
+        /[<>&'"]/g,
+        (c) =>
+          ({
+            '<': '&lt;',
+            '>': '&gt;',
+            '&': '&amp;',
+            "'": '&apos;',
+            '"': '&quot;',
+          }[c] || c)
+      );
 
     if (monogramInfo) {
       const data = monogramInfo.data;
       y += labelFontSize + 10;
-      const title = data.isCircular ? `Circular Monogram (${data.frameStyle})` : `${data.font.name} (${data.style.charAt(0).toUpperCase() + data.style.slice(1)})`;
+
+      const title = data.isCircular
+        ? `Circular Monogram (${data.frameStyle})`
+        : `${data.font.name} (${
+            data.style.charAt(0).toUpperCase() + data.style.slice(1)
+          })`;
+
       svgElements += `<text x="${padding}" y="${y}" font-family="Arial" font-size="${labelFontSize}" fill="#6b7280" font-weight="600">Monogram: ${title}</text>\n`;
+
       const svgCenterX = svgWidth / 2;
       const monogramBlockY = y + 150;
+
       if (data.isCircular) {
         const [first, middle, last] = data.text;
         const frameStyle = data.frameStyle;
-        const textColor = frameStyle === 'solid' || frameStyle === 'double' ? 'white' : 'black';
+        const textColor =
+          frameStyle === 'solid' || frameStyle === 'double'
+            ? 'white'
+            : 'black';
         const baseFontSize = (data.fontSize || 100) * 1.5;
         const finalFontSize = baseFontSize * 0.9875;
         let frameSvg = '';
-        if (frameStyle === 'solid') frameSvg = `<circle cx="${svgCenterX}" cy="${monogramBlockY}" r="64" fill="black" />`;
-        else if (frameStyle === 'double') frameSvg = `<g><circle cx="${svgCenterX}" cy="${monogramBlockY}" r="64" fill="black" /><circle cx="${svgCenterX}" cy="${monogramBlockY}" r="59" fill="none" stroke="white" stroke-width="3" /></g>`;
-        else if (frameStyle === 'dotted') frameSvg = `<circle cx="${svgCenterX}" cy="${monogramBlockY}" r="64" fill="none" stroke="black" stroke-width="4" stroke-dasharray="10 10" />`;
-        else if (frameStyle === 'outline') frameSvg = `<circle cx="${svgCenterX}" cy="${monogramBlockY}" r="64" fill="none" stroke="black" stroke-width="2" />`;
-        else if (frameStyle === 'thick-thin') frameSvg = `<g><circle cx="${svgCenterX}" cy="${monogramBlockY}" r="65" fill="none" stroke="black" stroke-width="5" /><circle cx="${svgCenterX}" cy="${monogramBlockY}" r="57" fill="none" stroke="black" stroke-width="2" /></g>`;
+
+        if (frameStyle === 'solid') {
+          frameSvg = `<circle cx="${svgCenterX}" cy="${monogramBlockY}" r="64" fill="black" />`;
+        } else if (frameStyle === 'double') {
+          frameSvg = `<g><circle cx="${svgCenterX}" cy="${monogramBlockY}" r="64" fill="black" /><circle cx="${svgCenterX}" cy="${monogramBlockY}" r="59" fill="none" stroke="white" stroke-width="3" /></g>`;
+        } else if (frameStyle === 'dotted') {
+          frameSvg = `<circle cx="${svgCenterX}" cy="${monogramBlockY}" r="64" fill="none" stroke="black" stroke-width="4" stroke-dasharray="10 10" />`;
+        } else if (frameStyle === 'outline') {
+          frameSvg = `<circle cx="${svgCenterX}" cy="${monogramBlockY}" r="64" fill="none" stroke="black" stroke-width="2" />`;
+        } else if (frameStyle === 'thick-thin') {
+          frameSvg = `<g><circle cx="${svgCenterX}" cy="${monogramBlockY}" r="65" fill="none" stroke="black" stroke-width="5" /><circle cx="${svgCenterX}" cy="${monogramBlockY}" r="57" fill="none" stroke="black" stroke-width="2" /></g>`;
+        }
+
         svgElements += frameSvg;
+
         if (mode === 'curves') {
           const letterConfigs = [
-            { char: first, fontFamily: 'LeftCircleMonogram', yOffset: 0 },
-            { char: middle, fontFamily: 'MiddleCircleMonogram', yOffset: -(finalFontSize * 0.02) },
-            { char: last, fontFamily: 'RightCircleMonogram', yOffset: 0 },
+            {
+              char: first,
+              fontFamily: 'LeftCircleMonogram',
+              yOffset: 0,
+            },
+            {
+              char: middle,
+              fontFamily: 'MiddleCircleMonogram',
+              yOffset: -(finalFontSize * 0.02),
+            },
+            {
+              char: last,
+              fontFamily: 'RightCircleMonogram',
+              yOffset: 0,
+            },
           ];
-          const measuredWidths = await Promise.all(letterConfigs.map(async ({ char, fontFamily }) => {
-            const font = await loadCurveFont(fontFamily);
-            return font ? font.getAdvanceWidth(char, finalFontSize, { kerning: true }) : finalFontSize * 0.7;
-          }));
-          let currentX = svgCenterX - measuredWidths.reduce((sum, width) => sum + width, 0) / 2;
+
+          const measuredWidths = await Promise.all(
+            letterConfigs.map(async ({ char, fontFamily }) => {
+              const font = await loadCurveFont(fontFamily);
+              return font
+                ? font.getAdvanceWidth(char, finalFontSize, { kerning: true })
+                : finalFontSize * 0.7;
+            })
+          );
+
+          let currentX =
+            svgCenterX -
+            measuredWidths.reduce((sum, width) => sum + width, 0) / 2;
+
           for (const [index, config] of letterConfigs.entries()) {
-            svgElements += await buildArtworkTextElement({ mode, text: config.char, x: currentX, y: monogramBlockY + config.yOffset, fontFamily: config.fontFamily, exportFontFamily: config.fontFamily, fontSize: finalFontSize, fill: textColor, anchor: 'start', verticalAlign: 'middle', escapeXml });
+            svgElements += await buildArtworkTextElement({
+              mode,
+              text: config.char,
+              x: currentX,
+              y: monogramBlockY + config.yOffset,
+              fontFamily: config.fontFamily,
+              exportFontFamily: config.fontFamily,
+              fontSize: finalFontSize,
+              fill: textColor,
+              anchor: 'start',
+              verticalAlign: 'middle',
+              escapeXml,
+            });
+
             currentX += measuredWidths[index];
           }
         } else {
-          svgElements += `<text x="${svgCenterX}" y="${monogramBlockY}" text-anchor="middle" dominant-baseline="middle" fill="${textColor}" style="font-size: ${finalFontSize}px;"><tspan font-family="LeftCircleMonogram">${escapeXml(first)}</tspan><tspan font-family="MiddleCircleMonogram" dy="-0.02em">${escapeXml(middle)}</tspan><tspan font-family="RightCircleMonogram">${escapeXml(last)}</tspan></text>`;
+          svgElements += `<text x="${svgCenterX}" y="${monogramBlockY}" text-anchor="middle" dominant-baseline="middle" fill="${textColor}" style="font-size: ${finalFontSize}px;"><tspan font-family="LeftCircleMonogram">${escapeXml(
+            first
+          )}</tspan><tspan font-family="MiddleCircleMonogram" dy="-0.02em">${escapeXml(
+            middle
+          )}</tspan><tspan font-family="RightCircleMonogram">${escapeXml(
+            last
+          )}</tspan></text>`;
         }
+
         y = monogramBlockY + 100;
       } else {
         const [first, middle, last] = data.text;
@@ -358,36 +555,110 @@ const App = () => {
         const sideScale = 1.2;
         const middleScale = 1.6;
         const sideSize = data.disableScaling ? baseSize : baseSize * sideScale;
-        const middleSize = data.disableScaling ? baseSize : baseSize * middleScale;
+        const middleSize = data.disableScaling
+          ? baseSize
+          : baseSize * middleScale;
         const gap = sideSize * 0.2;
         const middleLetterHalfWidth = (middleSize / 2) * 0.7;
         const middleX = svgCenterX;
         const leftX = middleX - middleLetterHalfWidth - gap;
         const rightX = middleX + middleLetterHalfWidth + gap;
+
         if (mode === 'curves') {
-          svgElements += await buildArtworkTextElement({ mode, text: first, x: leftX, y: monogramBlockY, fontFamily, exportFontFamily: fontFamily, fontSize: sideSize, anchor: 'middle', verticalAlign: 'middle', escapeXml });
-          svgElements += await buildArtworkTextElement({ mode, text: middle, x: middleX, y: monogramBlockY, fontFamily, exportFontFamily: fontFamily, fontSize: middleSize, anchor: 'middle', verticalAlign: 'middle', escapeXml });
-          svgElements += await buildArtworkTextElement({ mode, text: last, x: rightX, y: monogramBlockY, fontFamily, exportFontFamily: fontFamily, fontSize: sideSize, anchor: 'middle', verticalAlign: 'middle', escapeXml });
+          svgElements += await buildArtworkTextElement({
+            mode,
+            text: first,
+            x: leftX,
+            y: monogramBlockY,
+            fontFamily,
+            exportFontFamily: fontFamily,
+            fontSize: sideSize,
+            anchor: 'middle',
+            verticalAlign: 'middle',
+            escapeXml,
+          });
+
+          svgElements += await buildArtworkTextElement({
+            mode,
+            text: middle,
+            x: middleX,
+            y: monogramBlockY,
+            fontFamily,
+            exportFontFamily: fontFamily,
+            fontSize: middleSize,
+            anchor: 'middle',
+            verticalAlign: 'middle',
+            escapeXml,
+          });
+
+          svgElements += await buildArtworkTextElement({
+            mode,
+            text: last,
+            x: rightX,
+            y: monogramBlockY,
+            fontFamily,
+            exportFontFamily: fontFamily,
+            fontSize: sideSize,
+            anchor: 'middle',
+            verticalAlign: 'middle',
+            escapeXml,
+          });
         } else {
-          svgElements += `<g dominant-baseline="middle" text-anchor="middle" font-family="${fontFamily}" fill="#181717"><text x="${leftX}" y="${monogramBlockY}" font-size="${sideSize}px">${escapeXml(first)}</text><text x="${middleX}" y="${monogramBlockY}" font-size="${middleSize}px">${escapeXml(middle)}</text><text x="${rightX}" y="${monogramBlockY}" font-size="${sideSize}px">${escapeXml(last)}</text></g>`;
+          svgElements += `<g dominant-baseline="middle" text-anchor="middle" font-family="${fontFamily}" fill="#181717"><text x="${leftX}" y="${monogramBlockY}" font-size="${sideSize}px">${escapeXml(
+            first
+          )}</text><text x="${middleX}" y="${monogramBlockY}" font-size="${middleSize}px">${escapeXml(
+            middle
+          )}</text><text x="${rightX}" y="${monogramBlockY}" font-size="${sideSize}px">${escapeXml(
+            last
+          )}</text></g>`;
         }
+
         y = monogramBlockY + middleSize / 2;
       }
     }
 
     let contentY = y + 40;
+
     if (hasStandardSelection) {
       let artworkY = contentY;
+
       for (const [index, line] of populatedPreviewLines.entries()) {
         const font = getFontOptionByName(line.fontName);
-        const activeFontFamily = font?.styles[line.styleKey] || font?.styles[getDefaultStyleKey(font?.name)] || 'inherit';
-        const exportFontFamily = exportFontFamilyMap[activeFontFamily] || activeFontFamily;
+        const activeFontFamily =
+          font?.styles[line.styleKey] ||
+          font?.styles[getDefaultStyleKey(font?.name)] ||
+          'inherit';
+        const exportFontFamily =
+          exportFontFamilyMap[activeFontFamily] || activeFontFamily;
         const effectiveFontSize = line.fontSizeOverride ?? fontSize;
-        const styleName = line.styleKey ? line.styleKey.charAt(0).toUpperCase() + line.styleKey.slice(1) : 'No Style';
+        const styleName = line.styleKey
+          ? line.styleKey.charAt(0).toUpperCase() + line.styleKey.slice(1)
+          : 'No Style';
+
         artworkY += effectiveFontSize * lineSpacing;
-        svgElements += await buildArtworkTextElement({ mode, text: line.text, x: aligned.x, y: artworkY, fontFamily: activeFontFamily, exportFontFamily, fontSize: effectiveFontSize, fill: '#181717', anchor: aligned.anchor, escapeXml });
-        metadataElements += `<text x="${padding}" y="${labelFontSize + 10 + index * labelFontSize * 1.5}" font-family="Arial" font-size="${labelFontSize}" fill="#6b7280" font-weight="600">Line ${index + 1}: ${escapeXml(font?.name || 'No Font')} (${escapeXml(styleName)})</text>\n`;
+
+        svgElements += await buildArtworkTextElement({
+          mode,
+          text: line.text,
+          x: aligned.x,
+          y: artworkY,
+          fontFamily: activeFontFamily,
+          exportFontFamily,
+          fontSize: effectiveFontSize,
+          fill: '#181717',
+          anchor: aligned.anchor,
+          escapeXml,
+        });
+
+        metadataElements += `<text x="${padding}" y="${
+          labelFontSize + 10 + index * labelFontSize * 1.5
+        }" font-family="Arial" font-size="${labelFontSize}" fill="#6b7280" font-weight="600">Line ${
+          index + 1
+        }: ${escapeXml(font?.name || 'No Font')} (${escapeXml(
+          styleName
+        )})</text>\n`;
       }
+
       contentY = artworkY;
     }
 
@@ -395,41 +666,73 @@ const App = () => {
       contentY += fontSize * 1.4;
       svgElements += `<text x="${padding}" y="${contentY}" font-family="Arial" font-size="${labelFontSize}" fill="#6b7280" font-weight="600">Customer Notes</text>\n`;
       contentY += labelFontSize * 0.5;
-      const noteLines = customerNotes.split('\n').filter((line) => line.trim() !== '');
+
+      const noteLines = customerNotes
+        .split('\n')
+        .filter((line) => line.trim() !== '');
+
       noteLines.forEach((noteLine) => {
         contentY += labelFontSize * 1.4;
-        svgElements += `<text x="${padding}" y="${contentY}" font-family="Arial" font-size="${labelFontSize}" fill="#181717">${escapeXml(noteLine)}</text>\n`;
+        svgElements += `<text x="${padding}" y="${contentY}" font-family="Arial" font-size="${labelFontSize}" fill="#181717">${escapeXml(
+          noteLine
+        )}</text>\n`;
       });
     }
 
     let metadataBlock = '';
     let metadataHeight = 0;
+
     if (metadataElements !== '') {
       metadataHeight = populatedPreviewLines.length * labelFontSize * 1.5 + padding;
       const metadataBlockY = contentY + padding + labelFontSize;
+
       metadataBlock = `<g transform="translate(0, ${metadataBlockY})"><text x="${padding}" y="0" font-family="Arial" font-size="${labelFontSize}" fill="#94a3b8" font-weight="700">Font Reference</text>${metadataElements}</g>`;
     }
-    const svgHeight = contentY + padding + metadataHeight + (metadataElements !== '' ? labelFontSize * 2 : 0);
+
+    const svgHeight =
+      contentY +
+      padding +
+      metadataHeight +
+      (metadataElements !== '' ? labelFontSize * 2 : 0);
+
     return `<svg xmlns="http://www.w3.org/2000/svg" width="${svgWidth}" height="${svgHeight}" style="background-color: #FFF;">${svgElements}${metadataBlock}</svg>`;
   };
 
   const handleSubmitClick = async () => {
     const editableSvgContent = await generateSvgContent('editable');
     if (!editableSvgContent) return;
+
     const curvesSvgContent = await generateSvgContent('curves');
     if (!curvesSvgContent) return;
-    const svgContent = { editable: editableSvgContent, curves: curvesSvgContent };
+
+    const svgContent = {
+      editable: editableSvgContent,
+      curves: curvesSvgContent,
+    };
+
     setPendingSvgContent(svgContent);
-    if (isDataPrefilled) handleFinalSubmit(svgContent);
-    else setShowCustomerModal(true);
+
+    if (isDataPrefilled) {
+      handleFinalSubmit(svgContent);
+    } else {
+      setShowCustomerModal(true);
+    }
   };
 
   const uploadSvgFile = async (filename, svgContent) => {
     const response = await fetch(`${WORKER_URL}/${filename}`, {
-      method: 'PUT', headers: { 'Content-Type': 'image/svg+xml' }, body: svgContent,
+      method: 'PUT',
+      headers: { 'Content-Type': 'image/svg+xml' },
+      body: svgContent,
     });
-    if (response.status === 409) throw new Error(`A submission for ${filename} already exists.`);
-    if (!response.ok) throw new Error(await response.text());
+
+    if (response.status === 409) {
+      throw new Error(`A submission for ${filename} already exists.`);
+    }
+
+    if (!response.ok) {
+      throw new Error(await response.text());
+    }
   };
 
   const handleFinalSubmit = async (svgContent) => {
@@ -437,13 +740,27 @@ const App = () => {
       showMessage('Order Number and Customer Name are required.');
       return;
     }
+
     setIsSubmitting(true);
     setShowCustomerModal(false);
-    const baseFilename = [formatForFilename(orderNumber), formatForFilename(customerName), customerCompany.trim() ? formatForFilename(customerCompany) : ''].filter(Boolean).join('_');
+
+    const baseFilename = [
+      formatForFilename(orderNumber),
+      formatForFilename(customerName),
+      customerCompany.trim() ? formatForFilename(customerCompany) : '',
+    ]
+      .filter(Boolean)
+      .join('_');
+
     const editableFilename = `${baseFilename}.svg`;
     const curvesFilename = `${baseFilename}_CURVES.svg`;
+
     try {
-      await Promise.all([uploadSvgFile(editableFilename, svgContent.editable), uploadSvgFile(curvesFilename, svgContent.curves)]);
+      await Promise.all([
+        uploadSvgFile(editableFilename, svgContent.editable),
+        uploadSvgFile(curvesFilename, svgContent.curves),
+      ]);
+
       setShowSuccessModal(true);
       setIsSubmissionComplete(true);
     } catch (error) {
@@ -452,11 +769,13 @@ const App = () => {
     } finally {
       setIsSubmitting(false);
     }
+
     if (!isDataPrefilled) {
       setCustomerName('');
       setCustomerCompany('');
       setOrderNumber('');
     }
+
     setPendingSvgContent(null);
   };
 
@@ -471,10 +790,14 @@ const App = () => {
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(236,239,202,0.92),rgba(148,180,193,0.28)_30%,transparent_58%),radial-gradient(circle_at_top_right,rgba(84,119,146,0.12),transparent_42%),linear-gradient(180deg,#fbfbfa_0%,#f1f5f6_44%,#e8eef1_100%)] text-slate-900">
       <div className="relative mx-auto max-w-[1650px] px-4 py-4 sm:px-6 lg:px-8 lg:py-6">
         <div className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-[radial-gradient(circle_at_top,rgba(84,119,146,0.2),transparent_65%)]" />
+
         <div className="grid min-h-[calc(100vh-2rem)] gap-6 xl:grid-cols-[360px_minmax(0,1fr)]">
           <aside className="xl:sticky xl:top-6 xl:h-[calc(100vh-3rem)]">
             <div className="relative flex h-full flex-col overflow-hidden rounded-[2.2rem] border border-[rgba(148,180,193,0.18)] bg-[linear-gradient(180deg,#213448_0%,#29445a_44%,#547792_100%)] p-6 shadow-[0_42px_104px_-44px_rgba(18,31,44,0.62)] sm:p-7">
-              <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+              <div
+                className="pointer-events-none absolute inset-0"
+                aria-hidden="true"
+              >
                 <div className="absolute inset-x-0 top-0 h-44 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),transparent)]" />
                 <div className="absolute right-0 top-10 h-40 w-40 rounded-full bg-[radial-gradient(circle,rgba(236,239,202,0.22),transparent_72%)]" />
                 <div className="absolute -left-14 bottom-8 h-48 w-48 rounded-full bg-[radial-gradient(circle,rgba(148,180,193,0.18),transparent_74%)]" />
@@ -482,27 +805,52 @@ const App = () => {
               </div>
 
               <div className="relative rounded-[1.8rem] border border-[rgba(236,239,202,0.18)] bg-[linear-gradient(180deg,rgba(255,255,255,0.14),rgba(255,255,255,0.04))] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] backdrop-blur-sm">
-                <div className="rounded-[1.5rem] border border-[rgba(148,180,193,0.24)] bg-[linear-gradient(180deg,rgba(84,119,146,0.26),rgba(148,180,193,0.12))] px-4 py-6 shadow-[0_26px_48px_-30px_rgba(10,18,28,0.48),inset_0_1px_0_rgba(255,255,255,0.08)]">
-                  <div className="rounded-[1.2rem] border border-[rgba(236,239,202,0.18)] bg-[radial-gradient(circle_at_center,rgba(236,239,202,0.34),rgba(148,180,193,0.18)_46%,rgba(255,255,255,0.03)_100%)] px-3 py-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
-                    <img src="/images/Arch Vector Logo White.svg" alt="Arch Font Hub Logo" className="mx-auto h-36 w-36 object-contain drop-shadow-[0_12px_22px_rgba(14,20,27,0.28)] sm:h-40 sm:w-40" />
+                <div className="rounded-[1.5rem] bg-[linear-gradient(180deg,rgba(84,119,146,0.26),rgba(148,180,193,0.12))] px-4 py-6 shadow-[0_26px_48px_-30px_rgba(10,18,28,0.48),inset_0_1px_0_rgba(255,255,255,0.08)]">
+                  <div className="rounded-[1.2rem] bg-[radial-gradient(circle_at_center,rgba(236,239,202,0.34),rgba(148,180,193,0.18)_46%,rgba(255,255,255,0.03)_100%)] px-3 py-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
+                    <img
+                      src="/images/Arch Vector Logo White.svg"
+                      alt="Arch Font Hub Logo"
+                      className="mx-auto h-36 w-36 object-contain drop-shadow-[0_12px_22px_rgba(14,20,27,0.28)] sm:h-40 sm:w-40"
+                    />
                   </div>
                 </div>
+
                 <div className="mt-5 text-center">
-                  <div className="inline-flex items-center rounded-full border border-[rgba(236,239,202,0.18)] bg-[rgba(236,239,202,0.12)] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.3em] text-[rgba(236,239,202,0.86)] shadow-sm">Font Selection</div>
-                  <h1 className="mt-3 text-[2.7rem] font-bold tracking-tight text-white" style={{ fontFamily: 'Alumni Sans Regular' }}>Arch Font Hub</h1>
-                  <p className="mt-3 text-sm leading-6 text-slate-100/88">Browse fonts, preview your wording, and choose the style you like best.</p>
+                  <div className="inline-flex items-center rounded-full border border-[rgba(236,239,202,0.18)] bg-[rgba(236,239,202,0.12)] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.3em] text-[rgba(236,239,202,0.86)] shadow-sm">
+                    Font Selection
+                  </div>
+                  <h1
+                    className="mt-3 text-[2.7rem] font-bold tracking-tight text-white"
+                    style={{ fontFamily: 'Alumni Sans Regular' }}
+                  >
+                    Arch Font Hub
+                  </h1>
+                  <p className="mt-3 text-sm leading-6 text-slate-100/88">
+                    Browse fonts, preview your wording, and choose the style you
+                    like best.
+                  </p>
                 </div>
               </div>
 
               <div className="relative mt-6 rounded-[1.55rem] border border-[rgba(236,239,202,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.12),rgba(33,52,72,0.14))] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-sm">
-                <div className="inline-flex items-center rounded-full border border-[rgba(236,239,202,0.14)] bg-[rgba(236,239,202,0.1)] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.24em] text-[rgba(236,239,202,0.82)]">Start here</div>
-                <p className="mt-3 text-sm leading-6 text-slate-100/86">Choose up to three fonts, preview your text, and add any notes before submitting your selection.</p>
+                <div className="inline-flex items-center rounded-full border border-[rgba(236,239,202,0.14)] bg-[rgba(236,239,202,0.1)] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.24em] text-[rgba(236,239,202,0.82)]">
+                  Start here
+                </div>
+                <p className="mt-3 text-sm leading-6 text-slate-100/86">
+                  Choose up to three fonts, preview your text, and add any
+                  notes before submitting your selection.
+                </p>
               </div>
 
               <div className="mt-auto pt-5">
                 <div className="rounded-[1.3rem] border border-[rgba(236,239,202,0.14)] bg-[linear-gradient(180deg,rgba(255,255,255,0.12),rgba(33,52,72,0.12))] px-4 py-4 text-sm leading-6 text-slate-100/86 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
-                  <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[rgba(236,239,202,0.78)]">Ready when you are</div>
-                  <p className="mt-2">Complete the steps in the main area whenever you're ready to submit your selection.</p>
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[rgba(236,239,202,0.78)]">
+                    Ready when you are
+                  </div>
+                  <p className="mt-2">
+                    Complete the steps in the main area whenever you're ready
+                    to submit your selection.
+                  </p>
                 </div>
               </div>
             </div>
@@ -512,8 +860,16 @@ const App = () => {
             {isSubmissionComplete && (
               <div className="fixed inset-0 z-30 flex items-center justify-center bg-slate-950/60 backdrop-blur-sm">
                 <div className="rounded-[2rem] border border-[rgba(148,180,193,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.996),rgba(244,248,249,0.988))] p-10 text-center shadow-[0_34px_90px_-44px_rgba(24,28,34,0.16)]">
-                  <h2 className="text-4xl font-bold text-slate-900" style={{ fontFamily: 'Alumni Sans Regular' }}>Submission Complete</h2>
-                  <p className="mt-4 text-lg text-slate-600">Thank you for your selection. You may now close this window.</p>
+                  <h2
+                    className="text-4xl font-bold text-slate-900"
+                    style={{ fontFamily: 'Alumni Sans Regular' }}
+                  >
+                    Submission Complete
+                  </h2>
+                  <p className="mt-4 text-lg text-slate-600">
+                    Thank you for your selection. You may now close this
+                    window.
+                  </p>
                 </div>
               </div>
             )}
@@ -532,7 +888,10 @@ const App = () => {
                     >
                       Create a Monogram
                     </button>
-                    <p className="mt-2 text-xs leading-5 text-slate-500">Create or insert a monogram if you would like to include one with your selection.</p>
+                    <p className="mt-2 text-xs leading-5 text-slate-500">
+                      Create or insert a monogram if you would like to include
+                      one with your selection.
+                    </p>
                   </div>
                 }
               >
@@ -540,19 +899,56 @@ const App = () => {
                   {Object.entries(fontLibrary).map(([category, fonts]) => (
                     <div key={category}>
                       <div className="mb-4 flex items-center justify-between gap-4 border-b border-[rgba(148,180,193,0.16)] pb-3">
-                        <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-600">{category}</h3>
-                        <span className="text-xs font-medium text-slate-400">Select up to 3</span>
+                        <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-600">
+                          {category}
+                        </h3>
+                        <span className="text-xs font-medium text-slate-400">
+                          Select up to 3
+                        </span>
                       </div>
+
                       <div className="flex flex-wrap gap-3">
                         {fonts.map((font) => {
-                          const isSelected = selectedFonts.some((f) => f.name === font.name);
-                          const isScriptFont = scriptFontsToAdjust.includes(font.name);
-                          let fontSizeClass = isScriptFont ? 'text-2xl' : 'text-lg';
-                          if (font.name === 'Concerto Pro') fontSizeClass = 'text-4xl';
+                          const isSelected = selectedFonts.some(
+                            (f) => f.name === font.name
+                          );
+                          const isScriptFont = scriptFontsToAdjust.includes(
+                            font.name
+                          );
+                          let fontSizeClass = isScriptFont
+                            ? 'text-2xl'
+                            : 'text-lg';
+
+                          if (font.name === 'Concerto Pro') {
+                            fontSizeClass = 'text-4xl';
+                          }
+
                           return (
-                            <button key={font.name} onClick={() => handleFontSelect(font)} className={`group relative overflow-hidden rounded-[1.2rem] border px-5 py-3.5 font-semibold transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#94B4C1] ${fontSizeClass} ${isSelected ? 'border-[rgba(84,119,146,0.28)] bg-[linear-gradient(135deg,rgba(255,255,255,0.995),rgba(236,239,202,0.86))] text-slate-900 shadow-[0_22px_34px_-24px_rgba(24,28,34,0.14)]' : 'border-[rgba(148,180,193,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.985),rgba(248,250,251,0.965))] text-slate-800 shadow-[0_18px_28px_-24px_rgba(24,28,34,0.06)] hover:-translate-y-px hover:border-[rgba(84,119,146,0.24)] hover:bg-white'}`} style={{ fontFamily: font.name === 'Alumni Sans' ? 'Alumni Sans Regular' : font.styles[Object.keys(font.styles)[0]] }} type="button">
+                            <button
+                              key={font.name}
+                              onClick={() => handleFontSelect(font)}
+                              className={`group relative overflow-hidden rounded-[1.2rem] border px-5 py-3.5 font-semibold transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#94B4C1] ${fontSizeClass} ${
+                                isSelected
+                                  ? 'border-[rgba(84,119,146,0.28)] bg-[linear-gradient(135deg,rgba(255,255,255,0.995),rgba(236,239,202,0.86))] text-slate-900 shadow-[0_22px_34px_-24px_rgba(24,28,34,0.14)]'
+                                  : 'border-[rgba(148,180,193,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.985),rgba(248,250,251,0.965))] text-slate-800 shadow-[0_18px_28px_-24px_rgba(24,28,34,0.06)] hover:-translate-y-px hover:border-[rgba(84,119,146,0.24)] hover:bg-white'
+                              }`}
+                              style={{
+                                fontFamily:
+                                  font.name === 'Alumni Sans'
+                                    ? 'Alumni Sans Regular'
+                                    : font.styles[Object.keys(font.styles)[0]],
+                              }}
+                              type="button"
+                            >
                               <span className="pointer-events-none absolute inset-x-0 top-0 h-10 bg-[linear-gradient(180deg,rgba(255,255,255,0.56),transparent)]" />
-                              <span className="relative z-10 flex items-center gap-3"><span>{font.name}</span>{isSelected && <span className="rounded-full border border-[rgba(148,180,193,0.14)] bg-[rgba(236,239,202,0.92)] px-2.5 py-0.5 text-[11px] font-semibold tracking-normal text-[#213448]">Selected</span>}</span>
+                              <span className="relative z-10 flex items-center gap-3">
+                                <span>{font.name}</span>
+                                {isSelected && (
+                                  <span className="rounded-full border border-[rgba(148,180,193,0.14)] bg-[rgba(236,239,202,0.92)] px-2.5 py-0.5 text-[11px] font-semibold tracking-normal text-[#213448]">
+                                    Selected
+                                  </span>
+                                )}
+                              </span>
                             </button>
                           );
                         })}
@@ -562,96 +958,347 @@ const App = () => {
                 </div>
               </SectionShell>
 
-              <SectionShell eyebrow="Step 2" title="Enter your preview text" description="Enter the wording you would like to preview. Multiple lines work well for names, titles, and message layouts." action={<div className="flex flex-wrap items-center justify-end gap-2"><button onClick={() => setShowHebrewPalette(true)} className="rounded-xl border border-[rgba(148,180,193,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(244,248,249,0.95))] px-4 py-2 text-sm font-semibold text-slate-700 transition-all hover:-translate-y-px hover:border-[rgba(84,119,146,0.22)] hover:bg-white" type="button">Hebrew</button><button onClick={() => setShowAccentPalette(true)} className="rounded-xl border border-[rgba(148,180,193,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(244,248,249,0.95))] px-4 py-2 text-sm font-semibold text-slate-700 transition-all hover:-translate-y-px hover:border-[rgba(84,119,146,0.22)] hover:bg-white" type="button">Accents</button><button onClick={() => setShowGlyphPalette(true)} className="rounded-xl border border-[rgba(148,180,193,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(244,248,249,0.95))] px-4 py-2 text-sm font-semibold text-slate-700 transition-all hover:-translate-y-px hover:border-[rgba(84,119,146,0.22)] hover:bg-white" type="button">Symbols</button></div>}>
+              <SectionShell
+                eyebrow="Step 2"
+                title="Enter your preview text"
+                description="Enter the wording you would like to preview. Multiple lines work well for names, titles, and message layouts."
+                action={
+                  <div className="flex flex-wrap items-center justify-end gap-2">
+                    <button
+                      onClick={() => setShowHebrewPalette(true)}
+                      className="rounded-xl border border-[rgba(148,180,193,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(244,248,249,0.95))] px-4 py-2 text-sm font-semibold text-slate-700 transition-all hover:-translate-y-px hover:border-[rgba(84,119,146,0.22)] hover:bg-white"
+                      type="button"
+                    >
+                      Hebrew
+                    </button>
+                    <button
+                      onClick={() => setShowAccentPalette(true)}
+                      className="rounded-xl border border-[rgba(148,180,193,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(244,248,249,0.95))] px-4 py-2 text-sm font-semibold text-slate-700 transition-all hover:-translate-y-px hover:border-[rgba(84,119,146,0.22)] hover:bg-white"
+                      type="button"
+                    >
+                      Accents
+                    </button>
+                    <button
+                      onClick={() => setShowGlyphPalette(true)}
+                      className="rounded-xl border border-[rgba(148,180,193,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(244,248,249,0.95))] px-4 py-2 text-sm font-semibold text-slate-700 transition-all hover:-translate-y-px hover:border-[rgba(84,119,146,0.22)] hover:bg-white"
+                      type="button"
+                    >
+                      Symbols
+                    </button>
+                  </div>
+                }
+              >
                 <div className="rounded-[1.55rem] border border-[rgba(148,180,193,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.97),rgba(245,248,249,0.94))] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.84)] sm:p-5">
-                  <textarea ref={customTextRef} value={customText} onChange={(e) => setCustomText(e.target.value)} placeholder={DEFAULT_TEXT_PLACEHOLDER} dir="auto" className="min-h-[230px] w-full rounded-[1.3rem] border border-[rgba(148,180,193,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.998),rgba(249,250,251,0.99))] px-5 py-4 text-xl text-slate-900 shadow-[inset_0_2px_7px_rgba(20,18,15,0.03)] transition-all placeholder:text-slate-400 focus:border-[rgba(84,119,146,0.3)] focus:outline-none focus:ring-2 focus:ring-[rgba(148,180,193,0.18)]" />
+                  <textarea
+                    ref={customTextRef}
+                    value={customText}
+                    onChange={(e) => setCustomText(e.target.value)}
+                    placeholder={DEFAULT_TEXT_PLACEHOLDER}
+                    dir="auto"
+                    className="min-h-[230px] w-full rounded-[1.3rem] border border-[rgba(148,180,193,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.998),rgba(249,250,251,0.99))] px-5 py-4 text-xl text-slate-900 shadow-[inset_0_2px_7px_rgba(20,18,15,0.03)] transition-all placeholder:text-slate-400 focus:border-[rgba(84,119,146,0.3)] focus:outline-none focus:ring-2 focus:ring-[rgba(148,180,193,0.18)]"
+                  />
                 </div>
               </SectionShell>
 
-              <LivePreviewSection monogramInfo={monogramInfo} combinedText={combinedText} hebrewRegex={hebrewRegex} hasStandardSelection={hasStandardSelection} previewLines={previewLines} openPreviewLineIndex={openPreviewLineIndex} setOpenPreviewLineIndex={setOpenPreviewLineIndex} selectedFonts={selectedFonts} getFontOptionByName={getFontOptionByName} getDefaultStyleKey={getDefaultStyleKey} getSortedStyleKeys={getSortedStyleKeys} fontSize={fontSize} lineSpacing={lineSpacing} textAlign={textAlign} setTextAlign={setTextAlign} handleFontSizeChange={handleFontSizeChange} handleLineSpacingChange={handleLineSpacingChange} handleApplyFontToActiveLine={handleApplyFontToActiveLine} handleLineStyleChange={handleLineStyleChange} handleLineFontSizeOverrideChange={handleLineFontSizeOverrideChange} AlignIcon={AlignIcon} />
+              <LivePreviewSection
+                monogramInfo={monogramInfo}
+                combinedText={combinedText}
+                hebrewRegex={hebrewRegex}
+                hasStandardSelection={hasStandardSelection}
+                previewLines={previewLines}
+                openPreviewLineIndex={openPreviewLineIndex}
+                setOpenPreviewLineIndex={setOpenPreviewLineIndex}
+                selectedFonts={selectedFonts}
+                getFontOptionByName={getFontOptionByName}
+                getDefaultStyleKey={getDefaultStyleKey}
+                getSortedStyleKeys={getSortedStyleKeys}
+                fontSize={fontSize}
+                lineSpacing={lineSpacing}
+                textAlign={textAlign}
+                setTextAlign={setTextAlign}
+                handleFontSizeChange={handleFontSizeChange}
+                handleLineSpacingChange={handleLineSpacingChange}
+                handleApplyFontToActiveLine={handleApplyFontToActiveLine}
+                handleLineStyleChange={handleLineStyleChange}
+                handleLineFontSizeOverrideChange={handleLineFontSizeOverrideChange}
+                AlignIcon={AlignIcon}
+              />
 
-              <SectionShell eyebrow="Step 3" title="Additional Notes" description="Add any preferences or special instructions you would like us to consider with your selection.">
-                <textarea className="min-h-[160px] w-full rounded-[1.3rem] border border-[rgba(148,180,193,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.998),rgba(249,250,251,0.99))] px-5 py-4 text-lg text-slate-900 shadow-[inset_0_2px_7px_rgba(20,18,15,0.03)] transition-all placeholder:text-slate-400 focus:border-[rgba(84,119,146,0.3)] focus:outline-none focus:ring-2 focus:ring-[rgba(148,180,193,0.18)]" value={customerNotes} onChange={(e) => setCustomerNotes(e.target.value)} placeholder="e.g., Make the first line more prominent, keep the layout centered, or match the style shown on my proof." />
+              <SectionShell
+                eyebrow="Step 3"
+                title="Additional Notes"
+                description="Add any preferences or special instructions you would like us to consider with your selection."
+              >
+                <textarea
+                  className="min-h-[160px] w-full rounded-[1.3rem] border border-[rgba(148,180,193,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.998),rgba(249,250,251,0.99))] px-5 py-4 text-lg text-slate-900 shadow-[inset_0_2px_7px_rgba(20,18,15,0.03)] transition-all placeholder:text-slate-400 focus:border-[rgba(84,119,146,0.3)] focus:outline-none focus:ring-2 focus:ring-[rgba(148,180,193,0.18)]"
+                  value={customerNotes}
+                  onChange={(e) => setCustomerNotes(e.target.value)}
+                  placeholder="e.g., Make the first line more prominent, keep the layout centered, or match the style shown on my proof."
+                />
               </SectionShell>
 
               <div className="flex justify-end pt-1">
-                <button onClick={handleSubmitClick} className="rounded-[1.25rem] border border-[rgba(148,180,193,0.34)] bg-[linear-gradient(135deg,#547792_0%,#213448_100%)] px-8 py-3.5 text-lg font-bold text-white shadow-[0_20px_30px_-16px_rgba(24,33,40,0.38)] transition-all hover:-translate-y-px hover:shadow-[0_26px_40px_-14px_rgba(24,33,40,0.46)] disabled:cursor-not-allowed disabled:opacity-50" disabled={isSubmitting || !hasReadySubmission}>{isSubmitting ? 'Submitting...' : 'Submit Selection'}</button>
+                <button
+                  onClick={handleSubmitClick}
+                  className="rounded-[1.25rem] border border-[rgba(148,180,193,0.34)] bg-[linear-gradient(135deg,#547792_0%,#213448_100%)] px-8 py-3.5 text-lg font-bold text-white shadow-[0_20px_30px_-16px_rgba(24,33,40,0.38)] transition-all hover:-translate-y-px hover:shadow-[0_26px_40px_-14px_rgba(24,33,40,0.46)] disabled:cursor-not-allowed disabled:opacity-50"
+                  disabled={isSubmitting || !hasReadySubmission}
+                >
+                  {isSubmitting ? 'Submitting...' : 'Submit Selection'}
+                </button>
               </div>
             </div>
           </main>
         </div>
       </div>
 
-      {(showCustomerModal || showMessageBox || showGlyphPalette || showAccentPalette || showHebrewPalette || showSuccessModal) && (
+      {(showCustomerModal ||
+        showMessageBox ||
+        showGlyphPalette ||
+        showAccentPalette ||
+        showHebrewPalette ||
+        showSuccessModal) && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/54 p-4 backdrop-blur-sm animate-fade-in">
           <div className="w-full max-w-4xl rounded-[2rem] border border-[rgba(148,180,193,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.996),rgba(244,248,249,0.988))] p-8 shadow-[0_36px_100px_-42px_rgba(24,28,34,0.18)] animate-jump-in">
-            {showSuccessModal && <SuccessModal onClose={() => setShowSuccessModal(false)} />}
+            {showSuccessModal && (
+              <SuccessModal onClose={() => setShowSuccessModal(false)} />
+            )}
+
             {showHebrewPalette && (
               <div className="space-y-4">
-                <h3 className="text-2xl font-bold text-slate-900">Hebrew Keyboard</h3>
-                <p className="text-slate-600">Compose your Hebrew text below, then insert it into the main text area.</p>
+                <h3 className="text-2xl font-bold text-slate-900">
+                  Hebrew Keyboard
+                </h3>
+                <p className="text-slate-600">
+                  Compose your Hebrew text below, then insert it into the main
+                  text area.
+                </p>
+
                 <div className="pt-2">
                   <div className="mb-2 flex justify-between items-center">
-                    <label className="block text-sm font-medium text-slate-700">Preview</label>
-                    <button onClick={() => { setHebrewPaletteText(''); setLastHebrewBaseChar('א'); }} className="px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200 text-sm font-semibold">Clear</button>
+                    <label className="block text-sm font-medium text-slate-700">
+                      Preview
+                    </label>
+                    <button
+                      onClick={() => {
+                        setHebrewPaletteText('');
+                        setLastHebrewBaseChar('א');
+                      }}
+                      className="px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200 text-sm font-semibold"
+                    >
+                      Clear
+                    </button>
                   </div>
-                  <textarea readOnly className="w-full p-3 border border-[rgba(148,180,193,0.16)] rounded-xl shadow-inner bg-[rgba(249,250,251,0.98)] min-h-[100px] text-2xl cursor-default text-slate-900" value={hebrewPaletteText} dir="rtl" style={{ fontFamily: 'Noto Rashi Hebrew Regular' }} />
+
+                  <textarea
+                    readOnly
+                    className="w-full p-3 border border-[rgba(148,180,193,0.16)] rounded-xl shadow-inner bg-[rgba(249,250,251,0.98)] min-h-[100px] text-2xl cursor-default text-slate-900"
+                    value={hebrewPaletteText}
+                    dir="rtl"
+                    style={{ fontFamily: 'Noto Rashi Hebrew Regular' }}
+                  />
                 </div>
+
                 <div className="p-3 bg-[rgba(240,245,247,0.9)] rounded-xl space-y-2 select-none">
                   {hebrewKeyboardLayout.map((row, rowIndex) => (
                     <div key={rowIndex} className="flex justify-center gap-1.5">
                       {row.map((key, keyIndex) => {
-                        const char = typeof key === 'object' ? (isShifted ? key.shifted : key.unshifted) : key;
-                        return <button key={keyIndex} onClick={() => { setHebrewPaletteText((prev) => prev + char); if (!isShifted && hebrewCharacters.includes(char)) setLastHebrewBaseChar(char); setIsShifted(false); }} className="h-12 flex-1 flex items-center justify-center rounded-lg bg-white hover:bg-slate-100 text-slate-800 text-xl font-semibold shadow-sm transition-colors">{char}</button>;
+                        const char =
+                          typeof key === 'object'
+                            ? isShifted
+                              ? key.shifted
+                              : key.unshifted
+                            : key;
+
+                        return (
+                          <button
+                            key={keyIndex}
+                            onClick={() => {
+                              setHebrewPaletteText((prev) => prev + char);
+                              if (!isShifted && hebrewCharacters.includes(char)) {
+                                setLastHebrewBaseChar(char);
+                              }
+                              setIsShifted(false);
+                            }}
+                            className="h-12 flex-1 flex items-center justify-center rounded-lg bg-white hover:bg-slate-100 text-slate-800 text-xl font-semibold shadow-sm transition-colors"
+                          >
+                            {char}
+                          </button>
+                        );
                       })}
                     </div>
                   ))}
+
                   <div className="flex justify-center gap-1.5">
-                    <button onClick={() => setIsShifted((prev) => !prev)} className={`h-12 w-24 flex items-center justify-center rounded-lg text-slate-800 text-lg font-semibold shadow-sm transition-colors ${isShifted ? 'bg-[linear-gradient(135deg,#547792_0%,#213448_100%)] text-white' : 'bg-white hover:bg-slate-100'}`}>Shift</button>
-                    <button onClick={() => setHebrewPaletteText((prev) => prev + ' ')} className="h-12 flex-1 flex items-center justify-center rounded-lg bg-white hover:bg-slate-100 text-slate-800 text-xl font-semibold shadow-sm transition-colors">Space</button>
-                    <button onClick={handleHebrewBackspace} className="h-12 w-24 flex items-center justify-center rounded-lg bg-white hover:bg-slate-100 text-slate-800 text-lg font-semibold shadow-sm transition-colors">Backspace</button>
+                    <button
+                      onClick={() => setIsShifted((prev) => !prev)}
+                      className={`h-12 w-24 flex items-center justify-center rounded-lg text-slate-800 text-lg font-semibold shadow-sm transition-colors ${
+                        isShifted
+                          ? 'bg-[linear-gradient(135deg,#547792_0%,#213448_100%)] text-white'
+                          : 'bg-white hover:bg-slate-100'
+                      }`}
+                    >
+                      Shift
+                    </button>
+
+                    <button
+                      onClick={() => setHebrewPaletteText((prev) => prev + ' ')}
+                      className="h-12 flex-1 flex items-center justify-center rounded-lg bg-white hover:bg-slate-100 text-slate-800 text-xl font-semibold shadow-sm transition-colors"
+                    >
+                      Space
+                    </button>
+
+                    <button
+                      onClick={handleHebrewBackspace}
+                      className="h-12 w-24 flex items-center justify-center rounded-lg bg-white hover:bg-slate-100 text-slate-800 text-lg font-semibold shadow-sm transition-colors"
+                    >
+                      Backspace
+                    </button>
                   </div>
                 </div>
+
                 <div className="flex justify-between items-center pt-4">
-                  <button type="button" className="px-6 py-3 bg-[rgba(240,245,247,0.96)] text-slate-800 rounded-xl hover:bg-[rgba(231,239,243,0.96)] font-semibold transition-colors text-base flex-shrink-0" onClick={() => { setShowHebrewPalette(false); setIsShifted(false); setHebrewPaletteText(''); setLastHebrewBaseChar('א'); }}>Close</button>
-                  <button type="button" className="px-8 py-3 bg-[linear-gradient(135deg,#547792_0%,#213448_100%)] text-white rounded-xl hover:brightness-105 font-bold transition-colors shadow-sm text-base flex-shrink-0" onClick={handleInsertToMain}>Insert Text</button>
+                  <button
+                    type="button"
+                    className="px-6 py-3 bg-[rgba(240,245,247,0.96)] text-slate-800 rounded-xl hover:bg-[rgba(231,239,243,0.96)] font-semibold transition-colors text-base flex-shrink-0"
+                    onClick={() => {
+                      setShowHebrewPalette(false);
+                      setIsShifted(false);
+                      setHebrewPaletteText('');
+                      setLastHebrewBaseChar('א');
+                    }}
+                  >
+                    Close
+                  </button>
+
+                  <button
+                    type="button"
+                    className="px-8 py-3 bg-[linear-gradient(135deg,#547792_0%,#213448_100%)] text-white rounded-xl hover:brightness-105 font-bold transition-colors shadow-sm text-base flex-shrink-0"
+                    onClick={handleInsertToMain}
+                  >
+                    Insert Text
+                  </button>
                 </div>
               </div>
             )}
+
             {showAccentPalette && (
               <div className="space-y-6">
-                <h3 className="text-2xl font-bold text-slate-900">Accented Character Palette</h3>
+                <h3 className="text-2xl font-bold text-slate-900">
+                  Accented Character Palette
+                </h3>
+
                 <div className="space-y-4 bg-[rgba(249,250,251,0.92)] p-4 rounded-lg max-h-[60vh] overflow-y-auto">
-                  {Object.entries(accentedCharacters).map(([baseLetter, chars]) => (
-                    <div key={baseLetter} className="flex items-start gap-4">
-                      <div className="font-bold text-lg text-slate-600 w-8 text-center pt-2">{baseLetter}</div>
-                      <div className="flex flex-wrap gap-2 flex-1">{chars.map((char) => <button key={char} onClick={() => handleGlyphInsert(char)} className="flex items-center justify-center h-12 w-12 bg-white rounded-lg shadow-sm text-2xl text-slate-700 hover:bg-slate-100 hover:text-slate-900 transition-colors" title={`Insert ${char}`}>{char}</button>)}</div>
-                    </div>
-                  ))}
+                  {Object.entries(accentedCharacters).map(
+                    ([baseLetter, chars]) => (
+                      <div key={baseLetter} className="flex items-start gap-4">
+                        <div className="font-bold text-lg text-slate-600 w-8 text-center pt-2">
+                          {baseLetter}
+                        </div>
+                        <div className="flex flex-wrap gap-2 flex-1">
+                          {chars.map((char) => (
+                            <button
+                              key={char}
+                              onClick={() => handleGlyphInsert(char)}
+                              className="flex items-center justify-center h-12 w-12 bg-white rounded-lg shadow-sm text-2xl text-slate-700 hover:bg-slate-100 hover:text-slate-900 transition-colors"
+                              title={`Insert ${char}`}
+                            >
+                              {char}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )
+                  )}
                 </div>
+
                 <div className="flex justify-between items-center pt-4">
-                  <p className="text-sm text-slate-600 pr-4">Character support varies by font. Confirm the final appearance in the live preview.</p>
-                  <button type="button" className="px-6 py-3 bg-[rgba(240,245,247,0.96)] text-slate-800 rounded-xl hover:bg-[rgba(231,239,243,0.96)] font-semibold transition-colors text-base flex-shrink-0" onClick={() => setShowAccentPalette(false)}>Close</button>
+                  <p className="text-sm text-slate-600 pr-4">
+                    Character support varies by font. Confirm the final
+                    appearance in the live preview.
+                  </p>
+                  <button
+                    type="button"
+                    className="px-6 py-3 bg-[rgba(240,245,247,0.96)] text-slate-800 rounded-xl hover:bg-[rgba(231,239,243,0.96)] font-semibold transition-colors text-base flex-shrink-0"
+                    onClick={() => setShowAccentPalette(false)}
+                  >
+                    Close
+                  </button>
                 </div>
               </div>
             )}
+
             {showGlyphPalette && (
               <div className="space-y-6">
-                <h3 className="text-2xl font-bold text-slate-900">Symbol Palette</h3>
-                <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-12 gap-2 bg-[rgba(249,250,251,0.92)] p-4 rounded-lg">{glyphs.map((glyph) => <button key={glyph} onClick={() => handleGlyphInsert(glyph)} className="flex items-center justify-center h-12 w-full bg-white rounded-lg shadow-sm text-2xl text-slate-700 hover:bg-slate-100 hover:text-slate-900 transition-colors" title={`Insert ${glyph}`}>{glyph}</button>)}</div>
+                <h3 className="text-2xl font-bold text-slate-900">
+                  Symbol Palette
+                </h3>
+
+                <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-12 gap-2 bg-[rgba(249,250,251,0.92)] p-4 rounded-lg">
+                  {glyphs.map((glyph) => (
+                    <button
+                      key={glyph}
+                      onClick={() => handleGlyphInsert(glyph)}
+                      className="flex items-center justify-center h-12 w-full bg-white rounded-lg shadow-sm text-2xl text-slate-700 hover:bg-slate-100 hover:text-slate-900 transition-colors"
+                      title={`Insert ${glyph}`}
+                    >
+                      {glyph}
+                    </button>
+                  ))}
+                </div>
+
                 <div className="flex justify-between items-center pt-4">
-                  <p className="text-sm text-slate-600 pr-4">Character support varies by font. Confirm the final appearance in the live preview.</p>
-                  <button type="button" className="px-6 py-3 bg-[rgba(240,245,247,0.96)] text-slate-800 rounded-xl hover:bg-[rgba(231,239,243,0.96)] font-semibold transition-colors text-base flex-shrink-0" onClick={() => setShowGlyphPalette(false)}>Close</button>
+                  <p className="text-sm text-slate-600 pr-4">
+                    Character support varies by font. Confirm the final
+                    appearance in the live preview.
+                  </p>
+                  <button
+                    type="button"
+                    className="px-6 py-3 bg-[rgba(240,245,247,0.96)] text-slate-800 rounded-xl hover:bg-[rgba(231,239,243,0.96)] font-semibold transition-colors text-base flex-shrink-0"
+                    onClick={() => setShowGlyphPalette(false)}
+                  >
+                    Close
+                  </button>
                 </div>
               </div>
             )}
-            {showCustomerModal && <CustomerInfoModal onSubmit={handleCustomerModalSubmit} orderNumber={orderNumber} onOrderNumberChange={(e) => setOrderNumber(e.target.value)} customerName={customerName} onCustomerNameChange={(e) => setCustomerName(e.target.value)} customerCompany={customerCompany} onCustomerCompanyChange={(e) => setCustomerCompany(e.target.value)} isDataPrefilled={isDataPrefilled} isSubmitting={isSubmitting} onCancel={() => setShowCustomerModal(false)} />}
-            {showMessageBox && <MessageModal message={message} onClose={() => setShowMessageBox(false)} />}
+
+            {showCustomerModal && (
+              <CustomerInfoModal
+                onSubmit={handleCustomerModalSubmit}
+                orderNumber={orderNumber}
+                onOrderNumberChange={(e) => setOrderNumber(e.target.value)}
+                customerName={customerName}
+                onCustomerNameChange={(e) => setCustomerName(e.target.value)}
+                customerCompany={customerCompany}
+                onCustomerCompanyChange={(e) =>
+                  setCustomerCompany(e.target.value)
+                }
+                isDataPrefilled={isDataPrefilled}
+                isSubmitting={isSubmitting}
+                onCancel={() => setShowCustomerModal(false)}
+              />
+            )}
+
+            {showMessageBox && (
+              <MessageModal
+                message={message}
+                onClose={() => setShowMessageBox(false)}
+              />
+            )}
           </div>
         </div>
       )}
 
-      {showMonogramMaker && <MonogramMaker fontLibrary={fontLibrary} onClose={() => setShowMonogramMaker(false)} onInsert={(info) => { setMonogramInfo(info); setShowMonogramMaker(false); }} />}
+      {showMonogramMaker && (
+        <MonogramMaker
+          fontLibrary={fontLibrary}
+          onClose={() => setShowMonogramMaker(false)}
+          onInsert={(info) => {
+            setMonogramInfo(info);
+            setShowMonogramMaker(false);
+          }}
+        />
+      )}
     </div>
   );
 };
