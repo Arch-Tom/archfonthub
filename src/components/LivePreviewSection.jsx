@@ -96,23 +96,23 @@ const LivePreviewSection = ({
     : 'Compare your selected fonts in a brighter specimen view before mixing lines.';
 
   return (
-    <section className="relative overflow-visible rounded-[2.15rem] border border-[rgba(97,115,128,0.12)] bg-[linear-gradient(180deg,rgba(251,252,252,0.996),rgba(243,246,248,0.985))] p-5 shadow-[0_38px_90px_-54px_rgba(24,28,34,0.14)] sm:p-6 xl:p-7">
+    <section className="relative overflow-visible rounded-[2.15rem] border border-[rgba(148,180,193,0.16)] bg-[linear-gradient(180deg,rgba(252,253,252,0.998),rgba(241,246,247,0.988))] p-5 shadow-[0_38px_90px_-54px_rgba(24,28,34,0.14)] sm:p-6 xl:p-7">
       <div className="pointer-events-none absolute inset-0" aria-hidden="true">
         <div className="absolute inset-x-0 top-0 h-28 bg-[linear-gradient(180deg,rgba(255,255,255,0.84),transparent)]" />
-        <div className="absolute right-8 top-6 h-40 w-40 rounded-full bg-[radial-gradient(circle,rgba(137,161,177,0.14),transparent_72%)]" />
-        <div className="absolute left-10 bottom-0 h-48 w-48 rounded-full bg-[radial-gradient(circle,rgba(55,78,94,0.06),transparent_74%)]" />
+        <div className="absolute right-8 top-6 h-40 w-40 rounded-full bg-[radial-gradient(circle,rgba(236,239,202,0.18),transparent_72%)]" />
+        <div className="absolute left-10 bottom-0 h-48 w-48 rounded-full bg-[radial-gradient(circle,rgba(84,119,146,0.08),transparent_74%)]" />
       </div>
 
       <div className="relative space-y-4">
-        <header className="overflow-hidden rounded-[1.7rem] border border-[rgba(120,145,163,0.16)] bg-[linear-gradient(145deg,rgba(40,54,64,0.985),rgba(49,67,80,0.975)_44%,rgba(64,85,100,0.96)_100%)] px-5 py-5 shadow-[0_24px_50px_-34px_rgba(17,21,26,0.5)] sm:px-6">
+        <header className="overflow-hidden rounded-[1.75rem] border border-[rgba(148,180,193,0.18)] bg-[linear-gradient(140deg,#213448_0%,#2d4a61_48%,#547792_100%)] px-5 py-5 shadow-[0_28px_56px_-34px_rgba(17,21,26,0.52)] sm:px-6">
           <div className="pointer-events-none absolute inset-0" aria-hidden="true">
             <div className="absolute inset-x-0 top-0 h-24 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),transparent)]" />
-            <div className="absolute -right-10 top-3 h-32 w-32 rounded-full bg-[radial-gradient(circle,rgba(158,184,199,0.18),transparent_72%)]" />
+            <div className="absolute -right-10 top-3 h-32 w-32 rounded-full bg-[radial-gradient(circle,rgba(236,239,202,0.18),transparent_72%)]" />
           </div>
 
           <div className="relative flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
             <div className="max-w-[44rem]">
-              <div className="inline-flex items-center rounded-full border border-[rgba(158,184,199,0.22)] bg-[rgba(235,244,249,0.08)] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-[rgba(229,239,245,0.92)] shadow-sm backdrop-blur-sm">
+              <div className="inline-flex items-center rounded-full border border-[rgba(236,239,202,0.18)] bg-[rgba(236,239,202,0.12)] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-[rgba(236,239,202,0.86)] shadow-sm backdrop-blur-sm">
                 Preview Studio
               </div>
 
@@ -129,7 +129,7 @@ const LivePreviewSection = ({
                 </span>
               </div>
 
-              <p className="mt-2 max-w-[40rem] text-[15px] leading-7 text-slate-100/82">
+              <p className="mt-2 max-w-[40rem] text-[15px] leading-7 text-slate-100/84">
                 {modeDescription}
               </p>
             </div>
@@ -141,7 +141,7 @@ const LivePreviewSection = ({
                   onClick={() => setIsFontMixingMode(false)}
                   className={`flex-1 rounded-[0.9rem] px-4 py-2.5 text-sm font-semibold transition-all xl:min-w-[9rem] ${
                     !showFontMixingMode
-                      ? 'border border-[rgba(120,145,163,0.24)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(225,235,241,0.96))] text-slate-900 shadow-[0_12px_24px_-18px_rgba(120,145,163,0.4)]'
+                      ? 'border border-[rgba(148,180,193,0.24)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(236,239,202,0.9))] text-[#213448] shadow-[0_12px_24px_-18px_rgba(148,180,193,0.42)]'
                       : 'text-slate-100/82 hover:text-white'
                   }`}
                   aria-pressed={!showFontMixingMode}
@@ -155,7 +155,7 @@ const LivePreviewSection = ({
                   disabled={!canUseFontMixing}
                   className={`flex-1 rounded-[0.9rem] px-4 py-2.5 text-sm font-semibold transition-all xl:min-w-[9rem] ${
                     showFontMixingMode
-                      ? 'border border-[rgba(120,145,163,0.24)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(225,235,241,0.96))] text-slate-900 shadow-[0_12px_24px_-18px_rgba(120,145,163,0.4)]'
+                      ? 'border border-[rgba(148,180,193,0.24)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(236,239,202,0.9))] text-[#213448] shadow-[0_12px_24px_-18px_rgba(148,180,193,0.42)]'
                       : canUseFontMixing
                         ? 'text-slate-100/82 hover:text-white'
                         : 'cursor-not-allowed text-slate-300/34'
@@ -175,7 +175,7 @@ const LivePreviewSection = ({
         {showHebrewWarning && <HebrewSupportWarning />}
 
         {hasStandardSelection ? (
-          <div className="space-y-4 rounded-[1.8rem] border border-[rgba(120,145,163,0.12)] bg-[linear-gradient(180deg,rgba(255,255,255,0.995),rgba(244,247,249,0.982))] p-4 shadow-[0_28px_56px_-40px_rgba(24,28,34,0.08)] sm:p-5">
+          <div className="space-y-4 rounded-[1.8rem] border border-[rgba(148,180,193,0.14)] bg-[linear-gradient(180deg,rgba(255,255,255,0.996),rgba(244,248,249,0.986))] p-4 shadow-[0_28px_56px_-40px_rgba(24,28,34,0.08)] sm:p-5">
             <PreviewLayoutControls
               activeLineFontSize={activeLineFontSize}
               activePreviewLine={activePreviewLine}
@@ -224,9 +224,9 @@ const LivePreviewSection = ({
           </div>
         ) : (
           !monogramInfo && (
-            <div className="min-h-[170px] rounded-[1.6rem] border border-[rgba(120,145,163,0.12)] bg-[linear-gradient(180deg,rgba(255,255,255,0.995),rgba(247,249,250,0.98))] p-6 shadow-[0_20px_44px_-36px_rgba(24,28,34,0.05)]">
+            <div className="min-h-[170px] rounded-[1.6rem] border border-[rgba(148,180,193,0.14)] bg-[linear-gradient(180deg,rgba(255,255,255,0.996),rgba(247,249,250,0.98))] p-6 shadow-[0_20px_44px_-36px_rgba(24,28,34,0.05)]">
               <div className="flex h-full min-h-[110px] flex-col items-center justify-center text-center">
-                <div className="rounded-full border border-[rgba(120,145,163,0.18)] bg-[rgba(230,238,244,0.9)] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-600 shadow-sm">
+                <div className="rounded-full border border-[rgba(148,180,193,0.18)] bg-[rgba(236,239,202,0.9)] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#213448] shadow-sm">
                   Waiting for input
                 </div>
                 <p className="mt-4 max-w-md text-sm leading-6 text-slate-500">

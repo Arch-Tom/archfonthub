@@ -35,19 +35,20 @@ const AlignIcon = ({ align = 'left' }) => {
 const SectionShell = ({ eyebrow, title, description, action = null, children, tone = 'soft' }) => {
   const toneClasses =
     tone === 'light'
-      ? 'border-[rgba(97,115,128,0.12)] bg-[linear-gradient(180deg,rgba(255,255,255,0.995),rgba(247,248,249,0.986))] shadow-[0_30px_70px_-46px_rgba(28,35,41,0.1)]'
-      : 'border-[rgba(97,115,128,0.12)] bg-[linear-gradient(180deg,rgba(255,255,255,0.992),rgba(243,245,247,0.976))] shadow-[0_34px_82px_-52px_rgba(28,35,41,0.12)]';
+      ? 'border-[rgba(148,180,193,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.996),rgba(244,248,249,0.988))] shadow-[0_30px_70px_-46px_rgba(28,35,41,0.1)]'
+      : 'border-[rgba(148,180,193,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.994),rgba(240,245,247,0.982))] shadow-[0_34px_82px_-52px_rgba(28,35,41,0.12)]';
 
   const eyebrowClasses =
     tone === 'light'
-      ? 'text-slate-600 bg-white/95 border-slate-200/80'
-      : 'text-slate-600 bg-[rgba(237,242,246,0.9)] border-[rgba(120,145,163,0.22)]';
+      ? 'text-[#213448] bg-[rgba(236,239,202,0.76)] border-[rgba(148,180,193,0.22)]'
+      : 'text-[#213448] bg-[rgba(236,239,202,0.72)] border-[rgba(148,180,193,0.22)]';
 
   return (
     <section className={`relative overflow-hidden rounded-[2rem] border p-6 sm:p-8 ${toneClasses}`}>
       <div className="pointer-events-none absolute inset-0" aria-hidden="true">
-        <div className="absolute inset-x-0 top-0 h-24 bg-[linear-gradient(180deg,rgba(255,255,255,0.74),transparent)]" />
-        <div className="absolute -right-24 top-0 h-44 w-44 rounded-full bg-[radial-gradient(circle,rgba(137,161,177,0.14),transparent_72%)]" />
+        <div className="absolute inset-x-0 top-0 h-24 bg-[linear-gradient(180deg,rgba(255,255,255,0.78),transparent)]" />
+        <div className="absolute -right-24 top-0 h-44 w-44 rounded-full bg-[radial-gradient(circle,rgba(148,180,193,0.18),transparent_72%)]" />
+        <div className="absolute left-8 top-2 h-36 w-36 rounded-full bg-[radial-gradient(circle,rgba(236,239,202,0.18),transparent_72%)]" />
       </div>
 
       <div className="relative">
@@ -467,38 +468,42 @@ const App = () => {
   const hebrewRegex = /[\u0590-\u05FF]/;
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.98),rgba(234,240,244,0.8)_28%,transparent_52%),linear-gradient(180deg,#fbfbfa_0%,#f4f5f6_42%,#ebedf0_100%)] text-slate-900">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(236,239,202,0.92),rgba(148,180,193,0.28)_30%,transparent_58%),radial-gradient(circle_at_top_right,rgba(84,119,146,0.12),transparent_42%),linear-gradient(180deg,#fbfbfa_0%,#f1f5f6_44%,#e8eef1_100%)] text-slate-900">
       <div className="relative mx-auto max-w-[1650px] px-4 py-4 sm:px-6 lg:px-8 lg:py-6">
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-[radial-gradient(circle_at_top,rgba(137,161,177,0.18),transparent_65%)]" />
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-[radial-gradient(circle_at_top,rgba(84,119,146,0.2),transparent_65%)]" />
         <div className="grid min-h-[calc(100vh-2rem)] gap-6 xl:grid-cols-[360px_minmax(0,1fr)]">
           <aside className="xl:sticky xl:top-6 xl:h-[calc(100vh-3rem)]">
-            <div className="relative flex h-full flex-col overflow-hidden rounded-[2.2rem] border border-[rgba(255,255,255,0.12)] bg-[linear-gradient(165deg,#24313b_0%,#30414d_52%,#3d5160_100%)] p-6 shadow-[0_36px_88px_-42px_rgba(20,28,34,0.48)] sm:p-7">
+            <div className="relative flex h-full flex-col overflow-hidden rounded-[2.2rem] border border-[rgba(148,180,193,0.18)] bg-[linear-gradient(180deg,#213448_0%,#29445a_44%,#547792_100%)] p-6 shadow-[0_42px_104px_-44px_rgba(18,31,44,0.62)] sm:p-7">
               <div className="pointer-events-none absolute inset-0" aria-hidden="true">
-                <div className="absolute inset-x-0 top-0 h-40 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),transparent)]" />
-                <div className="absolute -right-16 top-12 h-36 w-36 rounded-full bg-[radial-gradient(circle,rgba(155,181,197,0.16),transparent_72%)]" />
-                <div className="absolute -left-16 bottom-10 h-44 w-44 rounded-full bg-[radial-gradient(circle,rgba(219,229,236,0.12),transparent_74%)]" />
+                <div className="absolute inset-x-0 top-0 h-44 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),transparent)]" />
+                <div className="absolute right-0 top-10 h-40 w-40 rounded-full bg-[radial-gradient(circle,rgba(236,239,202,0.22),transparent_72%)]" />
+                <div className="absolute -left-14 bottom-8 h-48 w-48 rounded-full bg-[radial-gradient(circle,rgba(148,180,193,0.18),transparent_74%)]" />
+                <div className="absolute inset-y-0 right-0 w-px bg-[linear-gradient(180deg,transparent,rgba(236,239,202,0.24),transparent)]" />
               </div>
 
-              <div className="relative rounded-[1.7rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.1),rgba(255,255,255,0.04))] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-sm">
-                <div className="rounded-[1.45rem] border border-white/10 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.06),rgba(255,255,255,0.016)_62%,rgba(0,0,0,0.1)_100%)] px-4 py-6 shadow-[0_22px_42px_-28px_rgba(8,10,12,0.4),inset_0_1px_0_rgba(255,255,255,0.08)]">
-                  <div className="rounded-[1.1rem] border border-white/10 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.05),rgba(255,255,255,0.014))] px-3 py-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
-                    <img src="/images/Arch Vector Logo White.svg" alt="Arch Font Hub Logo" className="mx-auto h-36 w-36 object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.26)] sm:h-40 sm:w-40" />
+              <div className="relative rounded-[1.8rem] border border-[rgba(236,239,202,0.18)] bg-[linear-gradient(180deg,rgba(255,255,255,0.14),rgba(255,255,255,0.04))] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] backdrop-blur-sm">
+                <div className="rounded-[1.5rem] border border-[rgba(148,180,193,0.24)] bg-[linear-gradient(180deg,rgba(84,119,146,0.26),rgba(148,180,193,0.12))] px-4 py-6 shadow-[0_26px_48px_-30px_rgba(10,18,28,0.48),inset_0_1px_0_rgba(255,255,255,0.08)]">
+                  <div className="rounded-[1.2rem] border border-[rgba(236,239,202,0.18)] bg-[radial-gradient(circle_at_center,rgba(236,239,202,0.34),rgba(148,180,193,0.18)_46%,rgba(255,255,255,0.03)_100%)] px-3 py-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
+                    <img src="/images/Arch Vector Logo White.svg" alt="Arch Font Hub Logo" className="mx-auto h-36 w-36 object-contain drop-shadow-[0_12px_22px_rgba(14,20,27,0.28)] sm:h-40 sm:w-40" />
                   </div>
                 </div>
                 <div className="mt-5 text-center">
-                  <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-200/72">Font Selection</div>
-                  <h1 className="mt-2 text-[2.55rem] font-bold tracking-tight text-white" style={{ fontFamily: 'Alumni Sans Regular' }}>Arch Font Hub</h1>
-                  <p className="mt-3 text-sm leading-6 text-slate-100/82">Browse fonts, preview your wording, and choose the style you like best.</p>
+                  <div className="inline-flex items-center rounded-full border border-[rgba(236,239,202,0.18)] bg-[rgba(236,239,202,0.12)] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.3em] text-[rgba(236,239,202,0.86)] shadow-sm">Font Selection</div>
+                  <h1 className="mt-3 text-[2.7rem] font-bold tracking-tight text-white" style={{ fontFamily: 'Alumni Sans Regular' }}>Arch Font Hub</h1>
+                  <p className="mt-3 text-sm leading-6 text-slate-100/88">Browse fonts, preview your wording, and choose the style you like best.</p>
                 </div>
               </div>
 
-              <div className="relative mt-6 rounded-[1.55rem] border border-[rgba(255,255,255,0.1)] bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.03))] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
-                <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-200/72">How It Works</div>
-                <p className="mt-3 text-sm leading-6 text-slate-100/84">Choose up to three fonts, preview your text, and add any notes before submitting your selection.</p>
+              <div className="relative mt-6 rounded-[1.55rem] border border-[rgba(236,239,202,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.12),rgba(33,52,72,0.14))] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-sm">
+                <div className="inline-flex items-center rounded-full border border-[rgba(236,239,202,0.14)] bg-[rgba(236,239,202,0.1)] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.24em] text-[rgba(236,239,202,0.82)]">Start here</div>
+                <p className="mt-3 text-sm leading-6 text-slate-100/86">Choose up to three fonts, preview your text, and add any notes before submitting your selection.</p>
               </div>
 
-              <div className="mt-auto pt-5 text-sm leading-6 text-slate-100/80">
-                When you're ready, complete the steps in the main area to submit your selection.
+              <div className="mt-auto pt-5">
+                <div className="rounded-[1.3rem] border border-[rgba(236,239,202,0.14)] bg-[linear-gradient(180deg,rgba(255,255,255,0.12),rgba(33,52,72,0.12))] px-4 py-4 text-sm leading-6 text-slate-100/86 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[rgba(236,239,202,0.78)]">Ready when you are</div>
+                  <p className="mt-2">Complete the steps in the main area whenever you're ready to submit your selection.</p>
+                </div>
               </div>
             </div>
           </aside>
@@ -506,7 +511,7 @@ const App = () => {
           <main className="min-w-0 pb-10">
             {isSubmissionComplete && (
               <div className="fixed inset-0 z-30 flex items-center justify-center bg-slate-950/60 backdrop-blur-sm">
-                <div className="rounded-[2rem] border border-[rgba(97,115,128,0.12)] bg-[linear-gradient(180deg,rgba(255,255,255,0.995),rgba(247,248,249,0.986))] p-10 text-center shadow-[0_34px_90px_-44px_rgba(24,28,34,0.16)]">
+                <div className="rounded-[2rem] border border-[rgba(148,180,193,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.996),rgba(244,248,249,0.988))] p-10 text-center shadow-[0_34px_90px_-44px_rgba(24,28,34,0.16)]">
                   <h2 className="text-4xl font-bold text-slate-900" style={{ fontFamily: 'Alumni Sans Regular' }}>Submission Complete</h2>
                   <p className="mt-4 text-lg text-slate-600">Thank you for your selection. You may now close this window.</p>
                 </div>
@@ -519,9 +524,9 @@ const App = () => {
                 title="Choose up to three fonts"
                 description="Select a few favorites to compare. You may choose up to three fonts."
                 action={
-                  <div className="rounded-[1.4rem] border border-[rgba(120,145,163,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.97),rgba(246,247,248,0.95))] p-3 shadow-[0_18px_34px_-24px_rgba(24,28,34,0.1)]">
+                  <div className="rounded-[1.4rem] border border-[rgba(148,180,193,0.18)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(244,248,249,0.95))] p-3 shadow-[0_18px_34px_-24px_rgba(24,28,34,0.1)]">
                     <button
-                      className="w-full rounded-[1rem] border border-[rgba(120,145,163,0.34)] bg-[linear-gradient(180deg,#2d3b47_0%,#425766_100%)] px-5 py-3 text-sm font-semibold text-white transition-all hover:-translate-y-px hover:shadow-[0_14px_24px_-16px_rgba(24,33,40,0.46)] focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300"
+                      className="w-full rounded-[1rem] border border-[rgba(148,180,193,0.34)] bg-[linear-gradient(135deg,#547792_0%,#213448_100%)] px-5 py-3 text-sm font-semibold text-white transition-all hover:-translate-y-px hover:shadow-[0_16px_28px_-16px_rgba(24,33,40,0.5)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#94B4C1]"
                       onClick={() => setShowMonogramMaker(true)}
                       type="button"
                     >
@@ -534,7 +539,7 @@ const App = () => {
                 <div className="space-y-7">
                   {Object.entries(fontLibrary).map(([category, fonts]) => (
                     <div key={category}>
-                      <div className="mb-4 flex items-center justify-between gap-4 border-b border-[rgba(120,145,163,0.12)] pb-3">
+                      <div className="mb-4 flex items-center justify-between gap-4 border-b border-[rgba(148,180,193,0.16)] pb-3">
                         <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-600">{category}</h3>
                         <span className="text-xs font-medium text-slate-400">Select up to 3</span>
                       </div>
@@ -545,9 +550,9 @@ const App = () => {
                           let fontSizeClass = isScriptFont ? 'text-2xl' : 'text-lg';
                           if (font.name === 'Concerto Pro') fontSizeClass = 'text-4xl';
                           return (
-                            <button key={font.name} onClick={() => handleFontSelect(font)} className={`group relative overflow-hidden rounded-[1.2rem] border px-5 py-3.5 font-semibold transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300 ${fontSizeClass} ${isSelected ? 'border-[rgba(120,145,163,0.24)] bg-[linear-gradient(135deg,rgba(255,255,255,0.995),rgba(234,240,244,0.96))] text-slate-900 shadow-[0_22px_34px_-24px_rgba(24,28,34,0.14)]' : 'border-[rgba(120,145,163,0.14)] bg-[linear-gradient(180deg,rgba(255,255,255,0.985),rgba(248,249,250,0.965))] text-slate-800 shadow-[0_18px_28px_-24px_rgba(24,28,34,0.06)] hover:-translate-y-px hover:border-[rgba(120,145,163,0.22)] hover:bg-white'}`} style={{ fontFamily: font.name === 'Alumni Sans' ? 'Alumni Sans Regular' : font.styles[Object.keys(font.styles)[0]] }} type="button">
+                            <button key={font.name} onClick={() => handleFontSelect(font)} className={`group relative overflow-hidden rounded-[1.2rem] border px-5 py-3.5 font-semibold transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#94B4C1] ${fontSizeClass} ${isSelected ? 'border-[rgba(84,119,146,0.28)] bg-[linear-gradient(135deg,rgba(255,255,255,0.995),rgba(236,239,202,0.86))] text-slate-900 shadow-[0_22px_34px_-24px_rgba(24,28,34,0.14)]' : 'border-[rgba(148,180,193,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.985),rgba(248,250,251,0.965))] text-slate-800 shadow-[0_18px_28px_-24px_rgba(24,28,34,0.06)] hover:-translate-y-px hover:border-[rgba(84,119,146,0.24)] hover:bg-white'}`} style={{ fontFamily: font.name === 'Alumni Sans' ? 'Alumni Sans Regular' : font.styles[Object.keys(font.styles)[0]] }} type="button">
                               <span className="pointer-events-none absolute inset-x-0 top-0 h-10 bg-[linear-gradient(180deg,rgba(255,255,255,0.56),transparent)]" />
-                              <span className="relative z-10 flex items-center gap-3"><span>{font.name}</span>{isSelected && <span className="rounded-full border border-[rgba(120,145,163,0.12)] bg-[rgba(230,238,244,0.96)] px-2.5 py-0.5 text-[11px] font-semibold tracking-normal text-slate-700">Selected</span>}</span>
+                              <span className="relative z-10 flex items-center gap-3"><span>{font.name}</span>{isSelected && <span className="rounded-full border border-[rgba(148,180,193,0.14)] bg-[rgba(236,239,202,0.92)] px-2.5 py-0.5 text-[11px] font-semibold tracking-normal text-[#213448]">Selected</span>}</span>
                             </button>
                           );
                         })}
@@ -557,20 +562,20 @@ const App = () => {
                 </div>
               </SectionShell>
 
-              <SectionShell eyebrow="Step 2" title="Enter your preview text" description="Enter the wording you would like to preview. Multiple lines work well for names, titles, and message layouts." action={<div className="flex flex-wrap items-center justify-end gap-2"><button onClick={() => setShowHebrewPalette(true)} className="rounded-xl border border-[rgba(120,145,163,0.14)] bg-[linear-gradient(180deg,rgba(255,255,255,0.97),rgba(246,247,248,0.95))] px-4 py-2 text-sm font-semibold text-slate-700 transition-all hover:-translate-y-px hover:bg-white" type="button">Hebrew</button><button onClick={() => setShowAccentPalette(true)} className="rounded-xl border border-[rgba(120,145,163,0.14)] bg-[linear-gradient(180deg,rgba(255,255,255,0.97),rgba(246,247,248,0.95))] px-4 py-2 text-sm font-semibold text-slate-700 transition-all hover:-translate-y-px hover:bg-white" type="button">Accents</button><button onClick={() => setShowGlyphPalette(true)} className="rounded-xl border border-[rgba(120,145,163,0.14)] bg-[linear-gradient(180deg,rgba(255,255,255,0.97),rgba(246,247,248,0.95))] px-4 py-2 text-sm font-semibold text-slate-700 transition-all hover:-translate-y-px hover:bg-white" type="button">Symbols</button></div>}>
-                <div className="rounded-[1.55rem] border border-[rgba(120,145,163,0.14)] bg-[linear-gradient(180deg,rgba(255,255,255,0.965),rgba(247,248,249,0.94))] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.84)] sm:p-5">
-                  <textarea ref={customTextRef} value={customText} onChange={(e) => setCustomText(e.target.value)} placeholder={DEFAULT_TEXT_PLACEHOLDER} dir="auto" className="min-h-[230px] w-full rounded-[1.3rem] border border-[rgba(120,145,163,0.14)] bg-[linear-gradient(180deg,rgba(255,255,255,0.998),rgba(249,250,251,0.99))] px-5 py-4 text-xl text-slate-900 shadow-[inset_0_2px_7px_rgba(20,18,15,0.03)] transition-all placeholder:text-slate-400 focus:border-[rgba(120,145,163,0.28)] focus:outline-none focus:ring-2 focus:ring-[rgba(120,145,163,0.14)]" />
+              <SectionShell eyebrow="Step 2" title="Enter your preview text" description="Enter the wording you would like to preview. Multiple lines work well for names, titles, and message layouts." action={<div className="flex flex-wrap items-center justify-end gap-2"><button onClick={() => setShowHebrewPalette(true)} className="rounded-xl border border-[rgba(148,180,193,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(244,248,249,0.95))] px-4 py-2 text-sm font-semibold text-slate-700 transition-all hover:-translate-y-px hover:border-[rgba(84,119,146,0.22)] hover:bg-white" type="button">Hebrew</button><button onClick={() => setShowAccentPalette(true)} className="rounded-xl border border-[rgba(148,180,193,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(244,248,249,0.95))] px-4 py-2 text-sm font-semibold text-slate-700 transition-all hover:-translate-y-px hover:border-[rgba(84,119,146,0.22)] hover:bg-white" type="button">Accents</button><button onClick={() => setShowGlyphPalette(true)} className="rounded-xl border border-[rgba(148,180,193,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(244,248,249,0.95))] px-4 py-2 text-sm font-semibold text-slate-700 transition-all hover:-translate-y-px hover:border-[rgba(84,119,146,0.22)] hover:bg-white" type="button">Symbols</button></div>}>
+                <div className="rounded-[1.55rem] border border-[rgba(148,180,193,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.97),rgba(245,248,249,0.94))] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.84)] sm:p-5">
+                  <textarea ref={customTextRef} value={customText} onChange={(e) => setCustomText(e.target.value)} placeholder={DEFAULT_TEXT_PLACEHOLDER} dir="auto" className="min-h-[230px] w-full rounded-[1.3rem] border border-[rgba(148,180,193,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.998),rgba(249,250,251,0.99))] px-5 py-4 text-xl text-slate-900 shadow-[inset_0_2px_7px_rgba(20,18,15,0.03)] transition-all placeholder:text-slate-400 focus:border-[rgba(84,119,146,0.3)] focus:outline-none focus:ring-2 focus:ring-[rgba(148,180,193,0.18)]" />
                 </div>
               </SectionShell>
 
               <LivePreviewSection monogramInfo={monogramInfo} combinedText={combinedText} hebrewRegex={hebrewRegex} hasStandardSelection={hasStandardSelection} previewLines={previewLines} openPreviewLineIndex={openPreviewLineIndex} setOpenPreviewLineIndex={setOpenPreviewLineIndex} selectedFonts={selectedFonts} getFontOptionByName={getFontOptionByName} getDefaultStyleKey={getDefaultStyleKey} getSortedStyleKeys={getSortedStyleKeys} fontSize={fontSize} lineSpacing={lineSpacing} textAlign={textAlign} setTextAlign={setTextAlign} handleFontSizeChange={handleFontSizeChange} handleLineSpacingChange={handleLineSpacingChange} handleApplyFontToActiveLine={handleApplyFontToActiveLine} handleLineStyleChange={handleLineStyleChange} handleLineFontSizeOverrideChange={handleLineFontSizeOverrideChange} AlignIcon={AlignIcon} />
 
               <SectionShell eyebrow="Step 3" title="Additional Notes" description="Add any preferences or special instructions you would like us to consider with your selection.">
-                <textarea className="min-h-[160px] w-full rounded-[1.3rem] border border-[rgba(120,145,163,0.14)] bg-[linear-gradient(180deg,rgba(255,255,255,0.998),rgba(249,250,251,0.99))] px-5 py-4 text-lg text-slate-900 shadow-[inset_0_2px_7px_rgba(20,18,15,0.03)] transition-all placeholder:text-slate-400 focus:border-[rgba(120,145,163,0.28)] focus:outline-none focus:ring-2 focus:ring-[rgba(120,145,163,0.14)]" value={customerNotes} onChange={(e) => setCustomerNotes(e.target.value)} placeholder="e.g., Make the first line more prominent, keep the layout centered, or match the style shown on my proof." />
+                <textarea className="min-h-[160px] w-full rounded-[1.3rem] border border-[rgba(148,180,193,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.998),rgba(249,250,251,0.99))] px-5 py-4 text-lg text-slate-900 shadow-[inset_0_2px_7px_rgba(20,18,15,0.03)] transition-all placeholder:text-slate-400 focus:border-[rgba(84,119,146,0.3)] focus:outline-none focus:ring-2 focus:ring-[rgba(148,180,193,0.18)]" value={customerNotes} onChange={(e) => setCustomerNotes(e.target.value)} placeholder="e.g., Make the first line more prominent, keep the layout centered, or match the style shown on my proof." />
               </SectionShell>
 
               <div className="flex justify-end pt-1">
-                <button onClick={handleSubmitClick} className="rounded-[1.25rem] border border-[rgba(120,145,163,0.34)] bg-[linear-gradient(180deg,#2d3b47_0%,#425766_100%)] px-8 py-3.5 text-lg font-bold text-white shadow-[0_20px_30px_-16px_rgba(24,33,40,0.34)] transition-all hover:-translate-y-px hover:shadow-[0_24px_36px_-14px_rgba(24,33,40,0.42)] disabled:cursor-not-allowed disabled:opacity-50" disabled={isSubmitting || !hasReadySubmission}>{isSubmitting ? 'Submitting...' : 'Submit Selection'}</button>
+                <button onClick={handleSubmitClick} className="rounded-[1.25rem] border border-[rgba(148,180,193,0.34)] bg-[linear-gradient(135deg,#547792_0%,#213448_100%)] px-8 py-3.5 text-lg font-bold text-white shadow-[0_20px_30px_-16px_rgba(24,33,40,0.38)] transition-all hover:-translate-y-px hover:shadow-[0_26px_40px_-14px_rgba(24,33,40,0.46)] disabled:cursor-not-allowed disabled:opacity-50" disabled={isSubmitting || !hasReadySubmission}>{isSubmitting ? 'Submitting...' : 'Submit Selection'}</button>
               </div>
             </div>
           </main>
@@ -579,7 +584,7 @@ const App = () => {
 
       {(showCustomerModal || showMessageBox || showGlyphPalette || showAccentPalette || showHebrewPalette || showSuccessModal) && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/54 p-4 backdrop-blur-sm animate-fade-in">
-          <div className="w-full max-w-4xl rounded-[2rem] border border-[rgba(97,115,128,0.12)] bg-[linear-gradient(180deg,rgba(255,255,255,0.995),rgba(247,248,249,0.986))] p-8 shadow-[0_36px_100px_-42px_rgba(24,28,34,0.18)] animate-jump-in">
+          <div className="w-full max-w-4xl rounded-[2rem] border border-[rgba(148,180,193,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.996),rgba(244,248,249,0.988))] p-8 shadow-[0_36px_100px_-42px_rgba(24,28,34,0.18)] animate-jump-in">
             {showSuccessModal && <SuccessModal onClose={() => setShowSuccessModal(false)} />}
             {showHebrewPalette && (
               <div className="space-y-4">
@@ -590,9 +595,9 @@ const App = () => {
                     <label className="block text-sm font-medium text-slate-700">Preview</label>
                     <button onClick={() => { setHebrewPaletteText(''); setLastHebrewBaseChar('א'); }} className="px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200 text-sm font-semibold">Clear</button>
                   </div>
-                  <textarea readOnly className="w-full p-3 border border-[rgba(120,145,163,0.14)] rounded-xl shadow-inner bg-[rgba(249,250,251,0.98)] min-h-[100px] text-2xl cursor-default text-slate-900" value={hebrewPaletteText} dir="rtl" style={{ fontFamily: 'Noto Rashi Hebrew Regular' }} />
+                  <textarea readOnly className="w-full p-3 border border-[rgba(148,180,193,0.16)] rounded-xl shadow-inner bg-[rgba(249,250,251,0.98)] min-h-[100px] text-2xl cursor-default text-slate-900" value={hebrewPaletteText} dir="rtl" style={{ fontFamily: 'Noto Rashi Hebrew Regular' }} />
                 </div>
-                <div className="p-3 bg-[rgba(237,242,246,0.88)] rounded-xl space-y-2 select-none">
+                <div className="p-3 bg-[rgba(240,245,247,0.9)] rounded-xl space-y-2 select-none">
                   {hebrewKeyboardLayout.map((row, rowIndex) => (
                     <div key={rowIndex} className="flex justify-center gap-1.5">
                       {row.map((key, keyIndex) => {
@@ -602,14 +607,14 @@ const App = () => {
                     </div>
                   ))}
                   <div className="flex justify-center gap-1.5">
-                    <button onClick={() => setIsShifted((prev) => !prev)} className={`h-12 w-24 flex items-center justify-center rounded-lg text-slate-800 text-lg font-semibold shadow-sm transition-colors ${isShifted ? 'bg-[linear-gradient(180deg,#2d3b47_0%,#425766_100%)] text-white' : 'bg-white hover:bg-slate-100'}`}>Shift</button>
+                    <button onClick={() => setIsShifted((prev) => !prev)} className={`h-12 w-24 flex items-center justify-center rounded-lg text-slate-800 text-lg font-semibold shadow-sm transition-colors ${isShifted ? 'bg-[linear-gradient(135deg,#547792_0%,#213448_100%)] text-white' : 'bg-white hover:bg-slate-100'}`}>Shift</button>
                     <button onClick={() => setHebrewPaletteText((prev) => prev + ' ')} className="h-12 flex-1 flex items-center justify-center rounded-lg bg-white hover:bg-slate-100 text-slate-800 text-xl font-semibold shadow-sm transition-colors">Space</button>
                     <button onClick={handleHebrewBackspace} className="h-12 w-24 flex items-center justify-center rounded-lg bg-white hover:bg-slate-100 text-slate-800 text-lg font-semibold shadow-sm transition-colors">Backspace</button>
                   </div>
                 </div>
                 <div className="flex justify-between items-center pt-4">
-                  <button type="button" className="px-6 py-3 bg-[rgba(238,241,244,0.96)] text-slate-800 rounded-xl hover:bg-[rgba(228,234,239,0.96)] font-semibold transition-colors text-base flex-shrink-0" onClick={() => { setShowHebrewPalette(false); setIsShifted(false); setHebrewPaletteText(''); setLastHebrewBaseChar('א'); }}>Close</button>
-                  <button type="button" className="px-8 py-3 bg-[linear-gradient(180deg,#2d3b47_0%,#425766_100%)] text-white rounded-xl hover:brightness-105 font-bold transition-colors shadow-sm text-base flex-shrink-0" onClick={handleInsertToMain}>Insert Text</button>
+                  <button type="button" className="px-6 py-3 bg-[rgba(240,245,247,0.96)] text-slate-800 rounded-xl hover:bg-[rgba(231,239,243,0.96)] font-semibold transition-colors text-base flex-shrink-0" onClick={() => { setShowHebrewPalette(false); setIsShifted(false); setHebrewPaletteText(''); setLastHebrewBaseChar('א'); }}>Close</button>
+                  <button type="button" className="px-8 py-3 bg-[linear-gradient(135deg,#547792_0%,#213448_100%)] text-white rounded-xl hover:brightness-105 font-bold transition-colors shadow-sm text-base flex-shrink-0" onClick={handleInsertToMain}>Insert Text</button>
                 </div>
               </div>
             )}
@@ -626,7 +631,7 @@ const App = () => {
                 </div>
                 <div className="flex justify-between items-center pt-4">
                   <p className="text-sm text-slate-600 pr-4">Character support varies by font. Confirm the final appearance in the live preview.</p>
-                  <button type="button" className="px-6 py-3 bg-[rgba(238,241,244,0.96)] text-slate-800 rounded-xl hover:bg-[rgba(228,234,239,0.96)] font-semibold transition-colors text-base flex-shrink-0" onClick={() => setShowAccentPalette(false)}>Close</button>
+                  <button type="button" className="px-6 py-3 bg-[rgba(240,245,247,0.96)] text-slate-800 rounded-xl hover:bg-[rgba(231,239,243,0.96)] font-semibold transition-colors text-base flex-shrink-0" onClick={() => setShowAccentPalette(false)}>Close</button>
                 </div>
               </div>
             )}
@@ -636,7 +641,7 @@ const App = () => {
                 <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-12 gap-2 bg-[rgba(249,250,251,0.92)] p-4 rounded-lg">{glyphs.map((glyph) => <button key={glyph} onClick={() => handleGlyphInsert(glyph)} className="flex items-center justify-center h-12 w-full bg-white rounded-lg shadow-sm text-2xl text-slate-700 hover:bg-slate-100 hover:text-slate-900 transition-colors" title={`Insert ${glyph}`}>{glyph}</button>)}</div>
                 <div className="flex justify-between items-center pt-4">
                   <p className="text-sm text-slate-600 pr-4">Character support varies by font. Confirm the final appearance in the live preview.</p>
-                  <button type="button" className="px-6 py-3 bg-[rgba(238,241,244,0.96)] text-slate-800 rounded-xl hover:bg-[rgba(228,234,239,0.96)] font-semibold transition-colors text-base flex-shrink-0" onClick={() => setShowGlyphPalette(false)}>Close</button>
+                  <button type="button" className="px-6 py-3 bg-[rgba(240,245,247,0.96)] text-slate-800 rounded-xl hover:bg-[rgba(231,239,243,0.96)] font-semibold transition-colors text-base flex-shrink-0" onClick={() => setShowGlyphPalette(false)}>Close</button>
                 </div>
               </div>
             )}
