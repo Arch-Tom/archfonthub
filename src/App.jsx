@@ -35,19 +35,19 @@ const AlignIcon = ({ align = 'left' }) => {
 const SectionShell = ({ eyebrow, title, description, action = null, children, tone = 'soft' }) => {
   const toneClasses =
     tone === 'light'
-      ? 'border-[rgba(99,91,78,0.14)] bg-[linear-gradient(180deg,rgba(255,255,255,0.995),rgba(248,246,241,0.985))] shadow-[0_30px_70px_-46px_rgba(36,34,31,0.12)]'
-      : 'border-[rgba(99,91,78,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.99),rgba(244,241,235,0.97))] shadow-[0_34px_82px_-52px_rgba(36,34,31,0.14)]';
+      ? 'border-[rgba(37,45,55,0.12)] bg-[linear-gradient(180deg,rgba(255,255,255,0.995),rgba(249,247,242,0.988))] shadow-[0_30px_70px_-46px_rgba(24,28,34,0.1)]'
+      : 'border-[rgba(37,45,55,0.12)] bg-[linear-gradient(180deg,rgba(255,255,255,0.992),rgba(246,241,234,0.976))] shadow-[0_34px_82px_-52px_rgba(24,28,34,0.12)]';
 
   const eyebrowClasses =
     tone === 'light'
       ? 'text-stone-600 bg-white/95 border-stone-200/80'
-      : 'text-stone-600 bg-[rgba(243,239,232,0.92)] border-[rgba(190,176,151,0.34)]';
+      : 'text-stone-600 bg-[rgba(247,241,232,0.9)] border-[rgba(182,138,82,0.22)]';
 
   return (
     <section className={`relative overflow-hidden rounded-[2rem] border p-6 sm:p-8 ${toneClasses}`}>
       <div className="pointer-events-none absolute inset-0" aria-hidden="true">
-        <div className="absolute inset-x-0 top-0 h-24 bg-[linear-gradient(180deg,rgba(255,255,255,0.72),transparent)]" />
-        <div className="absolute -right-24 top-0 h-44 w-44 rounded-full bg-[radial-gradient(circle,rgba(207,191,160,0.16),transparent_72%)]" />
+        <div className="absolute inset-x-0 top-0 h-24 bg-[linear-gradient(180deg,rgba(255,255,255,0.74),transparent)]" />
+        <div className="absolute -right-24 top-0 h-44 w-44 rounded-full bg-[radial-gradient(circle,rgba(182,138,82,0.14),transparent_72%)]" />
       </div>
 
       <div className="relative">
@@ -467,20 +467,20 @@ const App = () => {
   const hebrewRegex = /[\u0590-\u05FF]/;
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.98),rgba(245,242,236,0.76)_28%,transparent_52%),linear-gradient(180deg,#fbf8f3_0%,#f3f0ea_42%,#ece7df_100%)] text-stone-900">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.98),rgba(247,243,236,0.78)_28%,transparent_52%),linear-gradient(180deg,#fcfaf6_0%,#f7f3ec_42%,#eee6db_100%)] text-stone-900">
       <div className="relative mx-auto max-w-[1650px] px-4 py-4 sm:px-6 lg:px-8 lg:py-6">
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-[radial-gradient(circle_at_top,rgba(208,193,165,0.2),transparent_65%)]" />
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-[radial-gradient(circle_at_top,rgba(182,138,82,0.18),transparent_65%)]" />
         <div className="grid min-h-[calc(100vh-2rem)] gap-6 xl:grid-cols-[360px_minmax(0,1fr)]">
           <aside className="xl:sticky xl:top-6 xl:h-[calc(100vh-3rem)]">
-            <div className="relative flex h-full flex-col overflow-hidden rounded-[2.2rem] border border-[rgba(255,255,255,0.16)] bg-[linear-gradient(165deg,#1f1d1a_0%,#2b2925_52%,#3a372f_100%)] p-6 shadow-[0_36px_88px_-42px_rgba(20,18,15,0.52)] sm:p-7">
+            <div className="relative flex h-full flex-col overflow-hidden rounded-[2.2rem] border border-[rgba(255,255,255,0.12)] bg-[linear-gradient(165deg,#1b2127_0%,#1f252c_52%,#313b46_100%)] p-6 shadow-[0_36px_88px_-42px_rgba(17,21,26,0.56)] sm:p-7">
               <div className="pointer-events-none absolute inset-0" aria-hidden="true">
                 <div className="absolute inset-x-0 top-0 h-40 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),transparent)]" />
-                <div className="absolute -right-16 top-12 h-36 w-36 rounded-full bg-[radial-gradient(circle,rgba(214,201,177,0.12),transparent_72%)]" />
-                <div className="absolute -left-16 bottom-10 h-44 w-44 rounded-full bg-[radial-gradient(circle,rgba(121,112,93,0.12),transparent_74%)]" />
+                <div className="absolute -right-16 top-12 h-36 w-36 rounded-full bg-[radial-gradient(circle,rgba(182,138,82,0.14),transparent_72%)]" />
+                <div className="absolute -left-16 bottom-10 h-44 w-44 rounded-full bg-[radial-gradient(circle,rgba(231,217,198,0.1),transparent_74%)]" />
               </div>
 
-              <div className="relative rounded-[1.7rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.12),rgba(255,255,255,0.05))] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-sm">
-                <div className="rounded-[1.45rem] border border-white/12 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08),rgba(255,255,255,0.02)_62%,rgba(0,0,0,0.08)_100%)] px-4 py-6 shadow-[0_22px_42px_-28px_rgba(8,8,7,0.46),inset_0_1px_0_rgba(255,255,255,0.08)]">
+              <div className="relative rounded-[1.7rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.1),rgba(255,255,255,0.04))] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-sm">
+                <div className="rounded-[1.45rem] border border-white/10 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.06),rgba(255,255,255,0.014)_62%,rgba(0,0,0,0.1)_100%)] px-4 py-6 shadow-[0_22px_42px_-28px_rgba(8,10,12,0.46),inset_0_1px_0_rgba(255,255,255,0.08)]">
                   <div className="rounded-[1.1rem] border border-white/10 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.05),rgba(255,255,255,0.012))] px-3 py-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
                     <img src="/images/Arch Vector Logo White.svg" alt="Arch Font Hub Logo" className="mx-auto h-36 w-36 object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.26)] sm:h-40 sm:w-40" />
                   </div>
@@ -492,7 +492,7 @@ const App = () => {
                 </div>
               </div>
 
-              <div className="relative mt-6 rounded-[1.55rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.1),rgba(255,255,255,0.04))] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
+              <div className="relative mt-6 rounded-[1.55rem] border border-[rgba(255,255,255,0.1)] bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.03))] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
                 <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-stone-200/70">How It Works</div>
                 <p className="mt-3 text-sm leading-6 text-stone-100/84">Choose up to three fonts, preview your text, and add any notes before submitting your selection.</p>
               </div>
@@ -506,7 +506,7 @@ const App = () => {
           <main className="min-w-0 pb-10">
             {isSubmissionComplete && (
               <div className="fixed inset-0 z-30 flex items-center justify-center bg-stone-950/60 backdrop-blur-sm">
-                <div className="rounded-[2rem] border border-[rgba(99,91,78,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.995),rgba(248,246,241,0.98))] p-10 text-center shadow-[0_34px_90px_-44px_rgba(20,18,15,0.18)]">
+                <div className="rounded-[2rem] border border-[rgba(37,45,55,0.12)] bg-[linear-gradient(180deg,rgba(255,255,255,0.995),rgba(249,247,242,0.985))] p-10 text-center shadow-[0_34px_90px_-44px_rgba(24,28,34,0.16)]">
                   <h2 className="text-4xl font-bold text-stone-900" style={{ fontFamily: 'Alumni Sans Regular' }}>Submission Complete</h2>
                   <p className="mt-4 text-lg text-stone-600">Thank you for your selection. You may now close this window.</p>
                 </div>
@@ -519,9 +519,9 @@ const App = () => {
                 title="Choose up to three fonts"
                 description="Select a few favorites to compare. You may choose up to three fonts."
                 action={
-                  <div className="rounded-[1.4rem] border border-[rgba(190,176,151,0.28)] bg-[linear-gradient(180deg,rgba(255,255,255,0.97),rgba(245,242,236,0.95))] p-3 shadow-[0_18px_34px_-24px_rgba(30,27,22,0.12)]">
+                  <div className="rounded-[1.4rem] border border-[rgba(182,138,82,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.97),rgba(247,243,236,0.95))] p-3 shadow-[0_18px_34px_-24px_rgba(24,28,34,0.1)]">
                     <button
-                      className="w-full rounded-[1rem] border border-[rgba(74,64,49,0.62)] bg-[linear-gradient(180deg,#4a4031_0%,#2f2820_100%)] px-5 py-3 text-sm font-semibold text-white transition-all hover:-translate-y-px hover:shadow-[0_14px_24px_-16px_rgba(47,40,32,0.56)] focus:outline-none focus-visible:ring-2 focus-visible:ring-stone-300"
+                      className="w-full rounded-[1rem] border border-[rgba(182,138,82,0.34)] bg-[linear-gradient(180deg,#1f252c_0%,#313b46_100%)] px-5 py-3 text-sm font-semibold text-white transition-all hover:-translate-y-px hover:shadow-[0_14px_24px_-16px_rgba(17,21,26,0.5)] focus:outline-none focus-visible:ring-2 focus-visible:ring-stone-300"
                       onClick={() => setShowMonogramMaker(true)}
                       type="button"
                     >
@@ -534,7 +534,7 @@ const App = () => {
                 <div className="space-y-7">
                   {Object.entries(fontLibrary).map(([category, fonts]) => (
                     <div key={category}>
-                      <div className="mb-4 flex items-center justify-between gap-4 border-b border-[rgba(190,176,151,0.18)] pb-3">
+                      <div className="mb-4 flex items-center justify-between gap-4 border-b border-[rgba(182,138,82,0.12)] pb-3">
                         <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-stone-600">{category}</h3>
                         <span className="text-xs font-medium text-stone-400">Select up to 3</span>
                       </div>
@@ -545,9 +545,26 @@ const App = () => {
                           let fontSizeClass = isScriptFont ? 'text-2xl' : 'text-lg';
                           if (font.name === 'Concerto Pro') fontSizeClass = 'text-4xl';
                           return (
-                            <button key={font.name} onClick={() => handleFontSelect(font)} className={`group relative overflow-hidden rounded-[1.2rem] border px-5 py-3.5 font-semibold transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 ${fontSizeClass} ${isSelected ? 'border-[rgba(113,98,73,0.32)] bg-[linear-gradient(135deg,rgba(255,255,255,0.99),rgba(239,234,225,0.96))] text-stone-900 shadow-[0_22px_34px_-24px_rgba(47,40,32,0.16)]' : 'border-[rgba(190,176,151,0.24)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(247,244,238,0.96))] text-stone-800 shadow-[0_18px_28px_-24px_rgba(20,18,15,0.06)] hover:-translate-y-px hover:border-[rgba(113,98,73,0.24)] hover:bg-white'}`} style={{ fontFamily: font.name === 'Alumni Sans' ? 'Alumni Sans Regular' : font.styles[Object.keys(font.styles)[0]] }} type="button">
+                            <button
+                              key={font.name}
+                              onClick={() => handleFontSelect(font)}
+                              className={`group relative overflow-hidden rounded-[1.2rem] border px-5 py-3.5 font-semibold transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 ${fontSizeClass} ${
+                                isSelected
+                                  ? 'border-[rgba(182,138,82,0.26)] bg-[linear-gradient(135deg,rgba(255,255,255,0.995),rgba(243,236,226,0.97))] text-stone-900 shadow-[0_22px_34px_-24px_rgba(24,28,34,0.14)]'
+                                  : 'border-[rgba(182,138,82,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.985),rgba(248,245,240,0.965))] text-stone-800 shadow-[0_18px_28px_-24px_rgba(24,28,34,0.06)] hover:-translate-y-px hover:border-[rgba(182,138,82,0.24)] hover:bg-white'
+                              }`}
+                              style={{ fontFamily: font.name === 'Alumni Sans' ? 'Alumni Sans Regular' : font.styles[Object.keys(font.styles)[0]] }}
+                              type="button"
+                            >
                               <span className="pointer-events-none absolute inset-x-0 top-0 h-10 bg-[linear-gradient(180deg,rgba(255,255,255,0.56),transparent)]" />
-                              <span className="relative z-10 flex items-center gap-3"><span>{font.name}</span>{isSelected && <span className="rounded-full border border-[rgba(113,98,73,0.12)] bg-[rgba(244,239,228,0.96)] px-2.5 py-0.5 text-[11px] font-semibold tracking-normal text-stone-700">Selected</span>}</span>
+                              <span className="relative z-10 flex items-center gap-3">
+                                <span>{font.name}</span>
+                                {isSelected && (
+                                  <span className="rounded-full border border-[rgba(182,138,82,0.14)] bg-[rgba(247,241,232,0.96)] px-2.5 py-0.5 text-[11px] font-semibold tracking-normal text-stone-700">
+                                    Selected
+                                  </span>
+                                )}
+                              </span>
                             </button>
                           );
                         })}
@@ -557,20 +574,71 @@ const App = () => {
                 </div>
               </SectionShell>
 
-              <SectionShell eyebrow="Step 2" title="Enter your preview text" description="Enter the wording you would like to preview. Multiple lines work well for names, titles, and message layouts." action={<div className="flex flex-wrap items-center justify-end gap-2"><button onClick={() => setShowHebrewPalette(true)} className="rounded-xl border border-[rgba(190,176,151,0.24)] bg-[linear-gradient(180deg,rgba(255,255,255,0.97),rgba(245,242,236,0.95))] px-4 py-2 text-sm font-semibold text-stone-700 transition-all hover:-translate-y-px hover:bg-white" type="button">Hebrew</button><button onClick={() => setShowAccentPalette(true)} className="rounded-xl border border-[rgba(190,176,151,0.24)] bg-[linear-gradient(180deg,rgba(255,255,255,0.97),rgba(245,242,236,0.95))] px-4 py-2 text-sm font-semibold text-stone-700 transition-all hover:-translate-y-px hover:bg-white" type="button">Accents</button><button onClick={() => setShowGlyphPalette(true)} className="rounded-xl border border-[rgba(190,176,151,0.24)] bg-[linear-gradient(180deg,rgba(255,255,255,0.97),rgba(245,242,236,0.95))] px-4 py-2 text-sm font-semibold text-stone-700 transition-all hover:-translate-y-px hover:bg-white" type="button">Symbols</button></div>}>
-                <div className="rounded-[1.55rem] border border-[rgba(190,176,151,0.22)] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(246,243,238,0.93))] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.82)] sm:p-5">
-                  <textarea ref={customTextRef} value={customText} onChange={(e) => setCustomText(e.target.value)} placeholder={DEFAULT_TEXT_PLACEHOLDER} dir="auto" className="min-h-[230px] w-full rounded-[1.3rem] border border-[rgba(190,176,151,0.22)] bg-[linear-gradient(180deg,rgba(255,255,255,0.998),rgba(249,247,243,0.988))] px-5 py-4 text-xl text-stone-900 shadow-[inset_0_2px_7px_rgba(20,18,15,0.03)] transition-all placeholder:text-stone-400 focus:border-[rgba(113,98,73,0.34)] focus:outline-none focus:ring-2 focus:ring-[rgba(190,176,151,0.18)]" />
+              <SectionShell
+                eyebrow="Step 2"
+                title="Enter your preview text"
+                description="Enter the wording you would like to preview. Multiple lines work well for names, titles, and message layouts."
+                action={
+                  <div className="flex flex-wrap items-center justify-end gap-2">
+                    <button onClick={() => setShowHebrewPalette(true)} className="rounded-xl border border-[rgba(182,138,82,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.97),rgba(247,243,236,0.95))] px-4 py-2 text-sm font-semibold text-stone-700 transition-all hover:-translate-y-px hover:bg-white" type="button">Hebrew</button>
+                    <button onClick={() => setShowAccentPalette(true)} className="rounded-xl border border-[rgba(182,138,82,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.97),rgba(247,243,236,0.95))] px-4 py-2 text-sm font-semibold text-stone-700 transition-all hover:-translate-y-px hover:bg-white" type="button">Accents</button>
+                    <button onClick={() => setShowGlyphPalette(true)} className="rounded-xl border border-[rgba(182,138,82,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.97),rgba(247,243,236,0.95))] px-4 py-2 text-sm font-semibold text-stone-700 transition-all hover:-translate-y-px hover:bg-white" type="button">Symbols</button>
+                  </div>
+                }
+              >
+                <div className="rounded-[1.55rem] border border-[rgba(182,138,82,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.965),rgba(247,244,239,0.94))] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.84)] sm:p-5">
+                  <textarea
+                    ref={customTextRef}
+                    value={customText}
+                    onChange={(e) => setCustomText(e.target.value)}
+                    placeholder={DEFAULT_TEXT_PLACEHOLDER}
+                    dir="auto"
+                    className="min-h-[230px] w-full rounded-[1.3rem] border border-[rgba(182,138,82,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.998),rgba(250,247,242,0.99))] px-5 py-4 text-xl text-stone-900 shadow-[inset_0_2px_7px_rgba(20,18,15,0.03)] transition-all placeholder:text-stone-400 focus:border-[rgba(182,138,82,0.32)] focus:outline-none focus:ring-2 focus:ring-[rgba(182,138,82,0.16)]"
+                  />
                 </div>
               </SectionShell>
 
-              <LivePreviewSection monogramInfo={monogramInfo} combinedText={combinedText} hebrewRegex={hebrewRegex} hasStandardSelection={hasStandardSelection} previewLines={previewLines} openPreviewLineIndex={openPreviewLineIndex} setOpenPreviewLineIndex={setOpenPreviewLineIndex} selectedFonts={selectedFonts} getFontOptionByName={getFontOptionByName} getDefaultStyleKey={getDefaultStyleKey} getSortedStyleKeys={getSortedStyleKeys} fontSize={fontSize} lineSpacing={lineSpacing} textAlign={textAlign} setTextAlign={setTextAlign} handleFontSizeChange={handleFontSizeChange} handleLineSpacingChange={handleLineSpacingChange} handleApplyFontToActiveLine={handleApplyFontToActiveLine} handleLineStyleChange={handleLineStyleChange} handleLineFontSizeOverrideChange={handleLineFontSizeOverrideChange} AlignIcon={AlignIcon} />
+              <LivePreviewSection
+                monogramInfo={monogramInfo}
+                combinedText={combinedText}
+                hebrewRegex={hebrewRegex}
+                hasStandardSelection={hasStandardSelection}
+                previewLines={previewLines}
+                openPreviewLineIndex={openPreviewLineIndex}
+                setOpenPreviewLineIndex={setOpenPreviewLineIndex}
+                selectedFonts={selectedFonts}
+                getFontOptionByName={getFontOptionByName}
+                getDefaultStyleKey={getDefaultStyleKey}
+                getSortedStyleKeys={getSortedStyleKeys}
+                fontSize={fontSize}
+                lineSpacing={lineSpacing}
+                textAlign={textAlign}
+                setTextAlign={setTextAlign}
+                handleFontSizeChange={handleFontSizeChange}
+                handleLineSpacingChange={handleLineSpacingChange}
+                handleApplyFontToActiveLine={handleApplyFontToActiveLine}
+                handleLineStyleChange={handleLineStyleChange}
+                handleLineFontSizeOverrideChange={handleLineFontSizeOverrideChange}
+                AlignIcon={AlignIcon}
+              />
 
               <SectionShell eyebrow="Step 3" title="Additional Notes" description="Add any preferences or special instructions you would like us to consider with your selection.">
-                <textarea className="min-h-[160px] w-full rounded-[1.3rem] border border-[rgba(190,176,151,0.22)] bg-[linear-gradient(180deg,rgba(255,255,255,0.998),rgba(249,247,243,0.988))] px-5 py-4 text-lg text-stone-900 shadow-[inset_0_2px_7px_rgba(20,18,15,0.03)] transition-all placeholder:text-stone-400 focus:border-[rgba(113,98,73,0.34)] focus:outline-none focus:ring-2 focus:ring-[rgba(190,176,151,0.18)]" value={customerNotes} onChange={(e) => setCustomerNotes(e.target.value)} placeholder="e.g., Make the first line more prominent, keep the layout centered, or match the style shown on my proof." />
+                <textarea
+                  className="min-h-[160px] w-full rounded-[1.3rem] border border-[rgba(182,138,82,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.998),rgba(250,247,242,0.99))] px-5 py-4 text-lg text-stone-900 shadow-[inset_0_2px_7px_rgba(20,18,15,0.03)] transition-all placeholder:text-stone-400 focus:border-[rgba(182,138,82,0.32)] focus:outline-none focus:ring-2 focus:ring-[rgba(182,138,82,0.16)]"
+                  value={customerNotes}
+                  onChange={(e) => setCustomerNotes(e.target.value)}
+                  placeholder="e.g., Make the first line more prominent, keep the layout centered, or match the style shown on my proof."
+                />
               </SectionShell>
 
               <div className="flex justify-end pt-1">
-                <button onClick={handleSubmitClick} className="rounded-[1.25rem] border border-[rgba(74,64,49,0.62)] bg-[linear-gradient(180deg,#4a4031_0%,#2f2820_100%)] px-8 py-3.5 text-lg font-bold text-white shadow-[0_20px_30px_-16px_rgba(47,40,32,0.34)] transition-all hover:-translate-y-px hover:shadow-[0_24px_36px_-14px_rgba(47,40,32,0.42)] disabled:cursor-not-allowed disabled:opacity-50" disabled={isSubmitting || !hasReadySubmission}>{isSubmitting ? 'Submitting...' : 'Submit Selection'}</button>
+                <button
+                  onClick={handleSubmitClick}
+                  className="rounded-[1.25rem] border border-[rgba(182,138,82,0.34)] bg-[linear-gradient(180deg,#1f252c_0%,#313b46_100%)] px-8 py-3.5 text-lg font-bold text-white shadow-[0_20px_30px_-16px_rgba(17,21,26,0.34)] transition-all hover:-translate-y-px hover:shadow-[0_24px_36px_-14px_rgba(17,21,26,0.42)] disabled:cursor-not-allowed disabled:opacity-50"
+                  disabled={isSubmitting || !hasReadySubmission}
+                >
+                  {isSubmitting ? 'Submitting...' : 'Submit Selection'}
+                </button>
               </div>
             </div>
           </main>
@@ -579,7 +647,7 @@ const App = () => {
 
       {(showCustomerModal || showMessageBox || showGlyphPalette || showAccentPalette || showHebrewPalette || showSuccessModal) && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-stone-950/54 p-4 backdrop-blur-sm animate-fade-in">
-          <div className="w-full max-w-4xl rounded-[2rem] border border-[rgba(99,91,78,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.995),rgba(248,246,241,0.98))] p-8 shadow-[0_36px_100px_-42px_rgba(20,18,15,0.2)] animate-jump-in">
+          <div className="w-full max-w-4xl rounded-[2rem] border border-[rgba(37,45,55,0.12)] bg-[linear-gradient(180deg,rgba(255,255,255,0.995),rgba(249,247,242,0.985))] p-8 shadow-[0_36px_100px_-42px_rgba(24,28,34,0.18)] animate-jump-in">
             {showSuccessModal && <SuccessModal onClose={() => setShowSuccessModal(false)} />}
             {showHebrewPalette && (
               <div className="space-y-4">
@@ -590,9 +658,9 @@ const App = () => {
                     <label className="block text-sm font-medium text-stone-700">Preview</label>
                     <button onClick={() => { setHebrewPaletteText(''); setLastHebrewBaseChar('א'); }} className="px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200 text-sm font-semibold">Clear</button>
                   </div>
-                  <textarea readOnly className="w-full p-3 border border-[rgba(190,176,151,0.22)] rounded-xl shadow-inner bg-[rgba(249,247,243,0.98)] min-h-[100px] text-2xl cursor-default text-stone-900" value={hebrewPaletteText} dir="rtl" style={{ fontFamily: 'Noto Rashi Hebrew Regular' }} />
+                  <textarea readOnly className="w-full p-3 border border-[rgba(182,138,82,0.16)] rounded-xl shadow-inner bg-[rgba(250,247,242,0.98)] min-h-[100px] text-2xl cursor-default text-stone-900" value={hebrewPaletteText} dir="rtl" style={{ fontFamily: 'Noto Rashi Hebrew Regular' }} />
                 </div>
-                <div className="p-3 bg-[rgba(244,240,233,0.88)] rounded-xl space-y-2 select-none">
+                <div className="p-3 bg-[rgba(247,241,232,0.88)] rounded-xl space-y-2 select-none">
                   {hebrewKeyboardLayout.map((row, rowIndex) => (
                     <div key={rowIndex} className="flex justify-center gap-1.5">
                       {row.map((key, keyIndex) => {
@@ -602,21 +670,21 @@ const App = () => {
                     </div>
                   ))}
                   <div className="flex justify-center gap-1.5">
-                    <button onClick={() => setIsShifted((prev) => !prev)} className={`h-12 w-24 flex items-center justify-center rounded-lg text-stone-800 text-lg font-semibold shadow-sm transition-colors ${isShifted ? 'bg-[linear-gradient(180deg,#4a4031_0%,#2f2820_100%)] text-white' : 'bg-white hover:bg-stone-100'}`}>Shift</button>
+                    <button onClick={() => setIsShifted((prev) => !prev)} className={`h-12 w-24 flex items-center justify-center rounded-lg text-stone-800 text-lg font-semibold shadow-sm transition-colors ${isShifted ? 'bg-[linear-gradient(180deg,#1f252c_0%,#313b46_100%)] text-white' : 'bg-white hover:bg-stone-100'}`}>Shift</button>
                     <button onClick={() => setHebrewPaletteText((prev) => prev + ' ')} className="h-12 flex-1 flex items-center justify-center rounded-lg bg-white hover:bg-stone-100 text-stone-800 text-xl font-semibold shadow-sm transition-colors">Space</button>
                     <button onClick={handleHebrewBackspace} className="h-12 w-24 flex items-center justify-center rounded-lg bg-white hover:bg-stone-100 text-stone-800 text-lg font-semibold shadow-sm transition-colors">Backspace</button>
                   </div>
                 </div>
                 <div className="flex justify-between items-center pt-4">
                   <button type="button" className="px-6 py-3 bg-[rgba(238,234,227,0.96)] text-stone-800 rounded-xl hover:bg-[rgba(229,223,214,0.96)] font-semibold transition-colors text-base flex-shrink-0" onClick={() => { setShowHebrewPalette(false); setIsShifted(false); setHebrewPaletteText(''); setLastHebrewBaseChar('א'); }}>Close</button>
-                  <button type="button" className="px-8 py-3 bg-[linear-gradient(180deg,#4a4031_0%,#2f2820_100%)] text-white rounded-xl hover:brightness-105 font-bold transition-colors shadow-sm text-base flex-shrink-0" onClick={handleInsertToMain}>Insert Text</button>
+                  <button type="button" className="px-8 py-3 bg-[linear-gradient(180deg,#1f252c_0%,#313b46_100%)] text-white rounded-xl hover:brightness-105 font-bold transition-colors shadow-sm text-base flex-shrink-0" onClick={handleInsertToMain}>Insert Text</button>
                 </div>
               </div>
             )}
             {showAccentPalette && (
               <div className="space-y-6">
                 <h3 className="text-2xl font-bold text-stone-900">Accented Character Palette</h3>
-                <div className="space-y-4 bg-[rgba(249,247,243,0.92)] p-4 rounded-lg max-h-[60vh] overflow-y-auto">
+                <div className="space-y-4 bg-[rgba(250,247,242,0.92)] p-4 rounded-lg max-h-[60vh] overflow-y-auto">
                   {Object.entries(accentedCharacters).map(([baseLetter, chars]) => (
                     <div key={baseLetter} className="flex items-start gap-4">
                       <div className="font-bold text-lg text-stone-600 w-8 text-center pt-2">{baseLetter}</div>
@@ -633,7 +701,7 @@ const App = () => {
             {showGlyphPalette && (
               <div className="space-y-6">
                 <h3 className="text-2xl font-bold text-stone-900">Symbol Palette</h3>
-                <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-12 gap-2 bg-[rgba(249,247,243,0.92)] p-4 rounded-lg">{glyphs.map((glyph) => <button key={glyph} onClick={() => handleGlyphInsert(glyph)} className="flex items-center justify-center h-12 w-full bg-white rounded-lg shadow-sm text-2xl text-stone-700 hover:bg-stone-100 hover:text-stone-900 transition-colors" title={`Insert ${glyph}`}>{glyph}</button>)}</div>
+                <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-12 gap-2 bg-[rgba(250,247,242,0.92)] p-4 rounded-lg">{glyphs.map((glyph) => <button key={glyph} onClick={() => handleGlyphInsert(glyph)} className="flex items-center justify-center h-12 w-full bg-white rounded-lg shadow-sm text-2xl text-stone-700 hover:bg-stone-100 hover:text-stone-900 transition-colors" title={`Insert ${glyph}`}>{glyph}</button>)}</div>
                 <div className="flex justify-between items-center pt-4">
                   <p className="text-sm text-stone-600 pr-4">Character support varies by font. Confirm the final appearance in the live preview.</p>
                   <button type="button" className="px-6 py-3 bg-[rgba(238,234,227,0.96)] text-stone-800 rounded-xl hover:bg-[rgba(229,223,214,0.96)] font-semibold transition-colors text-base flex-shrink-0" onClick={() => setShowGlyphPalette(false)}>Close</button>
