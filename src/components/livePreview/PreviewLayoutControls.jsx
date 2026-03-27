@@ -30,19 +30,19 @@ const PreviewLayoutControls = ({
     : 'These controls apply across the full standard specimen view.';
 
   return (
-    <div className="rounded-[1.45rem] border border-[rgba(120,145,163,0.14)] bg-[linear-gradient(180deg,rgba(36,49,59,0.985),rgba(48,64,76,0.965))] p-4 text-white shadow-[0_24px_50px_-34px_rgba(17,21,26,0.46),inset_0_1px_0_rgba(255,255,255,0.08)] sm:p-5">
+    <div className="rounded-[1.45rem] border border-[rgba(148,180,193,0.16)] bg-[linear-gradient(180deg,rgba(248,250,250,0.995),rgba(238,244,245,0.965))] p-4 text-slate-900 shadow-[0_24px_50px_-34px_rgba(17,21,26,0.12),inset_0_1px_0_rgba(255,255,255,0.82)] sm:p-5">
       <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
         <div className="max-w-[34rem]">
-          <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[rgba(225,235,242,0.72)]">
+          <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">
             {controlLabel}
           </div>
           <div className="mt-1 flex flex-wrap items-center gap-2.5">
-            <h3 className="text-lg font-semibold tracking-tight text-white">{controlTitle}</h3>
+            <h3 className="text-lg font-semibold tracking-tight text-slate-900">{controlTitle}</h3>
             <span
               className={`inline-flex items-center rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] ${
                 isFontMixingMode
-                  ? 'border-[rgba(158,184,199,0.2)] bg-[rgba(235,244,249,0.1)] text-[rgba(229,239,245,0.92)]'
-                  : 'border-white/12 bg-white/10 text-slate-100/82'
+                  ? 'border-[rgba(148,180,193,0.2)] bg-[rgba(236,239,202,0.64)] text-[#213448]'
+                  : 'border-[rgba(148,180,193,0.18)] bg-white text-slate-700'
               }`}
             >
               {isFontMixingMode
@@ -52,7 +52,7 @@ const PreviewLayoutControls = ({
                 : 'Visible in all specimens'}
             </span>
           </div>
-          <p className="mt-2 max-w-[32rem] text-sm leading-6 text-slate-100/76">
+          <p className="mt-2 max-w-[32rem] text-sm leading-6 text-slate-600">
             {controlDescription}
           </p>
         </div>
@@ -90,8 +90,8 @@ const PreviewLayoutControls = ({
                   disabled={!activePreviewLine || isUsingDefaultLineSize}
                   className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-all duration-200 ${
                     !activePreviewLine || isUsingDefaultLineSize
-                      ? 'cursor-default bg-white/10 text-slate-300/38'
-                      : 'border border-[rgba(158,184,199,0.18)] bg-[rgba(235,244,249,0.1)] text-[rgba(229,239,245,0.92)] hover:bg-[rgba(235,244,249,0.18)] hover:text-white'
+                      ? 'cursor-default bg-slate-100 text-slate-400'
+                      : 'border border-[rgba(148,180,193,0.18)] bg-[rgba(236,239,202,0.64)] text-[#213448] hover:bg-[rgba(236,239,202,0.9)]'
                   }`}
                 >
                   Use default
