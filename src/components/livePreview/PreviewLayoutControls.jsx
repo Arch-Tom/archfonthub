@@ -30,10 +30,10 @@ const PreviewLayoutControls = ({
     : 'These controls apply across the full standard specimen view.';
 
   return (
-    <div className="rounded-[1.45rem] border border-[rgba(94,83,63,0.18)] bg-[linear-gradient(180deg,rgba(31,28,23,0.97),rgba(49,43,34,0.95))] p-4 text-white shadow-[0_24px_50px_-34px_rgba(18,16,13,0.44),inset_0_1px_0_rgba(255,255,255,0.08)] sm:p-5">
+    <div className="rounded-[1.45rem] border border-[rgba(182,138,82,0.16)] bg-[linear-gradient(180deg,rgba(24,29,35,0.985),rgba(34,41,49,0.965))] p-4 text-white shadow-[0_24px_50px_-34px_rgba(17,21,26,0.5),inset_0_1px_0_rgba(255,255,255,0.08)] sm:p-5">
       <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
         <div className="max-w-[34rem]">
-          <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-stone-200/72">
+          <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[rgba(247,236,218,0.72)]">
             {controlLabel}
           </div>
           <div className="mt-1 flex flex-wrap items-center gap-2.5">
@@ -41,7 +41,7 @@ const PreviewLayoutControls = ({
             <span
               className={`inline-flex items-center rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] ${
                 isFontMixingMode
-                  ? 'border-[rgba(214,201,177,0.24)] bg-[rgba(246,239,225,0.12)] text-[rgba(244,237,223,0.92)]'
+                  ? 'border-[rgba(182,138,82,0.22)] bg-[rgba(245,236,223,0.1)] text-[rgba(247,236,218,0.92)]'
                   : 'border-white/12 bg-white/10 text-stone-100/82'
               }`}
             >
@@ -91,7 +91,7 @@ const PreviewLayoutControls = ({
                   className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-all duration-200 ${
                     !activePreviewLine || isUsingDefaultLineSize
                       ? 'cursor-default bg-white/10 text-stone-300/38'
-                      : 'border border-[rgba(214,201,177,0.22)] bg-[rgba(246,239,225,0.12)] text-[rgba(244,237,223,0.92)] hover:bg-[rgba(246,239,225,0.2)] hover:text-white'
+                      : 'border border-[rgba(182,138,82,0.2)] bg-[rgba(245,236,223,0.1)] text-[rgba(247,236,218,0.92)] hover:bg-[rgba(245,236,223,0.18)] hover:text-white'
                   }`}
                 >
                   Use default
