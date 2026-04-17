@@ -10,86 +10,77 @@ const PreviewLayoutControls = ({
   handleFontSizeChange,
   handleLineFontSizeOverrideChange,
   handleLineSpacingChange,
-  isFontMixingMode,
   isUsingDefaultLineSize,
   lineSpacing,
+  onClearLineSelection,
   setTextAlign,
   textAlign,
 }) => {
-  const controlLabel = isFontMixingMode ? 'Line controls' : 'Preview controls';
-  const controlTitle = isFontMixingMode
-    ? activePreviewLine
-      ? `Editing line ${activePreviewLine.lineIndex + 1}`
-      : 'Select a line to edit'
-    : 'Adjust the standard preview';
-
-  const controlDescription = isFontMixingMode
-    ? activePreviewLine
-      ? 'These controls apply to the selected line.'
-      : 'Choose a line below to unlock line-specific controls.'
-    : 'These controls apply across the full standard specimen view.';
+  const isLineSelected = Boolean(activePreviewLine);
 
   return (
-    <div className="rounded-[1.45rem] border border-[rgba(148,180,193,0.16)] bg-[linear-gradient(180deg,rgba(248,250,250,0.995),rgba(238,244,245,0.965))] p-4 text-slate-900 shadow-[0_24px_50px_-34px_rgba(17,21,26,0.12),inset_0_1px_0_rgba(255,255,255,0.82)] sm:p-5">
-      <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
-        <div className="max-w-[34rem]">
-          <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">
-            {controlLabel}
-          </div>
-          <div className="mt-1 flex flex-wrap items-center gap-2.5">
-            <h3 className="text-lg font-semibold tracking-tight text-slate-900">{controlTitle}</h3>
-            <span
-              className={`inline-flex items-center rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] ${
-                isFontMixingMode
-                  ? 'border-[rgba(148,180,193,0.2)] bg-[rgba(236,239,202,0.64)] text-[#213448]'
-                  : 'border-[rgba(148,180,193,0.18)] bg-white text-slate-700'
-              }`}
-            >
-              {isFontMixingMode
-                ? activePreviewLine
-                  ? 'Active line'
-                  : 'Waiting for selection'
-                : 'Visible in all specimens'}
+    <div className="rounded-[1.3rem] border border-[rgba(148,180,193,0.14)] bg-[linear-gradient(180deg,rgba(248,250,250,0.995),rgba(240,245,246,0.975))] px-4 py-4 shadow-[0_18px_34px_-28px_rgba(17,21,26,0.1),inset_0_1px_0_rgba(255,255,255,0.82)] sm:px-5">
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex flex-wrap items-center gap-2.5">
+            <span className="inline-flex items-center rounded-full border border-[rgba(148,180,193,0.16)] bg-white/80 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-600 shadow-sm">
+              {isLineSelected
+                ? `Editing line ${activePreviewLine.lineIndex + 1}`
+                : 'Editing all lines'}
             </span>
+
+            {isLineSelected && (
+              <button
+                type="button"
+                onClick={onClearLineSelection}
+                className="rounded-full border border-[rgba(148,180,193,0.16)] bg-[rgba(236,239,202,0.68)] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#213448] transition-colors hover:bg-[rgba(236,239,202,0.92)]"
+              >
+                Clear line selection
+              </button>
+            )}
           </div>
-          <p className="mt-2 max-w-[32rem] text-sm leading-6 text-slate-600">
-            {controlDescription}
+
+          <p className="text-xs leading-5 text-slate-500">
+            Drag a font chip onto a line to mix fonts.
           </p>
         </div>
 
-        <div className="grid w-full gap-4 md:grid-cols-2 xl:w-auto xl:min-w-[46rem] xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] xl:items-end">
+        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] xl:items-center">
           <PreviewRangeControl
-            id={isFontMixingMode ? 'mixing-size-shared' : 'standard-size-shared'}
-            label={isFontMixingMode ? 'Line Size' : 'Preview Size'}
-            value={isFontMixingMode ? activeLineFontSize : fontSize}
-            min={isFontMixingMode ? 12 : 18}
-            max={isFontMixingMode ? 160 : 88}
+            id={isLineSelected ? 'selected-line-size' : 'all-lines-size'}
+            label={isLineSelected ? 'Line Size' : 'Preview Size'}
+            value={isLineSelected ? activeLineFontSize : fontSize}
+            min={isLineSelected ? 12 : 18}
+            max={isLineSelected ? 160 : 88}
             step={1}
             onChange={
-              isFontMixingMode
-                ? (e) =>
-                    activePreviewLine &&
-                    handleLineFontSizeOverrideChange(activePreviewLine.lineIndex, e.target.value)
+              isLineSelected
+                ? (event) =>
+                    handleLineFontSizeOverrideChange(
+                      activePreviewLine.lineIndex,
+                      event.target.value
+                    )
                 : handleFontSizeChange
             }
             showNumberInput
             numberInputAriaLabel={
-              isFontMixingMode && activePreviewLine
+              isLineSelected
                 ? `Size for line ${activePreviewLine.lineIndex + 1}`
                 : 'Preview size'
             }
-            disabled={isFontMixingMode && !activePreviewLine}
             secondaryAction={
-              isFontMixingMode ? (
+              isLineSelected ? (
                 <button
                   type="button"
                   onClick={() =>
-                    activePreviewLine &&
-                    handleLineFontSizeOverrideChange(activePreviewLine.lineIndex, null)
+                    handleLineFontSizeOverrideChange(
+                      activePreviewLine.lineIndex,
+                      null
+                    )
                   }
-                  disabled={!activePreviewLine || isUsingDefaultLineSize}
+                  disabled={isUsingDefaultLineSize}
                   className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-all duration-200 ${
-                    !activePreviewLine || isUsingDefaultLineSize
+                    isUsingDefaultLineSize
                       ? 'cursor-default bg-slate-100 text-slate-400'
                       : 'border border-[rgba(148,180,193,0.18)] bg-[rgba(236,239,202,0.64)] text-[#213448] hover:bg-[rgba(236,239,202,0.9)]'
                   }`}
@@ -101,10 +92,10 @@ const PreviewLayoutControls = ({
           />
 
           <PreviewRangeControl
-            id={isFontMixingMode ? 'mixing-spacing-shared' : 'standard-spacing-shared'}
+            id="shared-line-spacing"
             label="Line Spacing"
             value={lineSpacing}
-            min={isFontMixingMode ? 0.05 : 0.8}
+            min={0.8}
             max={3}
             step={0.05}
             onChange={handleLineSpacingChange}
@@ -116,7 +107,7 @@ const PreviewLayoutControls = ({
               textAlign={textAlign}
               setTextAlign={setTextAlign}
               AlignIcon={AlignIcon}
-              keyPrefix={isFontMixingMode ? 'mixing-shared-' : 'standard-shared-'}
+              keyPrefix="unified-preview-"
             />
           </div>
         </div>

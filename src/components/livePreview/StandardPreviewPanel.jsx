@@ -1,102 +1,147 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import PreviewCanvas from './PreviewCanvas';
 import { formatStyleLabel, getSafeFontFamilyPreview } from './utils';
 
 const StandardPreviewPanel = ({
+  activeStandardFontName,
   fontSize,
   getDefaultStyleKey,
   getSortedStyleKeys,
   lineSpacing,
   safeSelectedFonts,
+  setActiveStandardFontName,
   setStandardPreviewStyleMap,
   standardPreviewLines,
   standardPreviewStyleMap,
   textAlign,
-}) => (
-  <div className="rounded-[1.45rem] border border-[rgba(120,145,163,0.14)] bg-[linear-gradient(180deg,rgba(252,253,253,0.988),rgba(244,247,249,0.97))] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.94),0_18px_38px_-30px_rgba(15,23,42,0.07)] sm:p-6">
-    {safeSelectedFonts.length > 0 ? (
-      <div className="space-y-8">
-        {safeSelectedFonts.map((font) => {
-          const fallbackFontFamily = getSafeFontFamilyPreview(font);
-          const styleKeys = getSortedStyleKeys(font.styles || {});
-          const displayStyleKeys = styleKeys.length > 0 ? styleKeys : ['regular'];
-          const selectedStyleKey =
-            standardPreviewStyleMap[font.name] ||
-            getDefaultStyleKey(font.name) ||
-            displayStyleKeys[0];
-          const activeStandardFontFamily =
-            font?.styles?.[selectedStyleKey] || fallbackFontFamily;
+}) => {
+  const activeStandardFont =
+    safeSelectedFonts.find((font) => font.name === activeStandardFontName) ||
+    safeSelectedFonts[0] ||
+    null;
 
-          return (
-            <div key={`standard-preview-${font.name}`} className="relative flex flex-col items-start gap-3">
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-                <span
-                  className="rounded-full border border-[rgba(120,145,163,0.18)] bg-[linear-gradient(180deg,#2d3b47_0%,#425766_100%)] px-4 py-1 text-sm font-bold text-white shadow-[0_14px_22px_-18px_rgba(31,37,44,0.42)]"
-                  style={{ fontFamily: 'Arial' }}
-                >
-                  {font.name}
-                </span>
-                <div className="flex flex-wrap gap-1.5">
-                  {displayStyleKeys.map((styleKey) => {
-                    const isActiveStyle = styleKey === selectedStyleKey;
+  const styleKeys = activeStandardFont
+    ? getSortedStyleKeys(activeStandardFont.styles || {})
+    : [];
 
-                    return (
-                      <button
-                        key={`${font.name}-${styleKey}`}
-                        type="button"
-                        onClick={() =>
-                          setStandardPreviewStyleMap((current) => ({
-                            ...current,
-                            [font.name]: styleKey,
-                          }))
-                        }
-                        aria-pressed={isActiveStyle}
-                        className={`px-4 py-2 text-sm rounded-md border transition-colors ${
-                          isActiveStyle
-                            ? 'border-[rgba(120,145,163,0.22)] bg-[linear-gradient(180deg,#2d3b47_0%,#425766_100%)] text-white shadow-[0_14px_22px_-18px_rgba(31,37,44,0.42)]'
-                            : 'bg-white text-slate-600 border-[rgba(120,145,163,0.14)] hover:bg-[rgba(244,247,249,0.96)] hover:text-slate-900'
-                        }`}
-                      >
-                        {formatStyleLabel(styleKey)}
-                      </button>
-                    );
-                  })}
-                </div>
+  const displayStyleKeys = styleKeys.length > 0 ? styleKeys : ['regular'];
+
+  const selectedStyleKey = activeStandardFont
+    ? standardPreviewStyleMap[activeStandardFont.name] ||
+      getDefaultStyleKey(activeStandardFont.name) ||
+      displayStyleKeys[0]
+    : '';
+
+  const activeStandardFontFamily = activeStandardFont
+    ? activeStandardFont?.styles?.[selectedStyleKey] ||
+      getSafeFontFamilyPreview(activeStandardFont)
+    : 'inherit';
+
+  const standardCanvasLines = useMemo(
+    () =>
+      (standardPreviewLines || []).map((text, index) => ({
+        lineIndex: index,
+        text,
+      })),
+    [standardPreviewLines]
+  );
+
+  return (
+    <div className="space-y-3">
+      <div className="rounded-[1.25rem] border border-[rgba(197,184,161,0.22)] bg-[linear-gradient(180deg,rgba(253,250,245,0.98),rgba(244,239,231,0.94))] p-4 shadow-[0_18px_34px_-28px_rgba(15,23,42,0.1)]">
+        <div className="flex flex-col gap-3">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <span className="inline-flex items-center rounded-full border border-[rgba(148,180,193,0.16)] bg-white/85 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-600 shadow-sm">
+              Standard
+            </span>
+
+            {activeStandardFont && (
+              <span className="inline-flex items-center rounded-full border border-[rgba(148,180,193,0.16)] bg-[rgba(236,239,202,0.7)] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#213448] shadow-sm">
+                {activeStandardFont.name}
+              </span>
+            )}
+          </div>
+
+          {safeSelectedFonts.length > 0 && (
+            <div>
+              <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                Fonts
               </div>
 
-              <div className="w-full rounded-[1.15rem] border border-[rgba(120,145,163,0.14)] bg-[linear-gradient(180deg,rgba(255,255,255,0.998),rgba(249,250,251,0.992))] px-5 py-5 shadow-[0_16px_32px_-26px_rgba(15,23,42,0.07)]">
-                {standardPreviewLines.length > 0 ? (
-                  <p
-                    className="w-full break-words whitespace-pre-wrap text-slate-800"
-                    style={{
-                      fontFamily: activeStandardFontFamily,
-                      fontSize: `${fontSize}px`,
-                      lineHeight: Math.max(lineSpacing, 0.9),
-                      textAlign,
-                      overflowWrap: 'anywhere',
-                      color: '#1f2937',
-                    }}
-                    dir="auto"
-                  >
-                    {standardPreviewLines.join('\n')}
-                  </p>
-                ) : (
-                  <p className="text-sm leading-6 text-slate-400">
-                    Enter text above to preview it in {font.name}.
-                  </p>
-                )}
+              <div className="flex flex-wrap gap-2.5">
+                {safeSelectedFonts.map((font) => {
+                  const isActiveFont = activeStandardFont?.name === font.name;
+                  const fontFamily =
+                    font.styles?.[getDefaultStyleKey(font.name)] ||
+                    getSafeFontFamilyPreview(font);
+
+                  return (
+                    <button
+                      key={`standard-font-${font.name}`}
+                      type="button"
+                      onClick={() => setActiveStandardFontName(font.name)}
+                      className={`px-5 py-3 rounded-xl font-semibold border transition-all duration-150 ${
+                        isActiveFont
+                          ? 'border-[rgba(212,194,161,0.38)] bg-[linear-gradient(180deg,#2f4258_0%,#213142_100%)] text-white shadow-[0_18px_28px_-18px_rgba(33,49,66,0.56)]'
+                          : 'bg-[linear-gradient(180deg,rgba(255,255,255,0.99),rgba(246,242,235,0.97))] text-slate-700 border-[rgba(197,184,161,0.34)] hover:bg-white hover:border-[rgba(83,103,130,0.34)]'
+                      }`}
+                      style={{ fontFamily }}
+                    >
+                      {font.name}
+                    </button>
+                  );
+                })}
               </div>
             </div>
-          );
-        })}
-      </div>
-    ) : (
-      <div className="flex min-h-[240px] items-center justify-center rounded-[1.15rem] border border-[rgba(120,145,163,0.14)] bg-white text-center">
-        <div className="max-w-xs text-sm leading-6 text-slate-500">
-          Select fonts and enter text above to compare them here.
+          )}
+
+          {activeStandardFont && displayStyleKeys.length > 0 && (
+            <div>
+              <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                Style
+              </div>
+
+              <div className="flex flex-wrap gap-1.5">
+                {displayStyleKeys.map((styleKey) => {
+                  const isActiveStyle = styleKey === selectedStyleKey;
+
+                  return (
+                    <button
+                      key={`${activeStandardFont.name}-${styleKey}`}
+                      type="button"
+                      onClick={() =>
+                        setStandardPreviewStyleMap((current) => ({
+                          ...current,
+                          [activeStandardFont.name]: styleKey,
+                        }))
+                      }
+                      aria-pressed={isActiveStyle}
+                      className={`px-4 py-2 text-sm rounded-md border transition-colors ${
+                        isActiveStyle
+                          ? 'border-[rgba(212,194,161,0.36)] bg-[linear-gradient(180deg,#2f4258_0%,#213142_100%)] text-white shadow-[0_14px_22px_-18px_rgba(33,49,66,0.52)]'
+                          : 'bg-white text-slate-600 border-[rgba(197,184,161,0.34)] hover:bg-[rgba(247,244,238,0.95)] hover:text-slate-900'
+                      }`}
+                    >
+                      {formatStyleLabel(styleKey)}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
       </div>
-    )}
-  </div>
-);
+
+      <PreviewCanvas
+        mode="standard"
+        lines={standardCanvasLines}
+        fontSize={fontSize}
+        lineSpacing={lineSpacing}
+        textAlign={textAlign}
+        standardFontFamily={activeStandardFontFamily}
+      />
+    </div>
+  );
+};
 
 export default StandardPreviewPanel;
