@@ -14,102 +14,97 @@ const getAlignmentClass = (textAlign) =>
       : 'items-start text-left';
 
 const PreviewCanvas = ({
-  mode = 'standard',
   lines = [],
   fontSize = 36,
   lineSpacing = 1,
   textAlign = 'left',
-  openPreviewLineIndex = null,
-  setOpenPreviewLineIndex,
+  selectedLineIndex = null,
+  onSelectLine,
+  onClearLineSelection,
   getFontOptionByName,
   getDefaultStyleKey,
-  standardFontFamily = 'inherit',
+  onDropFontOnLine,
+  dragOverLineIndex = null,
+  setDragOverLineIndex,
 }) => {
   const alignmentClass = getAlignmentClass(textAlign);
   const hasLines = Array.isArray(lines) && lines.length > 0;
-  const isMixingMode = mode === 'mixing';
 
   return (
-    <div className="rounded-[1.45rem] border border-[rgba(197,184,161,0.24)] bg-[linear-gradient(180deg,rgba(255,255,255,0.998),rgba(248,245,239,0.985))] px-5 py-6 shadow-[0_20px_38px_-28px_rgba(30,41,59,0.12)] sm:px-6 sm:py-7">
+    <div
+      className="rounded-[1.45rem] border border-[rgba(197,184,161,0.24)] bg-[linear-gradient(180deg,rgba(255,255,255,0.998),rgba(248,245,239,0.985))] px-5 py-6 shadow-[0_20px_38px_-28px_rgba(30,41,59,0.12)] sm:px-6 sm:py-7"
+      onClick={() => onClearLineSelection?.()}
+    >
       {hasLines ? (
         <div
           className={`flex min-h-[280px] w-full flex-col justify-center ${alignmentClass}`}
         >
           {lines.map((line, index) => {
-            const effectiveFontSize =
-              isMixingMode && line.fontSizeOverride != null
-                ? line.fontSizeOverride
-                : fontSize;
+            const font = getFontOptionByName?.(line.fontName);
+            const fallbackStyleKey = getDefaultStyleKey?.(line.fontName);
+            const activeFontFamily =
+              font?.styles?.[line.styleKey] ||
+              font?.styles?.[fallbackStyleKey] ||
+              'inherit';
 
-            const activeFontFamily = isMixingMode
-              ? (() => {
-                  const font = getFontOptionByName?.(line.fontName);
-                  const fallbackStyleKey = getDefaultStyleKey?.(line.fontName);
-
-                  return (
-                    font?.styles?.[line.styleKey] ||
-                    font?.styles?.[fallbackStyleKey] ||
-                    'inherit'
-                  );
-                })()
-              : standardFontFamily;
-
-            const isSelected =
-              isMixingMode && openPreviewLineIndex === line.lineIndex;
-
-            const spacing =
-              index === 0
-                ? 0
-                : Math.max((lineSpacing - 1) * effectiveFontSize, 0);
-
-            if (isMixingMode) {
-              return (
-                <button
-                  key={`preview-line-${line.lineIndex}`}
-                  type="button"
-                  onClick={() => setOpenPreviewLineIndex?.(line.lineIndex)}
-                  aria-label={`Select line ${index + 1} for editing`}
-                  aria-pressed={isSelected}
-                  className={`w-full rounded-[1rem] border px-3 py-2.5 transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-900/15 ${
-                    isSelected
-                      ? 'border-[rgba(212,194,161,0.34)] bg-[linear-gradient(180deg,rgba(47,66,88,0.06),rgba(212,194,161,0.14))] shadow-[0_12px_24px_-20px_rgba(47,66,88,0.22)]'
-                      : 'border-transparent hover:border-[rgba(197,184,161,0.22)] hover:bg-[rgba(246,243,236,0.55)]'
-                  }`}
-                  style={{ marginTop: `${spacing}px` }}
-                >
-                  <div className={`flex w-full flex-col ${alignmentClass}`}>
-                    <p
-                      className="w-full break-words whitespace-pre-wrap text-slate-800"
-                      style={{
-                        fontFamily: activeFontFamily,
-                        fontSize: `${effectiveFontSize}px`,
-                        lineHeight: 1,
-                        textAlign,
-                        overflowWrap: 'anywhere',
-                        color: '#1f2937',
-                      }}
-                      dir="auto"
-                    >
-                      {renderLineText(line.text)}
-                    </p>
-                  </div>
-                </button>
-              );
-            }
+            const effectiveFontSize = line.fontSizeOverride ?? fontSize;
+            const isSelected = selectedLineIndex === line.lineIndex;
+            const isDragTarget = dragOverLineIndex === line.lineIndex;
 
             return (
-              <div
-                key={`standard-preview-line-${line.lineIndex}`}
-                className="w-full"
-                style={{ marginTop: `${spacing}px` }}
+              <button
+                key={`preview-line-${line.lineIndex}`}
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  onSelectLine?.(line.lineIndex);
+                }}
+                onDragOver={(event) => {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  setDragOverLineIndex?.(line.lineIndex);
+                }}
+                onDragLeave={(event) => {
+                  event.stopPropagation();
+                  setDragOverLineIndex?.((current) =>
+                    current === line.lineIndex ? null : current
+                  );
+                }}
+                onDrop={(event) => {
+                  event.preventDefault();
+                  event.stopPropagation();
+
+                  const droppedFontName =
+                    event.dataTransfer.getData('application/x-font-name') ||
+                    event.dataTransfer.getData('text/plain');
+
+                  setDragOverLineIndex?.(null);
+
+                  if (droppedFontName) {
+                    onDropFontOnLine?.(line.lineIndex, droppedFontName);
+                  }
+                }}
+                aria-label={`Select line ${index + 1} for editing`}
+                aria-pressed={isSelected}
+                className="relative block w-full bg-transparent p-0 text-inherit transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-900/15"
               >
-                <div className={`flex w-full flex-col ${alignmentClass}`}>
-                  <p
-                    className="w-full break-words whitespace-pre-wrap text-slate-800"
+                {(isSelected || isDragTarget) && (
+                  <span
+                    className={`pointer-events-none absolute -inset-x-3 -inset-y-1.5 rounded-[0.85rem] ${
+                      isDragTarget
+                        ? 'border border-dashed border-[rgba(84,119,146,0.42)] bg-[rgba(148,180,193,0.12)]'
+                        : 'border border-[rgba(212,194,161,0.34)] bg-[linear-gradient(180deg,rgba(47,66,88,0.05),rgba(212,194,161,0.12))] shadow-[0_12px_24px_-20px_rgba(47,66,88,0.22)]'
+                    }`}
+                  />
+                )}
+
+                <span className={`relative flex w-full flex-col ${alignmentClass}`}>
+                  <span
+                    className="block w-full break-words whitespace-pre-wrap text-slate-800"
                     style={{
                       fontFamily: activeFontFamily,
                       fontSize: `${effectiveFontSize}px`,
-                      lineHeight: 1,
+                      lineHeight: lineSpacing,
                       textAlign,
                       overflowWrap: 'anywhere',
                       color: '#1f2937',
@@ -117,18 +112,16 @@ const PreviewCanvas = ({
                     dir="auto"
                   >
                     {renderLineText(line.text)}
-                  </p>
-                </div>
-              </div>
+                  </span>
+                </span>
+              </button>
             );
           })}
         </div>
       ) : (
         <div className="flex min-h-[240px] items-center justify-center text-center">
           <div className="max-w-xs text-sm leading-6 text-slate-500">
-            {isMixingMode
-              ? 'Add text and selected fonts above to start building your mixed-font preview here.'
-              : 'Select a font and enter text above to preview it here.'}
+            Add text and selected fonts above to start building your preview here.
           </div>
         </div>
       )}
