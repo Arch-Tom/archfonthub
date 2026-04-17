@@ -19,6 +19,7 @@ const UnifiedPreviewWorkspace = ({
   getDefaultStyleKey,
   getFontOptionByName,
   getSortedStyleKeys,
+  handleApplyFontToActiveLine,
   handleApplyFontToAllLines,
   handleApplyFontToLine,
   handleApplyStyleToAllLines,
@@ -27,7 +28,6 @@ const UnifiedPreviewWorkspace = ({
   handleLineSpacingChange,
   handleLineStyleChange,
   lineSpacing,
-  openPreviewLineIndex,
   previewLines = [],
   selectedFonts = [],
   setOpenPreviewLineIndex,
@@ -38,6 +38,7 @@ const UnifiedPreviewWorkspace = ({
   const [globalStyleFontName, setGlobalStyleFontName] = useState(
     selectedFonts[0]?.name || ''
   );
+  const [selectedLineIndex, setSelectedLineIndex] = useState(null);
 
   const safeSelectedFonts = useMemo(
     () => (Array.isArray(selectedFonts) ? selectedFonts : []),
@@ -47,10 +48,6 @@ const UnifiedPreviewWorkspace = ({
     () => (Array.isArray(previewLines) ? previewLines : []),
     [previewLines]
   );
-
-  const activePreviewLine =
-    safePreviewLines.find((line) => line.lineIndex === openPreviewLineIndex) ||
-    null;
   const selectedFontNames = safeSelectedFonts.map((font) => font.name).join('|');
 
   useEffect(() => {
@@ -62,6 +59,18 @@ const UnifiedPreviewWorkspace = ({
       return safeSelectedFonts[0]?.name || '';
     });
   }, [safeSelectedFonts, selectedFontNames]);
+
+  useEffect(() => {
+    if (
+      selectedLineIndex != null &&
+      !safePreviewLines.some((line) => line.lineIndex === selectedLineIndex)
+    ) {
+      setSelectedLineIndex(null);
+    }
+  }, [safePreviewLines, selectedLineIndex]);
+
+  const activePreviewLine =
+    safePreviewLines.find((line) => line.lineIndex === selectedLineIndex) || null;
 
   const styleFontName =
     activePreviewLine?.fontName ||
@@ -80,15 +89,32 @@ const UnifiedPreviewWorkspace = ({
   const activeLineFontSize = activePreviewLine?.fontSizeOverride ?? fontSize;
   const isUsingDefaultLineSize = activePreviewLine?.fontSizeOverride == null;
 
+  const selectLine = (lineIndex) => {
+    setSelectedLineIndex(lineIndex);
+    setOpenPreviewLineIndex?.(lineIndex);
+  };
+
+  const clearSelection = () => {
+    setSelectedLineIndex(null);
+    setOpenPreviewLineIndex?.(null);
+  };
+
   const handleFontChipClick = (fontName) => {
     setGlobalStyleFontName(fontName);
 
     if (activePreviewLine) {
-      handleApplyFontToLine?.(activePreviewLine.lineIndex, fontName);
+      if (handleApplyFontToLine) {
+        handleApplyFontToLine(activePreviewLine.lineIndex, fontName);
+      } else if (handleApplyFontToActiveLine) {
+        setOpenPreviewLineIndex?.(activePreviewLine.lineIndex);
+        handleApplyFontToActiveLine(fontName);
+      }
       return;
     }
 
-    handleApplyFontToAllLines?.(fontName);
+    if (handleApplyFontToAllLines) {
+      handleApplyFontToAllLines(fontName);
+    }
   };
 
   const handleStyleChipClick = (styleKey) => {
@@ -99,13 +125,26 @@ const UnifiedPreviewWorkspace = ({
       return;
     }
 
-    handleApplyStyleToAllLines?.(styleFontName, styleKey);
+    if (handleApplyStyleToAllLines) {
+      handleApplyStyleToAllLines(styleFontName, styleKey);
+      return;
+    }
+
+    safePreviewLines.forEach((line) => {
+      handleLineStyleChange?.(line.lineIndex, styleKey);
+    });
   };
 
   const handleDropFontOnLine = (lineIndex, fontName) => {
     setGlobalStyleFontName(fontName);
-    handleApplyFontToLine?.(lineIndex, fontName);
-    setOpenPreviewLineIndex?.(lineIndex);
+    selectLine(lineIndex);
+
+    if (handleApplyFontToLine) {
+      handleApplyFontToLine(lineIndex, fontName);
+    } else if (handleApplyFontToActiveLine) {
+      setOpenPreviewLineIndex?.(lineIndex);
+      handleApplyFontToActiveLine(fontName);
+    }
   };
 
   const hasLines = safePreviewLines.length > 0;
@@ -134,7 +173,7 @@ const UnifiedPreviewWorkspace = ({
             {activePreviewLine ? (
               <button
                 type="button"
-                onClick={() => setOpenPreviewLineIndex?.(null)}
+                onClick={clearSelection}
                 className="rounded-full border border-[rgba(148,180,193,0.16)] bg-[rgba(236,239,202,0.72)] px-3.5 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#213448] transition-all hover:bg-[rgba(236,239,202,0.94)]"
               >
                 Clear selection
@@ -157,7 +196,7 @@ const UnifiedPreviewWorkspace = ({
           handleLineSpacingChange={handleLineSpacingChange}
           isUsingDefaultLineSize={isUsingDefaultLineSize}
           lineSpacing={lineSpacing}
-          onClearLineSelection={() => setOpenPreviewLineIndex?.(null)}
+          onClearLineSelection={clearSelection}
           setTextAlign={setTextAlign}
           textAlign={textAlign}
         />
@@ -263,9 +302,9 @@ const UnifiedPreviewWorkspace = ({
             fontSize={fontSize}
             lineSpacing={lineSpacing}
             textAlign={textAlign}
-            selectedLineIndex={openPreviewLineIndex}
-            onSelectLine={setOpenPreviewLineIndex}
-            onClearLineSelection={() => setOpenPreviewLineIndex?.(null)}
+            selectedLineIndex={selectedLineIndex}
+            onSelectLine={selectLine}
+            onClearLineSelection={clearSelection}
             getFontOptionByName={getFontOptionByName}
             getDefaultStyleKey={getDefaultStyleKey}
             onDropFontOnLine={handleDropFontOnLine}
