@@ -10,6 +10,7 @@ const LivePreviewSection = ({
   getDefaultStyleKey,
   getFontOptionByName,
   getSortedStyleKeys,
+  handleApplyFontToActiveLine,
   handleApplyFontToAllLines,
   handleApplyFontToLine,
   handleApplyStyleToAllLines,
@@ -18,6 +19,7 @@ const LivePreviewSection = ({
   handleLineSpacingChange,
   handleLineStyleChange,
   hasLivePreviewSelection,
+  hasStandardSelection,
   hebrewRegex,
   lineSpacing,
   monogramInfo,
@@ -29,6 +31,10 @@ const LivePreviewSection = ({
   textAlign,
 }) => {
   const hasHebrewText = Boolean(combinedText && hebrewRegex?.test(combinedText));
+  const hasReadyPreview =
+    typeof hasLivePreviewSelection === 'boolean'
+      ? hasLivePreviewSelection
+      : Boolean(hasStandardSelection);
 
   return (
     <section className="relative overflow-hidden rounded-[2rem] border border-[rgba(148,180,193,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.994),rgba(240,245,247,0.982))] p-6 shadow-[0_34px_82px_-52px_rgba(28,35,41,0.12)] sm:p-8">
@@ -59,7 +65,7 @@ const LivePreviewSection = ({
 
           <div className="flex flex-wrap items-center gap-2 xl:justify-end">
             <span className="rounded-full border border-[rgba(148,180,193,0.16)] bg-white/80 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500 shadow-sm">
-              {hasLivePreviewSelection ? 'Ready to submit' : 'Needs text'}
+              {hasReadyPreview ? 'Ready to submit' : 'Needs text'}
             </span>
           </div>
         </div>
@@ -81,6 +87,7 @@ const LivePreviewSection = ({
           getDefaultStyleKey={getDefaultStyleKey}
           getFontOptionByName={getFontOptionByName}
           getSortedStyleKeys={getSortedStyleKeys}
+          handleApplyFontToActiveLine={handleApplyFontToActiveLine}
           handleApplyFontToAllLines={handleApplyFontToAllLines}
           handleApplyFontToLine={handleApplyFontToLine}
           handleApplyStyleToAllLines={handleApplyStyleToAllLines}
