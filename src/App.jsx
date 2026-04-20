@@ -160,36 +160,6 @@ const accentedCharacters = {
   Z: ['Ž', 'ž'],
 };
 
-const hebrewCharacters = [
-  'א',
-  'ב',
-  'ג',
-  'ד',
-  'ה',
-  'ו',
-  'ז',
-  'ח',
-  'ט',
-  'י',
-  'כ',
-  'ך',
-  'ל',
-  'מ',
-  'ם',
-  'נ',
-  'ן',
-  'ס',
-  'ע',
-  'פ',
-  'ף',
-  'צ',
-  'ץ',
-  'ק',
-  'ר',
-  'ש',
-  'ת',
-];
-
 const hebrewKeyboardLayout = [
   [
     { unshifted: '`', shifted: '~' },
@@ -212,6 +182,12 @@ const hebrewKeyboardLayout = [
 ];
 
 const hebrewRegex = /[\u0590-\u05FF]/;
+
+const DEFAULT_LINE_SETTING = {
+  fontName: '',
+  styleKey: '',
+  fontSizeOverride: null,
+};
 
 const App = () => {
   const WORKER_URL =
@@ -320,6 +296,12 @@ const App = () => {
     [getDefaultStyleKey, getFontOptionByName, selectedFonts]
   );
 
+  const getNormalizedLineSetting = useCallback(
+    (settings, index, fonts = selectedFonts) =>
+      normalizeLineSelection(settings[index] || DEFAULT_LINE_SETTING, fonts),
+    [normalizeLineSelection, selectedFonts]
+  );
+
   const derivedTextLines = useMemo(
     () => (customText === '' ? [] : customText.split(/\r?\n/)),
     [customText]
@@ -330,15 +312,9 @@ const App = () => {
       derivedTextLines.map((text, index) => ({
         lineIndex: index,
         text,
-        ...normalizeLineSelection(
-          lineSettings[index] || {
-            fontName: '',
-            styleKey: '',
-            fontSizeOverride: null,
-          }
-        ),
+        ...getNormalizedLineSetting(lineSettings, index),
       })),
-    [derivedTextLines, lineSettings, normalizeLineSelection]
+    [derivedTextLines, getNormalizedLineSetting, lineSettings]
   );
 
   const populatedPreviewLines = useMemo(
@@ -363,14 +339,7 @@ const App = () => {
   useEffect(() => {
     setLineSettings((prevSettings) => {
       const nextSettings = derivedTextLines.map((_, index) =>
-        normalizeLineSelection(
-          prevSettings[index] || {
-            fontName: '',
-            styleKey: '',
-            fontSizeOverride: null,
-          },
-          selectedFonts
-        )
+        getNormalizedLineSetting(prevSettings, index, selectedFonts)
       );
 
       const settingsMatch =
@@ -384,7 +353,7 @@ const App = () => {
 
       return settingsMatch ? prevSettings : nextSettings;
     });
-  }, [derivedTextLines, normalizeLineSelection, selectedFonts]);
+  }, [derivedTextLines, getNormalizedLineSetting, selectedFonts]);
 
   useEffect(() => {
     if (previewLines.length === 0) {
@@ -436,6 +405,144 @@ const App = () => {
   const handleTextChange = (e) => setCustomText(e.target.value);
   const handleFontSizeChange = (e) => setFontSize(Number(e.target.value));
   const handleLineSpacingChange = (e) => setLineSpacing(Number(e.target.value));
+
+  const handleApplyFontToLine = useCallback(
+    (lineIndex, fontName) => {
+      const targetFont = getFontOptionByName(fontName);
+      if (!targetFont || lineIndex == null) return;
+
+      setLineSettings((prevSettings) =>
+        derivedTextLines.map((text, index) => {
+          const currentSetting = getNormalizedLineSetting(
+            prevSettings,
+            index,
+            selectedFonts
+          );
+
+          if (index !== lineIndex) return currentSetting;
+
+          return {
+            ...currentSetting,
+            fontName,
+            styleKey: targetFont.styles[currentSetting.styleKey]
+              ? currentSetting.styleKey
+              : getDefaultStyleKey(fontName),
+          };
+        })
+      );
+    },
+    [
+      derivedTextLines,
+      getDefaultStyleKey,
+      getFontOptionByName,
+      getNormalizedLineSetting,
+      selectedFonts,
+    ]
+  );
+
+  const handleApplyFontToAllLines = useCallback(
+    (fontName) => {
+      const targetFont = getFontOptionByName(fontName);
+      if (!targetFont) return;
+
+      setLineSettings((prevSettings) =>
+        derivedTextLines.map((text, index) => {
+          const currentSetting = getNormalizedLineSetting(
+            prevSettings,
+            index,
+            selectedFonts
+          );
+
+          if (text.trim() === '') return currentSetting;
+
+          return {
+            ...currentSetting,
+            fontName,
+            styleKey: targetFont.styles[currentSetting.styleKey]
+              ? currentSetting.styleKey
+              : getDefaultStyleKey(fontName),
+          };
+        })
+      );
+    },
+    [
+      derivedTextLines,
+      getDefaultStyleKey,
+      getFontOptionByName,
+      getNormalizedLineSetting,
+      selectedFonts,
+    ]
+  );
+
+  const handleLineStyleChange = useCallback(
+    (lineIndex, styleKey) => {
+      if (lineIndex == null) return;
+
+      setLineSettings((prevSettings) =>
+        derivedTextLines.map((text, index) => {
+          const currentSetting = getNormalizedLineSetting(
+            prevSettings,
+            index,
+            selectedFonts
+          );
+
+          if (index !== lineIndex) return currentSetting;
+
+          const currentFont = getFontOptionByName(currentSetting.fontName);
+          if (!currentFont?.styles?.[styleKey]) return currentSetting;
+
+          return {
+            ...currentSetting,
+            styleKey,
+          };
+        })
+      );
+    },
+    [
+      derivedTextLines,
+      getFontOptionByName,
+      getNormalizedLineSetting,
+      selectedFonts,
+    ]
+  );
+
+  const handleApplyStyleToAllLines = useCallback(
+    (fontName, styleKey) => {
+      const targetFont = getFontOptionByName(fontName);
+      if (!targetFont?.styles?.[styleKey]) return;
+
+      setSelectedFonts((prevFonts) =>
+        prevFonts.map((font) =>
+          font.name === fontName ? { ...font, activeStyle: styleKey } : font
+        )
+      );
+
+      setLineSettings((prevSettings) =>
+        derivedTextLines.map((text, index) => {
+          const currentSetting = getNormalizedLineSetting(
+            prevSettings,
+            index,
+            selectedFonts
+          );
+
+          if (text.trim() === '' || currentSetting.fontName !== fontName) {
+            return currentSetting;
+          }
+
+          return {
+            ...currentSetting,
+            styleKey,
+          };
+        })
+      );
+    },
+    [
+      derivedTextLines,
+      getFontOptionByName,
+      getNormalizedLineSetting,
+      selectedFonts,
+    ]
+  );
 
   const formatForFilename = (str) =>
     str.trim().replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_-]/g, '');
@@ -883,15 +990,21 @@ const App = () => {
               fontSize={fontSize}
               getDefaultStyleKey={getDefaultStyleKey}
               getFontOptionByName={getFontOptionByName}
+              getSortedStyleKeys={getSortedStyleKeys}
               hebrewRegex={hebrewRegex}
               lineSpacing={lineSpacing}
               monogramInfo={monogramInfo}
+              onApplyFontToAllLines={handleApplyFontToAllLines}
+              onApplyFontToLine={handleApplyFontToLine}
+              onApplyStyleToAllLines={handleApplyStyleToAllLines}
               onFontSizeChange={handleFontSizeChange}
               onLineSelect={setSelectedPreviewLineIndex}
               onLineSpacingChange={handleLineSpacingChange}
+              onLineStyleChange={handleLineStyleChange}
               onTextAlignChange={setTextAlign}
               previewLines={previewLines}
               selectedPreviewLineIndex={selectedPreviewLineIndex}
+              selectedFonts={selectedFonts}
               textAlign={textAlign}
             />
 
