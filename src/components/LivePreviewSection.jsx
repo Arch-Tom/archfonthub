@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from 'react';
 import PreviewCanvas from './livePreview/PreviewCanvas';
 import PreviewLayoutControls from './livePreview/PreviewLayoutControls';
 
+const FONT_DRAG_DATA_TYPE = 'application/x-archfonthub-font';
+
 const HebrewSupportWarning = () => (
     <div className="rounded-r-lg border-l-4 border-amber-400 bg-amber-50 p-4">
         <div className="flex">
@@ -55,6 +57,7 @@ const LivePreviewSection = ({
     const [focusedStyleFontName, setFocusedStyleFontName] = useState(
         selectedFonts[0]?.name || ''
     );
+    const [draggedFontName, setDraggedFontName] = useState('');
 
     const selectedPreviewLine = useMemo(
         () =>
@@ -105,6 +108,25 @@ const LivePreviewSection = ({
         }
 
         onApplyFontToAllLines(fontName);
+    };
+
+    const handleFontChipDragStart = (event, fontName) => {
+        setDraggedFontName(fontName);
+        event.dataTransfer.effectAllowed = 'copy';
+        event.dataTransfer.setData(FONT_DRAG_DATA_TYPE, fontName);
+        event.dataTransfer.setData('text/plain', fontName);
+    };
+
+    const handleFontChipDragEnd = () => {
+        setDraggedFontName('');
+    };
+
+    const handleFontDropToLine = (lineIndex, fontName) => {
+        if (!fontName) return;
+
+        setFocusedStyleFontName(fontName);
+        onApplyFontToLine(lineIndex, fontName);
+        onLineSelect(lineIndex);
     };
 
     const handleStyleChipClick = (styleKey) => {
@@ -168,9 +190,14 @@ const LivePreviewSection = ({
                                             <button
                                                 key={font.name}
                                                 type="button"
+                                                draggable
+                                                onDragStart={(event) =>
+                                                    handleFontChipDragStart(event, font.name)
+                                                }
+                                                onDragEnd={handleFontChipDragEnd}
                                                 onClick={() => handleFontChipClick(font.name)}
                                                 aria-pressed={isActive}
-                                                className={`rounded-lg border px-3 py-2 text-sm font-semibold transition-colors ${
+                                                className={`cursor-grab rounded-lg border px-3 py-2 text-sm font-semibold transition-colors active:cursor-grabbing ${
                                                     isActive
                                                         ? 'border-blue-500 bg-blue-600 text-white shadow-sm'
                                                         : 'border-slate-200 bg-white text-slate-700 hover:border-blue-300 hover:text-blue-700'
@@ -245,11 +272,14 @@ const LivePreviewSection = ({
                 {hebrewRegex.test(customText) && <HebrewSupportWarning />}
 
                 <PreviewCanvas
+                    draggedFontName={draggedFontName}
+                    fontDragDataType={FONT_DRAG_DATA_TYPE}
                     fontSize={fontSize}
                     getDefaultStyleKey={getDefaultStyleKey}
                     getFontOptionByName={getFontOptionByName}
                     lineSpacing={lineSpacing}
                     lines={previewLines}
+                    onFontDropToLine={handleFontDropToLine}
                     onLineSelect={onLineSelect}
                     selectedPreviewLineIndex={selectedPreviewLineIndex}
                     textAlign={textAlign}

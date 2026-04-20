@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 const renderLineText = (value) => {
     if (typeof value === 'string' || typeof value === 'number') return value;
     if (value) return String(value);
@@ -12,17 +14,58 @@ const getAlignmentClass = (textAlign) =>
             : 'items-start text-left';
 
 const PreviewCanvas = ({
+    draggedFontName = '',
+    fontDragDataType = 'application/x-archfonthub-font',
     fontSize,
     getDefaultStyleKey,
     getFontOptionByName,
     lineSpacing,
     lines = [],
+    onFontDropToLine,
     onLineSelect,
     selectedPreviewLineIndex,
     textAlign,
 }) => {
+    const [dropTargetLineIndex, setDropTargetLineIndex] = useState(null);
     const alignmentClass = getAlignmentClass(textAlign);
     const hasLines = Array.isArray(lines) && lines.some((line) => line.text.trim() !== '');
+    const isFontDrag = (event) =>
+        Boolean(draggedFontName) ||
+        Array.from(event.dataTransfer?.types || []).includes(fontDragDataType);
+
+    const handleLineDragOver = (event, lineIndex) => {
+        if (!onFontDropToLine || !isFontDrag(event)) return;
+
+        event.preventDefault();
+        event.dataTransfer.dropEffect = 'copy';
+        setDropTargetLineIndex(lineIndex);
+    };
+
+    const handleLineDragLeave = (event, lineIndex) => {
+        if (
+            dropTargetLineIndex === lineIndex &&
+            !event.currentTarget.contains(event.relatedTarget)
+        ) {
+            setDropTargetLineIndex(null);
+        }
+    };
+
+    const handleLineDrop = (event, lineIndex) => {
+        if (!onFontDropToLine) return;
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        const droppedFontName =
+            event.dataTransfer.getData(fontDragDataType) ||
+            draggedFontName;
+
+        setDropTargetLineIndex(null);
+
+        if (droppedFontName) {
+            onFontDropToLine(lineIndex, droppedFontName);
+        }
+    };
 
     if (!hasLines) {
         return (
@@ -48,6 +91,7 @@ const PreviewCanvas = ({
                     'inherit';
                 const effectiveFontSize = line.fontSizeOverride ?? fontSize;
                 const isSelected = selectedPreviewLineIndex === line.lineIndex;
+                const isDropTarget = dropTargetLineIndex === line.lineIndex;
 
                 return (
                     <button
@@ -57,12 +101,25 @@ const PreviewCanvas = ({
                             event.stopPropagation();
                             onLineSelect(line.lineIndex);
                         }}
+                        onDragOver={(event) =>
+                            handleLineDragOver(event, line.lineIndex)
+                        }
+                        onDragLeave={(event) =>
+                            handleLineDragLeave(event, line.lineIndex)
+                        }
+                        onDrop={(event) => handleLineDrop(event, line.lineIndex)}
                         aria-label={`Select line ${displayIndex + 1} for editing`}
                         aria-pressed={isSelected}
                         className="group relative block w-full bg-transparent p-0 text-inherit focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/40"
                     >
-                        {isSelected && (
-                            <span className="pointer-events-none absolute -inset-x-3 -inset-y-1.5 rounded-lg border border-blue-300 bg-blue-50/70 shadow-sm" />
+                        {(isSelected || isDropTarget) && (
+                            <span
+                                className={`pointer-events-none absolute -inset-x-3 -inset-y-1.5 rounded-lg border shadow-sm transition-colors ${
+                                    isDropTarget
+                                        ? 'border-emerald-400 bg-emerald-50/80'
+                                        : 'border-blue-300 bg-blue-50/70'
+                                }`}
+                            />
                         )}
                         <span className={`relative flex w-full flex-col ${alignmentClass}`}>
                             <span
