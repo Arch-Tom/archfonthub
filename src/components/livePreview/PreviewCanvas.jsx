@@ -6,13 +6,6 @@ const renderLineText = (value) => {
     return ' ';
 };
 
-const getAlignmentClass = (textAlign) =>
-    textAlign === 'center'
-        ? 'items-center text-center'
-        : textAlign === 'right'
-            ? 'items-end text-right'
-            : 'items-start text-left';
-
 const PreviewCanvas = ({
     draggedFontName = '',
     fontDragDataType = 'application/x-archfonthub-font',
@@ -27,8 +20,10 @@ const PreviewCanvas = ({
     textAlign,
 }) => {
     const [dropTargetLineIndex, setDropTargetLineIndex] = useState(null);
-    const alignmentClass = getAlignmentClass(textAlign);
-    const hasLines = Array.isArray(lines) && lines.some((line) => line.text.trim() !== '');
+
+    const hasLines =
+        Array.isArray(lines) && lines.some((line) => line.text.trim() !== '');
+
     const isFontDrag = (event) =>
         Boolean(draggedFontName) ||
         Array.from(event.dataTransfer?.types || []).includes(fontDragDataType);
@@ -57,8 +52,7 @@ const PreviewCanvas = ({
         event.stopPropagation();
 
         const droppedFontName =
-            event.dataTransfer.getData(fontDragDataType) ||
-            draggedFontName;
+            event.dataTransfer.getData(fontDragDataType) || draggedFontName;
 
         setDropTargetLineIndex(null);
 
@@ -79,66 +73,67 @@ const PreviewCanvas = ({
 
     return (
         <div
-            className={`flex min-h-[260px] w-full flex-col justify-center rounded-xl border border-slate-200 bg-white/95 px-5 py-7 shadow-inner ${alignmentClass}`}
+            className="flex min-h-[260px] w-full items-center justify-center rounded-xl border border-slate-200 bg-white/95 px-5 py-7 shadow-inner"
             onClick={() => onLineSelect(null)}
         >
-            {lines.map((line, displayIndex) => {
-                const font = getFontOptionByName?.(line.fontName);
-                const fallbackStyleKey = getDefaultStyleKey?.(line.fontName);
-                const activeFontFamily =
-                    font?.styles?.[line.styleKey] ||
-                    font?.styles?.[fallbackStyleKey] ||
-                    'inherit';
-                const effectiveFontSize = line.fontSizeOverride ?? fontSize;
-                const isSelected = selectedPreviewLineIndex === line.lineIndex;
-                const isDropTarget = dropTargetLineIndex === line.lineIndex;
+            <div className="inline-flex w-fit max-w-full flex-col items-stretch">
+                {lines.map((line, displayIndex) => {
+                    const font = getFontOptionByName?.(line.fontName);
+                    const fallbackStyleKey = getDefaultStyleKey?.(line.fontName);
+                    const activeFontFamily =
+                        font?.styles?.[line.styleKey] ||
+                        font?.styles?.[fallbackStyleKey] ||
+                        'inherit';
+                    const effectiveFontSize = line.fontSizeOverride ?? fontSize;
+                    const isSelected = selectedPreviewLineIndex === line.lineIndex;
+                    const isDropTarget = dropTargetLineIndex === line.lineIndex;
 
-                return (
-                    <button
-                        key={`preview-line-${line.lineIndex}`}
-                        type="button"
-                        onClick={(event) => {
-                            event.stopPropagation();
-                            onLineSelect(line.lineIndex);
-                        }}
-                        onDragOver={(event) =>
-                            handleLineDragOver(event, line.lineIndex)
-                        }
-                        onDragLeave={(event) =>
-                            handleLineDragLeave(event, line.lineIndex)
-                        }
-                        onDrop={(event) => handleLineDrop(event, line.lineIndex)}
-                        aria-label={`Select line ${displayIndex + 1} for editing`}
-                        aria-pressed={isSelected}
-                        className="group relative block w-full bg-transparent p-0 text-inherit focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/40"
-                    >
-                        {(isSelected || isDropTarget) && (
+                    return (
+                        <button
+                            key={`preview-line-${line.lineIndex}`}
+                            type="button"
+                            onClick={(event) => {
+                                event.stopPropagation();
+                                onLineSelect(line.lineIndex);
+                            }}
+                            onDragOver={(event) =>
+                                handleLineDragOver(event, line.lineIndex)
+                            }
+                            onDragLeave={(event) =>
+                                handleLineDragLeave(event, line.lineIndex)
+                            }
+                            onDrop={(event) => handleLineDrop(event, line.lineIndex)}
+                            aria-label={`Select line ${displayIndex + 1} for editing`}
+                            aria-pressed={isSelected}
+                            className="group w-full bg-transparent py-0.5 text-inherit focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/40"
+                        >
                             <span
-                                className={`pointer-events-none absolute -inset-x-3 -inset-y-1.5 rounded-lg border shadow-sm transition-colors ${
-                                    isDropTarget
-                                        ? 'border-emerald-400 bg-emerald-50/80'
-                                        : 'border-blue-300 bg-blue-50/70'
-                                }`}
-                            />
-                        )}
-                        <span className={`relative flex w-full flex-col ${alignmentClass}`}>
-                            <span
-                                className="block w-full whitespace-pre-wrap break-words text-slate-800"
-                                style={{
-                                    fontFamily: activeFontFamily,
-                                    fontSize: `${effectiveFontSize}px`,
-                                    lineHeight: lineSpacing,
-                                    overflowWrap: 'anywhere',
-                                    textAlign,
-                                }}
-                                dir="auto"
+                                className="block w-full"
+                                style={{ textAlign }}
                             >
-                                {renderLineText(line.text)}
+                                <span
+                                    className={`inline-block max-w-full whitespace-pre-wrap break-words rounded-md px-[0.18em] py-[0.04em] text-slate-800 transition-colors ${
+                                        isDropTarget
+                                            ? 'border border-emerald-400 bg-emerald-50/90 shadow-sm'
+                                            : isSelected
+                                            ? 'border border-blue-300 bg-blue-50/85 shadow-sm'
+                                            : 'border border-transparent bg-transparent'
+                                    }`}
+                                    style={{
+                                        fontFamily: activeFontFamily,
+                                        fontSize: `${effectiveFontSize}px`,
+                                        lineHeight: lineSpacing,
+                                        overflowWrap: 'anywhere',
+                                    }}
+                                    dir="auto"
+                                >
+                                    {renderLineText(line.text)}
+                                </span>
                             </span>
-                        </span>
-                    </button>
-                );
-            })}
+                        </button>
+                    );
+                })}
+            </div>
         </div>
     );
 };
