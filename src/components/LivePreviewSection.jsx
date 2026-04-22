@@ -34,22 +34,25 @@ export default function LivePreviewSection({
   const hasText = visiblePreviewLines.length > 0;
 
   return (
-    <section className="flex min-h-0 flex-col gap-4 rounded-[30px] border border-[#dfd6c7] bg-[rgba(251,248,241,0.94)] p-4 shadow-[0_20px_52px_-36px_rgba(20,39,58,0.35)] lg:p-5">
-      <div className="flex min-h-0 flex-1 flex-col rounded-[26px] border border-[#e2d8c8] bg-[linear-gradient(180deg,rgba(254,252,247,0.98),rgba(248,244,236,0.98))] p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] lg:p-4">
-        <div className="mb-3 flex items-center justify-between gap-3">
+    <section className="flex min-h-0 flex-col gap-3 overflow-hidden rounded-[28px] border border-[#dfd6c7] bg-[rgba(251,248,241,0.94)] p-3 shadow-[0_20px_52px_-36px_rgba(20,39,58,0.35)] lg:p-4">
+      <div className="flex min-h-0 flex-1 flex-col rounded-[24px] border border-[#e2d8c8] bg-[linear-gradient(180deg,rgba(254,252,247,0.98),rgba(248,244,236,0.98))] p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
+        <div className="mb-2.5 flex items-center justify-between gap-3">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#5e7085]">
               Live Preview
             </p>
             <p className="mt-1 text-sm text-[#6d7783]">
-              Click a line in the preview to make it active.
+              {hasText
+                ? 'Click a line in the preview to make it active.'
+                : 'Start typing on the left to build your engraving preview.'}
             </p>
           </div>
 
           <button
             type="button"
             onClick={onFitToPreview}
-            className="rounded-[14px] border border-[#d9cfbf] bg-white/78 px-4 py-2 text-sm font-semibold text-[#315171] shadow-[0_12px_24px_-24px_rgba(20,39,58,0.45)] transition-colors hover:border-[#a69a82] hover:bg-white"
+            disabled={!hasText}
+            className="rounded-[13px] border border-[#d9cfbf] bg-white/78 px-3.5 py-2 text-sm font-semibold text-[#315171] shadow-[0_12px_24px_-24px_rgba(20,39,58,0.45)] transition-colors hover:border-[#a69a82] hover:bg-white disabled:cursor-not-allowed disabled:opacity-55"
           >
             Fit to Preview
           </button>

@@ -220,28 +220,66 @@ const getLineRange = (value, lineIndex) => {
   };
 };
 
-const getActiveLineLabel = (line, lineIndex) => {
-  const trimmedLine = line?.trim();
+const styleLabelMap = {
+  thin: 'Thin',
+  thinItalic: 'Thin Italic',
+  extralight: 'Extra Light',
+  extralightItalic: 'Extra Light Italic',
+  light: 'Light',
+  lightItalic: 'Light Italic',
+  regular: 'Regular',
+  regularItalic: 'Regular Italic',
+  italic: 'Italic',
+  book: 'Book',
+  bookItalic: 'Book Italic',
+  roman: 'Roman',
+  medium: 'Medium',
+  mediumItalic: 'Medium Italic',
+  semibold: 'Semi Bold',
+  semiBold: 'Semi Bold',
+  semiboldItalic: 'Semi Bold Italic',
+  semiBoldItalic: 'Semi Bold Italic',
+  demi: 'Demi',
+  bold: 'Bold',
+  boldItalic: 'Bold Italic',
+  extrabold: 'Extra Bold',
+  extraboldItalic: 'Extra Bold Italic',
+  black: 'Black',
+  blackItalic: 'Black Italic',
+  outline: 'Outline',
+  condensed: 'Condensed',
+  condensedBold: 'Condensed Bold',
+  condensedItalic: 'Condensed Italic',
+  condensedBoldItalic: 'Condensed Bold Italic',
+};
 
-  if (trimmedLine) {
-    return trimmedLine;
-  }
+const formatStyleLabel = (styleKey = '') => {
+  if (!styleKey) return '';
+  if (styleLabelMap[styleKey]) return styleLabelMap[styleKey];
 
-  if (typeof lineIndex === 'number') {
-    return `Line ${lineIndex + 1}`;
-  }
+  return styleKey
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1))
+    .join(' ');
+};
 
-  return 'your text';
+const truncateLineReference = (line = '', maxLength = 38) => {
+  const trimmedLine = line.trim();
+
+  if (trimmedLine.length <= maxLength) return trimmedLine;
+  return `${trimmedLine.slice(0, maxLength - 1).trimEnd()}…`;
 };
 
 const ToolShortcutButton = ({ icon, label, onClick }) => (
   <button
     type="button"
     onClick={onClick}
-    className="flex min-h-[78px] flex-1 flex-col items-center justify-center rounded-[18px] border border-[#ddd5c5] bg-white/86 px-3 py-3 text-center text-[#18395a] shadow-[0_10px_26px_-22px_rgba(20,39,58,0.45)] transition-all hover:-translate-y-0.5 hover:border-[#b4ab92] hover:bg-white"
+    className="flex min-h-[64px] flex-col items-center justify-center rounded-[16px] border border-[#ddd5c5] bg-white/86 px-3 py-2.5 text-center text-[#18395a] shadow-[0_10px_26px_-22px_rgba(20,39,58,0.45)] transition-all hover:-translate-y-0.5 hover:border-[#b4ab92] hover:bg-white"
   >
-    <span className="text-[1.45rem] leading-none">{icon}</span>
-    <span className="mt-2 text-[0.92rem] font-semibold">{label}</span>
+    <span className="text-[1.25rem] leading-none">{icon}</span>
+    <span className="mt-1.5 text-[0.86rem] font-semibold">{label}</span>
   </button>
 );
 
@@ -282,19 +320,27 @@ const App = () => {
   const [isShifted, setIsShifted] = useState(false);
 
   const textInputRef = useRef(null);
+  const styleOrderIndex = useMemo(
+    () =>
+      styleSortOrder.reduce((lookup, styleKey, index) => {
+        lookup[styleKey.toLowerCase()] = index;
+        return lookup;
+      }, {}),
+    []
+  );
 
   const getSortedStyleKeys = useCallback(
     (styles) =>
       Object.keys(styles || {}).sort((a, b) => {
-        const indexA = styleSortOrder.indexOf(a.toLowerCase());
-        const indexB = styleSortOrder.indexOf(b.toLowerCase());
+        const indexA = styleOrderIndex[a.toLowerCase()];
+        const indexB = styleOrderIndex[b.toLowerCase()];
 
-        if (indexA === -1 && indexB === -1) return 0;
-        if (indexA === -1) return 1;
-        if (indexB === -1) return -1;
+        if (indexA == null && indexB == null) return a.localeCompare(b);
+        if (indexA == null) return 1;
+        if (indexB == null) return -1;
         return indexA - indexB;
       }),
-    []
+    [styleOrderIndex]
   );
 
   const getFontOptionByName = useCallback(
@@ -524,6 +570,30 @@ const App = () => {
       handleApplyFontToLine(selectedPreviewLineIndex, fontName);
     },
     [handleApplyFontToLine, selectedPreviewLineIndex]
+  );
+
+  const handleStyleSelect = useCallback(
+    (styleKey) => {
+      if (!styleKey || selectedPreviewLineIndex == null) return;
+
+      setLineSettings((prevSettings) =>
+        derivedTextLines.map((text, index) => {
+          const currentSetting = getNormalizedLineSetting(
+            prevSettings,
+            index,
+            allFonts
+          );
+
+          if (index !== selectedPreviewLineIndex) return currentSetting;
+
+          return {
+            ...currentSetting,
+            styleKey,
+          };
+        })
+      );
+    },
+    [allFonts, derivedTextLines, getNormalizedLineSetting, selectedPreviewLineIndex]
   );
 
   const handlePreviewLineSelect = useCallback(
@@ -999,11 +1069,56 @@ const App = () => {
     previewLines[0] ||
     null;
 
-  const selectedLineLabel = getActiveLineLabel(
-    selectedPreviewLine?.text,
-    selectedPreviewLine?.lineIndex
-  );
+  const hasAnyRealText = populatedPreviewLines.length > 0;
+  const hasSelectableLine =
+    selectedPreviewLine != null && selectedPreviewLine.lineIndex != null;
+  const selectedLineText = selectedPreviewLine?.text || '';
+  const selectedLineHasRealText = selectedLineText.trim() !== '';
+  const selectedLineNumberLabel =
+    selectedPreviewLine?.lineIndex != null
+      ? `Line ${selectedPreviewLine.lineIndex + 1}`
+      : 'Line';
+  const selectedLineReference = selectedLineHasRealText
+    ? truncateLineReference(selectedLineText)
+    : selectedLineNumberLabel;
   const selectedLineFontName = selectedPreviewLine?.fontName || '';
+  const selectedFontOption =
+    hasAnyRealText && selectedLineFontName
+      ? getFontOptionByName(selectedLineFontName)
+      : null;
+  const selectedFontStyleKeys = selectedFontOption
+    ? getSortedStyleKeys(selectedFontOption.styles)
+    : [];
+  const selectedStyleKey = selectedPreviewLine?.styleKey
+    ? selectedPreviewLine.styleKey
+    : selectedFontOption
+    ? getDefaultStyleKey(selectedFontOption.name)
+    : '';
+  const selectedStyleLabel = formatStyleLabel(selectedStyleKey);
+  const statusTitle = !hasAnyRealText
+    ? 'Start typing to preview your engraving'
+    : !hasSelectableLine
+    ? 'Select a line to start styling'
+    : selectedLineHasRealText
+    ? `Active line: ${selectedLineReference}`
+    : `${selectedLineNumberLabel} is ready for text`;
+  const statusDescription = !hasAnyRealText
+    ? 'Placeholder text stays as an example until you enter your own wording.'
+    : !hasSelectableLine
+    ? 'Click inside the text box or preview to choose which line you want to edit.'
+    : selectedLineHasRealText
+    ? 'Click a different line in the text box or preview to change its font and style.'
+    : 'Type on this line to preview it, or click another line to style different text.';
+  const fontHeading = !hasAnyRealText
+    ? 'Choose a font'
+    : selectedLineHasRealText
+    ? `Choose a font for "${selectedLineReference}"`
+    : `Choose a font for ${selectedLineNumberLabel}`;
+  const fontSupportCopy = !hasAnyRealText
+    ? 'Enter text to unlock line-based font styling.'
+    : selectedLineHasRealText
+    ? 'Fonts and styles apply only to the active engraving line.'
+    : `${selectedLineNumberLabel} is empty until you type into it.`;
   const notesPreviewText = customerNotes.trim()
     ? `${customerNotes.trim().slice(0, 120)}${
         customerNotes.trim().length > 120 ? '...' : ''
@@ -1011,7 +1126,7 @@ const App = () => {
     : 'Share any special requests, font preferences, or placement notes.';
 
   return (
-    <div className="min-h-screen bg-[#f6f1e7] font-sans text-[#17324d]">
+    <div className="min-h-screen bg-[#f6f1e7] font-sans text-[#17324d] xl:h-screen xl:overflow-hidden">
       {isSubmissionComplete && (
         <div className="fixed inset-0 z-30 flex items-center justify-center bg-[#f6f1e7]/95">
           <div className="rounded-[28px] border border-[#ded5c6] bg-[#fcfaf4] px-10 py-12 text-center shadow-[0_28px_80px_-48px_rgba(20,39,58,0.45)]">
@@ -1028,24 +1143,24 @@ const App = () => {
         </div>
       )}
 
-      <main className="mx-auto flex min-h-screen max-w-[1560px] flex-col px-4 py-4 lg:px-6">
-        <header className="rounded-[30px] border border-[#dfd6c7] bg-[rgba(251,248,241,0.92)] px-5 py-5 shadow-[0_18px_44px_-34px_rgba(20,39,58,0.35)] backdrop-blur">
-          <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
-            <div className="flex flex-col gap-5 md:flex-row md:items-center">
+      <main className="mx-auto flex min-h-screen max-w-[1560px] flex-col px-4 py-3 lg:px-6 xl:h-screen xl:min-h-0 xl:overflow-hidden">
+        <header className="shrink-0 rounded-[28px] border border-[#dfd6c7] bg-[rgba(251,248,241,0.92)] px-4 py-4 shadow-[0_18px_44px_-34px_rgba(20,39,58,0.35)] backdrop-blur lg:px-5">
+          <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+            <div className="flex flex-col gap-4 md:flex-row md:items-center">
               <img
                 src="/images/Arch Vector Logo.svg"
                 alt="Arch Engraving Logo"
-                className="h-14 w-auto md:h-16"
+                className="h-12 w-auto md:h-14"
               />
-              <div className="hidden h-14 w-px bg-[#d8d0c1] md:block" />
+              <div className="hidden h-12 w-px bg-[#d8d0c1] md:block" />
               <div>
                 <h1
-                  className="text-[2rem] leading-none text-[#18395a] sm:text-[2.45rem]"
+                  className="text-[1.85rem] leading-none text-[#18395a] sm:text-[2.25rem]"
                   style={{ fontFamily: 'Alumni Sans Regular' }}
                 >
                   Arch Engraving Font Selection
                 </h1>
-                <p className="mt-2 max-w-3xl text-[0.98rem] text-[#5f6875]">
+                <p className="mt-1.5 max-w-3xl text-[0.95rem] text-[#5f6875]">
                   Preview your fonts, fine-tune your layout, and submit your
                   selection.
                 </p>
@@ -1057,7 +1172,7 @@ const App = () => {
                 onClick={handleSubmitClick}
                 type="button"
                 disabled={isSubmitting || !hasReadySubmission}
-                className="inline-flex items-center gap-3 rounded-[18px] bg-[#6c7343] px-5 py-3 text-[1rem] font-semibold text-white shadow-[0_18px_28px_-20px_rgba(108,115,67,0.8)] transition-all hover:bg-[#5f673b] disabled:cursor-not-allowed disabled:opacity-55"
+                className="inline-flex items-center gap-3 rounded-[16px] bg-[#6c7343] px-5 py-3 text-[0.98rem] font-semibold text-white shadow-[0_18px_28px_-20px_rgba(108,115,67,0.8)] transition-all hover:bg-[#5f673b] disabled:cursor-not-allowed disabled:opacity-55"
               >
                 <svg
                   width="18"
@@ -1092,21 +1207,21 @@ const App = () => {
           </div>
         </header>
 
-        <div className="mt-4 grid flex-1 gap-4 xl:min-h-0 xl:grid-cols-[minmax(430px,520px)_minmax(0,1fr)]">
-          <section className="flex min-h-0 flex-col rounded-[30px] border border-[#dfd6c7] bg-[rgba(251,248,241,0.94)] p-5 shadow-[0_20px_52px_-36px_rgba(20,39,58,0.35)]">
+        <div className="mt-3 grid flex-1 gap-3 xl:min-h-0 xl:grid-cols-[minmax(410px,500px)_minmax(0,1fr)] xl:overflow-hidden">
+          <section className="flex min-h-0 flex-col overflow-hidden rounded-[28px] border border-[#dfd6c7] bg-[rgba(251,248,241,0.94)] p-4 shadow-[0_20px_52px_-36px_rgba(20,39,58,0.35)]">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#5e7085]">
                   Custom Text
                 </p>
-                <p className="mt-2 text-sm leading-6 text-[#66707d]">
-                  Add each engraving line on its own row, then click a font to
-                  style the active line.
+                <p className="mt-1.5 text-sm leading-6 text-[#66707d]">
+                  Add one engraving line per row, then choose fonts for the
+                  active line.
                 </p>
               </div>
             </div>
 
-            <div className="mt-4 flex flex-wrap gap-3">
+            <div className="mt-3 grid grid-cols-2 gap-2.5 sm:grid-cols-4">
               <ToolShortcutButton
                 icon="אב"
                 label="Hebrew"
@@ -1129,10 +1244,10 @@ const App = () => {
               />
             </div>
 
-            <div className="mt-4 rounded-[24px] border border-[#d8cfbf] bg-white/84 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
+            <div className="mt-3 rounded-[22px] border border-[#d8cfbf] bg-white/84 p-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
               <textarea
                 ref={textInputRef}
-                className="min-h-[160px] w-full resize-none rounded-[18px] border border-[#c9bfad] bg-[#fffdf8] px-4 py-3 text-[1.05rem] leading-10 text-[#17324d] shadow-[inset_0_1px_8px_rgba(24,57,90,0.05)] outline-none transition focus:border-[#6c7343] focus:ring-2 focus:ring-[#d8ddc0]"
+                className="min-h-[132px] w-full resize-none rounded-[18px] border border-[#c9bfad] bg-[#fffdf8] px-4 py-3 text-[1.02rem] leading-[2.2rem] text-[#17324d] shadow-[inset_0_1px_8px_rgba(24,57,90,0.05)] outline-none transition focus:border-[#6c7343] focus:ring-2 focus:ring-[#d8ddc0]"
                 value={customText}
                 onChange={handleTextChange}
                 onClick={handleTextInteraction}
@@ -1144,26 +1259,72 @@ const App = () => {
               />
             </div>
 
-            <div className="mt-3 rounded-[20px] border border-[#ddd5c7] bg-white/70 px-4 py-3 text-[#17324d] shadow-[0_12px_30px_-28px_rgba(20,39,58,0.45)]">
+            <div className="mt-3 rounded-[18px] border border-[#ddd5c7] bg-white/70 px-4 py-3 text-[#17324d] shadow-[0_12px_30px_-28px_rgba(20,39,58,0.45)]">
               <div className="flex items-center gap-3">
-                <span className="h-3 w-3 rounded-full bg-[#798350]" />
-                <p className="text-[0.97rem] font-semibold">
-                  Currently styling: {selectedLineLabel}
-                </p>
+                <span
+                  className={`h-2.5 w-2.5 rounded-full ${
+                    hasAnyRealText ? 'bg-[#798350]' : 'bg-[#b8b39d]'
+                  }`}
+                />
+                <p className="text-[0.95rem] font-semibold">{statusTitle}</p>
               </div>
-              <p className="mt-1 text-sm text-[#72808d]">
-                Click a line in the text box or preview to edit it.
+              <p className="mt-1 text-sm leading-6 text-[#72808d]">
+                {statusDescription}
               </p>
             </div>
 
-            <div className="mt-5 flex items-center justify-between gap-3">
-              <h2 className="text-[1.15rem] font-semibold text-[#18395a]">
-                Choose a font for &quot;{selectedLineLabel}&quot;
-              </h2>
+            <div className="mt-4 flex items-start justify-between gap-3">
+              <div>
+                <h2 className="text-[1.08rem] font-semibold text-[#18395a]">
+                  {fontHeading}
+                </h2>
+                <p className="mt-1 text-xs font-medium uppercase tracking-[0.16em] text-[#7b8794]">
+                  {fontSupportCopy}
+                </p>
+              </div>
               <span className="rounded-full bg-[#eef1df] px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-[#6c7343]">
                 {fontCategoryFilter}
               </span>
             </div>
+
+            {selectedFontOption && (
+              <div className="mt-3 rounded-[18px] border border-[#ddd5c7] bg-white/72 px-3 py-3 shadow-[0_12px_28px_-30px_rgba(20,39,58,0.4)]">
+                <div className="flex flex-wrap items-center gap-2 text-[#18395a]">
+                  <span className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[#7b8794]">
+                    Selected Font
+                  </span>
+                  <span className="rounded-full bg-[#f3efdf] px-3 py-1 text-sm font-semibold">
+                    {selectedFontOption.name}
+                  </span>
+                  {selectedStyleLabel && (
+                    <span className="rounded-full border border-[#d9d1c1] bg-white px-3 py-1 text-sm font-medium text-[#5d6774]">
+                      {selectedStyleLabel}
+                    </span>
+                  )}
+                </div>
+
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {selectedFontStyleKeys.map((styleKey) => {
+                    const isSelected = selectedStyleKey === styleKey;
+
+                    return (
+                      <button
+                        key={`${selectedFontOption.name}-${styleKey}`}
+                        type="button"
+                        onClick={() => handleStyleSelect(styleKey)}
+                        className={`rounded-full border px-3 py-1.5 text-sm font-semibold transition-colors ${
+                          isSelected
+                            ? 'border-[#6c7343] bg-[#6c7343] text-white'
+                            : 'border-[#d9d1c1] bg-white text-[#315171] hover:border-[#a69a82] hover:bg-[#faf8f1]'
+                        }`}
+                      >
+                        {formatStyleLabel(styleKey)}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
 
             <div className="mt-3 flex flex-wrap gap-2">
               {CATEGORY_FILTERS.map((filterLabel) => (
@@ -1171,7 +1332,7 @@ const App = () => {
                   key={filterLabel}
                   type="button"
                   onClick={() => setFontCategoryFilter(filterLabel)}
-                  className={`rounded-[14px] border px-4 py-2 text-sm font-semibold transition-colors ${
+                  className={`rounded-[13px] border px-3.5 py-1.5 text-sm font-semibold transition-colors ${
                     fontCategoryFilter === filterLabel
                       ? 'border-[#6c7343] bg-[#6c7343] text-white'
                       : 'border-[#ddd5c7] bg-white/78 text-[#315171] hover:border-[#a69a82] hover:bg-white'
@@ -1182,7 +1343,7 @@ const App = () => {
               ))}
             </div>
 
-            <div className="mt-4 min-h-0 flex-1 overflow-hidden rounded-[24px] border border-[#ddd5c7] bg-white/65 p-3">
+            <div className="mt-3 min-h-0 flex-1 overflow-hidden rounded-[22px] border border-[#ddd5c7] bg-white/65 p-2.5">
               <div className="grid h-full grid-cols-2 gap-2 overflow-y-auto pr-1 sm:grid-cols-3">
                 {visibleFontOptions.map((font) => {
                   const previewStyleKey = getDefaultStyleKey(font.name, allFonts);
@@ -1199,26 +1360,26 @@ const App = () => {
                       key={`${font.category}-${font.name}`}
                       type="button"
                       onClick={() => handleFontChipSelect(font.name)}
-                      disabled={selectedPreviewLineIndex == null}
-                      className={`rounded-[16px] border px-3 py-3 text-center shadow-[0_12px_26px_-24px_rgba(20,39,58,0.45)] transition-all ${
+                      disabled={!hasAnyRealText || selectedPreviewLineIndex == null}
+                      className={`rounded-[15px] border px-3 py-2.5 text-center shadow-[0_12px_26px_-24px_rgba(20,39,58,0.45)] transition-all ${
                         isSelected
                           ? 'border-[#6c7343] bg-[#eef1df] text-[#18395a]'
                           : 'border-[#ddd5c7] bg-white/82 text-[#23415d] hover:-translate-y-0.5 hover:border-[#9f957f] hover:bg-white'
                       } ${
-                        selectedPreviewLineIndex == null
+                        !hasAnyRealText || selectedPreviewLineIndex == null
                           ? 'cursor-not-allowed opacity-60'
                           : ''
                       }`}
                     >
                       <span
                         className={`block leading-none ${
-                          isScriptFont ? 'text-[1.6rem]' : 'text-[1.12rem]'
+                          isScriptFont ? 'text-[1.45rem]' : 'text-[1.03rem]'
                         }`}
                         style={{ fontFamily: previewFontFamily }}
                       >
                         {font.name}
                       </span>
-                      <span className="mt-2 block text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[#8190a0]">
+                      <span className="mt-1.5 block text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-[#8190a0]">
                         {font.category}
                       </span>
                     </button>
@@ -1227,9 +1388,10 @@ const App = () => {
               </div>
             </div>
 
-            <p className="mt-3 text-sm text-[#708090]">
-              Fonts apply to the active line. Click a different line to change
-              it.
+            <p className="mt-2.5 text-sm text-[#708090]">
+              {hasAnyRealText
+                ? 'Fonts and styles stay tied to the active line. Click a different line to restyle it.'
+                : 'Enter text first, then click a line to style it.'}
             </p>
           </section>
 
@@ -1254,7 +1416,7 @@ const App = () => {
           />
         </div>
 
-        <section className="mt-4 rounded-[26px] border border-[#dfd6c7] bg-[rgba(251,248,241,0.88)] px-5 py-4 shadow-[0_18px_40px_-34px_rgba(20,39,58,0.35)]">
+        <section className="mt-3 shrink-0 rounded-[24px] border border-[#dfd6c7] bg-[rgba(251,248,241,0.88)] px-4 py-3 shadow-[0_18px_40px_-34px_rgba(20,39,58,0.35)]">
           <button
             type="button"
             onClick={() => setIsNotesOpen((prev) => !prev)}
@@ -1285,12 +1447,12 @@ const App = () => {
                     strokeLinejoin="round"
                   />
                 </svg>
-                <p className="text-[1.08rem] font-semibold text-[#18395a]">
+                <p className="text-[1rem] font-semibold text-[#18395a]">
                   Notes for Designer
                 </p>
                 <span className="text-sm text-[#7c8794]">(Optional)</span>
               </div>
-              <p className="mt-2 text-sm text-[#6f7a86]">
+              <p className="mt-1.5 text-sm text-[#6f7a86]">
                 {notesPreviewText}
               </p>
             </div>
@@ -1317,7 +1479,7 @@ const App = () => {
 
           {isNotesOpen && (
             <textarea
-              className="mt-4 min-h-[110px] w-full rounded-[20px] border border-[#d5cbbb] bg-white/82 px-4 py-3 text-[1rem] text-[#17324d] shadow-[inset_0_1px_8px_rgba(24,57,90,0.05)] outline-none transition focus:border-[#6c7343] focus:ring-2 focus:ring-[#d8ddc0]"
+              className="mt-3 min-h-[104px] w-full rounded-[20px] border border-[#d5cbbb] bg-white/82 px-4 py-3 text-[1rem] text-[#17324d] shadow-[inset_0_1px_8px_rgba(24,57,90,0.05)] outline-none transition focus:border-[#6c7343] focus:ring-2 focus:ring-[#d8ddc0]"
               value={customerNotes}
               onChange={(e) => setCustomerNotes(e.target.value)}
               placeholder="Share any special requests, font preferences, or placement notes."
