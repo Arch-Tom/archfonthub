@@ -286,7 +286,8 @@ const ToolShortcutButton = ({ icon, label, onClick }) => (
 const App = () => {
   const WORKER_URL =
     'https://customerfontselection-worker.tom-4a9.workers.dev';
-  const DEFAULT_TEXT_PLACEHOLDER = 'Eleanor & James\nEst. 2024\nForever & Always';
+  const DEFAULT_TEXT_PLACEHOLDER =
+    'Eleanor & James\nEst. 2024\nForever & Always';
   const allFonts = useMemo(() => flattenFontLibrary(), []);
 
   const [customText, setCustomText] = useState('');
@@ -320,6 +321,7 @@ const App = () => {
   const [isShifted, setIsShifted] = useState(false);
 
   const textInputRef = useRef(null);
+
   const styleOrderIndex = useMemo(
     () =>
       styleSortOrder.reduce((lookup, styleKey, index) => {
@@ -445,10 +447,10 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-      setLineSettings((prevSettings) => {
-        const nextSettings = derivedTextLines.map((_, index) =>
-          getNormalizedLineSetting(prevSettings, index, allFonts)
-        );
+    setLineSettings((prevSettings) => {
+      const nextSettings = derivedTextLines.map((_, index) =>
+        getNormalizedLineSetting(prevSettings, index, allFonts)
+      );
 
       const settingsMatch =
         nextSettings.length === prevSettings.length &&
@@ -490,33 +492,27 @@ const App = () => {
     setTimeout(() => setShowMessageBox(false), duration);
   };
 
-  const syncActiveLineFromTextarea = useCallback(
-    (textareaElement) => {
-      if (!textareaElement) return;
+  const syncActiveLineFromTextarea = useCallback((textareaElement) => {
+    if (!textareaElement) return;
 
-      const nextLineIndex = getLineIndexFromPosition(
-        textareaElement.value,
-        textareaElement.selectionStart ?? 0
-      );
+    const nextLineIndex = getLineIndexFromPosition(
+      textareaElement.value,
+      textareaElement.selectionStart ?? 0
+    );
 
-      setSelectedPreviewLineIndex(nextLineIndex);
-    },
-    []
-  );
+    setSelectedPreviewLineIndex(nextLineIndex);
+  }, []);
 
-  const focusTextareaLine = useCallback(
-    (lineIndex) => {
-      const textarea = textInputRef.current;
-      if (!textarea || lineIndex == null) return;
+  const focusTextareaLine = useCallback((lineIndex) => {
+    const textarea = textInputRef.current;
+    if (!textarea || lineIndex == null) return;
 
-      const { end } = getLineRange(textarea.value, lineIndex);
+    const { end } = getLineRange(textarea.value, lineIndex);
 
-      textarea.focus();
-      textarea.setSelectionRange(end, end);
-      setSelectedPreviewLineIndex(lineIndex);
-    },
-    []
-  );
+    textarea.focus();
+    textarea.setSelectionRange(end, end);
+    setSelectedPreviewLineIndex(lineIndex);
+  }, []);
 
   const handleTextChange = (e) => {
     setCustomText(e.target.value);
@@ -593,7 +589,12 @@ const App = () => {
         })
       );
     },
-    [allFonts, derivedTextLines, getNormalizedLineSetting, selectedPreviewLineIndex]
+    [
+      allFonts,
+      derivedTextLines,
+      getNormalizedLineSetting,
+      selectedPreviewLineIndex,
+    ]
   );
 
   const handlePreviewLineSelect = useCallback(
@@ -625,7 +626,9 @@ const App = () => {
       Math.min(72, Math.round(920 / Math.max(longestLineLength, 10)))
     );
 
-    setFontSize(Math.max(30, Math.min(72, Math.min(sizeByLineCount, sizeByLength))));
+    setFontSize(
+      Math.max(30, Math.min(72, Math.min(sizeByLineCount, sizeByLength)))
+    );
     setLineSpacing(visibleLines.length > 2 ? 0.94 : 1);
   }, [previewLines]);
 
@@ -1095,6 +1098,7 @@ const App = () => {
     ? getDefaultStyleKey(selectedFontOption.name)
     : '';
   const selectedStyleLabel = formatStyleLabel(selectedStyleKey);
+
   const statusTitle = !hasAnyRealText
     ? 'Start typing to preview your engraving'
     : !hasSelectableLine
@@ -1102,6 +1106,7 @@ const App = () => {
     : selectedLineHasRealText
     ? `Active line: ${selectedLineReference}`
     : `${selectedLineNumberLabel} is ready for text`;
+
   const statusDescription = !hasAnyRealText
     ? 'Placeholder text stays as an example until you enter your own wording.'
     : !hasSelectableLine
@@ -1109,16 +1114,19 @@ const App = () => {
     : selectedLineHasRealText
     ? 'Click a different line in the text box or preview to change its font and style.'
     : 'Type on this line to preview it, or click another line to style different text.';
+
   const fontHeading = !hasAnyRealText
     ? 'Choose a font'
     : selectedLineHasRealText
     ? `Choose a font for "${selectedLineReference}"`
     : `Choose a font for ${selectedLineNumberLabel}`;
+
   const fontSupportCopy = !hasAnyRealText
     ? 'Enter text to unlock line-based font styling.'
     : selectedLineHasRealText
     ? 'Fonts and styles apply only to the active engraving line.'
     : `${selectedLineNumberLabel} is empty until you type into it.`;
+
   const notesPreviewText = customerNotes.trim()
     ? `${customerNotes.trim().slice(0, 120)}${
         customerNotes.trim().length > 120 ? '...' : ''
@@ -1207,7 +1215,7 @@ const App = () => {
           </div>
         </header>
 
-        <div className="mt-3 grid flex-1 gap-3 xl:min-h-0 xl:grid-cols-[minmax(410px,500px)_minmax(0,1fr)] xl:overflow-hidden">
+        <div className="mt-3 grid flex-1 gap-3 xl:min-h-0 xl:grid-cols-[minmax(450px,540px)_minmax(0,1fr)] xl:overflow-hidden">
           <section className="flex min-h-0 flex-col overflow-hidden rounded-[28px] border border-[#dfd6c7] bg-[rgba(251,248,241,0.94)] p-4 shadow-[0_20px_52px_-36px_rgba(20,39,58,0.35)]">
             <div className="flex items-start justify-between gap-4">
               <div>
@@ -1215,8 +1223,8 @@ const App = () => {
                   Custom Text
                 </p>
                 <p className="mt-1.5 text-sm leading-6 text-[#66707d]">
-                  Add one engraving line per row, then choose fonts for the
-                  active line.
+                  Add one engraving line per row, then choose a font and style
+                  for the active line below.
                 </p>
               </div>
             </div>
@@ -1244,155 +1252,170 @@ const App = () => {
               />
             </div>
 
-            <div className="mt-3 rounded-[22px] border border-[#d8cfbf] bg-white/84 p-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
-              <textarea
-                ref={textInputRef}
-                className="min-h-[132px] w-full resize-none rounded-[18px] border border-[#c9bfad] bg-[#fffdf8] px-4 py-3 text-[1.02rem] leading-[2.2rem] text-[#17324d] shadow-[inset_0_1px_8px_rgba(24,57,90,0.05)] outline-none transition focus:border-[#6c7343] focus:ring-2 focus:ring-[#d8ddc0]"
-                value={customText}
-                onChange={handleTextChange}
-                onClick={handleTextInteraction}
-                onKeyUp={handleTextInteraction}
-                onSelect={handleTextInteraction}
-                onFocus={handleTextInteraction}
-                placeholder={DEFAULT_TEXT_PLACEHOLDER}
-                dir="auto"
-              />
-            </div>
-
-            <div className="mt-3 rounded-[18px] border border-[#ddd5c7] bg-white/70 px-4 py-3 text-[#17324d] shadow-[0_12px_30px_-28px_rgba(20,39,58,0.45)]">
-              <div className="flex items-center gap-3">
-                <span
-                  className={`h-2.5 w-2.5 rounded-full ${
-                    hasAnyRealText ? 'bg-[#798350]' : 'bg-[#b8b39d]'
-                  }`}
+            <div className="mt-3 flex min-h-0 flex-1 flex-col">
+              <div className="rounded-[22px] border border-[#d8cfbf] bg-white/84 p-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
+                <textarea
+                  ref={textInputRef}
+                  className="min-h-[148px] w-full resize-none rounded-[18px] border border-[#c9bfad] bg-[#fffdf8] px-4 py-3 text-[1.02rem] leading-[2.2rem] text-[#17324d] shadow-[inset_0_1px_8px_rgba(24,57,90,0.05)] outline-none transition focus:border-[#6c7343] focus:ring-2 focus:ring-[#d8ddc0]"
+                  value={customText}
+                  onChange={handleTextChange}
+                  onClick={handleTextInteraction}
+                  onKeyUp={handleTextInteraction}
+                  onSelect={handleTextInteraction}
+                  onFocus={handleTextInteraction}
+                  placeholder={DEFAULT_TEXT_PLACEHOLDER}
+                  dir="auto"
                 />
-                <p className="text-[0.95rem] font-semibold">{statusTitle}</p>
               </div>
-              <p className="mt-1 text-sm leading-6 text-[#72808d]">
-                {statusDescription}
-              </p>
-            </div>
 
-            <div className="mt-4 flex items-start justify-between gap-3">
-              <div>
-                <h2 className="text-[1.08rem] font-semibold text-[#18395a]">
-                  {fontHeading}
-                </h2>
-                <p className="mt-1 text-xs font-medium uppercase tracking-[0.16em] text-[#7b8794]">
-                  {fontSupportCopy}
-                </p>
+              <div className="mt-2.5 px-1 text-[#6f7d89]">
+                <div className="flex items-start gap-2.5">
+                  <span
+                    className={`mt-[0.42rem] h-2 w-2 flex-shrink-0 rounded-full ${
+                      hasAnyRealText ? 'bg-[#798350]' : 'bg-[#b8b39d]'
+                    }`}
+                  />
+                  <div>
+                    <p className="text-[0.88rem] font-semibold text-[#476072]">
+                      {statusTitle}
+                    </p>
+                    <p className="mt-0.5 text-sm leading-5 text-[#788591]">
+                      {statusDescription}
+                    </p>
+                  </div>
+                </div>
               </div>
-              <span className="rounded-full bg-[#eef1df] px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-[#6c7343]">
-                {fontCategoryFilter}
-              </span>
-            </div>
 
-            {selectedFontOption && (
-              <div className="mt-3 rounded-[18px] border border-[#ddd5c7] bg-white/72 px-3 py-3 shadow-[0_12px_28px_-30px_rgba(20,39,58,0.4)]">
-                <div className="flex flex-wrap items-center gap-2 text-[#18395a]">
-                  <span className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[#7b8794]">
-                    Selected Font
+              <div className="mt-4 flex min-h-0 flex-1 flex-col border-t border-[#e4dccd] pt-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <h2 className="text-[1.08rem] font-semibold text-[#18395a]">
+                      {fontHeading}
+                    </h2>
+                    <p className="mt-1 text-xs font-medium uppercase tracking-[0.16em] text-[#7b8794]">
+                      {fontSupportCopy}
+                    </p>
+                  </div>
+                  <span className="shrink-0 rounded-full bg-[#eef1df] px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-[#6c7343]">
+                    {fontCategoryFilter}
                   </span>
-                  <span className="rounded-full bg-[#f3efdf] px-3 py-1 text-sm font-semibold">
-                    {selectedFontOption.name}
-                  </span>
-                  {selectedStyleLabel && (
-                    <span className="rounded-full border border-[#d9d1c1] bg-white px-3 py-1 text-sm font-medium text-[#5d6774]">
-                      {selectedStyleLabel}
-                    </span>
-                  )}
                 </div>
 
                 <div className="mt-3 flex flex-wrap gap-2">
-                  {selectedFontStyleKeys.map((styleKey) => {
-                    const isSelected = selectedStyleKey === styleKey;
-
-                    return (
-                      <button
-                        key={`${selectedFontOption.name}-${styleKey}`}
-                        type="button"
-                        onClick={() => handleStyleSelect(styleKey)}
-                        className={`rounded-full border px-3 py-1.5 text-sm font-semibold transition-colors ${
-                          isSelected
-                            ? 'border-[#6c7343] bg-[#6c7343] text-white'
-                            : 'border-[#d9d1c1] bg-white text-[#315171] hover:border-[#a69a82] hover:bg-[#faf8f1]'
-                        }`}
-                      >
-                        {formatStyleLabel(styleKey)}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-
-            <div className="mt-3 flex flex-wrap gap-2">
-              {CATEGORY_FILTERS.map((filterLabel) => (
-                <button
-                  key={filterLabel}
-                  type="button"
-                  onClick={() => setFontCategoryFilter(filterLabel)}
-                  className={`rounded-[13px] border px-3.5 py-1.5 text-sm font-semibold transition-colors ${
-                    fontCategoryFilter === filterLabel
-                      ? 'border-[#6c7343] bg-[#6c7343] text-white'
-                      : 'border-[#ddd5c7] bg-white/78 text-[#315171] hover:border-[#a69a82] hover:bg-white'
-                  }`}
-                >
-                  {filterLabel}
-                </button>
-              ))}
-            </div>
-
-            <div className="mt-3 min-h-0 flex-1 overflow-hidden rounded-[22px] border border-[#ddd5c7] bg-white/65 p-2.5">
-              <div className="grid h-full grid-cols-2 gap-2 overflow-y-auto pr-1 sm:grid-cols-3">
-                {visibleFontOptions.map((font) => {
-                  const previewStyleKey = getDefaultStyleKey(font.name, allFonts);
-                  const previewFontFamily =
-                    font.name === 'Alumni Sans'
-                      ? 'Alumni Sans Regular'
-                      : font.styles[previewStyleKey] ||
-                        font.styles[getSortedStyleKeys(font.styles)[0]];
-                  const isSelected = selectedLineFontName === font.name;
-                  const isScriptFont = scriptFontsToAdjust.includes(font.name);
-
-                  return (
+                  {CATEGORY_FILTERS.map((filterLabel) => (
                     <button
-                      key={`${font.category}-${font.name}`}
+                      key={filterLabel}
                       type="button"
-                      onClick={() => handleFontChipSelect(font.name)}
-                      disabled={!hasAnyRealText || selectedPreviewLineIndex == null}
-                      className={`rounded-[15px] border px-3 py-2.5 text-center shadow-[0_12px_26px_-24px_rgba(20,39,58,0.45)] transition-all ${
-                        isSelected
-                          ? 'border-[#6c7343] bg-[#eef1df] text-[#18395a]'
-                          : 'border-[#ddd5c7] bg-white/82 text-[#23415d] hover:-translate-y-0.5 hover:border-[#9f957f] hover:bg-white'
-                      } ${
-                        !hasAnyRealText || selectedPreviewLineIndex == null
-                          ? 'cursor-not-allowed opacity-60'
-                          : ''
+                      onClick={() => setFontCategoryFilter(filterLabel)}
+                      className={`rounded-[13px] border px-3.5 py-1.5 text-sm font-semibold transition-colors ${
+                        fontCategoryFilter === filterLabel
+                          ? 'border-[#6c7343] bg-[#6c7343] text-white'
+                          : 'border-[#ddd5c7] bg-white/78 text-[#315171] hover:border-[#a69a82] hover:bg-white'
                       }`}
                     >
-                      <span
-                        className={`block leading-none ${
-                          isScriptFont ? 'text-[1.45rem]' : 'text-[1.03rem]'
-                        }`}
-                        style={{ fontFamily: previewFontFamily }}
-                      >
-                        {font.name}
-                      </span>
-                      <span className="mt-1.5 block text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-[#8190a0]">
-                        {font.category}
-                      </span>
+                      {filterLabel}
                     </button>
-                  );
-                })}
+                  ))}
+                </div>
+
+                {selectedFontOption && (
+                  <div className="mt-3 rounded-[16px] border border-[#ddd5c7] bg-white/58 px-3 py-2.5">
+                    <div className="flex flex-wrap items-center gap-2 text-[#18395a]">
+                      <span className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-[#7b8794]">
+                        Current Font
+                      </span>
+                      <span className="rounded-full bg-[#f3efdf] px-3 py-1 text-sm font-semibold">
+                        {selectedFontOption.name}
+                      </span>
+                      {selectedStyleLabel && (
+                        <span className="rounded-full border border-[#d9d1c1] bg-white px-3 py-1 text-sm font-medium text-[#5d6774]">
+                          {selectedStyleLabel}
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="mt-2.5 flex flex-wrap gap-2">
+                      {selectedFontStyleKeys.map((styleKey) => {
+                        const isSelected = selectedStyleKey === styleKey;
+
+                        return (
+                          <button
+                            key={`${selectedFontOption.name}-${styleKey}`}
+                            type="button"
+                            onClick={() => handleStyleSelect(styleKey)}
+                            className={`rounded-full border px-3 py-1.5 text-sm font-semibold transition-colors ${
+                              isSelected
+                                ? 'border-[#6c7343] bg-[#6c7343] text-white'
+                                : 'border-[#d9d1c1] bg-white text-[#315171] hover:border-[#a69a82] hover:bg-[#faf8f1]'
+                            }`}
+                          >
+                            {formatStyleLabel(styleKey)}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                <div className="mt-3 min-h-0 flex-1 overflow-hidden rounded-[22px] border border-[#ddd5c7] bg-white/65 p-2.5">
+                  <div className="grid h-full grid-cols-2 gap-2 overflow-y-auto overflow-x-hidden pr-1 sm:grid-cols-3">
+                    {visibleFontOptions.map((font) => {
+                      const previewStyleKey = getDefaultStyleKey(
+                        font.name,
+                        allFonts
+                      );
+                      const previewFontFamily =
+                        font.name === 'Alumni Sans'
+                          ? 'Alumni Sans Regular'
+                          : font.styles[previewStyleKey] ||
+                            font.styles[getSortedStyleKeys(font.styles)[0]];
+                      const isSelected = selectedLineFontName === font.name;
+                      const isScriptFont = scriptFontsToAdjust.includes(
+                        font.name
+                      );
+
+                      return (
+                        <button
+                          key={`${font.category}-${font.name}`}
+                          type="button"
+                          onClick={() => handleFontChipSelect(font.name)}
+                          disabled={
+                            !hasAnyRealText || selectedPreviewLineIndex == null
+                          }
+                          className={`rounded-[15px] border px-3 py-2.5 text-center shadow-[0_12px_26px_-24px_rgba(20,39,58,0.45)] transition-all ${
+                            isSelected
+                              ? 'border-[#6c7343] bg-[#eef1df] text-[#18395a]'
+                              : 'border-[#ddd5c7] bg-white/82 text-[#23415d] hover:-translate-y-0.5 hover:border-[#9f957f] hover:bg-white'
+                          } ${
+                            !hasAnyRealText || selectedPreviewLineIndex == null
+                              ? 'cursor-not-allowed opacity-60'
+                              : ''
+                          }`}
+                        >
+                          <span
+                            className={`block leading-none ${
+                              isScriptFont ? 'text-[1.45rem]' : 'text-[1.03rem]'
+                            }`}
+                            style={{ fontFamily: previewFontFamily }}
+                          >
+                            {font.name}
+                          </span>
+                          <span className="mt-1.5 block text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-[#8190a0]">
+                            {font.category}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <p className="mt-2.5 text-sm text-[#708090]">
+                  {hasAnyRealText
+                    ? 'Fonts and styles stay tied to the active line. Click a different line to restyle it.'
+                    : 'Enter text first, then click a line to style it.'}
+                </p>
               </div>
             </div>
-
-            <p className="mt-2.5 text-sm text-[#708090]">
-              {hasAnyRealText
-                ? 'Fonts and styles stay tied to the active line. Click a different line to restyle it.'
-                : 'Enter text first, then click a line to style it.'}
-            </p>
           </section>
 
           <LivePreviewSection
