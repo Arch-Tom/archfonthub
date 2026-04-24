@@ -1,248 +1,272 @@
-/*
-  Single-screen font rack polish
-  ------------------------------
-  This stylesheet targets the inline font picker that still lives in App.jsx.
-  The goal is the mockup behavior: a compact font rack that stays visible,
-  keeps all fonts exposed at once, and avoids accidentally styling preview lines.
-*/
-
-:root {
-  --font-rack-navy: #18395a;
-  --font-rack-olive: #7c8b66;
-  --font-rack-olive-deep: #63704e;
-  --font-rack-border: #ded5c7;
-  --font-rack-ivory: #fbf8f1;
-  --font-rack-stone: #f1ece3;
+.font-rack {
+  display: flex;
+  min-height: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+  color: #17324d;
 }
 
-/*
-  The preview canvas also contains buttons with font-family styles.
-  Excluding the preview line aria-label keeps this polish focused only on the
-  left-side font chooser.
-*/
-
-/* Let the left-side card breathe instead of clipping the rack. */
-section:has(button:not([aria-label^="Select line"])[style*="font-family"]),
-section:has(button:not([aria-label^="Select line"]) [style*="font-family"]),
-div[class*="overflow-hidden"]:has(button:not([aria-label^="Select line"])[style*="font-family"]),
-div[class*="overflow-hidden"]:has(button:not([aria-label^="Select line"]) [style*="font-family"]) {
-  overflow: visible !important;
+.font-rack__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
 }
 
-/* Category/filter row directly above the font rack. */
-div:has(+ div > button:not([aria-label^="Select line"])[style*="font-family"]),
-div:has(+ div > button:not([aria-label^="Select line"]) [style*="font-family"]) {
-  display: flex !important;
-  flex-wrap: wrap !important;
-  gap: 0.35rem !important;
-  align-items: center !important;
-  margin: 0.25rem 0 0.38rem !important;
+.font-rack__title {
+  margin: 0;
+  color: #18395a;
+  font-size: 1.08rem;
+  font-weight: 700;
+  line-height: 1.25;
 }
 
-div:has(+ div > button:not([aria-label^="Select line"])[style*="font-family"]) > button,
-div:has(+ div > button:not([aria-label^="Select line"]) [style*="font-family"]) > button {
-  min-height: 1.95rem !important;
-  flex: 1 1 4.9rem !important;
-  border-radius: 999px !important;
-  border: 1px solid rgba(222, 213, 199, 0.95) !important;
-  background: rgba(255, 255, 255, 0.74) !important;
-  color: var(--font-rack-navy) !important;
-  font-size: 0.78rem !important;
-  font-weight: 750 !important;
-  line-height: 1 !important;
-  letter-spacing: 0.01em !important;
-  box-shadow: 0 10px 18px -18px rgba(20, 39, 58, 0.36) !important;
+.font-rack__support {
+  margin: 0.25rem 0 0;
+  color: #7b8794;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1.45;
+  text-transform: uppercase;
+}
+
+.font-rack__current-category {
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: #eef1df;
+  color: #6c7343;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  line-height: 1;
+  padding: 0.45rem 0.7rem;
+  text-transform: uppercase;
+}
+
+.font-rack__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+}
+
+.font-rack__filter,
+.font-rack__style {
+  border: 1px solid #ddd5c7;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.78);
+  color: #315171;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 750;
+  line-height: 1;
+  padding: 0.48rem 0.72rem;
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease,
+    color 150ms ease,
+    transform 150ms ease;
+}
+
+.font-rack__filter:hover,
+.font-rack__style:hover {
+  border-color: #a69a82;
+  background: #fff;
+  transform: translateY(-1px);
+}
+
+.font-rack__filter[aria-pressed='true'],
+.font-rack__style[aria-pressed='true'] {
+  border-color: #6c7343;
+  background: #6c7343;
+  color: #fffef8;
+}
+
+.font-rack__current-font {
+  border: 1px solid #ddd5c7;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.58);
+  margin-top: 0.65rem;
+  padding: 0.62rem 0.7rem;
+}
+
+.font-rack__current-summary,
+.font-rack__styles {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.font-rack__styles {
+  margin-top: 0.55rem;
+}
+
+.font-rack__eyebrow {
+  color: #7b8794;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.font-rack__current-name,
+.font-rack__current-style {
+  border-radius: 999px;
+  font-size: 0.82rem;
+  line-height: 1;
+  padding: 0.42rem 0.68rem;
+}
+
+.font-rack__current-name {
+  background: #f3efdf;
+  color: #18395a;
+  font-weight: 800;
+}
+
+.font-rack__current-style {
+  border: 1px solid #d9d1c1;
+  background: #fff;
+  color: #5d6774;
+  font-weight: 700;
+}
+
+.font-rack__body {
+  border: 1px solid #ddd5c7;
+  border-radius: 1.15rem;
+  background: rgba(255, 255, 255, 0.66);
+  margin-top: 0.7rem;
+  max-height: clamp(13rem, 30vh, 21rem);
+  min-height: 10rem;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0.55rem;
+  scrollbar-color: #b9b09f rgba(255, 255, 255, 0.5);
+  scrollbar-width: thin;
+}
+
+.font-rack__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+
+.font-rack__font {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  min-height: 3.1rem;
+  cursor: pointer;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid #ddd5c7;
+  border-radius: 0.72rem;
+  background: linear-gradient(180deg, #fff, #fbf8f1);
+  color: #23415d;
+  padding: 0.52rem 0.55rem;
+  text-align: center;
+  box-shadow:
+    0 10px 18px -18px rgba(20, 39, 58, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.84);
   transition:
     background 150ms ease,
     border-color 150ms ease,
+    box-shadow 150ms ease,
     color 150ms ease,
-    transform 150ms ease,
-    box-shadow 150ms ease !important;
+    transform 150ms ease;
 }
 
-div:has(+ div > button:not([aria-label^="Select line"])[style*="font-family"]) > button:hover,
-div:has(+ div > button:not([aria-label^="Select line"]) [style*="font-family"]) > button:hover {
-  transform: translateY(-1px) !important;
-  border-color: rgba(124, 139, 102, 0.46) !important;
-  background: rgba(255, 255, 255, 0.94) !important;
+.font-rack__font:hover:not(:disabled) {
+  border-color: rgba(124, 139, 102, 0.56);
+  background: linear-gradient(180deg, #fff, #f8f4ec);
+  box-shadow:
+    0 14px 24px -21px rgba(20, 39, 58, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  transform: translateY(-1px);
 }
 
-div:has(+ div > button:not([aria-label^="Select line"])[style*="font-family"]) > button[aria-pressed="true"],
-div:has(+ div > button:not([aria-label^="Select line"])[style*="font-family"]) > button[data-selected="true"],
-div:has(+ div > button:not([aria-label^="Select line"])[style*="font-family"]) > button[data-active="true"],
-div:has(+ div > button:not([aria-label^="Select line"]) [style*="font-family"]) > button[aria-pressed="true"],
-div:has(+ div > button:not([aria-label^="Select line"]) [style*="font-family"]) > button[data-selected="true"],
-div:has(+ div > button:not([aria-label^="Select line"]) [style*="font-family"]) > button[data-active="true"] {
-  border-color: transparent !important;
-  background: var(--font-rack-olive-deep) !important;
-  color: #fffef8 !important;
-  box-shadow: 0 14px 24px -18px rgba(99, 112, 78, 0.62) !important;
+.font-rack__font[aria-pressed='true'] {
+  border-color: rgba(108, 115, 67, 0.82);
+  background: #eef1df;
+  color: #18395a;
+  box-shadow:
+    0 0 0 1px rgba(108, 115, 67, 0.18),
+    0 14px 24px -22px rgba(20, 39, 58, 0.55);
 }
 
-/* The font rack itself: no internal scroller, compact enough to show the full library. */
-div:has(> button:not([aria-label^="Select line"])[style*="font-family"]),
-div:has(> button:not([aria-label^="Select line"]) [style*="font-family"]) {
-  display: grid !important;
-  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-  gap: 0.34rem !important;
-  align-items: stretch !important;
-  max-height: none !important;
-  height: auto !important;
-  overflow: visible !important;
-  overscroll-behavior: auto !important;
-  padding: 0.1rem 0 !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  scrollbar-width: auto !important;
+.font-rack__font[aria-pressed='true']::after {
+  content: "";
+  position: absolute;
+  right: 0.35rem;
+  top: 0.35rem;
+  width: 0.48rem;
+  height: 0.48rem;
+  border-radius: 999px;
+  background: #6c7343;
+  box-shadow: 0 0 0 2px #fffef8;
 }
 
-/* Neutralize old Tailwind scroll/height wrappers if they are still present. */
-div[class*="overflow-y-auto"]:has(button:not([aria-label^="Select line"])[style*="font-family"]),
-div[class*="overflow-y-auto"]:has(button:not([aria-label^="Select line"]) [style*="font-family"]),
-div[class*="max-h"]:has(button:not([aria-label^="Select line"])[style*="font-family"]),
-div[class*="max-h"]:has(button:not([aria-label^="Select line"]) [style*="font-family"]) {
-  max-height: none !important;
-  height: auto !important;
-  overflow: visible !important;
+.font-rack__font:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+  transform: none;
+}
+
+.font-rack__font-preview,
+.font-rack__font-meta {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.font-rack__font-preview {
+  font-size: 1.02rem;
+  line-height: 1;
+}
+
+.font-rack__font-preview--script {
+  font-size: 1.34rem;
+}
+
+.font-rack__font-meta {
+  color: rgba(49, 81, 113, 0.58);
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 0.52rem;
+  font-weight: 850;
+  letter-spacing: 0.14em;
+  line-height: 1;
+  margin-top: 0.34rem;
+  text-transform: uppercase;
+}
+
+.font-rack__helper {
+  color: #708090;
+  flex-shrink: 0;
+  font-size: 0.86rem;
+  line-height: 1.4;
+  margin: 0.55rem 0 0;
+}
+
+@media (min-width: 640px) {
+  .font-rack__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 @media (min-width: 1320px) {
-  div:has(> button:not([aria-label^="Select line"])[style*="font-family"]),
-  div:has(> button:not([aria-label^="Select line"]) [style*="font-family"]) {
-    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-    gap: 0.36rem !important;
+  .font-rack__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
-@media (min-width: 1740px) {
-  div:has(> button:not([aria-label^="Select line"])[style*="font-family"]),
-  div:has(> button:not([aria-label^="Select line"]) [style*="font-family"]) {
-    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+@media (min-height: 860px) {
+  .font-rack__body {
+    max-height: clamp(15rem, 35vh, 25rem);
   }
-}
-
-@media (max-width: 760px) {
-  div:has(> button:not([aria-label^="Select line"])[style*="font-family"]),
-  div:has(> button:not([aria-label^="Select line"]) [style*="font-family"]) {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  }
-}
-
-/* Individual font cards: short, crisp, and preview-forward. */
-div:has(> button:not([aria-label^="Select line"])[style*="font-family"]) > button:not([aria-label^="Select line"])[style*="font-family"],
-div:has(> button:not([aria-label^="Select line"]) [style*="font-family"]) > button:not([aria-label^="Select line"]) {
-  position: relative !important;
-  min-height: 2.05rem !important;
-  width: 100% !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 0.08rem !important;
-  overflow: hidden !important;
-  border-radius: 0.55rem !important;
-  border: 1px solid rgba(222, 213, 199, 0.98) !important;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(251, 248, 241, 0.96)) !important;
-  color: #17324d !important;
-  box-shadow:
-    0 9px 16px -18px rgba(20, 39, 58, 0.36),
-    inset 0 1px 0 rgba(255, 255, 255, 0.86) !important;
-  font-size: clamp(0.76rem, 0.88vw, 0.98rem) !important;
-  line-height: 1 !important;
-  letter-spacing: 0.005em !important;
-  text-align: center !important;
-  white-space: nowrap !important;
-  text-overflow: ellipsis !important;
-  transition:
-    transform 150ms ease,
-    border-color 150ms ease,
-    background 150ms ease,
-    box-shadow 150ms ease,
-    color 150ms ease !important;
-}
-
-/* Keep single-style scripts elegant but prevent them from eating the rack. */
-div:has(> button:not([aria-label^="Select line"])[style*="font-family"]) > button:not([aria-label^="Select line"])[style*="font-family"] > *,
-div:has(> button:not([aria-label^="Select line"]) [style*="font-family"]) > button:not([aria-label^="Select line"]) > * {
-  max-width: calc(100% - 0.35rem) !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  white-space: nowrap !important;
-}
-
-div:has(> button:not([aria-label^="Select line"])[style*="font-family"]) > button:not([aria-label^="Select line"])[style*="font-family"]:hover:not(:disabled),
-div:has(> button:not([aria-label^="Select line"]) [style*="font-family"]) > button:not([aria-label^="Select line"]):hover:not(:disabled) {
-  transform: translateY(-1px) !important;
-  border-color: rgba(124, 139, 102, 0.52) !important;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(248, 244, 236, 0.99)) !important;
-  box-shadow:
-    0 16px 24px -22px rgba(20, 39, 58, 0.48),
-    inset 0 1px 0 rgba(255, 255, 255, 0.96) !important;
-}
-
-/* Active font states, depending on what the JSX exposes. */
-div:has(> button:not([aria-label^="Select line"])[style*="font-family"]) > button:not([aria-label^="Select line"])[style*="font-family"][aria-pressed="true"],
-div:has(> button:not([aria-label^="Select line"])[style*="font-family"]) > button:not([aria-label^="Select line"])[style*="font-family"][data-selected="true"],
-div:has(> button:not([aria-label^="Select line"])[style*="font-family"]) > button:not([aria-label^="Select line"])[style*="font-family"][data-active="true"],
-div:has(> button:not([aria-label^="Select line"]) [style*="font-family"]) > button:not([aria-label^="Select line"])[aria-pressed="true"],
-div:has(> button:not([aria-label^="Select line"]) [style*="font-family"]) > button:not([aria-label^="Select line"])[data-selected="true"],
-div:has(> button:not([aria-label^="Select line"]) [style*="font-family"]) > button:not([aria-label^="Select line"])[data-active="true"] {
-  border-color: rgba(124, 139, 102, 0.74) !important;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(239, 235, 223, 0.98)) !important;
-  color: #112f4e !important;
-  box-shadow:
-    0 0 0 1px rgba(124, 139, 102, 0.18),
-    0 14px 24px -22px rgba(20, 39, 58, 0.58),
-    inset 0 1px 0 rgba(255, 255, 255, 0.96) !important;
-}
-
-div:has(> button:not([aria-label^="Select line"])[style*="font-family"]) > button:not([aria-label^="Select line"])[style*="font-family"][aria-pressed="true"]::after,
-div:has(> button:not([aria-label^="Select line"])[style*="font-family"]) > button:not([aria-label^="Select line"])[style*="font-family"][data-selected="true"]::after,
-div:has(> button:not([aria-label^="Select line"])[style*="font-family"]) > button:not([aria-label^="Select line"])[style*="font-family"][data-active="true"]::after,
-div:has(> button:not([aria-label^="Select line"]) [style*="font-family"]) > button:not([aria-label^="Select line"])[aria-pressed="true"]::after,
-div:has(> button:not([aria-label^="Select line"]) [style*="font-family"]) > button:not([aria-label^="Select line"])[data-selected="true"]::after,
-div:has(> button:not([aria-label^="Select line"]) [style*="font-family"]) > button:not([aria-label^="Select line"])[data-active="true"]::after {
-  content: "✓" !important;
-  position: absolute !important;
-  right: 0.22rem !important;
-  top: 0.18rem !important;
-  display: grid !important;
-  place-items: center !important;
-  width: 0.82rem !important;
-  height: 0.82rem !important;
-  border-radius: 999px !important;
-  background: var(--font-rack-olive) !important;
-  color: #fffef8 !important;
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
-  font-size: 0.55rem !important;
-  font-weight: 900 !important;
-  line-height: 1 !important;
-}
-
-/* Disabled state still reads intentional, not broken. */
-div:has(> button:not([aria-label^="Select line"])[style*="font-family"]) > button:not([aria-label^="Select line"])[style*="font-family"]:disabled,
-div:has(> button:not([aria-label^="Select line"]) [style*="font-family"]) > button:not([aria-label^="Select line"]):disabled {
-  cursor: not-allowed !important;
-  opacity: 0.58 !important;
-  filter: grayscale(0.14) !important;
-  transform: none !important;
-}
-
-/* Helper/style labels inside font cards should not make the card taller. */
-div:has(> button:not([aria-label^="Select line"])[style*="font-family"]) > button:not([aria-label^="Select line"])[style*="font-family"] span:not(:first-child),
-div:has(> button:not([aria-label^="Select line"])[style*="font-family"]) > button:not([aria-label^="Select line"])[style*="font-family"] small,
-div:has(> button:not([aria-label^="Select line"]) [style*="font-family"]) > button:not([aria-label^="Select line"]) span:not(:first-child),
-div:has(> button:not([aria-label^="Select line"]) [style*="font-family"]) > button:not([aria-label^="Select line"]) small {
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
-  font-size: 0.49rem !important;
-  font-weight: 800 !important;
-  letter-spacing: 0.15em !important;
-  line-height: 0.95 !important;
-  text-transform: uppercase !important;
-  color: rgba(49, 81, 113, 0.56) !important;
 }

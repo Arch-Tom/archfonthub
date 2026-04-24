@@ -1,10 +1,10 @@
 ﻿import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import MonogramMaker from './MonogramMaker';
+import FontSelectionPanel from './components/FontSelectionPanel';
 import LivePreviewSection from './components/LivePreviewSection';
 import {
   exportFontFamilyMap,
   fontLibrary,
-  scriptFontsToAdjust,
   styleSortOrder,
 } from './constants/fontConfig';
 import { buildArtworkTextElement, loadCurveFont } from './utils/svgExport';
@@ -1286,135 +1286,27 @@ const App = () => {
                 </div>
               </div>
 
-              <div className="mt-4 flex min-h-0 flex-1 flex-col border-t border-[#e4dccd] pt-4">
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <h2 className="text-[1.08rem] font-semibold text-[#18395a]">
-                      {fontHeading}
-                    </h2>
-                    <p className="mt-1 text-xs font-medium uppercase tracking-[0.16em] text-[#7b8794]">
-                      {fontSupportCopy}
-                    </p>
-                  </div>
-                  <span className="shrink-0 rounded-full bg-[#eef1df] px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-[#6c7343]">
-                    {fontCategoryFilter}
-                  </span>
-                </div>
-
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {CATEGORY_FILTERS.map((filterLabel) => (
-                    <button
-                      key={filterLabel}
-                      type="button"
-                      onClick={() => setFontCategoryFilter(filterLabel)}
-                      className={`rounded-[13px] border px-3.5 py-1.5 text-sm font-semibold transition-colors ${
-                        fontCategoryFilter === filterLabel
-                          ? 'border-[#6c7343] bg-[#6c7343] text-white'
-                          : 'border-[#ddd5c7] bg-white/78 text-[#315171] hover:border-[#a69a82] hover:bg-white'
-                      }`}
-                    >
-                      {filterLabel}
-                    </button>
-                  ))}
-                </div>
-
-                {selectedFontOption && (
-                  <div className="mt-3 rounded-[16px] border border-[#ddd5c7] bg-white/58 px-3 py-2.5">
-                    <div className="flex flex-wrap items-center gap-2 text-[#18395a]">
-                      <span className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-[#7b8794]">
-                        Current Font
-                      </span>
-                      <span className="rounded-full bg-[#f3efdf] px-3 py-1 text-sm font-semibold">
-                        {selectedFontOption.name}
-                      </span>
-                      {selectedStyleLabel && (
-                        <span className="rounded-full border border-[#d9d1c1] bg-white px-3 py-1 text-sm font-medium text-[#5d6774]">
-                          {selectedStyleLabel}
-                        </span>
-                      )}
-                    </div>
-
-                    <div className="mt-2.5 flex flex-wrap gap-2">
-                      {selectedFontStyleKeys.map((styleKey) => {
-                        const isSelected = selectedStyleKey === styleKey;
-
-                        return (
-                          <button
-                            key={`${selectedFontOption.name}-${styleKey}`}
-                            type="button"
-                            onClick={() => handleStyleSelect(styleKey)}
-                            className={`rounded-full border px-3 py-1.5 text-sm font-semibold transition-colors ${
-                              isSelected
-                                ? 'border-[#6c7343] bg-[#6c7343] text-white'
-                                : 'border-[#d9d1c1] bg-white text-[#315171] hover:border-[#a69a82] hover:bg-[#faf8f1]'
-                            }`}
-                          >
-                            {formatStyleLabel(styleKey)}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-
-                <div className="mt-3 min-h-0 flex-1 overflow-hidden rounded-[22px] border border-[#ddd5c7] bg-white/65 p-2.5">
-                  <div className="grid h-full grid-cols-2 gap-2 overflow-y-auto overflow-x-hidden pr-1 sm:grid-cols-3">
-                    {visibleFontOptions.map((font) => {
-                      const previewStyleKey = getDefaultStyleKey(
-                        font.name,
-                        allFonts
-                      );
-                      const previewFontFamily =
-                        font.name === 'Alumni Sans'
-                          ? 'Alumni Sans Regular'
-                          : font.styles[previewStyleKey] ||
-                            font.styles[getSortedStyleKeys(font.styles)[0]];
-                      const isSelected = selectedLineFontName === font.name;
-                      const isScriptFont = scriptFontsToAdjust.includes(
-                        font.name
-                      );
-
-                      return (
-                        <button
-                          key={`${font.category}-${font.name}`}
-                          type="button"
-                          onClick={() => handleFontChipSelect(font.name)}
-                          disabled={
-                            !hasAnyRealText || selectedPreviewLineIndex == null
-                          }
-                          className={`rounded-[15px] border px-3 py-2.5 text-center shadow-[0_12px_26px_-24px_rgba(20,39,58,0.45)] transition-all ${
-                            isSelected
-                              ? 'border-[#6c7343] bg-[#eef1df] text-[#18395a]'
-                              : 'border-[#ddd5c7] bg-white/82 text-[#23415d] hover:-translate-y-0.5 hover:border-[#9f957f] hover:bg-white'
-                          } ${
-                            !hasAnyRealText || selectedPreviewLineIndex == null
-                              ? 'cursor-not-allowed opacity-60'
-                              : ''
-                          }`}
-                        >
-                          <span
-                            className={`block leading-none ${
-                              isScriptFont ? 'text-[1.45rem]' : 'text-[1.03rem]'
-                            }`}
-                            style={{ fontFamily: previewFontFamily }}
-                          >
-                            {font.name}
-                          </span>
-                          <span className="mt-1.5 block text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-[#8190a0]">
-                            {font.category}
-                          </span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                <p className="mt-2.5 text-sm text-[#708090]">
-                  {hasAnyRealText
-                    ? 'Fonts and styles stay tied to the active line. Click a different line to restyle it.'
-                    : 'Enter text first, then click a line to style it.'}
-                </p>
-              </div>
+              <FontSelectionPanel
+                allFonts={allFonts}
+                categoryFilters={CATEGORY_FILTERS}
+                currentCategory={fontCategoryFilter}
+                fontHeading={fontHeading}
+                fontOptions={visibleFontOptions}
+                fontSupportCopy={fontSupportCopy}
+                formatStyleLabel={formatStyleLabel}
+                getDefaultStyleKey={getDefaultStyleKey}
+                getSortedStyleKeys={getSortedStyleKeys}
+                hasAnyRealText={hasAnyRealText}
+                onCategoryChange={setFontCategoryFilter}
+                onFontSelect={handleFontChipSelect}
+                onStyleSelect={handleStyleSelect}
+                selectedFontOption={selectedFontOption}
+                selectedFontStyleKeys={selectedFontStyleKeys}
+                selectedLineFontName={selectedLineFontName}
+                selectedPreviewLineIndex={selectedPreviewLineIndex}
+                selectedStyleKey={selectedStyleKey}
+                selectedStyleLabel={selectedStyleLabel}
+              />
             </div>
           </section>
 
