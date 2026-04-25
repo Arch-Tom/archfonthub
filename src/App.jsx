@@ -276,10 +276,10 @@ const ToolShortcutButton = ({ icon, label, onClick }) => (
   <button
     type="button"
     onClick={onClick}
-    className="flex min-h-[64px] flex-col items-center justify-center rounded-[16px] border border-[#ddd5c5] bg-white/86 px-3 py-2.5 text-center text-[#18395a] shadow-[0_10px_26px_-22px_rgba(20,39,58,0.45)] transition-all hover:-translate-y-0.5 hover:border-[#b4ab92] hover:bg-white"
+    className="flex min-h-[46px] flex-col items-center justify-center rounded-[14px] border border-[#ddd5c5] bg-white/86 px-2.5 py-1.5 text-center text-[#18395a] shadow-[0_10px_26px_-22px_rgba(20,39,58,0.45)] transition-all hover:-translate-y-0.5 hover:border-[#b4ab92] hover:bg-white"
   >
-    <span className="text-[1.25rem] leading-none">{icon}</span>
-    <span className="mt-1.5 text-[0.86rem] font-semibold">{label}</span>
+    <span className="text-[1.06rem] leading-none">{icon}</span>
+    <span className="mt-0.5 text-[0.76rem] font-semibold">{label}</span>
   </button>
 );
 
@@ -1099,22 +1099,6 @@ const App = () => {
     : '';
   const selectedStyleLabel = formatStyleLabel(selectedStyleKey);
 
-  const statusTitle = !hasAnyRealText
-    ? 'Start typing to preview your engraving'
-    : !hasSelectableLine
-    ? 'Select a line to start styling'
-    : selectedLineHasRealText
-    ? `Active line: ${selectedLineReference}`
-    : `${selectedLineNumberLabel} is ready for text`;
-
-  const statusDescription = !hasAnyRealText
-    ? 'Placeholder text stays as an example until you enter your own wording.'
-    : !hasSelectableLine
-    ? 'Click inside the text box or preview to choose which line you want to edit.'
-    : selectedLineHasRealText
-    ? 'Click a different line in the text box or preview to change its font and style.'
-    : 'Type on this line to preview it, or click another line to style different text.';
-
   const fontHeading = !hasAnyRealText
     ? 'Choose a font'
     : selectedLineHasRealText
@@ -1222,14 +1206,10 @@ const App = () => {
                 <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#5e7085]">
                   Custom Text
                 </p>
-                <p className="mt-1.5 text-sm leading-6 text-[#66707d]">
-                  Add one engraving line per row, then choose a font and style
-                  for the active line below.
-                </p>
               </div>
             </div>
 
-            <div className="mt-3 grid grid-cols-2 gap-2.5 sm:grid-cols-4">
+            <div className="mt-2.5 grid grid-cols-2 gap-2 sm:grid-cols-4">
               <ToolShortcutButton
                 icon="אב"
                 label="Hebrew"
@@ -1252,39 +1232,19 @@ const App = () => {
               />
             </div>
 
-            <div className="mt-3 flex min-h-0 flex-1 flex-col">
-              <div className="rounded-[22px] border border-[#d8cfbf] bg-white/84 p-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
-                <textarea
-                  ref={textInputRef}
-                  className="min-h-[148px] w-full resize-none rounded-[18px] border border-[#c9bfad] bg-[#fffdf8] px-4 py-3 text-[1.02rem] leading-[2.2rem] text-[#17324d] shadow-[inset_0_1px_8px_rgba(24,57,90,0.05)] outline-none transition focus:border-[#6c7343] focus:ring-2 focus:ring-[#d8ddc0]"
-                  value={customText}
-                  onChange={handleTextChange}
-                  onClick={handleTextInteraction}
-                  onKeyUp={handleTextInteraction}
-                  onSelect={handleTextInteraction}
-                  onFocus={handleTextInteraction}
-                  placeholder={DEFAULT_TEXT_PLACEHOLDER}
-                  dir="auto"
-                />
-              </div>
-
-              <div className="mt-2.5 px-1 text-[#6f7d89]">
-                <div className="flex items-start gap-2.5">
-                  <span
-                    className={`mt-[0.42rem] h-2 w-2 flex-shrink-0 rounded-full ${
-                      hasAnyRealText ? 'bg-[#798350]' : 'bg-[#b8b39d]'
-                    }`}
-                  />
-                  <div>
-                    <p className="text-[0.88rem] font-semibold text-[#476072]">
-                      {statusTitle}
-                    </p>
-                    <p className="mt-0.5 text-sm leading-5 text-[#788591]">
-                      {statusDescription}
-                    </p>
-                  </div>
-                </div>
-              </div>
+            <div className="mt-2.5 flex min-h-0 flex-1 flex-col">
+              <textarea
+                ref={textInputRef}
+                className="min-h-[148px] w-full resize-none rounded-[20px] border border-[#c9bfad] bg-[#fffdf8] px-4 py-3 text-[1.02rem] leading-[2.2rem] text-[#17324d] shadow-[inset_0_1px_8px_rgba(24,57,90,0.05),0_10px_24px_-24px_rgba(20,39,58,0.45)] outline-none transition focus:border-[#6c7343] focus:ring-2 focus:ring-[#d8ddc0]"
+                value={customText}
+                onChange={handleTextChange}
+                onClick={handleTextInteraction}
+                onKeyUp={handleTextInteraction}
+                onSelect={handleTextInteraction}
+                onFocus={handleTextInteraction}
+                placeholder={DEFAULT_TEXT_PLACEHOLDER}
+                dir="auto"
+              />
 
               <FontSelectionPanel
                 allFonts={allFonts}

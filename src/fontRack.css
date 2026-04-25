@@ -3,8 +3,8 @@
   min-height: 0;
   flex: 0 1 auto;
   flex-direction: column;
-  margin-top: 0.64rem;
-  padding-top: 0.64rem;
+  margin-top: 0.52rem;
+  padding-top: 0.52rem;
   color: #17324d;
 }
 
@@ -24,7 +24,7 @@
 }
 
 .font-rack__support {
-  margin: 0.14rem 0 0;
+  margin: 0.1rem 0 0;
   color: #7b8794;
   font-size: 0.62rem;
   font-weight: 700;
@@ -42,7 +42,7 @@
   font-weight: 800;
   letter-spacing: 0.1em;
   line-height: 1;
-  padding: 0.34rem 0.56rem;
+  padding: 0.3rem 0.52rem;
   text-transform: uppercase;
 }
 
@@ -50,7 +50,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.24rem;
-  margin-top: 0.42rem;
+  margin-top: 0.34rem;
 }
 
 .font-rack__filter,
@@ -63,7 +63,7 @@
   font-size: 0.69rem;
   font-weight: 750;
   line-height: 1;
-  padding: 0.33rem 0.5rem;
+  padding: 0.3rem 0.48rem;
   transition:
     background-color 150ms ease,
     border-color 150ms ease,
@@ -89,8 +89,8 @@
   border: 1px solid #ddd5c7;
   border-radius: 0.86rem;
   background: rgba(255, 255, 255, 0.58);
-  margin-top: 0.42rem;
-  padding: 0.4rem 0.5rem;
+  margin-top: 0.34rem;
+  padding: 0.34rem 0.46rem;
 }
 
 .font-rack__current-summary,
@@ -102,7 +102,7 @@
 }
 
 .font-rack__styles {
-  margin-top: 0.4rem;
+  margin-top: 0.34rem;
 }
 
 .font-rack__eyebrow {
@@ -118,7 +118,7 @@
   border-radius: 999px;
   font-size: 0.72rem;
   line-height: 1;
-  padding: 0.32rem 0.52rem;
+  padding: 0.3rem 0.5rem;
 }
 
 .font-rack__current-name {
@@ -138,12 +138,12 @@
   border: 1px solid #ddd5c7;
   border-radius: 0.96rem;
   background: rgba(255, 255, 255, 0.66);
-  margin-top: 0.42rem;
+  margin-top: 0.34rem;
   max-height: none;
   min-height: 0;
   overflow-x: hidden;
   overflow-y: visible;
-  padding: 0.3rem;
+  padding: 0.28rem;
 }
 
 .font-rack__grid {
@@ -245,14 +245,6 @@
   text-transform: uppercase;
 }
 
-.font-rack__helper {
-  color: #708090;
-  flex-shrink: 0;
-  font-size: 0.7rem;
-  line-height: 1.24;
-  margin: 0.32rem 0 0;
-}
-
 @media (min-width: 640px) {
   .font-rack__grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -262,15 +254,5 @@
 @media (min-width: 880px) {
   .font-rack__grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 879px) {
-  .font-rack__body {
-    max-height: clamp(13rem, 44vh, 22rem);
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    scrollbar-color: #b9b09f rgba(255, 255, 255, 0.5);
-    scrollbar-width: thin;
   }
 }

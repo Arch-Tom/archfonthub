@@ -24,7 +24,7 @@ const FontSelectionPanel = ({
   const canChooseFont = hasAnyRealText && selectedPreviewLineIndex != null;
 
   return (
-    <div className="font-rack mt-4 border-t border-[#e4dccd] pt-4">
+    <div className="font-rack mt-3 border-t border-[#e4dccd] pt-3">
       <div className="font-rack__header">
         <div className="min-w-0">
           <h2 className="font-rack__title">{fontHeading}</h2>
@@ -117,11 +117,6 @@ const FontSelectionPanel = ({
         </div>
       </div>
 
-      <p className="font-rack__helper">
-        {hasAnyRealText
-          ? 'Fonts and styles stay tied to the active line. Click a different line to restyle it.'
-          : 'Enter text first, then click a line to style it.'}
-      </p>
     </div>
   );
 };
