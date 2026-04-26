@@ -1126,8 +1126,6 @@ const App = () => {
     null;
 
   const hasAnyRealText = populatedPreviewLines.length > 0;
-  const hasSelectableLine =
-    selectedPreviewLine != null && selectedPreviewLine.lineIndex != null;
   const selectedLineText = selectedPreviewLine?.text || '';
   const selectedLineHasRealText = selectedLineText.trim() !== '';
   const selectedLineNumberLabel =
@@ -1188,7 +1186,7 @@ const App = () => {
         </div>
       )}
 
-      <main className="mx-auto flex min-h-screen max-w-[1560px] flex-col px-4 py-3 lg:px-6 xl:h-screen xl:min-h-0 xl:overflow-hidden">
+      <main className="mx-auto flex min-h-screen max-w-[1720px] flex-col px-4 py-3 lg:px-6 xl:h-screen xl:min-h-0 xl:overflow-hidden">
         <header className="shrink-0 rounded-[28px] border border-[#dfd6c7] bg-[rgba(251,248,241,0.92)] px-4 py-4 shadow-[0_18px_44px_-34px_rgba(20,39,58,0.35)] backdrop-blur lg:px-5">
           <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
             <div className="flex flex-col gap-4 md:flex-row md:items-center">
