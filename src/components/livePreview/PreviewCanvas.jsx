@@ -28,14 +28,14 @@ const PreviewCanvas = ({
 
   if (!hasLines) {
     return (
-      <div className="relative flex h-full min-h-[360px] flex-col items-center justify-center overflow-hidden rounded-[22px] border border-[#e6ddcf] bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.98),rgba(248,243,234,0.98)_58%,rgba(243,237,227,0.98))] px-6 text-center shadow-[inset_0_1px_12px_rgba(24,57,90,0.04)] xl:min-h-0">
+      <div className="relative flex h-full min-h-[360px] flex-col items-center justify-center overflow-hidden rounded-[22px] border border-[#DDE5EA] bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.98),rgba(251,251,250,0.98)_58%,rgba(238,246,251,0.98))] px-6 text-center shadow-[inset_0_1px_12px_rgba(24,57,90,0.04)] xl:min-h-0">
         <div className="pointer-events-none absolute inset-0 opacity-55">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.95),transparent_40%),radial-gradient(circle_at_bottom_right,rgba(227,219,204,0.35),transparent_42%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.95),transparent_40%),radial-gradient(circle_at_bottom_right,rgba(199,211,218,0.34),transparent_42%)]" />
         </div>
 
         <div className="relative">
           <svg
-            className="mx-auto mb-3 h-11 w-11 text-[#b7b1a4]"
+            className="mx-auto mb-3 h-11 w-11 text-[#9FB2BF]"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -47,10 +47,10 @@ const PreviewCanvas = ({
               d="M4 6h16M4 12h16M4 18h7"
             />
           </svg>
-          <p className="text-lg font-semibold text-[#576272]">
+          <p className="text-lg font-semibold text-[#315171]">
             Your preview will appear here
           </p>
-          <p className="mt-1 max-w-md text-sm leading-6 text-[#7d8793]">
+          <p className="mt-1 max-w-md text-sm leading-6 text-[#6E7A86]">
             Start typing on the left to preview your engraving. Placeholder
             examples stay non-editable until you enter real text.
           </p>
@@ -60,11 +60,11 @@ const PreviewCanvas = ({
   }
 
   return (
-    <div className="relative flex h-full min-h-[390px] items-center justify-center overflow-hidden rounded-[22px] border border-[#e6ddcf] bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.985),rgba(250,247,241,0.985)_55%,rgba(244,238,228,0.985))] px-5 py-8 shadow-[inset_0_1px_12px_rgba(24,57,90,0.045)] lg:px-7 xl:min-h-0">
+    <div className="relative flex h-full min-h-[390px] items-center justify-center overflow-hidden rounded-[22px] border border-[#DDE5EA] bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.985),rgba(251,251,250,0.985)_55%,rgba(238,246,251,0.985))] px-5 py-8 shadow-[inset_0_1px_12px_rgba(24,57,90,0.045)] lg:px-7 xl:min-h-0">
       <div className="pointer-events-none absolute inset-0 opacity-70">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.96),transparent_38%),radial-gradient(circle_at_bottom_right,rgba(227,219,204,0.38),transparent_42%)]" />
-        <div className="absolute inset-x-8 top-6 h-px bg-gradient-to-r from-transparent via-[#e9dfcf] to-transparent" />
-        <div className="absolute inset-x-8 bottom-6 h-px bg-gradient-to-r from-transparent via-[#e9dfcf] to-transparent" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.96),transparent_38%),radial-gradient(circle_at_bottom_right,rgba(199,211,218,0.38),transparent_42%)]" />
+        <div className="absolute inset-x-8 top-6 h-px bg-gradient-to-r from-transparent via-[#C7D3DA] to-transparent" />
+        <div className="absolute inset-x-8 bottom-6 h-px bg-gradient-to-r from-transparent via-[#C7D3DA] to-transparent" />
       </div>
 
       <div
@@ -91,7 +91,7 @@ const PreviewCanvas = ({
               onClick={() => onLineSelect?.(line.lineIndex)}
               aria-label={`Select line ${displayIndex + 1} for editing`}
               aria-pressed={isSelected}
-              className={`group max-w-full bg-transparent py-0 text-inherit transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[#9ba96c]/50 ${
+              className={`group max-w-full bg-transparent py-0 text-inherit transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0877B9]/45 ${
                 textAlign === 'right'
                   ? 'self-end'
                   : textAlign === 'left'
@@ -101,9 +101,9 @@ const PreviewCanvas = ({
               style={{ marginBottom: `${gapAfter}px` }}
             >
               <span
-                className={`inline-block max-w-full whitespace-pre-wrap break-words rounded-[24px] px-[0.3em] py-[0.1em] text-[#123a63] transition-all duration-150 ${
+                className={`inline-block max-w-full whitespace-pre-wrap break-words rounded-[24px] px-[0.3em] py-[0.1em] text-[#17324D] transition-all duration-150 ${
                   isSelected
-                    ? 'bg-white/68 shadow-[0_0_0_1px_rgba(255,255,255,0.96),0_22px_34px_-28px_rgba(18,58,99,0.68)]'
+                    ? 'bg-[#FFFFFF]/70 shadow-[0_0_0_1px_rgba(255,255,255,0.96),0_22px_34px_-28px_rgba(20,39,58,0.62)]'
                     : 'group-hover:bg-white/34'
                 }`}
                 style={{

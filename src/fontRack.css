@@ -5,7 +5,7 @@
   flex-direction: column;
   margin-top: 0.52rem;
   padding-top: 0.52rem;
-  color: #17324d;
+  color: #17324D;
 }
 
 .font-rack__header {
@@ -25,7 +25,7 @@
 
 .font-rack__title {
   margin: 0;
-  color: #18395a;
+  color: #17324D;
   font-size: 1rem;
   font-weight: 700;
   line-height: 1.2;
@@ -33,7 +33,7 @@
 
 .font-rack__support {
   margin: 0.1rem 0 0;
-  color: #7b8794;
+  color: #6E7A86;
   font-size: 0.62rem;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -44,8 +44,8 @@
 .font-rack__current-category {
   flex-shrink: 0;
   border-radius: 999px;
-  background: #eef1df;
-  color: #6c7343;
+  background: #DFF3EA;
+  color: #277E5A;
   font-size: 0.68rem;
   font-weight: 800;
   letter-spacing: 0.1em;
@@ -58,9 +58,9 @@
   display: inline-flex;
   align-items: center;
   gap: 0.32rem;
-  border: 1px solid #c8bfae;
+  border: 1px solid #C7D3DA;
   border-radius: 999px;
-  background: #fffef8;
+  background: #FFFFFF;
   color: #315171;
   cursor: pointer;
   font-size: 0.68rem;
@@ -77,15 +77,15 @@
 }
 
 .font-rack__focus-toggle:hover {
-  border-color: #a69a82;
-  background: #fff;
+  border-color: #9FB2BF;
+  background: #FFFFFF;
   transform: translateY(-1px);
 }
 
 .font-rack__focus-toggle[aria-pressed='true'] {
-  border-color: #6c7343;
-  background: #eef1df;
-  color: #596236;
+  border-color: #35A978;
+  background: #DFF3EA;
+  color: #277E5A;
 }
 
 .font-rack__filters {
@@ -97,9 +97,9 @@
 
 .font-rack__filter,
 .font-rack__style {
-  border: 1px solid #ddd5c7;
+  border: 1px solid #C7D3DA;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.78);
+  background: rgba(255, 255, 255, 0.82);
   color: #315171;
   cursor: pointer;
   font-size: 0.69rem;
@@ -115,22 +115,22 @@
 
 .font-rack__filter:hover,
 .font-rack__style:hover {
-  border-color: #a69a82;
-  background: #fff;
+  border-color: #9FB2BF;
+  background: #FFFFFF;
   transform: translateY(-1px);
 }
 
 .font-rack__filter[aria-pressed='true'],
 .font-rack__style[aria-pressed='true'] {
-  border-color: #6c7343;
-  background: #6c7343;
-  color: #fffef8;
+  border-color: #0877B9;
+  background: #0877B9;
+  color: #FFFFFF;
 }
 
 .font-rack__current-font {
-  border: 1px solid #ddd5c7;
+  border: 1px solid #C7D3DA;
   border-radius: 0.86rem;
-  background: rgba(255, 255, 255, 0.58);
+  background: rgba(255, 255, 255, 0.62);
   margin-top: 0.34rem;
   padding: 0.34rem 0.46rem;
 }
@@ -148,7 +148,7 @@
 }
 
 .font-rack__eyebrow {
-  color: #7b8794;
+  color: #6E7A86;
   font-size: 0.58rem;
   font-weight: 800;
   letter-spacing: 0.12em;
@@ -164,15 +164,15 @@
 }
 
 .font-rack__current-name {
-  background: #f3efdf;
-  color: #18395a;
+  background: #DDF0FA;
+  color: #17324D;
   font-weight: 800;
 }
 
 .font-rack__current-style {
-  border: 1px solid #d9d1c1;
-  background: #fff;
-  color: #5d6774;
+  border: 1px solid #DDE5EA;
+  background: #FFFFFF;
+  color: #6E7A86;
   font-weight: 700;
 }
 
@@ -204,10 +204,10 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  border: 1px solid #ddd5c7;
+  border: 1px solid #C7D3DA;
   border-radius: 0.52rem;
-  background: linear-gradient(180deg, #fff, #fbf8f1);
-  color: #23415d;
+  background: linear-gradient(180deg, #FFFFFF, #FBFBFA);
+  color: #17324D;
   padding: 0.23rem 0.3rem;
   text-align: center;
   box-shadow:
@@ -222,8 +222,8 @@
 }
 
 .font-rack__font:hover:not(:disabled) {
-  border-color: rgba(124, 139, 102, 0.56);
-  background: linear-gradient(180deg, #fff, #f8f4ec);
+  border-color: rgba(159, 178, 191, 0.78);
+  background: linear-gradient(180deg, #FFFFFF, #DDF0FA);
   box-shadow:
     0 14px 24px -21px rgba(20, 39, 58, 0.5),
     inset 0 1px 0 rgba(255, 255, 255, 0.95);
@@ -231,11 +231,11 @@
 }
 
 .font-rack__font[aria-pressed='true'] {
-  border-color: rgba(108, 115, 67, 0.82);
-  background: #eef1df;
-  color: #18395a;
+  border-color: rgba(8, 119, 185, 0.78);
+  background: #DDF0FA;
+  color: #17324D;
   box-shadow:
-    0 0 0 1px rgba(108, 115, 67, 0.18),
+    0 0 0 1px rgba(8, 119, 185, 0.18),
     0 14px 24px -22px rgba(20, 39, 58, 0.55);
 }
 
@@ -247,8 +247,8 @@
   width: 0.34rem;
   height: 0.34rem;
   border-radius: 999px;
-  background: #6c7343;
-  box-shadow: 0 0 0 2px #fffef8;
+  background: #0877B9;
+  box-shadow: 0 0 0 2px #FFFFFF;
 }
 
 .font-rack__font:disabled {
@@ -276,7 +276,7 @@
 }
 
 .font-rack__font-meta {
-  color: rgba(49, 81, 113, 0.58);
+  color: rgba(49, 81, 113, 0.62);
   display: none;
   font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-size: 0.4rem;
@@ -318,9 +318,9 @@
 }
 
 .font-rack--focus .font-rack__body {
-  border: 1px solid #ddd5c7;
+  border: 1px solid #C7D3DA;
   border-radius: 0.96rem;
-  background: rgba(255, 255, 255, 0.66);
+  background: rgba(255, 255, 255, 0.7);
   flex: 1 1 auto;
   margin-top: 0.54rem;
   overflow-x: hidden;

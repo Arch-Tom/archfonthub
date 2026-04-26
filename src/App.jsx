@@ -1,4 +1,4 @@
-﻿import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
+import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import MonogramMaker from './MonogramMaker';
 import FontSelectionPanel from './components/FontSelectionPanel';
 import LivePreviewSection from './components/LivePreviewSection';
@@ -21,12 +21,12 @@ const FormInput = ({
   <div>
     <label
       htmlFor={id}
-      className="mb-1 block text-sm font-medium text-slate-700"
+      className="mb-1 block text-sm font-medium text-[#315171]"
     >
       {label}
-      {required && <span className="ml-1 text-red-500">*</span>}
+      {required && <span className="ml-1 text-[#0877B9]">*</span>}
       {isOptional && (
-        <span className="ml-1 text-xs text-slate-500">(Optional)</span>
+        <span className="ml-1 text-xs text-[#6E7A86]">(Optional)</span>
       )}
     </label>
     <input
@@ -36,10 +36,10 @@ const FormInput = ({
       onChange={onChange}
       required={required}
       disabled={disabled}
-      className={`w-full rounded-xl border px-3 py-2 text-base shadow-sm focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+      className={`w-full rounded-xl border bg-white px-3 py-2 text-base text-[#17212B] shadow-sm focus:border-[#0877B9] focus:outline-none focus:ring-2 focus:ring-[#DDF0FA] ${
         disabled
-          ? 'cursor-not-allowed bg-slate-100 text-slate-500'
-          : 'border-slate-300'
+          ? 'cursor-not-allowed border-[#DDE5EA] bg-[#EEF6FB] text-[#6E7A86]'
+          : 'border-[#C7D3DA]'
       }`}
     />
   </div>
@@ -328,7 +328,7 @@ const ToolShortcutButton = ({ icon, label, onClick }) => (
   <button
     type="button"
     onClick={onClick}
-    className="flex min-h-[46px] flex-col items-center justify-center rounded-[14px] border border-[#ddd5c5] bg-white/86 px-2.5 py-1.5 text-center text-[#18395a] shadow-[0_10px_26px_-22px_rgba(20,39,58,0.45)] transition-all hover:-translate-y-0.5 hover:border-[#b4ab92] hover:bg-white"
+    className="flex min-h-[46px] flex-col items-center justify-center rounded-[14px] border border-[#C7D3DA] bg-[#FFFFFF]/90 px-2.5 py-1.5 text-center text-[#17324D] shadow-[0_10px_26px_-22px_rgba(20,39,58,0.42)] transition-all hover:-translate-y-0.5 hover:border-[#9FB2BF] hover:bg-[#FFFFFF]"
   >
     <span className="text-[1.06rem] leading-none">{icon}</span>
     <span className="mt-0.5 text-[0.76rem] font-semibold">{label}</span>
@@ -1169,17 +1169,17 @@ const App = () => {
     : 'Share any special requests, font preferences, or placement notes.';
 
   return (
-    <div className="min-h-screen bg-[#f6f1e7] font-sans text-[#17324d] xl:h-screen xl:overflow-hidden">
+    <div className="min-h-screen bg-[#EAF6FC] font-sans text-[#17212B] xl:h-screen xl:overflow-hidden">
       {isSubmissionComplete && (
-        <div className="fixed inset-0 z-30 flex items-center justify-center bg-[#f6f1e7]/95">
-          <div className="rounded-[28px] border border-[#ded5c6] bg-[#fcfaf4] px-10 py-12 text-center shadow-[0_28px_80px_-48px_rgba(20,39,58,0.45)]">
+        <div className="fixed inset-0 z-30 flex items-center justify-center bg-[#EAF6FC]/95">
+          <div className="rounded-[28px] border border-[#C7D3DA] bg-[#FFFFFF] px-10 py-12 text-center shadow-[0_28px_80px_-48px_rgba(20,39,58,0.42)]">
             <h2
-              className="text-4xl font-bold text-[#18395a]"
+              className="text-4xl font-bold text-[#17324D]"
               style={{ fontFamily: 'Alumni Sans Regular' }}
             >
               Submission Complete
             </h2>
-            <p className="mt-4 text-lg text-[#5d6774]">
+            <p className="mt-4 text-lg text-[#6E7A86]">
               Thank you for your submission. You may now close this window.
             </p>
           </div>
@@ -1187,7 +1187,7 @@ const App = () => {
       )}
 
       <main className="mx-auto flex min-h-screen max-w-[1720px] flex-col px-4 py-3 lg:px-6 xl:h-screen xl:min-h-0 xl:overflow-hidden">
-        <header className="shrink-0 rounded-[28px] border border-[#dfd6c7] bg-[rgba(251,248,241,0.92)] px-4 py-4 shadow-[0_18px_44px_-34px_rgba(20,39,58,0.35)] backdrop-blur lg:px-5">
+        <header className="shrink-0 rounded-[28px] border border-[#C7D3DA] bg-[rgba(255,255,255,0.94)] px-4 py-4 shadow-[0_18px_44px_-34px_rgba(20,39,58,0.32)] backdrop-blur lg:px-5">
           <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
             <div className="flex flex-col gap-4 md:flex-row md:items-center">
               <img
@@ -1195,15 +1195,15 @@ const App = () => {
                 alt="Arch Engraving Logo"
                 className="h-12 w-auto md:h-14"
               />
-              <div className="hidden h-12 w-px bg-[#d8d0c1] md:block" />
+              <div className="hidden h-12 w-px bg-[#C7D3DA] md:block" />
               <div>
                 <h1
-                  className="text-[1.85rem] leading-none text-[#18395a] sm:text-[2.25rem]"
+                  className="text-[1.85rem] leading-none text-[#17324D] sm:text-[2.25rem]"
                   style={{ fontFamily: 'Alumni Sans Regular' }}
                 >
                   Arch Engraving Font Selection
                 </h1>
-                <p className="mt-1.5 max-w-3xl text-[0.95rem] text-[#5f6875]">
+                <p className="mt-1.5 max-w-3xl text-[0.95rem] text-[#6E7A86]">
                   Preview your fonts, fine-tune your layout, and submit your
                   selection.
                 </p>
@@ -1215,7 +1215,7 @@ const App = () => {
                 onClick={handleSubmitClick}
                 type="button"
                 disabled={isSubmitting || !hasReadySubmission}
-                className="inline-flex items-center gap-3 rounded-[16px] bg-[#6c7343] px-5 py-3 text-[0.98rem] font-semibold text-white shadow-[0_18px_28px_-20px_rgba(108,115,67,0.8)] transition-all hover:bg-[#5f673b] disabled:cursor-not-allowed disabled:opacity-55"
+                className="inline-flex items-center gap-3 rounded-[16px] bg-[#0877B9] px-5 py-3 text-[0.98rem] font-semibold text-white shadow-[0_18px_28px_-20px_rgba(8,119,185,0.62)] transition-all hover:bg-[#0A86CF] disabled:cursor-not-allowed disabled:opacity-55"
               >
                 <svg
                   width="18"
@@ -1243,7 +1243,7 @@ const App = () => {
                   {isSubmitting ? 'Submitting...' : 'Review & Submit'}
                 </span>
               </button>
-              <p className="text-sm text-[#6b7480]">
+              <p className="text-sm text-[#6E7A86]">
                 We&apos;ll email a proof soon.
               </p>
             </div>
@@ -1257,11 +1257,11 @@ const App = () => {
               : 'xl:grid-cols-[minmax(450px,540px)_minmax(0,1fr)]'
           }`}
         >
-          <section className="flex min-h-0 flex-col overflow-hidden rounded-[28px] border border-[#dfd6c7] bg-[rgba(251,248,241,0.94)] p-4 shadow-[0_20px_52px_-36px_rgba(20,39,58,0.35)]">
+          <section className="flex min-h-0 flex-col overflow-hidden rounded-[28px] border border-[#C7D3DA] bg-[rgba(255,255,255,0.94)] p-4 shadow-[0_20px_52px_-36px_rgba(20,39,58,0.32)]">
             {!isFontFocusMode && (
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#5e7085]">
+                  <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#6E7A86]">
                     Custom Text
                   </p>
                 </div>
@@ -1297,7 +1297,7 @@ const App = () => {
               {!isFontFocusMode && (
                 <textarea
                   ref={textInputRef}
-                  className="min-h-[148px] w-full resize-none rounded-[20px] border border-[#c9bfad] bg-[#fffdf8] px-4 py-3 text-[1.02rem] leading-[2.2rem] text-[#17324d] shadow-[inset_0_1px_8px_rgba(24,57,90,0.05),0_10px_24px_-24px_rgba(20,39,58,0.45)] outline-none transition focus:border-[#6c7343] focus:ring-2 focus:ring-[#d8ddc0]"
+                  className="min-h-[148px] w-full resize-none rounded-[20px] border border-[#C7D3DA] bg-[#FFFFFF] px-4 py-3 text-[1.02rem] leading-[2.2rem] text-[#17324D] shadow-[inset_0_1px_8px_rgba(24,57,90,0.045),0_10px_24px_-24px_rgba(20,39,58,0.42)] outline-none transition focus:border-[#0877B9] focus:ring-2 focus:ring-[#DDF0FA]"
                   value={customText}
                   onChange={handleTextChange}
                   onClick={handleTextInteraction}
@@ -1356,7 +1356,7 @@ const App = () => {
           />
         </div>
 
-        <section className="mt-3 shrink-0 rounded-[24px] border border-[#dfd6c7] bg-[rgba(251,248,241,0.88)] px-4 py-3 shadow-[0_18px_40px_-34px_rgba(20,39,58,0.35)]">
+        <section className="mt-3 shrink-0 rounded-[24px] border border-[#C7D3DA] bg-[rgba(255,255,255,0.9)] px-4 py-3 shadow-[0_18px_40px_-34px_rgba(20,39,58,0.32)]">
           <button
             type="button"
             onClick={() => setIsNotesOpen((prev) => !prev)}
@@ -1387,12 +1387,12 @@ const App = () => {
                     strokeLinejoin="round"
                   />
                 </svg>
-                <p className="text-[1rem] font-semibold text-[#18395a]">
+                <p className="text-[1rem] font-semibold text-[#17324D]">
                   Notes for Designer
                 </p>
-                <span className="text-sm text-[#7c8794]">(Optional)</span>
+                <span className="text-sm text-[#6E7A86]">(Optional)</span>
               </div>
-              <p className="mt-1.5 text-sm text-[#6f7a86]">
+              <p className="mt-1.5 text-sm text-[#6E7A86]">
                 {notesPreviewText}
               </p>
             </div>
@@ -1419,7 +1419,7 @@ const App = () => {
 
           {isNotesOpen && (
             <textarea
-              className="mt-3 min-h-[104px] w-full rounded-[20px] border border-[#d5cbbb] bg-white/82 px-4 py-3 text-[1rem] text-[#17324d] shadow-[inset_0_1px_8px_rgba(24,57,90,0.05)] outline-none transition focus:border-[#6c7343] focus:ring-2 focus:ring-[#d8ddc0]"
+              className="mt-3 min-h-[104px] w-full rounded-[20px] border border-[#C7D3DA] bg-[#FFFFFF]/90 px-4 py-3 text-[1rem] text-[#17324D] shadow-[inset_0_1px_8px_rgba(24,57,90,0.045)] outline-none transition focus:border-[#0877B9] focus:ring-2 focus:ring-[#DDF0FA]"
               value={customerNotes}
               onChange={(e) => setCustomerNotes(e.target.value)}
               placeholder="Share any special requests, font preferences, or placement notes."
@@ -1434,8 +1434,8 @@ const App = () => {
         showAccentPalette ||
         showHebrewPalette ||
         showSuccessModal) && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900 bg-opacity-75 p-4 transition-opacity animate-fade-in">
-          <div className="w-full max-w-4xl animate-jump-in rounded-2xl bg-white p-8 shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#17212B]/76 p-4 transition-opacity animate-fade-in">
+          <div className="w-full max-w-4xl animate-jump-in rounded-2xl border border-[#C7D3DA] bg-white p-8 shadow-2xl">
             {showSuccessModal && (
               <div className="mx-auto flex max-w-lg flex-col items-center text-center">
                 <img
@@ -1443,15 +1443,15 @@ const App = () => {
                   alt="Arch Engraving Logo"
                   className="mb-6 h-95 w-95"
                 />
-                <h3 className="mb-2 text-3xl font-bold text-slate-800">
+                <h3 className="mb-2 text-3xl font-bold text-[#17324D]">
                   Submission Successful!
                 </h3>
-                <p className="mb-8 text-lg text-slate-600">
+                <p className="mb-8 text-lg text-[#6E7A86]">
                   We Appreciate Your Business!
                 </p>
                 <button
                   onClick={() => setShowSuccessModal(false)}
-                  className="rounded-xl bg-blue-600 px-12 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-blue-700"
+                  className="rounded-xl bg-[#0877B9] px-12 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-[#0A86CF]"
                   type="button"
                 >
                   Done
@@ -1461,10 +1461,10 @@ const App = () => {
 
             {showHebrewPalette && (
               <div className="space-y-4">
-                <h3 className="text-2xl font-bold text-slate-900">
+                <h3 className="text-2xl font-bold text-[#17324D]">
                   Hebrew Keyboard
                 </h3>
-                <p className="pb-2 text-slate-600">
+                <p className="pb-2 text-[#6E7A86]">
                   Please use the virtual keyboard below to compose your Hebrew
                   text. When finished, click the &apos;Insert Text&apos; button.
                   Your text will be added to the main input area, allowing you
@@ -1473,12 +1473,12 @@ const App = () => {
 
                 <div className="pt-2">
                   <div className="mb-2 flex items-center justify-between">
-                    <label className="block text-sm font-medium text-slate-700">
+                    <label className="block text-sm font-medium text-[#315171]">
                       Preview
                     </label>
                     <button
                       onClick={() => setHebrewPaletteText('')}
-                      className="rounded-md bg-red-100 px-3 py-1 text-sm font-semibold text-red-700 hover:bg-red-200"
+                      className="rounded-md bg-[#EEF6FB] px-3 py-1 text-sm font-semibold text-[#075987] hover:bg-[#DDF0FA]"
                       type="button"
                     >
                       Clear
@@ -1487,14 +1487,14 @@ const App = () => {
 
                   <textarea
                     readOnly
-                    className="min-h-[100px] w-full cursor-default rounded-xl border-2 border-slate-200 bg-slate-50 p-3 text-2xl shadow-inner"
+                    className="min-h-[100px] w-full cursor-default rounded-xl border-2 border-[#C7D3DA] bg-[#F4F9FC] p-3 text-2xl text-[#17324D] shadow-inner"
                     value={hebrewPaletteText}
                     dir="rtl"
                     style={{ fontFamily: 'Noto Rashi Hebrew Regular' }}
                   />
                 </div>
 
-                <div className="space-y-2 rounded-xl bg-slate-200 p-3 select-none">
+                <div className="space-y-2 rounded-xl border border-[#DDE5EA] bg-[#EEF6FB] p-3 select-none">
                   {hebrewKeyboardLayout.map((row, rowIndex) => (
                     <div key={rowIndex} className="flex justify-center gap-1.5">
                       {row.map((key, keyIndex) => {
@@ -1512,7 +1512,7 @@ const App = () => {
                               setHebrewPaletteText((prev) => prev + char);
                               setIsShifted(false);
                             }}
-                            className="flex h-12 flex-1 items-center justify-center rounded-lg bg-white text-xl font-semibold text-slate-800 shadow-sm transition-colors hover:bg-blue-100"
+                            className="flex h-12 flex-1 items-center justify-center rounded-lg border border-[#DDE5EA] bg-white text-xl font-semibold text-[#17324D] shadow-sm transition-colors hover:bg-[#DDF0FA]"
                             type="button"
                           >
                             {char}
@@ -1525,10 +1525,10 @@ const App = () => {
                   <div className="flex justify-center gap-1.5">
                     <button
                       onClick={() => setIsShifted((prev) => !prev)}
-                      className={`flex h-12 w-24 items-center justify-center rounded-lg text-lg font-semibold text-slate-800 shadow-sm transition-colors ${
+                      className={`flex h-12 w-24 items-center justify-center rounded-lg text-lg font-semibold shadow-sm transition-colors ${
                         isShifted
-                          ? 'bg-blue-500 text-white'
-                          : 'bg-white hover:bg-blue-100'
+                          ? 'bg-[#0877B9] text-white'
+                          : 'border border-[#DDE5EA] bg-white text-[#17324D] hover:bg-[#DDF0FA]'
                       }`}
                       type="button"
                     >
@@ -1538,14 +1538,14 @@ const App = () => {
                       onClick={() =>
                         setHebrewPaletteText((prev) => prev + ' ')
                       }
-                      className="flex h-12 flex-1 items-center justify-center rounded-lg bg-white text-xl font-semibold text-slate-800 shadow-sm transition-colors hover:bg-blue-100"
+                      className="flex h-12 flex-1 items-center justify-center rounded-lg border border-[#DDE5EA] bg-white text-xl font-semibold text-[#17324D] shadow-sm transition-colors hover:bg-[#DDF0FA]"
                       type="button"
                     >
                       Space
                     </button>
                     <button
                       onClick={handleHebrewBackspace}
-                      className="flex h-12 w-24 items-center justify-center rounded-lg bg-white text-lg font-semibold text-slate-800 shadow-sm transition-colors hover:bg-blue-100"
+                      className="flex h-12 w-24 items-center justify-center rounded-lg border border-[#DDE5EA] bg-white text-lg font-semibold text-[#17324D] shadow-sm transition-colors hover:bg-[#DDF0FA]"
                       type="button"
                     >
                       Backspace
@@ -1556,7 +1556,7 @@ const App = () => {
                 <div className="flex items-center justify-between pt-4">
                   <button
                     type="button"
-                    className="flex-shrink-0 rounded-xl bg-slate-200 px-6 py-3 text-base font-semibold text-slate-800 transition-colors hover:bg-slate-300"
+                    className="flex-shrink-0 rounded-xl bg-[#EEF6FB] px-6 py-3 text-base font-semibold text-[#315171] transition-colors hover:bg-[#DDF0FA]"
                     onClick={() => {
                       setShowHebrewPalette(false);
                       setIsShifted(false);
@@ -1567,7 +1567,7 @@ const App = () => {
                   </button>
                   <button
                     type="button"
-                    className="flex-shrink-0 rounded-xl bg-blue-600 px-8 py-3 text-base font-bold text-white shadow-sm transition-colors hover:bg-blue-700"
+                    className="flex-shrink-0 rounded-xl bg-[#0877B9] px-8 py-3 text-base font-bold text-white shadow-sm transition-colors hover:bg-[#0A86CF]"
                     onClick={handleInsertToMain}
                   >
                     Insert Text
@@ -1578,15 +1578,15 @@ const App = () => {
 
             {showAccentPalette && (
               <div className="space-y-6">
-                <h3 className="text-2xl font-bold text-slate-900">
+                <h3 className="text-2xl font-bold text-[#17324D]">
                   Accented Character Palette
                 </h3>
 
-                <div className="max-h-[60vh] space-y-4 overflow-y-auto rounded-lg bg-slate-50 p-4">
+                <div className="max-h-[60vh] space-y-4 overflow-y-auto rounded-lg border border-[#DDE5EA] bg-[#F4F9FC] p-4">
                   {Object.entries(accentedCharacters).map(
                     ([baseLetter, chars]) => (
                       <div key={baseLetter} className="flex items-start gap-4">
-                        <div className="w-8 pt-2 text-center text-lg font-bold text-slate-600">
+                        <div className="w-8 pt-2 text-center text-lg font-bold text-[#315171]">
                           {baseLetter}
                         </div>
                         <div className="flex flex-1 flex-wrap gap-2">
@@ -1594,7 +1594,7 @@ const App = () => {
                             <button
                               key={char}
                               onClick={() => handleGlyphInsert(char)}
-                              className="flex h-12 w-12 items-center justify-center rounded-lg bg-white text-2xl text-slate-700 shadow-sm transition-colors hover:bg-blue-100 hover:text-blue-700"
+                              className="flex h-12 w-12 items-center justify-center rounded-lg border border-[#DDE5EA] bg-white text-2xl text-[#17324D] shadow-sm transition-colors hover:bg-[#DDF0FA] hover:text-[#075987]"
                               title={`Insert ${char}`}
                               type="button"
                             >
@@ -1608,13 +1608,13 @@ const App = () => {
                 </div>
 
                 <div className="flex items-center justify-between pt-4">
-                  <p className="pr-4 text-sm text-slate-600">
+                  <p className="pr-4 text-sm text-[#6E7A86]">
                     Note: Character support varies by font. Please confirm the
                     appearance in the live preview.
                   </p>
                   <button
                     type="button"
-                    className="flex-shrink-0 rounded-xl bg-slate-200 px-6 py-3 text-base font-semibold text-slate-800 transition-colors hover:bg-slate-300"
+                    className="flex-shrink-0 rounded-xl bg-[#EEF6FB] px-6 py-3 text-base font-semibold text-[#315171] transition-colors hover:bg-[#DDF0FA]"
                     onClick={() => setShowAccentPalette(false)}
                   >
                     Close
@@ -1625,16 +1625,16 @@ const App = () => {
 
             {showGlyphPalette && (
               <div className="space-y-6">
-                <h3 className="text-2xl font-bold text-slate-900">
+                <h3 className="text-2xl font-bold text-[#17324D]">
                   Symbol Palette
                 </h3>
 
-                <div className="grid grid-cols-6 gap-2 rounded-lg bg-slate-100 p-4 sm:grid-cols-8 md:grid-cols-12">
+                <div className="grid grid-cols-6 gap-2 rounded-lg border border-[#DDE5EA] bg-[#F4F9FC] p-4 sm:grid-cols-8 md:grid-cols-12">
                   {glyphs.map((glyph) => (
                     <button
                       key={glyph}
                       onClick={() => handleGlyphInsert(glyph)}
-                      className="flex h-12 w-full items-center justify-center rounded-lg bg-white text-2xl text-slate-700 shadow-sm transition-colors hover:bg-blue-100 hover:text-blue-700"
+                      className="flex h-12 w-full items-center justify-center rounded-lg border border-[#DDE5EA] bg-white text-2xl text-[#17324D] shadow-sm transition-colors hover:bg-[#DDF0FA] hover:text-[#075987]"
                       title={`Insert ${glyph}`}
                       type="button"
                     >
@@ -1644,13 +1644,13 @@ const App = () => {
                 </div>
 
                 <div className="flex items-center justify-between pt-4">
-                  <p className="pr-4 text-sm text-slate-600">
+                  <p className="pr-4 text-sm text-[#6E7A86]">
                     Note: Character support varies by font. Please confirm the
                     appearance in the live preview.
                   </p>
                   <button
                     type="button"
-                    className="flex-shrink-0 rounded-xl bg-slate-200 px-6 py-3 text-base font-semibold text-slate-800 transition-colors hover:bg-slate-300"
+                    className="flex-shrink-0 rounded-xl bg-[#EEF6FB] px-6 py-3 text-base font-semibold text-[#315171] transition-colors hover:bg-[#DDF0FA]"
                     onClick={() => setShowGlyphPalette(false)}
                   >
                     Close
@@ -1661,7 +1661,7 @@ const App = () => {
 
             {showCustomerModal && (
               <form onSubmit={handleCustomerModalSubmit} className="space-y-8">
-                <h3 className="text-2xl font-bold text-slate-900">
+                <h3 className="text-2xl font-bold text-[#17324D]">
                   Enter Customer Information to Save
                 </h3>
 
@@ -1693,7 +1693,7 @@ const App = () => {
                 <div className="flex justify-end gap-4 pt-4">
                   <button
                     type="button"
-                    className="rounded-xl bg-slate-200 px-6 py-3 text-base font-semibold text-slate-800 transition-colors hover:bg-slate-300"
+                    className="rounded-xl bg-[#EEF6FB] px-6 py-3 text-base font-semibold text-[#315171] transition-colors hover:bg-[#DDF0FA]"
                     onClick={() => setShowCustomerModal(false)}
                     disabled={isSubmitting}
                   >
@@ -1701,7 +1701,7 @@ const App = () => {
                   </button>
                   <button
                     type="submit"
-                    className="rounded-xl bg-blue-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-75"
+                    className="rounded-xl bg-[#0877B9] px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-[#0A86CF] disabled:cursor-not-allowed disabled:opacity-75"
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? 'Submitting...' : 'Submit & Save'}
@@ -1712,10 +1712,10 @@ const App = () => {
 
             {showMessageBox && (
               <div className="text-center">
-                <p className="mb-8 text-lg text-slate-800">{message}</p>
+                <p className="mb-8 text-lg text-[#17324D]">{message}</p>
                 <button
                   onClick={() => setShowMessageBox(false)}
-                  className="rounded-xl bg-blue-600 px-12 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-blue-700"
+                  className="rounded-xl bg-[#0877B9] px-12 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-[#0A86CF]"
                   type="button"
                 >
                   OK

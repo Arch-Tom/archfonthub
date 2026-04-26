@@ -13,12 +13,12 @@ const PreviewLayoutControls = ({
   textAlign,
 }) => {
   return (
-    <div className="rounded-[22px] border border-[#dfd6c7] bg-[rgba(251,248,241,0.96)] px-3 py-3 shadow-[0_18px_40px_-34px_rgba(20,39,58,0.35)]">
+    <div className="rounded-[22px] border border-[#C7D3DA] bg-[rgba(255,255,255,0.96)] px-3 py-3 shadow-[0_18px_40px_-34px_rgba(20,39,58,0.32)]">
       <div className="grid gap-3 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto_auto] xl:items-center">
-        <div className="rounded-[16px] border border-[#e0d8ca] bg-white/72 px-3.5 py-2.5">
+        <div className="rounded-[16px] border border-[#DDE5EA] bg-[#FFFFFF]/78 px-3.5 py-2.5">
           <p className="text-sm font-semibold text-[#315171]">Text Size</p>
           <div className="mt-2.5 flex items-center gap-3">
-            <span className="text-[1.5rem] leading-none text-[#17324d]">A</span>
+            <span className="text-[1.5rem] leading-none text-[#17324D]">A</span>
             <input
               id="fontSizeSlider"
               type="range"
@@ -29,14 +29,14 @@ const PreviewLayoutControls = ({
               onChange={onFontSizeChange}
               className="preview-range flex-1"
             />
-            <span className="text-[1.05rem] leading-none text-[#17324d]">A</span>
+            <span className="text-[1.05rem] leading-none text-[#17324D]">A</span>
           </div>
         </div>
 
-        <div className="rounded-[16px] border border-[#e0d8ca] bg-white/72 px-3.5 py-2.5">
+        <div className="rounded-[16px] border border-[#DDE5EA] bg-[#FFFFFF]/78 px-3.5 py-2.5">
           <p className="text-sm font-semibold text-[#315171]">Spacing</p>
           <div className="mt-2.5 flex items-center gap-3">
-            <span className="text-[1.05rem] leading-none text-[#17324d]">A.A</span>
+            <span className="text-[1.05rem] leading-none text-[#17324D]">A.A</span>
             <input
               id="lineSpacingSlider"
               type="range"
@@ -47,13 +47,13 @@ const PreviewLayoutControls = ({
               onChange={onLineSpacingChange}
               className="preview-range flex-1"
             />
-            <span className="text-[1.05rem] leading-none text-[#17324d]">A.A</span>
+            <span className="text-[1.05rem] leading-none text-[#17324D]">A.A</span>
           </div>
         </div>
 
-        <div className="rounded-[16px] border border-[#e0d8ca] bg-white/72 px-3.5 py-2.5">
+        <div className="rounded-[16px] border border-[#DDE5EA] bg-[#FFFFFF]/78 px-3.5 py-2.5">
           <p className="mb-2.5 text-sm font-semibold text-[#315171]">Align</p>
-          <div className="inline-flex overflow-hidden rounded-[13px] border border-[#d7cfbf] bg-white">
+          <div className="inline-flex overflow-hidden rounded-[13px] border border-[#C7D3DA] bg-[#FFFFFF]">
             {ALIGNMENTS.map((alignment) => (
               <button
                 key={alignment}
@@ -61,8 +61,8 @@ const PreviewLayoutControls = ({
                 onClick={() => onTextAlignChange(alignment)}
                 className={`flex h-10 w-11 items-center justify-center transition-colors ${
                   textAlign === alignment
-                    ? 'bg-[#6c7343] text-white'
-                    : 'bg-white text-[#315171] hover:bg-[#f3efdf]'
+                    ? 'bg-[#0877B9] text-white'
+                    : 'bg-[#FFFFFF] text-[#315171] hover:bg-[#DDF0FA]'
                 }`}
                 title={`Align ${alignment}`}
                 aria-label={`Align ${alignment}`}
@@ -77,7 +77,7 @@ const PreviewLayoutControls = ({
         <button
           type="button"
           onClick={onResetLayout}
-          className="inline-flex items-center justify-center gap-2 rounded-[14px] border border-transparent px-3 py-2.5 text-sm font-semibold text-[#315171] transition-colors hover:border-[#d7cfbf] hover:bg-white/78"
+          className="inline-flex items-center justify-center gap-2 rounded-[14px] border border-transparent px-3 py-2.5 text-sm font-semibold text-[#315171] transition-colors hover:border-[#C7D3DA] hover:bg-[#FFFFFF]/78"
         >
           <svg
             width="18"
