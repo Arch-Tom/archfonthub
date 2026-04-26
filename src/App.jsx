@@ -272,6 +272,58 @@ const truncateLineReference = (line = '', maxLength = 38) => {
   return `${trimmedLine.slice(0, maxLength - 1).trimEnd()}…`;
 };
 
+const CircleMonogramIcon = () => (
+  <span
+    className="relative inline-block align-middle leading-none"
+    style={{
+      width: '1.3em',
+      height: '1.2em',
+    }}
+    aria-hidden="true"
+  >
+    <span
+      style={{
+        position: 'absolute',
+        left: '0.03em',
+        top: '50%',
+        transform: 'translateY(-50%)',
+        fontFamily: 'LeftCircleMonogram',
+        fontSize: '1.05em',
+        lineHeight: 1,
+      }}
+    >
+      A
+    </span>
+    <span
+      style={{
+        position: 'absolute',
+        left: '50%',
+        top: '50%',
+        transform: 'translate(-50%, -52%)',
+        fontFamily: 'MiddleCircleMonogram',
+        fontSize: '1.28em',
+        lineHeight: 1,
+        zIndex: 1,
+      }}
+    >
+      B
+    </span>
+    <span
+      style={{
+        position: 'absolute',
+        right: '0.03em',
+        top: '50%',
+        transform: 'translateY(-50%)',
+        fontFamily: 'RightCircleMonogram',
+        fontSize: '1.05em',
+        lineHeight: 1,
+      }}
+    >
+      C
+    </span>
+  </span>
+);
+
 const ToolShortcutButton = ({ icon, label, onClick }) => (
   <button
     type="button"
@@ -299,6 +351,7 @@ const App = () => {
   const [textAlign, setTextAlign] = useState('center');
   const [fontCategoryFilter, setFontCategoryFilter] = useState('All');
   const [isNotesOpen, setIsNotesOpen] = useState(false);
+  const [isFontFocusMode, setIsFontFocusMode] = useState(false);
 
   const [customerNotes, setCustomerNotes] = useState('');
   const [message, setMessage] = useState('');
@@ -1199,52 +1252,64 @@ const App = () => {
           </div>
         </header>
 
-        <div className="mt-3 grid flex-1 gap-3 xl:min-h-0 xl:grid-cols-[minmax(450px,540px)_minmax(0,1fr)] xl:overflow-hidden">
+        <div
+          className={`mt-3 grid flex-1 gap-3 xl:min-h-0 xl:overflow-hidden ${
+            isFontFocusMode
+              ? 'xl:grid-cols-[minmax(540px,680px)_minmax(0,1fr)]'
+              : 'xl:grid-cols-[minmax(450px,540px)_minmax(0,1fr)]'
+          }`}
+        >
           <section className="flex min-h-0 flex-col overflow-hidden rounded-[28px] border border-[#dfd6c7] bg-[rgba(251,248,241,0.94)] p-4 shadow-[0_20px_52px_-36px_rgba(20,39,58,0.35)]">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#5e7085]">
-                  Custom Text
-                </p>
+            {!isFontFocusMode && (
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#5e7085]">
+                    Custom Text
+                  </p>
+                </div>
               </div>
-            </div>
+            )}
 
-            <div className="mt-2.5 grid grid-cols-2 gap-2 sm:grid-cols-4">
-              <ToolShortcutButton
-                icon="אב"
-                label="Hebrew"
-                onClick={() => setShowHebrewPalette(true)}
-              />
-              <ToolShortcutButton
-                icon="á"
-                label="Accented"
-                onClick={() => setShowAccentPalette(true)}
-              />
-              <ToolShortcutButton
-                icon="○"
-                label="Symbols"
-                onClick={() => setShowGlyphPalette(true)}
-              />
-              <ToolShortcutButton
-                icon="⌘"
-                label="Monogram Maker"
-                onClick={() => setShowMonogramMaker(true)}
-              />
-            </div>
+            {!isFontFocusMode && (
+              <div className="mt-2.5 grid grid-cols-2 gap-2 sm:grid-cols-4">
+                <ToolShortcutButton
+                  icon="א"
+                  label="Hebrew"
+                  onClick={() => setShowHebrewPalette(true)}
+                />
+                <ToolShortcutButton
+                  icon="Á"
+                  label="Accented"
+                  onClick={() => setShowAccentPalette(true)}
+                />
+                <ToolShortcutButton
+                  icon="★"
+                  label="Symbols"
+                  onClick={() => setShowGlyphPalette(true)}
+                />
+                <ToolShortcutButton
+                  icon={<CircleMonogramIcon />}
+                  label="Monogram Maker"
+                  onClick={() => setShowMonogramMaker(true)}
+                />
+              </div>
+            )}
 
             <div className="mt-2.5 flex min-h-0 flex-1 flex-col">
-              <textarea
-                ref={textInputRef}
-                className="min-h-[148px] w-full resize-none rounded-[20px] border border-[#c9bfad] bg-[#fffdf8] px-4 py-3 text-[1.02rem] leading-[2.2rem] text-[#17324d] shadow-[inset_0_1px_8px_rgba(24,57,90,0.05),0_10px_24px_-24px_rgba(20,39,58,0.45)] outline-none transition focus:border-[#6c7343] focus:ring-2 focus:ring-[#d8ddc0]"
-                value={customText}
-                onChange={handleTextChange}
-                onClick={handleTextInteraction}
-                onKeyUp={handleTextInteraction}
-                onSelect={handleTextInteraction}
-                onFocus={handleTextInteraction}
-                placeholder={DEFAULT_TEXT_PLACEHOLDER}
-                dir="auto"
-              />
+              {!isFontFocusMode && (
+                <textarea
+                  ref={textInputRef}
+                  className="min-h-[148px] w-full resize-none rounded-[20px] border border-[#c9bfad] bg-[#fffdf8] px-4 py-3 text-[1.02rem] leading-[2.2rem] text-[#17324d] shadow-[inset_0_1px_8px_rgba(24,57,90,0.05),0_10px_24px_-24px_rgba(20,39,58,0.45)] outline-none transition focus:border-[#6c7343] focus:ring-2 focus:ring-[#d8ddc0]"
+                  value={customText}
+                  onChange={handleTextChange}
+                  onClick={handleTextInteraction}
+                  onKeyUp={handleTextInteraction}
+                  onSelect={handleTextInteraction}
+                  onFocus={handleTextInteraction}
+                  placeholder={DEFAULT_TEXT_PLACEHOLDER}
+                  dir="auto"
+                />
+              )}
 
               <FontSelectionPanel
                 allFonts={allFonts}
@@ -1257,7 +1322,9 @@ const App = () => {
                 getDefaultStyleKey={getDefaultStyleKey}
                 getSortedStyleKeys={getSortedStyleKeys}
                 hasAnyRealText={hasAnyRealText}
+                isFontFocusMode={isFontFocusMode}
                 onCategoryChange={setFontCategoryFilter}
+                onFontFocusModeChange={setIsFontFocusMode}
                 onFontSelect={handleFontChipSelect}
                 onStyleSelect={handleStyleSelect}
                 selectedFontOption={selectedFontOption}

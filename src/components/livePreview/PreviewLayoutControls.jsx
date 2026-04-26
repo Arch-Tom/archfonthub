@@ -87,14 +87,28 @@ const PreviewLayoutControls = ({
             aria-hidden="true"
           >
             <path
-              d="M3 12A9 9 0 1021 12"
+              d="M4 4V9H9"
               stroke="currentColor"
               strokeWidth="1.8"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
             <path
-              d="M3 4V12H11"
+              d="M5.9 13A6.5 6.5 0 1011.5 5.75"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M4.45 8.35A8 8 0 016.8 6.1"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M12 9.25V12.5L14.2 13.8"
               stroke="currentColor"
               strokeWidth="1.8"
               strokeLinecap="round"

@@ -17,20 +17,61 @@ const FontSelectionPanel = ({
   formatStyleLabel,
   getDefaultStyleKey,
   getSortedStyleKeys,
+  isFontFocusMode,
   onCategoryChange,
+  onFontFocusModeChange,
   onFontSelect,
   onStyleSelect,
 }) => {
   const canChooseFont = hasAnyRealText && selectedPreviewLineIndex != null;
 
   return (
-    <div className="font-rack mt-3 border-t border-[#e4dccd] pt-3">
+    <div
+      className={`font-rack mt-3 border-t border-[#e4dccd] pt-3 ${
+        isFontFocusMode ? 'font-rack--focus' : ''
+      }`}
+    >
       <div className="font-rack__header">
         <div className="min-w-0">
           <h2 className="font-rack__title">{fontHeading}</h2>
           <p className="font-rack__support">{fontSupportCopy}</p>
         </div>
-        <span className="font-rack__current-category">{currentCategory}</span>
+        <div className="font-rack__header-actions">
+          <span className="font-rack__current-category">{currentCategory}</span>
+          <button
+            type="button"
+            className="font-rack__focus-toggle"
+            onClick={() => onFontFocusModeChange(!isFontFocusMode)}
+            aria-pressed={isFontFocusMode}
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              {isFontFocusMode ? (
+                <path
+                  d="M8 4V8H4M16 4V8H20M8 20V16H4M16 20V16H20"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              ) : (
+                <path
+                  d="M4 9V4H9M20 9V4H15M4 15V20H9M20 15V20H15"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              )}
+            </svg>
+            <span>{isFontFocusMode ? 'Compact Fonts' : 'Expand Fonts'}</span>
+          </button>
+        </div>
       </div>
 
       <div className="font-rack__filters" aria-label="Font categories">
