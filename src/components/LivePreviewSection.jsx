@@ -11,6 +11,7 @@ const HebrewSupportWarning = () => (
 export default function LivePreviewSection({
   AlignIcon,
   customText,
+  filigreeSelection,
   fontSize,
   getDefaultStyleKey,
   getFontOptionByName,
@@ -109,6 +110,7 @@ export default function LivePreviewSection({
           ) : (
             <PreviewCanvas
               fontSize={fontSize}
+              filigreeSelection={filigreeSelection}
               getDefaultStyleKey={getDefaultStyleKey}
               getFontOptionByName={getFontOptionByName}
               lineSpacing={lineSpacing}

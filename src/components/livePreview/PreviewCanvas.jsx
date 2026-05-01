@@ -1,3 +1,10 @@
+import {
+  getFiligreeInsertIndex,
+  getFiligreePreset,
+  getFiligreeSize,
+  hasActiveFiligree,
+} from '../../constants/filigreeConfig';
+
 const renderLineText = (value) => {
   if (typeof value === 'string' || typeof value === 'number') return value;
   if (value) return String(value);
@@ -11,6 +18,7 @@ const getAlignmentClasses = (textAlign) => {
 };
 
 const PreviewCanvas = ({
+  filigreeSelection,
   fontSize,
   getDefaultStyleKey,
   getFontOptionByName,
@@ -24,9 +32,45 @@ const PreviewCanvas = ({
     ? lines.filter((line) => line.text.trim() !== '')
     : [];
   const hasLines = visibleLines.length > 0;
+  const showFiligree = hasActiveFiligree(filigreeSelection);
+  const filigreePreset = getFiligreePreset(filigreeSelection?.presetId);
+  const filigreeSize = getFiligreeSize(filigreeSelection?.size);
+  const filigreeInsertIndex = showFiligree
+    ? getFiligreeInsertIndex(filigreeSelection?.placement, visibleLines.length)
+    : -1;
   const alignmentClasses = getAlignmentClasses(textAlign);
 
-  if (!hasLines) {
+  const renderFiligree = (key) => (
+    <div
+      key={key}
+      className="pointer-events-none flex w-full justify-center py-2 text-[#B58A3A]"
+      aria-hidden="true"
+    >
+      <svg
+        viewBox={filigreePreset.viewBox}
+        fill="none"
+        style={{
+          width: `${filigreeSize.previewWidth}px`,
+          maxWidth: '72%',
+          height: `${filigreeSize.previewHeight}px`,
+        }}
+      >
+        {filigreePreset.paths.map((path) => (
+          <path
+            key={path.d}
+            d={path.d}
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.1"
+            vectorEffect="non-scaling-stroke"
+          />
+        ))}
+      </svg>
+    </div>
+  );
+
+  if (!hasLines && !showFiligree) {
     return (
       <div className="relative flex h-full min-h-[360px] flex-col items-center justify-center overflow-hidden rounded-[22px] border border-[#D8CEC0] bg-[radial-gradient(circle_at_top,rgba(255,253,248,0.98),rgba(251,251,250,0.98)_58%,rgba(234,243,244,0.96))] px-6 text-center shadow-[inset_0_1px_12px_rgba(24,57,90,0.04)] xl:min-h-0">
         <div className="pointer-events-none absolute inset-0 opacity-55">
@@ -70,6 +114,10 @@ const PreviewCanvas = ({
       <div
         className={`relative flex w-full max-w-[94%] flex-col ${alignmentClasses}`}
       >
+        {showFiligree &&
+          filigreeInsertIndex === 0 &&
+          renderFiligree('filigree-before')}
+
         {visibleLines.map((line, displayIndex) => {
           const font = getFontOptionByName?.(line.fontName);
           const fallbackStyleKey = getDefaultStyleKey?.(line.fontName);
@@ -85,41 +133,56 @@ const PreviewCanvas = ({
               : Math.max(0, (Number(lineSpacing) - 1) * effectiveFontSize);
 
           return (
-            <button
-              key={`preview-line-${line.lineIndex}`}
-              type="button"
-              onClick={() => onLineSelect?.(line.lineIndex)}
-              aria-label={`Select line ${displayIndex + 1} for editing`}
-              aria-pressed={isSelected}
-              className={`group max-w-full bg-transparent py-0 text-inherit transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[#245E73]/45 ${
+            <div
+              key={`preview-row-${line.lineIndex}`}
+              className={`flex flex-col ${
                 textAlign === 'right'
-                  ? 'self-end'
+                  ? 'items-end'
                   : textAlign === 'left'
-                    ? 'self-start'
-                    : 'self-center'
+                    ? 'items-start'
+                    : 'items-center'
               }`}
-              style={{ marginBottom: `${gapAfter}px` }}
             >
-              <span
-                className={`inline-block max-w-full whitespace-pre-wrap break-words rounded-[24px] px-[0.3em] py-[0.1em] text-[#17212B] transition-all duration-150 ${
-                  isSelected
-                    ? 'bg-[#FFFDF8]/70 shadow-[0_0_0_1px_rgba(255,253,248,0.96),0_22px_34px_-28px_rgba(20,39,58,0.62)]'
-                    : 'group-hover:bg-[#FFFDF8]/40'
+              <button
+                type="button"
+                onClick={() => onLineSelect?.(line.lineIndex)}
+                aria-label={`Select line ${displayIndex + 1} for editing`}
+                aria-pressed={isSelected}
+                className={`group max-w-full bg-transparent py-0 text-inherit transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[#245E73]/45 ${
+                  textAlign === 'right'
+                    ? 'self-end'
+                    : textAlign === 'left'
+                      ? 'self-start'
+                      : 'self-center'
                 }`}
-                style={{
-                  fontFamily: activeFontFamily,
-                  fontSize: `${effectiveFontSize}px`,
-                  lineHeight: 1.04,
-                  overflowWrap: 'anywhere',
-                  textAlign,
-                }}
-                dir="auto"
+                style={{ marginBottom: `${gapAfter}px` }}
               >
-                {renderLineText(line.text)}
-              </span>
-            </button>
+                <span
+                  className={`inline-block max-w-full whitespace-pre-wrap break-words rounded-[24px] px-[0.3em] py-[0.1em] text-[#17212B] transition-all duration-150 ${
+                    isSelected
+                      ? 'bg-[#FFFDF8]/70 shadow-[0_0_0_1px_rgba(255,253,248,0.96),0_22px_34px_-28px_rgba(20,39,58,0.62)]'
+                      : 'group-hover:bg-[#FFFDF8]/40'
+                  }`}
+                  style={{
+                    fontFamily: activeFontFamily,
+                    fontSize: `${effectiveFontSize}px`,
+                    lineHeight: 1.04,
+                    overflowWrap: 'anywhere',
+                    textAlign,
+                  }}
+                  dir="auto"
+                >
+                  {renderLineText(line.text)}
+                </span>
+              </button>
+
+              {showFiligree &&
+                filigreeInsertIndex === displayIndex + 1 &&
+                renderFiligree(`filigree-after-${line.lineIndex}`)}
+            </div>
           );
         })}
+
       </div>
     </div>
   );

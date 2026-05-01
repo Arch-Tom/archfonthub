@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import MonogramMaker from './MonogramMaker';
+import FiligreeControls from './components/FiligreeControls';
 import FontSelectionPanel from './components/FontSelectionPanel';
 import LivePreviewSection from './components/LivePreviewSection';
 import {
@@ -7,6 +8,14 @@ import {
   fontLibrary,
   styleSortOrder,
 } from './constants/fontConfig';
+import {
+  DEFAULT_FILIGREE_SELECTION,
+  getFiligreeInsertIndex,
+  getFiligreePlacement,
+  getFiligreePreset,
+  getFiligreeSize,
+  hasActiveFiligree,
+} from './constants/filigreeConfig';
 import { buildArtworkTextElement, loadCurveFont } from './utils/svgExport';
 
 const FormInput = ({
@@ -349,6 +358,9 @@ const App = () => {
   const [fontSize, setFontSize] = useState(36);
   const [lineSpacing, setLineSpacing] = useState(1);
   const [textAlign, setTextAlign] = useState('center');
+  const [filigreeSelection, setFiligreeSelection] = useState(
+    DEFAULT_FILIGREE_SELECTION
+  );
   const [fontCategoryFilter, setFontCategoryFilter] = useState('All');
   const [isNotesOpen, setIsNotesOpen] = useState(false);
   const [isFontFocusMode, setIsFontFocusMode] = useState(false);
@@ -737,6 +749,7 @@ const App = () => {
 
     let svgElements = '';
     let metadataElements = '';
+    let metadataLineCount = 0;
     const labelFontSize = 16;
     const padding = 20;
     const svgWidth = 800;
@@ -759,6 +772,39 @@ const App = () => {
             return c;
         }
       });
+
+    const activeFiligreePreset = getFiligreePreset(
+      filigreeSelection.presetId
+    );
+    const activeFiligreePlacement = getFiligreePlacement(
+      filigreeSelection.placement
+    );
+    const activeFiligreeSize = getFiligreeSize(filigreeSelection.size);
+    const shouldRenderFiligree =
+      hasStandardSelection && hasActiveFiligree(filigreeSelection);
+
+    const renderExportFiligree = (centerY) => {
+      if (!shouldRenderFiligree || activeFiligreePreset.paths.length === 0) {
+        return '';
+      }
+
+      const [, , viewBoxWidthValue, viewBoxHeightValue] =
+        activeFiligreePreset.viewBox.split(/\s+/).map(Number);
+      const viewBoxWidth = viewBoxWidthValue || 240;
+      const viewBoxHeight = viewBoxHeightValue || 48;
+      const scale = activeFiligreeSize.exportWidth / viewBoxWidth;
+      const exportHeight = viewBoxHeight * scale;
+      const x = svgWidth / 2 - activeFiligreeSize.exportWidth / 2;
+      const topY = centerY - exportHeight / 2;
+      const pathElements = activeFiligreePreset.paths
+        .map(
+          (path) =>
+            `<path d="${path.d}" fill="none" stroke="#181717" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke" />`
+        )
+        .join('');
+
+      return `<g transform="translate(${x}, ${topY}) scale(${scale})">${pathElements}</g>\n`;
+    };
 
     if (monogramInfo) {
       const data = monogramInfo.data;
@@ -936,8 +982,27 @@ const App = () => {
       const estimatedGroupWidth = 560;
       const groupLeftX = svgWidth / 2 - estimatedGroupWidth / 2;
       const groupRightX = svgWidth / 2 + estimatedGroupWidth / 2;
+      const filigreeInsertIndex = shouldRenderFiligree
+        ? getFiligreeInsertIndex(
+            filigreeSelection.placement,
+            populatedPreviewLines.length
+          )
+        : -1;
+      const filigreeExportHeight = shouldRenderFiligree
+        ? (activeFiligreeSize.exportWidth / 240) * 48
+        : 0;
+
+      const appendFiligree = () => {
+        artworkY += filigreeExportHeight * 0.65;
+        svgElements += renderExportFiligree(artworkY);
+        artworkY += filigreeExportHeight * 0.35;
+      };
 
       for (const [index, line] of populatedPreviewLines.entries()) {
+        if (index === filigreeInsertIndex) {
+          appendFiligree();
+        }
+
         const font = getFontOptionByName(line.fontName);
         const fallbackStyleKey = getDefaultStyleKey(line.fontName);
         const activeFontFamily =
@@ -981,12 +1046,28 @@ const App = () => {
         });
 
         metadataElements += `<text x="${padding}" y="${
-          labelFontSize + 10 + index * labelFontSize * 1.5
+          labelFontSize + 10 + metadataLineCount * labelFontSize * 1.5
         }" font-family="Arial" font-size="${labelFontSize}" fill="#6b7280" font-weight="600">Line ${
           index + 1
         }: ${escapeXml(font?.name || 'No Font')} (${escapeXml(
           styleName
         )})</text>\n`;
+        metadataLineCount += 1;
+      }
+
+      if (filigreeInsertIndex === populatedPreviewLines.length) {
+        appendFiligree();
+      }
+
+      if (shouldRenderFiligree) {
+        metadataElements += `<text x="${padding}" y="${
+          labelFontSize + 10 + metadataLineCount * labelFontSize * 1.5
+        }" font-family="Arial" font-size="${labelFontSize}" fill="#6b7280" font-weight="600">Decoration: ${escapeXml(
+          activeFiligreePreset.label
+        )} (${escapeXml(activeFiligreePlacement.label)}, ${escapeXml(
+          activeFiligreeSize.label
+        )})</text>\n`;
+        metadataLineCount += 1;
       }
 
       contentY = artworkY;
@@ -1013,8 +1094,7 @@ const App = () => {
     let metadataHeight = 0;
 
     if (metadataElements !== '') {
-      metadataHeight =
-        populatedPreviewLines.length * labelFontSize * 1.5 + padding;
+      metadataHeight = metadataLineCount * labelFontSize * 1.5 + padding;
       const metadataBlockY = contentY + padding + labelFontSize;
 
       metadataBlock = `<g transform="translate(0, ${metadataBlockY})"><text x="${padding}" y="0" font-family="Arial" font-size="${labelFontSize}" fill="#94a3b8" font-weight="700">Font Reference</text>${metadataElements}</g>`;
@@ -1309,6 +1389,13 @@ const App = () => {
                 />
               )}
 
+              {!isFontFocusMode && (
+                <FiligreeControls
+                  selection={filigreeSelection}
+                  onChange={setFiligreeSelection}
+                />
+              )}
+
               <FontSelectionPanel
                 allFonts={allFonts}
                 categoryFilters={CATEGORY_FILTERS}
@@ -1341,6 +1428,7 @@ const App = () => {
             fontSize={fontSize}
             getDefaultStyleKey={getDefaultStyleKey}
             getFontOptionByName={getFontOptionByName}
+            filigreeSelection={filigreeSelection}
             hebrewRegex={hebrewRegex}
             lineSpacing={lineSpacing}
             monogramInfo={monogramInfo}
