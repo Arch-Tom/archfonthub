@@ -13,12 +13,12 @@ const PreviewLayoutControls = ({
   textAlign,
 }) => {
   return (
-    <div className="rounded-[22px] border border-[#D8CEC0] bg-[rgba(255,253,248,0.96)] px-3 py-3 shadow-[0_18px_40px_-34px_rgba(20,39,58,0.28)]">
+    <div className="rounded-[22px] border border-[#BFD5E8] bg-[rgba(255,255,255,0.96)] px-3 py-3 shadow-[0_18px_40px_-34px_rgba(30,40,75,0.28)]">
       <div className="grid gap-3 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto_auto] xl:items-center">
-        <div className="rounded-[16px] border border-[#D8CEC0] bg-[#FFFDF8]/78 px-3.5 py-2.5">
-          <p className="text-sm font-semibold text-[#245E73]">Text Size</p>
+        <div className="rounded-[16px] border border-[#BFD5E8] bg-[#FFFFFF]/78 px-3.5 py-2.5">
+          <p className="text-sm font-semibold text-[#3677B3]">Text Size</p>
           <div className="mt-2.5 flex items-center gap-3">
-            <span className="text-[1.5rem] leading-none text-[#17212B]">A</span>
+            <span className="text-[1.5rem] leading-none text-[#232124]">A</span>
             <input
               id="fontSizeSlider"
               type="range"
@@ -29,14 +29,14 @@ const PreviewLayoutControls = ({
               onChange={onFontSizeChange}
               className="preview-range flex-1"
             />
-            <span className="text-[1.05rem] leading-none text-[#17212B]">A</span>
+            <span className="text-[1.05rem] leading-none text-[#232124]">A</span>
           </div>
         </div>
 
-        <div className="rounded-[16px] border border-[#D8CEC0] bg-[#FFFDF8]/78 px-3.5 py-2.5">
-          <p className="text-sm font-semibold text-[#245E73]">Spacing</p>
+        <div className="rounded-[16px] border border-[#BFD5E8] bg-[#FFFFFF]/78 px-3.5 py-2.5">
+          <p className="text-sm font-semibold text-[#3677B3]">Spacing</p>
           <div className="mt-2.5 flex items-center gap-3">
-            <span className="text-[1.05rem] leading-none text-[#17212B]">A.A</span>
+            <span className="text-[1.05rem] leading-none text-[#232124]">A.A</span>
             <input
               id="lineSpacingSlider"
               type="range"
@@ -47,13 +47,13 @@ const PreviewLayoutControls = ({
               onChange={onLineSpacingChange}
               className="preview-range flex-1"
             />
-            <span className="text-[1.05rem] leading-none text-[#17212B]">A.A</span>
+            <span className="text-[1.05rem] leading-none text-[#232124]">A.A</span>
           </div>
         </div>
 
-        <div className="rounded-[16px] border border-[#D8CEC0] bg-[#FFFDF8]/78 px-3.5 py-2.5">
-          <p className="mb-2.5 text-sm font-semibold text-[#245E73]">Align</p>
-          <div className="inline-flex overflow-hidden rounded-[13px] border border-[#D8CEC0] bg-[#FFFDF8]">
+        <div className="rounded-[16px] border border-[#BFD5E8] bg-[#FFFFFF]/78 px-3.5 py-2.5">
+          <p className="mb-2.5 text-sm font-semibold text-[#3677B3]">Align</p>
+          <div className="inline-flex overflow-hidden rounded-[13px] border border-[#BFD5E8] bg-[#FFFFFF]">
             {ALIGNMENTS.map((alignment) => (
               <button
                 key={alignment}
@@ -61,8 +61,8 @@ const PreviewLayoutControls = ({
                 onClick={() => onTextAlignChange(alignment)}
                 className={`flex h-10 w-11 items-center justify-center transition-colors ${
                   textAlign === alignment
-                    ? 'bg-[#245E73] text-white'
-                    : 'bg-[#FFFDF8] text-[#245E73] hover:bg-[#EAF3F4]'
+                    ? 'bg-[#478CCA] text-white'
+                    : 'bg-[#FFFFFF] text-[#3677B3] hover:bg-[#EAF5FC]'
                 }`}
                 title={`Align ${alignment}`}
                 aria-label={`Align ${alignment}`}
@@ -77,7 +77,7 @@ const PreviewLayoutControls = ({
         <button
           type="button"
           onClick={onResetLayout}
-          className="inline-flex items-center justify-center gap-2 rounded-[14px] border border-transparent px-3 py-2.5 text-sm font-semibold text-[#245E73] transition-colors hover:border-[#D8CEC0] hover:bg-[#FFFDF8]/78"
+          className="inline-flex items-center justify-center gap-2 rounded-[14px] border border-transparent px-3 py-2.5 text-sm font-semibold text-[#3677B3] transition-colors hover:border-[#3B9DD6] hover:bg-[#EAF5FC]"
         >
           <svg
             width="18"

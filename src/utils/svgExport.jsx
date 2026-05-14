@@ -66,7 +66,7 @@ const buildSvgTextElement = ({
     anchor = 'start',
     fontFamily,
     fontSize,
-    fill = '#181717',
+    fill = '#232124',
     text,
     extraAttributes = '',
 }) =>
@@ -87,7 +87,7 @@ const buildCurveTextElement = async ({
     y,
     fontFamily,
     fontSize,
-    fill = '#181717',
+    fill = '#232124',
     anchor = 'start',
     verticalAlign = 'baseline',
 }) => {
@@ -117,7 +117,7 @@ const buildArtworkTextElement = async ({
     fontFamily,
     exportFontFamily,
     fontSize,
-    fill = '#181717',
+    fill = '#232124',
     anchor = 'start',
     verticalAlign = 'baseline',
     escapeXml,

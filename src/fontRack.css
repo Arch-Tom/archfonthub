@@ -5,7 +5,7 @@
   flex-direction: column;
   margin-top: 0.52rem;
   padding-top: 0.52rem;
-  color: #17212B;
+  color: #232124;
 }
 
 .font-rack__header {
@@ -25,7 +25,7 @@
 
 .font-rack__title {
   margin: 0;
-  color: #17212B;
+  color: #232124;
   font-size: 1rem;
   font-weight: 700;
   line-height: 1.2;
@@ -33,7 +33,7 @@
 
 .font-rack__support {
   margin: 0.1rem 0 0;
-  color: #66737A;
+  color: #4D5B68;
   font-size: 0.62rem;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -44,8 +44,8 @@
 .font-rack__current-category {
   flex-shrink: 0;
   border-radius: 999px;
-  background: #F2E7D0;
-  color: #7A5B22;
+  background: #478CCA;
+  color: #FFFFFF;
   font-size: 0.68rem;
   font-weight: 800;
   letter-spacing: 0.1em;
@@ -58,10 +58,10 @@
   display: inline-flex;
   align-items: center;
   gap: 0.32rem;
-  border: 1px solid #D8CEC0;
+  border: 1px solid #BFD5E8;
   border-radius: 999px;
-  background: #FFFDF8;
-  color: #245E73;
+  background: #FFFFFF;
+  color: #478CCA;
   cursor: pointer;
   font-size: 0.68rem;
   font-weight: 850;
@@ -77,15 +77,15 @@
 }
 
 .font-rack__focus-toggle:hover {
-  border-color: #B58A3A;
-  background: #FFFDF8;
+  border-color: #3B9DD6;
+  background: #EAF5FC;
   transform: translateY(-1px);
 }
 
 .font-rack__focus-toggle[aria-pressed='true'] {
-  border-color: #B58A3A;
-  background: #F2E7D0;
-  color: #7A5B22;
+  border-color: #3B9DD6;
+  background: #478CCA;
+  color: #FFFFFF;
 }
 
 .font-rack__filters {
@@ -97,10 +97,10 @@
 
 .font-rack__filter,
 .font-rack__style {
-  border: 1px solid #D8CEC0;
+  border: 1px solid #BFD5E8;
   border-radius: 999px;
-  background: rgba(255, 253, 248, 0.82);
-  color: #245E73;
+  background: rgba(255, 255, 255, 0.82);
+  color: #478CCA;
   cursor: pointer;
   font-size: 0.69rem;
   font-weight: 750;
@@ -115,22 +115,22 @@
 
 .font-rack__filter:hover,
 .font-rack__style:hover {
-  border-color: #B58A3A;
-  background: #FFFDF8;
+  border-color: #3B9DD6;
+  background: #EAF5FC;
   transform: translateY(-1px);
 }
 
 .font-rack__filter[aria-pressed='true'],
 .font-rack__style[aria-pressed='true'] {
-  border-color: #245E73;
-  background: #245E73;
-  color: #FFFDF8;
+  border-color: #478CCA;
+  background: linear-gradient(180deg, #478CCA, #3677B3);
+  color: #FFFFFF;
 }
 
 .font-rack__current-font {
-  border: 1px solid #D8CEC0;
+  border: 1px solid #BFD5E8;
   border-radius: 0.86rem;
-  background: rgba(255, 253, 248, 0.62);
+  background: rgba(255, 255, 255, 0.62);
   margin-top: 0.34rem;
   padding: 0.34rem 0.46rem;
 }
@@ -148,7 +148,7 @@
 }
 
 .font-rack__eyebrow {
-  color: #66737A;
+  color: #4D5B68;
   font-size: 0.58rem;
   font-weight: 800;
   letter-spacing: 0.12em;
@@ -164,15 +164,15 @@
 }
 
 .font-rack__current-name {
-  background: #EAF3F4;
-  color: #17212B;
+  background: #EAF5FC;
+  color: #1E284B;
   font-weight: 800;
 }
 
 .font-rack__current-style {
-  border: 1px solid #D8CEC0;
-  background: #FFFDF8;
-  color: #66737A;
+  border: 1px solid #BFD5E8;
+  background: #FFFFFF;
+  color: #4D5B68;
   font-weight: 700;
 }
 
@@ -205,15 +205,15 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  border: 1px solid #D8CEC0;
+  border: 1px solid #BFD5E8;
   border-radius: 0.52rem;
-  background: linear-gradient(180deg, #FFFDF8, #FBFBFA);
-  color: #17212B;
+  background: linear-gradient(180deg, #FFFFFF, #F8FAFC);
+  color: #232124;
   padding: 0.23rem 0.3rem;
   text-align: center;
   box-shadow:
-    0 10px 18px -18px rgba(20, 39, 58, 0.42),
-    inset 0 1px 0 rgba(255, 253, 248, 0.84);
+    0 10px 18px -18px rgba(30, 40, 75, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.84);
   transition:
     background 150ms ease,
     border-color 150ms ease,
@@ -223,21 +223,21 @@
 }
 
 .font-rack__font:hover:not(:disabled) {
-  border-color: rgba(181, 138, 58, 0.58);
-  background: linear-gradient(180deg, #FFFDF8, #EAF3F4);
+  border-color: rgba(59, 157, 214, 0.72);
+  background: linear-gradient(180deg, #FFFFFF, #EAF5FC);
   box-shadow:
-    0 14px 24px -21px rgba(20, 39, 58, 0.5),
-    inset 0 1px 0 rgba(255, 253, 248, 0.95);
+    0 14px 24px -21px rgba(30, 40, 75, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
   transform: translateY(-1px);
 }
 
 .font-rack__font[aria-pressed='true'] {
-  border-color: rgba(36, 94, 115, 0.78);
-  background: #EAF3F4;
-  color: #17212B;
+  border-color: rgba(71, 140, 202, 0.9);
+  background: linear-gradient(180deg, #EAF5FC, #FFFFFF);
+  color: #1E284B;
   box-shadow:
-    0 0 0 1px rgba(36, 94, 115, 0.18),
-    0 14px 24px -22px rgba(20, 39, 58, 0.55);
+    0 0 0 1px rgba(71, 140, 202, 0.18),
+    0 14px 24px -22px rgba(30, 40, 75, 0.55);
 }
 
 .font-rack__font[aria-pressed='true']::after {
@@ -248,8 +248,8 @@
   width: 0.34rem;
   height: 0.34rem;
   border-radius: 999px;
-  background: #245E73;
-  box-shadow: 0 0 0 2px #FFFDF8;
+  background: #58A068;
+  box-shadow: 0 0 0 2px #FFFFFF;
 }
 
 .font-rack__font:disabled {
@@ -319,9 +319,9 @@
 }
 
 .font-rack--focus .font-rack__body {
-  border: 1px solid #D8CEC0;
+  border: 1px solid #BFD5E8;
   border-radius: 0.96rem;
-  background: rgba(255, 253, 248, 0.7);
+  background: rgba(255, 255, 255, 0.7);
   flex: 1 1 auto;
   margin-top: 0.54rem;
   overflow-x: hidden;

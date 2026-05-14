@@ -27,7 +27,7 @@ const FontSelectionPanel = ({
 
   return (
     <div
-      className={`font-rack mt-3 border-t border-[#e4dccd] pt-3 ${
+      className={`font-rack mt-3 border-t border-[#BFD5E8] pt-3 ${
         isFontFocusMode ? 'font-rack--focus' : ''
       }`}
     >
