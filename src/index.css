@@ -4,26 +4,27 @@
 
 /* --- Base Styles & Animations --- */
 :root {
-    --main-bg: #F5F1EA;
-    --page-wash: #EDE4D8;
-    --page-wash-soft: #FFFDF8;
-    --card-bg: #FFFDF8;
-    --surface-warm: #FBFBFA;
-    --surface-blue: #EAF3F4;
-    --ink: #17212B;
-    --arch-navy: #17212B;
-    --ink-soft: #245E73;
-    --muted: #66737A;
-    --arch-blue: #245E73;
-    --arch-blue-deep: #1B4657;
-    --arch-blue-hover: #2F6F84;
-    --arch-blue-soft: #EAF3F4;
-    --arch-green: #B58A3A;
-    --arch-green-deep: #7A5B22;
-    --arch-green-soft: #F2E7D0;
-    --border-soft: #D8CEC0;
-    --border-medium: #D8CEC0;
-    --border-strong: #B58A3A;
+    --main-bg: #1E284B;
+    --page-wash: #3677B3;
+    --page-wash-soft: #E7EAE7;
+    --card-bg: #FFFFFF;
+    --surface-warm: #F8FAFC;
+    --surface-blue: #EAF5FC;
+    --ink: #232124;
+    --arch-navy: #1E284B;
+    --ink-soft: #3677B3;
+    --muted: #4D5B68;
+    --arch-blue: #478CCA;
+    --arch-blue-bright: #3B9DD6;
+    --arch-blue-deep: #1E284B;
+    --arch-blue-hover: #3677B3;
+    --arch-blue-soft: #EAF5FC;
+    --arch-green: #58A068;
+    --arch-green-deep: #347041;
+    --arch-green-soft: #E6F3EA;
+    --border-soft: #BFD5E8;
+    --border-medium: #93B9D8;
+    --border-strong: #3B9DD6;
     --radius: 1.5rem;
 }
 
@@ -34,16 +35,16 @@ html {
 body {
     margin: 0;
     background:
-        radial-gradient(circle at top left, rgba(216, 206, 192, 0.58), rgba(255, 253, 248, 0.34) 30%, transparent 58%),
-        linear-gradient(180deg, #FFFDF8 0%, #F5F1EA 46%, #EDE4D8 100%);
-    color: #17212B;
+        radial-gradient(circle at top left, rgba(59, 157, 214, 0.45), rgba(71, 140, 202, 0.16) 32%, transparent 62%),
+        linear-gradient(135deg, #1E284B 0%, #3677B3 48%, #3B9DD6 100%);
+    color: #232124;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
 
 ::selection {
-    background: rgba(181, 138, 58, 0.22);
-    color: var(--ink);
+    background: rgba(88, 160, 104, 0.28);
+    color: var(--arch-navy);
 }
 
 .animate-fade-in {
@@ -80,18 +81,18 @@ body {
 .preview-range::-webkit-slider-runnable-track {
     height: 0.5rem;
     border-radius: 9999px;
-    background: linear-gradient(90deg, rgba(255, 253, 248, 0.98), rgba(234, 243, 244, 0.96));
-    box-shadow: inset 0 1px 2px rgba(23, 50, 77, 0.08);
+    background: linear-gradient(90deg, rgba(231, 234, 231, 0.98), rgba(234, 245, 252, 0.96));
+    box-shadow: inset 0 1px 2px rgba(30, 40, 75, 0.12);
 }
 
 .preview-range::-webkit-slider-thumb {
     width: 1rem;
     height: 1rem;
     margin-top: -0.25rem;
-    border: 2px solid #FFFDF8;
+    border: 2px solid #FFFFFF;
     border-radius: 9999px;
-    background: linear-gradient(180deg, #2F6F84 0%, #245E73 44%, #1B4657 100%);
-    box-shadow: 0 10px 22px -10px rgba(36, 94, 115, 0.32);
+    background: linear-gradient(180deg, #3B9DD6 0%, #478CCA 44%, #3677B3 100%);
+    box-shadow: 0 10px 22px -10px rgba(71, 140, 202, 0.46);
     -webkit-appearance: none;
     appearance: none;
 }
@@ -99,23 +100,23 @@ body {
 .preview-range::-moz-range-track {
     height: 0.5rem;
     border-radius: 9999px;
-    background: linear-gradient(90deg, rgba(255, 253, 248, 0.98), rgba(234, 243, 244, 0.96));
-    box-shadow: inset 0 1px 2px rgba(23, 50, 77, 0.08);
+    background: linear-gradient(90deg, rgba(231, 234, 231, 0.98), rgba(234, 245, 252, 0.96));
+    box-shadow: inset 0 1px 2px rgba(30, 40, 75, 0.12);
 }
 
 .preview-range::-moz-range-progress {
     height: 0.5rem;
     border-radius: 9999px;
-    background: linear-gradient(90deg, rgba(234, 243, 244, 0.98), rgba(36, 94, 115, 0.88));
+    background: linear-gradient(90deg, rgba(59, 157, 214, 0.5), rgba(71, 140, 202, 0.96));
 }
 
 .preview-range::-moz-range-thumb {
     width: 1rem;
     height: 1rem;
-    border: 2px solid #FFFDF8;
+    border: 2px solid #FFFFFF;
     border-radius: 9999px;
-    background: linear-gradient(180deg, #2F6F84 0%, #245E73 44%, #1B4657 100%);
-    box-shadow: 0 10px 22px -10px rgba(36, 94, 115, 0.32);
+    background: linear-gradient(180deg, #3B9DD6 0%, #478CCA 44%, #3677B3 100%);
+    box-shadow: 0 10px 22px -10px rgba(71, 140, 202, 0.46);
 }
 
 /* --- Alumni Sans --- */
