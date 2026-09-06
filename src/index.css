@@ -561,7 +561,7 @@ body {
 
 @font-face {
     font-family: 'LeftCircleMonogram';
-    src: url('/fonts/LeftCircleMonogram.woff2') format('woff2'), url('/fonts/LeftCircleMonogram.woff') format('woff'), url('/fonts/LeftCircleMonogram.ttf') format('truetype');
+    src: url('/fonts/LeftCircleMonogramRegular.woff2') format('woff2'), url('/fonts/LeftCircleMonogramRegular.woff') format('woff'), url('/fonts/LeftCircleMonogram.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
@@ -569,7 +569,7 @@ body {
 
 @font-face {
     font-family: 'MiddleCircleMonogram';
-    src: url('/fonts/MiddleCircleMonogram.woff2') format('woff2'), url('/fonts/MiddleCircleMonogram.woff') format('woff'), url('/fonts/MiddleCircleMonogram.ttf') format('truetype');
+    src: url('/fonts/MiddleCircleMonogramRegular.woff2') format('woff2'), url('/fonts/MiddleCircleMonogramRegular.woff') format('woff'), url('/fonts/MiddleCircleMonogram.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
@@ -577,7 +577,7 @@ body {
 
 @font-face {
     font-family: 'RightCircleMonogram';
-    src: url('/fonts/RightCircleMonogram.woff2') format('woff2'), url('/fonts/RightCircleMonogram.woff') format('woff'), url('/fonts/RightCircleMonogram.ttf') format('truetype');
+    src: url('/fonts/RightCircleMonogramRegular.woff2') format('woff2'), url('/fonts/RightCircleMonogramRegular.woff') format('woff'), url('/fonts/RightCircleMonogram.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
     font-display: swap;

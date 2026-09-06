@@ -23,6 +23,7 @@ export default function CircularMonogram({
     if (!isCircular) {
         return (
             <div
+                role="img" aria-label={`Monogram: ${first}, ${middle}, ${last}`}
                 className="flex items-center justify-center"
                 style={{
                     lineHeight: 1,
@@ -50,6 +51,7 @@ export default function CircularMonogram({
     return (
         <div className="relative flex items-center justify-center" style={{ width: `${containerSize}px`, height: `${containerSize}px` }}>
             <svg
+                role="img" aria-label={`Circular monogram: ${first}, ${middle}, ${last}${frameStyle !== 'none' ? `, ${frameStyle} frame` : ''}`}
                 className="absolute inset-0 w-full h-full"
                 viewBox="0 0 200 200"
                 preserveAspectRatio="xMidYMid meet"

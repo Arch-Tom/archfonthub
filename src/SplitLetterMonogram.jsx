@@ -18,7 +18,7 @@ const SplitLetterMonogram = ({
     const clipPathId = `split-letter-clip-${React.useId()}`;
 
     return (
-        <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+        <svg role="img" aria-label={`Split monogram: ${initial}, ${name}`} width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
             {/* 1. Define the letter shape that will be used as a clipping mask. */}
             <defs>
                 <clipPath id={clipPathId}>
@@ -63,7 +63,7 @@ const SplitLetterMonogram = ({
                 y="51" // Y-position adjusted for the name
                 dominantBaseline="middle"
                 textAnchor="middle"
-                fontSize="12"
+                fontSize={Math.min(12, 85 / Math.max(name.length * 0.7, 1))}
                 // UPDATE: Use the main font family for the name as a fallback
                 fontFamily={nameFontFamily || fontFamily}
                 fill={nameColor}

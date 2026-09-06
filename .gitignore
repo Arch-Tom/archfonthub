@@ -25,3 +25,7 @@ dist-ssr
 
 # Visual Studio user-specific files
 .vs/
+# Local validation output
+artifacts/
+test-results/
+playwright-report/

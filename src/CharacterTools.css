@@ -1,0 +1,163 @@
+.character-tools {
+  width: 100%;
+  color: #263b50;
+  font-size: 0.875rem;
+}
+.character-tools summary {
+  width: fit-content;
+  padding: 0.55rem 0;
+  cursor: pointer;
+  font-weight: 600;
+}
+.character-tools summary::marker {
+  color: #667e8c;
+}
+.character-tools-panel {
+  margin-top: 0.45rem;
+  padding: 0.8rem;
+  background: #f7f9fa;
+  border: 1px solid #d6dfe3;
+  border-radius: 0.6rem;
+}
+.character-tools-heading {
+  display: flex;
+  gap: 0.3rem;
+  align-items: center;
+  justify-content: space-between;
+}
+.character-tools-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+.character-tools button {
+  min-height: 44px;
+  border: 1px solid #d4dce1;
+  background: white;
+  color: #263b50;
+  border-radius: 0.35rem;
+  cursor: pointer;
+}
+.character-tools button:hover {
+  background: #e9eff2;
+}
+.character-tools-tabs button {
+  padding: 0.45rem 0.65rem;
+  font-size: 0.8rem;
+}
+.character-tools-tabs button[aria-selected="true"] {
+  border-color: #284d66;
+  background: #284d66;
+  color: white;
+  box-shadow: inset 0 -3px #c7dce8;
+}
+.character-tools button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.character-tools-close {
+  flex-shrink: 0;
+  width: 44px;
+  font-size: 1.5rem;
+}
+.character-tools-content {
+  padding-top: 0.8rem;
+}
+.character-tools-content[hidden] {
+  display: none;
+}
+.character-tools-content p {
+  color: #526571;
+  line-height: 1.6;
+  margin: 0 0 0.7rem;
+  font-size: 0.8rem;
+}
+.character-tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+  gap: 0.3rem;
+}
+.character-tools-grid button {
+  padding: 0.3rem;
+  font-size: 1.3rem;
+  font-family: Arial, sans-serif;
+}
+.character-tools-accents {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 330px;
+  overflow: auto;
+}
+.character-tools-accent-row {
+  display: grid;
+  grid-template-columns: 1rem minmax(0, 1fr);
+  gap: 0.4rem;
+  align-items: start;
+}
+.character-tools-accent-row > span {
+  padding-top: 0.7rem;
+  font-size: 0.75rem;
+  color: #526571;
+}
+.character-tools-content label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+}
+.character-tools .character-tools-content textarea {
+  width: 100%;
+  border: 1px solid #b5c2ca;
+  border-radius: 0.4rem;
+  background: white;
+  font-family: "Noto Rashi Hebrew Regular", serif;
+  font-size: 1.7rem;
+  padding: 0.5rem;
+  margin-bottom: 0.7rem;
+  resize: vertical;
+}
+.character-tools-hebrew button {
+  font-family: "Noto Rashi Hebrew Regular", serif;
+  font-size: 1.5rem;
+}
+.character-tools-content .character-tools-vowel-label {
+  margin: 0.8rem 0 0.4rem;
+}
+.character-tools-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.8rem;
+}
+.character-tools-actions button {
+  padding: 0.5rem 0.65rem;
+  font-size: 0.8rem;
+}
+.character-tools-actions .character-tools-insert {
+  border-color: #284d66;
+  background: #284d66;
+  color: white;
+}
+.character-tools :focus-visible {
+  outline: 3px solid #207c9d;
+  outline-offset: 3px;
+}
+.character-tools-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+@media (max-width: 430px) {
+  .character-tools-panel {
+    padding: 0.65rem;
+  }
+  .character-tools-tabs button {
+    padding-inline: 0.45rem;
+  }
+  .character-tools-grid {
+    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+  }
+}
