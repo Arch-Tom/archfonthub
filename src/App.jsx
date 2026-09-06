@@ -44,7 +44,7 @@ const familyFor = (font) =>
 
 function TextPreview({ text, font, large = false }) {
   const ref = useRef(null);
-  const [size, setSize] = useState(large ? 38 : 26);
+  const [size, setSize] = useState(large ? 46 : 32);
   const family = familyFor(font);
   useEffect(() => {
     const element = ref.current;
@@ -52,7 +52,7 @@ function TextPreview({ text, font, large = false }) {
     const fit = () => {
       if (cancelled || !element) return;
       const ctx = document.createElement("canvas").getContext("2d");
-      const max = large ? 38 : 26;
+      const max = large ? 46 : 32;
       ctx.font = `${max}px ${family}`;
       const widest = Math.max(
         1,
@@ -88,7 +88,7 @@ function TextPreview({ text, font, large = false }) {
 
 function FontName({ font }) {
   const ref = useRef(null);
-  const [size, setSize] = useState(23);
+  const [size, setSize] = useState(42);
   const family = familyFor(font);
   useEffect(() => {
     const element = ref.current;
@@ -96,13 +96,13 @@ function FontName({ font }) {
     const fit = () => {
       if (cancelled) return;
       const ctx = document.createElement("canvas").getContext("2d");
-      ctx.font = "23px " + family;
+      ctx.font = "42px " + family;
       const widestWord = Math.max(
         ...font.name.split(" ").map((word) => ctx.measureText(word).width),
         1,
       );
       setSize(
-        Math.min(23, Math.max(12, (23 * element.clientWidth) / widestWord)),
+        Math.min(42, Math.max(20, (42 * element.clientWidth) / widestWord)),
       );
     };
     const observer = new ResizeObserver(fit);
@@ -123,6 +123,20 @@ function FontName({ font }) {
     </span>
   );
 }
+
+const inspirationFont = allFonts.find((font) => font.name === "Garamond");
+// Introduce the range of lettering before the complete collection.
+const openingFonts = [
+  "Garamond",
+  "Great Vibes",
+  "Graphik",
+  "Copperplate",
+  "Old English",
+];
+const galleryFonts = [
+  ...openingFonts.map((name) => allFonts.find((font) => font.name === name)),
+  ...allFonts.filter((font) => !openingFonts.includes(font.name)),
+];
 
 function MonogramSample({ info }) {
   const data = info.data;
@@ -242,7 +256,7 @@ export default function App() {
     textAlign: "center",
   };
   const ready = Boolean(monogramInfo || (text.trim() && favorites.length));
-  const visibleFonts = allFonts.filter(
+  const visibleFonts = (category === "All" ? galleryFonts : allFonts).filter(
     (font) =>
       (category === "All" || font.category === category) &&
       font.name.toLowerCase().includes(search.toLowerCase()),
@@ -411,18 +425,16 @@ export default function App() {
             Font Hub<small>YOUR WORDS. OUR CRAFT.</small>
           </span>
         </a>
-        <span className="header-caption">
-          A little inspiration for your engraving.
-        </span>
+        <span className="header-caption">Lettering, thoughtfully crafted.</span>
       </header>
       <main id="main" className="page-main">
         {step === "choose" ? (
           <>
             <div className="intro">
               <div>
-                <p className="eyebrow">LET’S FIND YOUR LETTERING</p>
+                <p className="eyebrow">THE ARCH LETTERING COLLECTION</p>
                 <h1 ref={pageHeading} tabIndex={-1}>
-                  Your words. A style you love.
+                  Your words. <em>A style you love.</em>
                 </h1>
                 <p>
                   Choose up to 3 lettering favorites. We’ll use your choices to
@@ -445,13 +457,10 @@ export default function App() {
               <div className="explore-column">
                 <section
                   className="wording-section"
-                  aria-labelledby="wording-title"
+                  aria-label="Engraving wording editor"
                 >
                   <div className="section-heading">
-                    <h2 id="wording-title">
-                      <span className="step-number">01</span>Your engraving
-                      wording
-                    </h2>
+                    <h2 id="wording-title">Your engraving wording</h2>
                     <span className="muted small">Start here</span>
                   </div>
                   <label className="sr-only" htmlFor="engraving-text">
@@ -529,9 +538,7 @@ export default function App() {
                   tabIndex={-1}
                 >
                   <div className="section-heading">
-                    <h2 id="browse-title">
-                      <span className="step-number">02</span>Find your favorites
-                    </h2>
+                    <h2 id="browse-title">Find your favorites</h2>
                     <button
                       className="text-button sample-toggle"
                       aria-pressed={expanded}
@@ -629,12 +636,14 @@ export default function App() {
                           onClick={() => chooseFont(font)}
                         >
                           <span className="font-option-top">
-                            <FontName font={font} />
+                            <span className="font-option-label">
+                              {text ? font.name : font.category}
+                            </span>
                             <span className="selection-mark" aria-hidden="true">
                               {selected ? "✓" : "+"}
                             </span>
                           </span>
-                          {text && (
+                          {text ? (
                             <span
                               className="font-sample"
                               dir="auto"
@@ -642,9 +651,18 @@ export default function App() {
                             >
                               {expanded ? text : text.split("\n")[0]}
                             </span>
+                          ) : (
+                            <FontName font={font} />
                           )}
                           <span className="font-meta">
-                            {selected ? "✓ Selected" : font.category}
+                            {selected
+                              ? "✓ Selected"
+                              : text
+                                ? font.category
+                                : Object.keys(font.styles).length +
+                                  (Object.keys(font.styles).length === 1
+                                    ? " style"
+                                    : " styles")}
                           </span>
                         </button>
                       );
@@ -670,10 +688,11 @@ export default function App() {
               <aside
                 id="favorites"
                 className="favorites-panel"
+                data-count={favorites.length}
+                data-wording={Boolean(text.trim())}
                 aria-labelledby="favorites-title"
               >
                 <div className="favorites-heading">
-                  <p className="eyebrow">YOUR SHORTLIST</p>
                   <div className="section-heading">
                     <h2 id="favorites-title">The favorites</h2>
                     <span className="count-badge">
@@ -712,7 +731,11 @@ export default function App() {
                           ×
                         </button>
                       </div>
-                      <TextPreview text={text} font={font} />
+                      <TextPreview
+                        text={text}
+                        font={font}
+                        large={favorites.length === 1}
+                      />
                       {((font.name === "Collegiate" && /[éÉ]/.test(text)) ||
                         (font.name === "I Love Glitter" &&
                           text.includes("•"))) && (
@@ -766,16 +789,55 @@ export default function App() {
                   ))}
                   {!favorites.length && (
                     <div className="empty-favorites">
-                      <div className="specimen" aria-hidden="true">
-                        <span>Aa</span>
-                        <span>Aa</span>
-                        <span>Aa</span>
-                      </div>
-                      <h3>A few favorites. One great starting point.</h3>
-                      <p>
-                        Choose a font from the collection to see your wording
-                        here.
-                      </p>
+                      {text.trim() ? (
+                        <>
+                          <p className="specimen-caption">
+                            A FIRST LOOK AT YOUR WORDS
+                          </p>
+                          <div className="inspiration-preview">
+                            <TextPreview
+                              text={text}
+                              font={inspirationFont}
+                              large
+                            />
+                          </div>
+                          <div className="inspiration-credit">
+                            <span>Garamond · Sample preview</span>
+                            <button
+                              className="text-button"
+                              onClick={() => chooseFont(inspirationFont)}
+                            >
+                              Keep Garamond +
+                            </button>
+                          </div>
+                          <p className="empty-instruction">
+                            Nothing selected yet. Keep this style or explore the
+                            collection.
+                          </p>
+                        </>
+                      ) : (
+                        <>
+                          <p className="specimen-caption">
+                            A LITTLE INSPIRATION
+                          </p>
+                          <div
+                            className="lettering-poster"
+                            aria-label="Words worth keeping. A lettering sample."
+                          >
+                            <span>Words</span>
+                            <span>worth</span>
+                            <span>keeping.</span>
+                          </div>
+                          <div className="poster-rule" aria-hidden="true">
+                            <span>✦</span>
+                          </div>
+                          <h3>Every word has a character.</h3>
+                          <p>
+                            Type your wording to see it come to life. Then
+                            choose the lettering that feels right.
+                          </p>
+                        </>
+                      )}
                     </div>
                   )}
                   {favorites.length > 0 && favorites.length < 3 && (
@@ -822,9 +884,7 @@ export default function App() {
               </aside>
             </div>
             <div className="mobile-shortlist">
-              <a href="#favorites">
-                View favorites · {favorites.length}/3
-              </a>
+              <a href="#favorites">View favorites · {favorites.length}/3</a>
               <button onClick={openReview}>Review choices →</button>
             </div>
             {!draftSaved && (
