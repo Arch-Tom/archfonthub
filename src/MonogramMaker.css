@@ -1,0 +1,54 @@
+.monogram-dialog {
+  width: 100vw;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  border: 0;
+}
+.monogram-dialog::backdrop {
+  background: rgba(15, 23, 42, 0.45);
+}
+.monogram-dialog-content {
+  max-height: calc(100dvh - 1rem);
+}
+.monogram-dialog :focus-visible {
+  outline: 3px solid #207c9d;
+  outline-offset: 3px;
+}
+.monogram-dialog button[aria-pressed="true"]::after {
+  content: " \2713";
+}
+.monogram-dialog button.group {
+  position: relative;
+}
+.monogram-dialog button.group[aria-pressed="true"]::after {
+  position: absolute;
+  top: 0.1rem;
+  right: 0.4rem;
+  font-size: 0.8rem;
+}
+.monogram-dialog button[aria-pressed="true"] {
+  border-color: #284d66;
+}
+@media (max-width: 639px) {
+  .monogram-dialog-content {
+    height: 100dvh;
+    max-height: 100dvh;
+  }
+}
+
+.monogram-dialog button.bg-blue-600 {
+  background: #245b59;
+}
+.monogram-dialog button.bg-blue-600:hover:not(:disabled) {
+  background: #194744;
+}
+.monogram-dialog button[aria-pressed="true"].group {
+  background: #edf4f0;
+  border-color: #245b59;
+}
+.monogram-dialog #monogram-title {
+  font-family: "Graphik", Arial, sans-serif;
+  font-size: 19px;
+}

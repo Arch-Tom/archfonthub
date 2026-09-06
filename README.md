@@ -1,12 +1,31 @@
-# React + Vite
+# Arch Font Hub
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A one-screen tool for customers to choose lettering for an Arch Engraving proof. Enter exact wording, preview fonts on individual lines, save up to three independent favorites, add notes or a monogram, then review and send the preferences.
 
-Currently, two official plugins are available:
+This branch evolves `color-refinement` from `245b383ad752a21759545f3208be5017b56e2165`; it selectively ports later v3 functionality without importing their layouts.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Development
 
-## Expanding the ESLint configuration
+Requires Node.js 22 and npm. Install with `npm ci`, then run `npm run dev`. For a fixed browser-test address use `node node_modules/vite/bin/vite.js --host 127.0.0.1 --port 5173 --strictPort`.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- `npm run lint` — ESLint, no warnings allowed.
+- `npm test` — submission and independent font-asset tests.
+- `npm run test:e2e` — browser tests; Windows defaults to installed Edge. Set `PLAYWRIGHT_CHANNEL` to choose another installed Chromium channel.
+- `npm run build` — production static assets in `dist`.
+- `npm --prefix r2-worker test -- --run` — isolated Worker tests after installing that directory's dependencies.
+
+All browser submission tests block real writes and intercept the Worker request. Do not send a real production request while developing. The deployed Worker contract is preserved and the Worker source is not modified by this branch.
+
+## Behavior and maintenance
+
+Draft and receipt storage is local to the browser, scoped by the optional `orderId` query parameter. Links can also supply `name` and `company`. Browser storage failures leave an on-screen recovery notice.
+
+The font audit can be regenerated with `python scripts/audit-fonts.py`; maintenance requires FontTools and Brotli (`fonttools[woff]`). Use `--check` to verify generated data without changing it. The normal Node regression suite does not require Python or these packages.
+
+The original Optima assets contain corrupt non-ASCII mappings. Their verified ASCII glyphs are retained; affected characters use explicitly disclosed supporting fonts. Do not replace the repaired assets with the historical files. SVG specimens also carry explicit supporting-font spans and glyph warnings.
+
+See [the implementation and validation report](docs/COLOR-REFINEMENT-DEFINITIVE.md), [Unicode audit](docs/FONT-UNICODE-AUDIT.md), and [submission contract](docs/SUBMISSION-CONTRACT.md).
+
+## Deployment
+
+The existing Cloudflare Pages integration builds the branch preview from GitHub using `npm run build` and `dist`. Push only the new development branch. Do not deploy the Worker, update production, or change the source/historical branches as part of this preview work.

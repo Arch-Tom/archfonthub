@@ -2,123 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* --- Base Styles & Animations --- */
-:root {
-    --main-bg: #EAF6FC;
-    --page-wash: #DDECF4;
-    --page-wash-soft: #F4F9FC;
-    --card-bg: #FFFFFF;
-    --surface-warm: #FBFBFA;
-    --surface-blue: #EEF6FB;
-    --ink: #17212B;
-    --arch-navy: #17324D;
-    --ink-soft: #315171;
-    --muted: #6E7A86;
-    --arch-blue: #0877B9;
-    --arch-blue-deep: #075987;
-    --arch-blue-hover: #0A86CF;
-    --arch-blue-soft: #DDF0FA;
-    --arch-green: #35A978;
-    --arch-green-deep: #277E5A;
-    --arch-green-soft: #DFF3EA;
-    --border-soft: #DDE5EA;
-    --border-medium: #C7D3DA;
-    --border-strong: #9FB2BF;
-    --radius: 1.5rem;
-}
-
-html {
-    scroll-behavior: smooth;
-}
-
-body {
-    margin: 0;
-    background:
-        radial-gradient(circle at top left, rgba(221, 229, 234, 0.72), rgba(244, 247, 248, 0.32) 30%, transparent 58%),
-        linear-gradient(180deg, #FFFFFF 0%, #F4F7F8 46%, #EAF0F2 100%);
-    color: #17212B;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-::selection {
-    background: rgba(8, 119, 185, 0.18);
-    color: var(--ink);
-}
-
-.animate-fade-in {
-    animation: fade-in 0.35s cubic-bezier(0.33, 1, 0.68, 1);
-}
-
-@keyframes fade-in {
-    from {
-        opacity: 0;
-        transform: translateY(32px) scale(0.98);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-/* --- Preview Range Controls --- */
-.preview-range {
-    display: block;
-    width: 100%;
-    height: 1.5rem;
-    cursor: pointer;
-    background: transparent;
-    -webkit-appearance: none;
-    appearance: none;
-}
-
-.preview-range:focus {
-    outline: none;
-}
-
-.preview-range::-webkit-slider-runnable-track {
-    height: 0.5rem;
-    border-radius: 9999px;
-    background: linear-gradient(90deg, rgba(238, 246, 251, 0.98), rgba(221, 240, 250, 0.94));
-    box-shadow: inset 0 1px 2px rgba(23, 50, 77, 0.08);
-}
-
-.preview-range::-webkit-slider-thumb {
-    width: 1rem;
-    height: 1rem;
-    margin-top: -0.25rem;
-    border: 2px solid #ffffff;
-    border-radius: 9999px;
-    background: linear-gradient(180deg, #0A86CF 0%, #0877B9 44%, #075987 100%);
-    box-shadow: 0 10px 22px -10px rgba(8, 119, 185, 0.34);
-    -webkit-appearance: none;
-    appearance: none;
-}
-
-.preview-range::-moz-range-track {
-    height: 0.5rem;
-    border-radius: 9999px;
-    background: linear-gradient(90deg, rgba(238, 246, 251, 0.98), rgba(221, 240, 250, 0.94));
-    box-shadow: inset 0 1px 2px rgba(23, 50, 77, 0.08);
-}
-
-.preview-range::-moz-range-progress {
-    height: 0.5rem;
-    border-radius: 9999px;
-    background: linear-gradient(90deg, rgba(238, 246, 251, 0.98), rgba(8, 119, 185, 0.88));
-}
-
-.preview-range::-moz-range-thumb {
-    width: 1rem;
-    height: 1rem;
-    border: 2px solid #ffffff;
-    border-radius: 9999px;
-    background: linear-gradient(180deg, #0A86CF 0%, #0877B9 44%, #075987 100%);
-    box-shadow: 0 10px 22px -10px rgba(8, 119, 185, 0.34);
-}
-
-/* --- Alumni Sans --- */
 @font-face {
     font-family: 'Alumni Sans Black';
     src: url('/fonts/AlumniSans-Black.ttf') format('truetype');
@@ -174,7 +57,6 @@ body {
     src: url('/fonts/AlumniSans-SemiBoldItalic.ttf') format('truetype');
 }
 
-/* --- Montserrat --- */
 @font-face {
     font-family: 'Montserrat Regular';
     src: url('/fonts/montserrat-v31-latin-regular.woff2') format('woff2'),
@@ -211,7 +93,6 @@ body {
     font-display: swap;
 }
 
-/* --- Optima --- */
 @font-face {
     font-family: 'Optima';
     src: url('/fonts/Optima.woff2') format('woff2'),
@@ -230,13 +111,11 @@ body {
     font-display: swap;
 }
 
-/* --- Amazone --- */
 @font-face {
     font-family: 'Amazone BT';
     src: url('/fonts/AmazonRg_0.ttf') format('truetype');
 }
 
-/* --- Arial --- */
 @font-face {
     font-family: 'Arial';
     src: url('/fonts/arial.ttf') format('truetype');
@@ -257,7 +136,6 @@ body {
     src: url('/fonts/ariali.ttf') format('truetype');
 }
 
-/* --- Bebas Neue --- */
 @font-face {
     font-family: 'Bebas Neue Regular';
     src: url('/fonts/Bebas Neue Regular 400.ttf') format('truetype');
@@ -268,7 +146,6 @@ body {
     src: url('/fonts/BebasNeue-Bold.otf') format('opentype');
 }
 
-/* --- Benguiat --- */
 @font-face {
     font-family: 'Benguiat Bold BT';
     src: url('/fonts/BENGUIAB.TTF') format('truetype');
@@ -284,13 +161,11 @@ body {
     src: url('/fonts/benguini.ttf') format('truetype');
 }
 
-/* --- BlackChancery --- */
 @font-face {
     font-family: 'BlackChancery';
     src: url('/fonts/BLKCHCRY.TTF') format('truetype');
 }
 
-/* --- Bookman Old Style --- */
 @font-face {
     font-family: 'Bookman Old Style Bold';
     src: url('/fonts/BOOKOSB.TTF') format('truetype');
@@ -306,7 +181,6 @@ body {
     src: url('/fonts/BOOKOSI.TTF') format('truetype');
 }
 
-/* --- Berlin Sans --- */
 @font-face {
     font-family: 'Berlin Sans FB Bold';
     src: url('/fonts/BRLNSB.TTF') format('truetype');
@@ -317,7 +191,6 @@ body {
     src: url('/fonts/BRLNSR.TTF') format('truetype');
 }
 
-/* --- Calibri --- */
 @font-face {
     font-family: 'Calibri';
     src: url('/fonts/CALIBRI.TTF') format('truetype');
@@ -333,7 +206,6 @@ body {
     src: url('/fonts/CALIBRII.TTF') format('truetype');
 }
 
-/* --- Century Schoolbook --- */
 @font-face {
     font-family: 'Century Schoolbook';
     src: url('/fonts/CENSCBK.TTF') format('truetype');
@@ -349,7 +221,6 @@ body {
     src: url('/fonts/SCHLBKBI.TTF') format('truetype');
 }
 
-/* --- Century Gothic --- */
 @font-face {
     font-family: 'Century Gothic Paneuropean Bold';
     src: url('/fonts/CenturyGothicPaneuropeanBold.ttf') format('truetype');
@@ -365,13 +236,11 @@ body {
     src: url('/fonts/CenturyGothicPaneuropeanRegular.ttf') format('truetype');
 }
 
-/* --- Clicker Script --- */
 @font-face {
     font-family: 'Clicker Script';
     src: url('/fonts/ClickerScript-Regular.ttf') format('truetype');
 }
 
-/* --- Collegiate --- */
 @font-face {
     font-family: 'CollegiateBlackFLF';
     src: url('/fonts/CollegiateBlackFLF.ttf') format('truetype');
@@ -382,37 +251,31 @@ body {
     src: url('/fonts/CollegiateOutlineFLF.ttf') format('truetype');
 }
 
-/* --- Concerto Pro --- */
 @font-face {
     font-family: 'ConcertoPro-Regular';
     src: url('/fonts/concertoproregular.ttf') format('truetype');
 }
 
-/* --- Copperplate --- */
 @font-face {
     font-family: 'CopprplGoth BT Roman';
     src: url('/fonts/Copperplate Gothic.ttf') format('truetype');
 }
 
-/* --- Courgette --- */
 @font-face {
     font-family: 'Courgette Regular';
     src: url('/fonts/Courgette-Regular.ttf') format('truetype');
 }
 
-/* --- Cowboy Rodeo --- */
 @font-face {
     font-family: 'Cowboy Rodeo W01 Regular';
     src: url('/fonts/Cowboy Rodeo W01 Regular.ttf') format('truetype');
 }
 
-/* --- Cutive Mono --- */
 @font-face {
     font-family: 'Cutive Mono Regular';
     src: url('/fonts/CutiveMono-Regular.ttf') format('truetype');
 }
 
-/* --- DejaVu Serif --- */
 @font-face {
     font-family: 'DejaVu Serif Bold';
     src: url('/fonts/DejaVuSerif-Bold.ttf') format('truetype');
@@ -453,19 +316,16 @@ body {
     src: url('/fonts/DejaVuSerifCondensed.ttf') format('truetype');
 }
 
-/* --- Freebooter Script --- */
 @font-face {
     font-family: 'Freebooter Script';
     src: url('/fonts/freebooterscript.ttf') format('truetype');
 }
 
-/* --- French Script --- */
 @font-face {
     font-family: 'French Script MT';
     src: url('/fonts/Frscript.TTF') format('truetype');
 }
 
-/* --- Garamond --- */
 @font-face {
     font-family: 'EB Garamond Regular';
     src: url('/fonts/EBGaramond-Regular.woff2') format('woff2'),
@@ -683,8 +543,8 @@ body {
 
 @font-face {
     font-family: 'LeftCircleMonogram';
-    src: url('/fonts/LeftCircleMonogram.woff2') format('woff2'),
-        url('/fonts/LeftCircleMonogram.woff') format('woff'),
+    src: url('/fonts/LeftCircleMonogramRegular.woff2') format('woff2'),
+        url('/fonts/LeftCircleMonogramRegular.woff') format('woff'),
         url('/fonts/LeftCircleMonogram.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
@@ -693,8 +553,8 @@ body {
 
 @font-face {
     font-family: 'MiddleCircleMonogram';
-    src: url('/fonts/MiddleCircleMonogram.woff2') format('woff2'),
-        url('/fonts/MiddleCircleMonogram.woff') format('woff'),
+    src: url('/fonts/MiddleCircleMonogramRegular.woff2') format('woff2'),
+        url('/fonts/MiddleCircleMonogramRegular.woff') format('woff'),
         url('/fonts/MiddleCircleMonogram.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
@@ -703,8 +563,8 @@ body {
 
 @font-face {
     font-family: 'RightCircleMonogram';
-    src: url('/fonts/RightCircleMonogram.woff2') format('woff2'),
-        url('/fonts/RightCircleMonogram.woff') format('woff'),
+    src: url('/fonts/RightCircleMonogramRegular.woff2') format('woff2'),
+        url('/fonts/RightCircleMonogramRegular.woff') format('woff'),
         url('/fonts/RightCircleMonogram.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
