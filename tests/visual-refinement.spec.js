@@ -11,19 +11,20 @@ test.beforeEach(async ({ page }) => {
   });
   await page.goto("/");
 });
-test("live inspiration remains unselected until explicitly kept and can be removed", async ({
+test("comparison specimen remains unselected until explicitly kept and can be removed", async ({
   page,
 }) => {
   await expect(page.locator(".count-badge")).toHaveText("0 of 3 selected");
   await page
     .getByLabel("Your engraving wording", { exact: true })
     .fill(wording);
+  await page.getByRole("button", { name: "Compare choices", exact: true }).first().click();
   await expect(
     page.locator(".inspiration-preview .wording-preview"),
   ).toHaveText(wording);
   await expect(
     page.getByText(
-      "Nothing selected yet. Keep this style or explore the collection.",
+      "Nothing selected yet. Add a font to compare your wording.",
     ),
   ).toBeVisible();
   await expect(page.locator(".favorite-card")).toHaveCount(0);
@@ -46,6 +47,7 @@ test("narrow, tablet and 200-percent-zoom-equivalent layouts keep controls withi
   await page
     .getByLabel("Your engraving wording", { exact: true })
     .fill(wording);
+  await page.getByRole("button", { name: "Compare choices", exact: true }).first().click();
   await page
     .getByRole("button", { name: "Keep Garamond +", exact: true })
     .click();

@@ -1,54 +1,459 @@
 .monogram-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100vw;
   height: 100dvh;
   max-width: none;
   max-height: none;
   margin: 0;
+  padding: 24px;
   border: 0;
+  background: transparent;
+  color: #20272b;
+  font-family: "Graphik", Arial, sans-serif;
 }
+
 .monogram-dialog::backdrop {
-  background: rgba(15, 23, 42, 0.45);
+  background: rgb(20 28 34 / 64%);
 }
+
 .monogram-dialog-content {
-  max-height: calc(100dvh - 1rem);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1080px;
+  height: min(820px, calc(100dvh - 48px));
+  max-height: calc(100dvh - 48px);
+  overflow: hidden;
+  border: 1px solid #cbd2d6;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0 20px 70px rgb(12 24 32 / 25%);
 }
-.monogram-dialog :focus-visible {
-  outline: 3px solid #207c9d;
-  outline-offset: 3px;
+
+.monogram-header {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 19px 24px;
+  border-bottom: 1px solid #cbd2d6;
+  background: #fff;
 }
+
+.monogram-dialog #monogram-title {
+  margin: 0 0 5px;
+  color: #20272b;
+  font-family: "Graphik", Arial, sans-serif;
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 1.3;
+}
+
+.monogram-help {
+  margin: 0;
+  color: #53616a;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.monogram-dialog button {
+  min-height: 44px;
+  border: 1px solid #cbd2d6;
+  border-radius: 4px;
+  color: #20272b;
+  background: #fff;
+  cursor: pointer;
+  transition: background-color 120ms ease, border-color 120ms ease;
+}
+
+.monogram-dialog button:hover:not(:disabled) {
+  border-color: #829cae;
+  background: #e8eff4;
+}
+
+.monogram-dialog .monogram-close {
+  flex: 0 0 44px;
+  width: 44px;
+  padding: 0;
+  font-size: 29px;
+  line-height: 1;
+}
+
+.monogram-workspace {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  align-items: start;
+  gap: 28px;
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 24px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-color: #a4afb7 #f3f5f5;
+}
+
+.monogram-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-width: 0;
+}
+
+.monogram-workspace:not(:has(.monogram-fonts)) {
+  display: block;
+  background: #f3f5f5;
+}
+
+.monogram-workspace:not(:has(.monogram-fonts)) .monogram-controls {
+  width: 100%;
+  max-width: 520px;
+  margin-inline: auto;
+}
+
+.monogram-setup {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.monogram-mode-selector {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.monogram-mode,
+.monogram-frame {
+  padding: 10px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.monogram-dialog button[aria-pressed="true"] {
+  border-color: #216399;
+  background: #216399;
+  color: #fff;
+}
+
+.monogram-dialog button[aria-pressed="true"]:hover {
+  background: #194f7d;
+}
+
 .monogram-dialog button[aria-pressed="true"]::after {
   content: " \2713";
 }
-.monogram-dialog button.group {
+
+.monogram-dialog .monogram-section-title {
+  margin: 0 0 6px;
+  font-family: "Graphik", Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.monogram-dialog .monogram-mode-help {
+  margin: 0 0 8px;
+  color: #53616a;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.monogram-inputs {
+  display: flex;
+  gap: 10px;
+}
+
+.monogram-dialog input {
+  height: 60px;
+  min-width: 0;
+  border: 1px solid #8999a3;
+  border-radius: 4px;
+  background: #fff;
+  color: #20272b;
+  font-family: "Graphik", Arial, sans-serif;
+  text-align: center;
+}
+
+.monogram-dialog input::placeholder {
+  color: #8c979e;
+}
+
+.monogram-initial-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: #53616a;
+  font-size: 12px;
+}
+
+.monogram-dialog .monogram-initial-input {
+  width: 60px;
+  flex: 0 0 60px;
+  padding: 6px;
+  font-size: 28px;
+}
+
+.monogram-dialog .monogram-name-input {
+  flex: 1;
+  width: 100%;
+  padding: 6px 10px;
+  font-size: 22px;
+}
+
+.monogram-frame-selector {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.monogram-frame {
+  padding: 9px 5px;
+  font-size: 12px;
+}
+
+.monogram-preview-surface {
+  overflow: hidden;
+  border: 1px solid #cbd2d6;
+  border-radius: 4px;
+  background: #f3f5f5;
+}
+
+.monogram-preview-label {
+  display: block;
+  padding: 12px 14px 0;
+  color: #53616a;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.monogram-preview-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 210px;
+  padding: 8px;
+}
+
+.monogram-fonts {
+  min-width: 0;
+  padding-left: 28px;
+  border-left: 1px solid #cbd2d6;
+}
+
+.monogram-font-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.monogram-dialog .monogram-font-option {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  min-width: 0;
+  min-height: 142px;
+  padding: 13px 6px;
 }
-.monogram-dialog button.group[aria-pressed="true"]::after {
+
+.monogram-dialog .monogram-font-option[aria-pressed="true"] {
+  color: #20272b;
+  background: #edf4f9;
+  border: 2px solid #216399;
+  padding: 12px 5px;
+}
+
+.monogram-dialog .monogram-font-option[aria-pressed="true"]:hover {
+  background: #e2eef7;
+}
+
+.monogram-dialog .monogram-font-option[aria-pressed="true"]::after {
   position: absolute;
-  top: 0.1rem;
-  right: 0.4rem;
-  font-size: 0.8rem;
+  top: 5px;
+  right: 7px;
+  color: #216399;
+  font-size: 13px;
+  font-weight: 700;
 }
-.monogram-dialog button[aria-pressed="true"] {
-  border-color: #284d66;
+
+.monogram-font-name {
+  width: 100%;
+  color: #20272b;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: center;
+  overflow-wrap: anywhere;
 }
-@media (max-width: 639px) {
-  .monogram-dialog-content {
-    height: 100dvh;
-    max-height: 100dvh;
+
+.monogram-font-category {
+  color: #53616a;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.monogram-footer {
+  display: flex;
+  flex-direction: row-reverse;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 24px;
+  border-top: 1px solid #cbd2d6;
+  background: #fff;
+}
+
+.monogram-footer button {
+  min-height: 46px;
+  padding: 11px 18px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.monogram-dialog .monogram-insert {
+  border-color: #216399;
+  background: #216399;
+  color: #fff;
+}
+
+.monogram-dialog .monogram-insert:hover:not(:disabled) {
+  background: #194f7d;
+  border-color: #194f7d;
+}
+
+.monogram-dialog .monogram-insert:disabled {
+  border-color: #cbd2d6;
+  background: #e8ecee;
+  color: #69737a;
+  cursor: not-allowed;
+}
+
+.monogram-dialog button:focus-visible,
+.monogram-dialog input:focus-visible {
+  outline: 3px solid #216399;
+  outline-offset: 3px;
+}
+
+@media (min-width: 800px) and (min-height: 760px) {
+  .monogram-controls {
+    position: sticky;
+    top: 0;
   }
 }
 
-.monogram-dialog button.bg-blue-600 {
-  background: #245b59;
+@media (max-width: 960px) {
+  .monogram-workspace {
+    grid-template-columns: 270px minmax(0, 1fr);
+    gap: 20px;
+  }
+
+  .monogram-fonts {
+    padding-left: 20px;
+  }
+
+  .monogram-font-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
-.monogram-dialog button.bg-blue-600:hover:not(:disabled) {
-  background: #194744;
+
+@media (max-width: 799px) {
+  .monogram-dialog {
+    padding: 8px;
+  }
+
+  .monogram-dialog-content {
+    max-width: 600px;
+    height: calc(100dvh - 16px);
+    max-height: calc(100dvh - 16px);
+  }
+
+  .monogram-header {
+    gap: 12px;
+    padding: 14px 16px;
+  }
+
+  .monogram-dialog #monogram-title {
+    font-size: 19px;
+  }
+
+  .monogram-help {
+    font-size: 12px;
+  }
+
+  .monogram-workspace {
+    display: block;
+    padding: 20px 16px;
+  }
+
+  .monogram-controls,
+  .monogram-setup {
+    gap: 16px;
+  }
+
+  .monogram-mode-selector {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 4px;
+  }
+
+  .monogram-mode {
+    position: relative;
+    padding: 10px 4px;
+    font-size: 12px;
+  }
+
+  .monogram-dialog .monogram-mode[aria-pressed="true"]::after {
+    position: absolute;
+    top: 2px;
+    right: 4px;
+    font-size: 9px;
+    line-height: 1;
+  }
+
+  .monogram-preview-box {
+    height: 140px;
+  }
+
+  .monogram-preview-box > div {
+    transform: scale(0.8);
+  }
+
+  .monogram-fonts {
+    margin-top: 20px;
+    padding: 18px 0 0;
+    border-top: 1px solid #cbd2d6;
+    border-left: 0;
+  }
+
+  .monogram-footer {
+    gap: 10px;
+    padding: 10px 16px;
+  }
+
+  .monogram-footer button {
+    font-size: 13px;
+  }
 }
-.monogram-dialog button[aria-pressed="true"].group {
-  background: #edf4f0;
-  border-color: #245b59;
+
+@media (max-width: 359px) {
+  .monogram-mode-selector {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
-.monogram-dialog #monogram-title {
-  font-family: "Graphik", Arial, sans-serif;
-  font-size: 19px;
+
+@media (prefers-reduced-motion: reduce) {
+  .monogram-dialog button {
+    transition: none;
+  }
 }

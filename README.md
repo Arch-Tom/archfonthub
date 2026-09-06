@@ -2,7 +2,7 @@
 
 Arch Font Hub helps engraving customers choose up to three lettering favorites, preview their own wording, add notes, and send a reviewed request to Arch. The designer uses these preferences to prepare the actual proof.
 
-The v3 interface keeps the wording, searchable font collection, and favorite previews together. Customers can remove or replace favorites, compare styles, use special characters, and optionally create a monogram. A separate review step includes customer details and the complete request; successful submission produces a downloadable receipt.
+The v3 interface uses a shared wording editor, full-width Browse and Compare workspaces, and a persistent selection bar. Mobile adds compact and enlarged comparison previews. Customers can remove or replace favorites, compare styles, use special characters, and optionally create a monogram. A separate review step includes customer details and the complete request; successful submission produces a downloadable receipt.
 
 ## Local development
 
@@ -77,3 +77,8 @@ The backend's duplicate check is based on the complete filename, not an order-wi
 Previews communicate preferences, not production engraving layout. Multiline wording, blank lines, punctuation, and Unicode remain in the request. SVG metadata also retains the exact source wording and customer identity. Accompanying wording and favorite names are visibly exported even when the request includes a monogram.
 
 Font coverage varies. Browser fallbacks can render a character in a different font when the selected asset lacks that glyph; check accents, Hebrew, and symbols in the final proof. Circular monograms use dedicated Latin-letter font assets. The exported SVG references font-family names rather than embedding font files or converting lettering to paths, so the designer's application needs the corresponding fonts. Monogram size and placement in previews are illustrative and remain subject to the designer's proof.
+
+
+## Radical redesign
+
+See [the third-pass design and validation report](docs/V3-RADICAL-REDESIGN.md) for the new workspace model, independent rendered review, accessibility checks, and retained behavior. All 21 existing browser tests remain; six additional cases cover the new interaction model and font fitting.

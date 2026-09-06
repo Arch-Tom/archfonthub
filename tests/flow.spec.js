@@ -41,6 +41,8 @@ test("desktop comparison retains Unicode, styles and favorites through edits, fi
 }) => {
   await choose(page);
   await expect(page.locator(".count-badge")).toHaveText("3 of 3 selected");
+  await page.getByRole("button", { name: "Compare choices", exact: true }).first().click();
+  await expect(page.locator(".favorite-card .wording-preview")).toHaveCount(3);
   for (const preview of await page
     .locator(".favorite-card .wording-preview")
     .all())
@@ -49,7 +51,9 @@ test("desktop comparison retains Unicode, styles and favorites through edits, fi
   await page
     .getByLabel("Your engraving wording", { exact: true })
     .fill(wording + "\nThank you!");
+  await page.getByRole("button", { name: "Browse fonts", exact: true }).click();
   await page.getByRole("button", { name: "Script", exact: true }).click();
+  await page.getByRole("button", { name: "Compare choices", exact: true }).first().click();
   await expect(page.getByLabel("Arial style")).toHaveValue("bold");
   await expect(
     page.getByRole("article", { name: "Favorite 1: Arial" }),
@@ -58,6 +62,7 @@ test("desktop comparison retains Unicode, styles and favorites through edits, fi
   await expect(
     page.getByLabel("Your engraving wording", { exact: true }),
   ).toHaveValue(wording + "\nThank you!");
+  await page.getByRole("button", { name: "Compare choices", exact: true }).first().click();
   await expect(page.getByLabel("Arial style")).toHaveValue("bold");
   await page.evaluate(() => document.fonts.ready);
   await page.screenshot({ path: "artifacts/v3-desktop.png", fullPage: true });
@@ -91,6 +96,7 @@ test("three-font limit offers immediate replacement, and favorites remove/replac
     .getByRole("button", { name: "Remove Calibri", exact: true })
     .click();
   await expect(page.locator(".count-badge")).toHaveText("2 of 3 selected");
+  await page.getByRole("button", { name: "Browse fonts", exact: true }).click();
   await page.getByRole("button", { name: "Larger samples" }).click();
   await expect(page.locator(".font-catalog")).toHaveClass(/expanded/);
   expect(writes).toHaveLength(0);
@@ -236,7 +242,7 @@ test("390px layout and keyboard offer clear focus and readable favorites", async
   await page.screenshot({ path: "artifacts/v3-mobile.png", fullPage: true });
   await page.locator(".mobile-shortlist a").click();
   await expect(
-    page.getByRole("heading", { name: "The favorites" }),
+    page.getByRole("heading", { name: "Your lettering choices" }),
   ).toBeInViewport();
   await page.screenshot({ path: "artifacts/v3-mobile-favorites.png" });
   expect(writes).toHaveLength(0);
@@ -302,7 +308,7 @@ test("failed submission can retry safely and returning to choices restores keybo
   await review(page);
   await page.getByRole("button", { name: "Back to my choices" }).click();
   await expect(
-    page.getByRole("heading", { name: "Your words. A style you love." }),
+    page.getByRole("heading", { name: "Choose lettering for your order" }),
   ).toBeFocused();
   await page.getByRole("button", { name: "Review my choices" }).click();
   await page.getByRole("button", { name: "Send my choices to Arch" }).click();

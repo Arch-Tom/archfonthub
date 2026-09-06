@@ -53,6 +53,7 @@ test("accents replace selected wording and symbols insert at the preserved curso
   await page
     .getByRole("button", { name: "Add Garamond to favorites", exact: true })
     .click();
+  await page.getByRole("button", { name: "Compare choices", exact: true }).first().click();
   await expect(
     page
       .getByRole("article", { name: "Favorite 1: Garamond" })
@@ -188,6 +189,7 @@ for (const mode of ["classic", "flat", "circular", "split"]) {
       .getByRole("button", { name: "Insert Monogram", exact: true })
       .click();
     await expect(dialog).toHaveCount(0);
+    await page.getByRole("button", { name: "Compare choices", exact: true }).first().click();
     await expect(
       page.getByRole("heading", { name: "Your monogram", exact: true }),
     ).toBeVisible();

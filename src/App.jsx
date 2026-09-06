@@ -44,15 +44,15 @@ const familyFor = (font) =>
 
 function TextPreview({ text, font, large = false }) {
   const ref = useRef(null);
-  const [size, setSize] = useState(large ? 46 : 32);
+  const [size, setSize] = useState(large ? 56 : 32);
   const family = familyFor(font);
   useEffect(() => {
     const element = ref.current;
     let cancelled = false;
     const fit = () => {
-      if (cancelled || !element) return;
+      if (cancelled || !element?.clientWidth) return;
       const ctx = document.createElement("canvas").getContext("2d");
-      const max = large ? 46 : 32;
+      const max = large ? 56 : 32;
       ctx.font = `${max}px ${family}`;
       const widest = Math.max(
         1,
@@ -67,10 +67,12 @@ function TextPreview({ text, font, large = false }) {
     };
     fit();
     document.fonts.ready.then(fit);
+    document.fonts.addEventListener("loadingdone", fit);
     const observer = new ResizeObserver(fit);
     observer.observe(element);
     return () => {
       cancelled = true;
+      document.fonts.removeEventListener("loadingdone", fit);
       observer.disconnect();
     };
   }, [text, family, large]);
@@ -79,7 +81,11 @@ function TextPreview({ text, font, large = false }) {
       ref={ref}
       className="wording-preview"
       dir="auto"
-      style={{ fontFamily: family, fontSize: size }}
+      style={{
+        fontFamily: family,
+        fontSize: size,
+        "--preview-size": `${size}px`,
+      }}
     >
       {text || "Your wording goes here"}
     </div>
@@ -117,7 +123,11 @@ function FontName({ font }) {
     <span
       ref={ref}
       className="font-name"
-      style={{ fontFamily: family, fontSize: size }}
+      style={{
+        fontFamily: family,
+        fontSize: size,
+        "--preview-size": `${size}px`,
+      }}
     >
       {font.name}
     </span>
@@ -162,6 +172,27 @@ function MonogramSample({ info }) {
   );
 }
 
+function FontGuidance({ font, text }) {
+  if (font.name === "Great Vibes" && text.includes("•"))
+    return (
+      <p className="glyph-note">
+        This font has a large bullet character. Your designer will check its
+        size in the proof.
+      </p>
+    );
+  if (
+    (font.name === "Collegiate" && /[éÉ]/.test(text)) ||
+    (font.name === "I Love Glitter" && text.includes("•"))
+  )
+    return (
+      <p className="glyph-note">
+        Some characters use a supporting font. Your designer will check them in
+        the proof.
+      </p>
+    );
+  return null;
+}
+
 function RequestSummary({ request }) {
   return (
     <div className="request-summary">
@@ -178,6 +209,7 @@ function RequestSummary({ request }) {
             <strong>{font.name}</strong>
             <span className="muted"> · {styleLabel(font.activeStyle)}</span>
             <TextPreview text={request.text} font={font} />
+            <FontGuidance text={request.text} font={font} />
           </div>
         </div>
       ))}
@@ -228,6 +260,10 @@ export default function App() {
   const [category, setCategory] = useState("All");
   const [search, setSearch] = useState("");
   const [expanded, setExpanded] = useState(false);
+  const [workspaceView, setWorkspaceView] = useState("browse");
+  const [comparisonExpanded, setComparisonExpanded] = useState(false);
+  const comparisonRef = useRef(null);
+  const replacementRef = useRef(null);
   const [replaceName, setReplaceName] = useState(null);
   const [pendingFont, setPendingFont] = useState(null);
   const [announcement, setAnnouncement] = useState("");
@@ -294,6 +330,16 @@ export default function App() {
     previousStep.current = step;
   }, [step]);
 
+  const switchWorkspace = (view, moveFocus = false) => {
+    setWorkspaceView(view);
+    if (moveFocus)
+      requestAnimationFrame(() => {
+        const target =
+          view === "browse" ? catalogRef.current : comparisonRef.current;
+        target?.focus();
+        target?.scrollIntoView({ block: "start", behavior: "instant" });
+      });
+  };
   const chooseFont = (font) => {
     if (favorites.some((item) => item.name === font.name)) {
       removeFont(font.name);
@@ -306,6 +352,7 @@ export default function App() {
       );
       setAnnouncement(`${replaceName} replaced with ${font.name}.`);
       setReplaceName(null);
+      switchWorkspace("compare", true);
     } else if (favorites.length < 3) {
       setFavorites((items) => [...items, chosen]);
       setAnnouncement(
@@ -313,6 +360,13 @@ export default function App() {
       );
     } else {
       setPendingFont(chosen);
+      requestAnimationFrame(() => {
+        replacementRef.current?.focus();
+        replacementRef.current?.scrollIntoView({
+          block: "start",
+          behavior: "instant",
+        });
+      });
       setAnnouncement(
         "Three favorites selected. Choose a favorite to replace.",
       );
@@ -323,6 +377,10 @@ export default function App() {
     if (replaceName === name) setReplaceName(null);
     setPendingFont(null);
     setAnnouncement(`${name} removed. You can choose another font.`);
+    if (workspaceView === "compare")
+      requestAnimationFrame(() =>
+        comparisonRef.current?.focus({ preventScroll: true }),
+      );
   };
   const insert = (value) => {
     const { start, end } = selectionRef.current;
@@ -420,49 +478,42 @@ export default function App() {
       </a>
       <header className="site-header">
         <a className="brand" href="#main" aria-label="Arch Engraving Font Hub">
-          <img src="/images/Arch Vector Logo.svg" alt="Arch Engraving" />
+          <img src="/images/Arch Vector Logo White.svg" alt="Arch Engraving" />
           <span>
-            Font Hub<small>YOUR WORDS. OUR CRAFT.</small>
+            Font Hub<small>ARCH ENGRAVING</small>
           </span>
         </a>
-        <span className="header-caption">Lettering, thoughtfully crafted.</span>
+        <div className="header-context">
+          <span>LETTERING PREFERENCES</span>
+          <strong>
+            {step === "receipt"
+              ? "Request received"
+              : step === "review"
+                ? "Review & send"
+                : orderNumber
+                  ? `Order ${orderNumber}`
+                  : "For your engraving order"}
+          </strong>
+        </div>
       </header>
       <main id="main" className="page-main">
         {step === "choose" ? (
           <>
-            <div className="intro">
-              <div>
-                <p className="eyebrow">THE ARCH LETTERING COLLECTION</p>
-                <h1 ref={pageHeading} tabIndex={-1}>
-                  Your words. <em>A style you love.</em>
-                </h1>
-                <p>
-                  Choose up to 3 lettering favorites. We’ll use your choices to
-                  prepare your engraving proof.
-                </p>
-              </div>
-              <ol className="step-list" aria-label="Your progress">
-                <li className="current">
-                  <span>1</span>Choose
-                </li>
-                <li>
-                  <span>2</span>Review
-                </li>
-                <li>
-                  <span>3</span>Send
-                </li>
-              </ol>
-            </div>
             <div className="workspace">
-              <div className="explore-column">
-                <section
-                  className="wording-section"
-                  aria-label="Engraving wording editor"
-                >
-                  <div className="section-heading">
-                    <h2 id="wording-title">Your engraving wording</h2>
-                    <span className="muted small">Start here</span>
-                  </div>
+              <section
+                className="wording-section"
+                aria-label="Engraving wording editor"
+              >
+                <div className="wording-label">
+                  <h1 ref={pageHeading} tabIndex={-1}>
+                    Choose lettering for your order
+                  </h1>
+                  <p>
+                    Choose up to three lettering styles for your engraving
+                    proof.
+                  </p>
+                </div>
+                <div className="wording-input">
                   <label className="sr-only" htmlFor="engraving-text">
                     Your engraving wording
                   </label>
@@ -497,8 +548,8 @@ export default function App() {
                     aria-describedby="wording-help"
                   />
                   <p id="wording-help" className="field-help">
-                    See the same wording in every font. Your designer will
-                    refine the final layout.
+                    These samples show lettering preferences. Arch will prepare
+                    the final layout in your proof.
                   </p>
                   <div className="wording-extras">
                     <CharacterTools onInsert={insert} />
@@ -527,191 +578,239 @@ export default function App() {
                       rows={3}
                       value={notes}
                       onChange={(event) => setNotes(event.target.value)}
-                      placeholder="e.g., I love Garamond. Please make the name the main focus."
+                      placeholder="e.g., Please make the name larger than the title."
                     />
                   </details>
-                </section>
-                <section
-                  className="font-section"
-                  aria-labelledby="browse-title"
-                  ref={catalogRef}
-                  tabIndex={-1}
+                </div>
+              </section>
+              <nav className="workspace-nav" aria-label="Lettering workspace">
+                <button
+                  aria-label="Browse fonts"
+                  aria-pressed={workspaceView === "browse"}
+                  onClick={() => switchWorkspace("browse", true)}
                 >
-                  <div className="section-heading">
-                    <h2 id="browse-title">Find your favorites</h2>
+                  Browse fonts <span>{allFonts.length}</span>
+                </button>
+                <button
+                  aria-label="Compare choices"
+                  aria-pressed={workspaceView === "compare"}
+                  onClick={() => switchWorkspace("compare", true)}
+                >
+                  Compare choices <span>{favorites.length}</span>
+                </button>
+                <button
+                  className="edit-wording"
+                  onClick={() => {
+                    textRef.current?.focus();
+                    textRef.current?.scrollIntoView({ block: "center" });
+                  }}
+                >
+                  Edit wording <span aria-hidden="true">↑</span>
+                </button>
+              </nav>
+              <section
+                className="font-section"
+                hidden={workspaceView !== "browse"}
+                aria-labelledby="browse-title"
+                ref={catalogRef}
+                tabIndex={-1}
+              >
+                <h2 id="browse-title" className="sr-only">
+                  Browse lettering
+                </h2>
+                <div className="browse-controls">
+                  <div className="categories" aria-label="Font categories">
+                    {["All", ...Object.keys(fontLibrary)].map((item) => (
+                      <button
+                        key={item}
+                        aria-pressed={category === item}
+                        onClick={() => setCategory(item)}
+                      >
+                        {item}
+                      </button>
+                    ))}
+                  </div>
+                  <label className="font-search">
+                    <span className="sr-only">Search fonts</span>
+                    <input
+                      type="search"
+                      placeholder="Search fonts"
+                      value={search}
+                      onChange={(event) => setSearch(event.target.value)}
+                    />
+                  </label>
+                  <button
+                    className="text-button sample-toggle"
+                    aria-pressed={expanded}
+                    onClick={() => setExpanded((value) => !value)}
+                  >
+                    {expanded ? "Compact samples" : "Larger samples"}{" "}
+                    <span aria-hidden="true">↗</span>
+                  </button>
+                </div>
+                {replaceName && (
+                  <div className="inline-notice" role="status">
+                    Choose a new font to replace <strong>{replaceName}</strong>.
                     <button
-                      className="text-button sample-toggle"
-                      aria-pressed={expanded}
-                      onClick={() => setExpanded((value) => !value)}
+                      className="text-button"
+                      onClick={() => setReplaceName(null)}
                     >
-                      {expanded ? "Compact samples" : "Larger samples"}{" "}
-                      <span aria-hidden="true">↗</span>
+                      Cancel replacement
                     </button>
                   </div>
-                  <div className="browse-controls">
-                    <div className="categories" aria-label="Font categories">
-                      {["All", ...Object.keys(fontLibrary)].map((item) => (
+                )}
+                {pendingFont && (
+                  <div
+                    className="limit-notice"
+                    role="alert"
+                    ref={replacementRef}
+                    tabIndex={-1}
+                  >
+                    <strong>You have 3 favorites.</strong>
+                    <p>To add {pendingFont.name}, choose one to replace:</p>
+                    <div className="replacement-options">
+                      {favorites.map((font) => (
                         <button
-                          key={item}
-                          aria-pressed={category === item}
-                          onClick={() => setCategory(item)}
+                          key={font.name}
+                          onClick={() => {
+                            setFavorites((items) =>
+                              items.map((item) =>
+                                item.name === font.name ? pendingFont : item,
+                              ),
+                            );
+                            setAnnouncement(
+                              `${font.name} replaced with ${pendingFont.name}.`,
+                            );
+                            setPendingFont(null);
+                            switchWorkspace("compare", true);
+                          }}
                         >
-                          {item}
+                          {font.name}
                         </button>
                       ))}
+                      <button onClick={() => setPendingFont(null)}>
+                        Keep my favorites
+                      </button>
                     </div>
-                    <label className="font-search">
-                      <span className="sr-only">Search fonts</span>
-                      <input
-                        type="search"
-                        placeholder="Search fonts"
-                        value={search}
-                        onChange={(event) => setSearch(event.target.value)}
-                      />
-                    </label>
                   </div>
-                  {replaceName && (
-                    <div className="inline-notice" role="status">
-                      Choose a new font to replace{" "}
-                      <strong>{replaceName}</strong>.
+                )}
+                <div className="catalog-caption">
+                  <span>
+                    {visibleFonts.length} lettering{" "}
+                    {visibleFonts.length === 1 ? "style" : "styles"}
+                  </span>
+                  <span>
+                    Choose a font to add it <span aria-hidden="true">＋</span>
+                  </span>
+                </div>
+                <div
+                  className={`font-catalog ${expanded ? "expanded" : ""}`}
+                  role="region"
+                  aria-label="Lettering styles"
+                  tabIndex={0}
+                >
+                  {visibleFonts.map((font) => {
+                    const selected = favorites.some(
+                      (item) => item.name === font.name,
+                    );
+                    return (
+                      <button
+                        key={font.name}
+                        className={`font-option ${selected ? "selected" : ""}`}
+                        aria-label={`${selected ? "Remove" : "Add"} ${font.name}${selected ? " from" : " to"} favorites`}
+                        aria-pressed={selected}
+                        onClick={() => chooseFont(font)}
+                      >
+                        <span className="font-option-top">
+                          <span className="font-option-label">{font.name}</span>
+                          <span className="selection-mark" aria-hidden="true">
+                            {selected ? "✓" : "+"}
+                          </span>
+                        </span>
+                        {text ? (
+                          <span
+                            className="font-sample"
+                            dir="auto"
+                            style={{
+                              fontFamily: familyFor(
+                                favorites.find(
+                                  (item) => item.name === font.name,
+                                ) || font,
+                              ),
+                            }}
+                          >
+                            {expanded ? text : text.split("\n")[0]}
+                          </span>
+                        ) : (
+                          <FontName font={font} />
+                        )}
+                        <span className="font-meta">
+                          {selected
+                            ? "✓ Selected"
+                            : text
+                              ? font.category
+                              : font.category +
+                                " · " +
+                                Object.keys(font.styles).length +
+                                (Object.keys(font.styles).length === 1
+                                  ? " style"
+                                  : " styles")}
+                        </span>
+                      </button>
+                    );
+                  })}
+                  {!visibleFonts.length && (
+                    <div className="empty-search">
+                      <h3>No fonts found</h3>
+                      <p>Try a different name or category.</p>
                       <button
                         className="text-button"
-                        onClick={() => setReplaceName(null)}
+                        onClick={() => {
+                          setSearch("");
+                          setCategory("All");
+                        }}
                       >
-                        Cancel replacement
+                        Show all fonts
                       </button>
                     </div>
                   )}
-                  {pendingFont && (
-                    <div className="limit-notice" role="alert">
-                      <strong>You have 3 favorites.</strong>
-                      <p>To add {pendingFont.name}, choose one to replace:</p>
-                      <div className="replacement-options">
-                        {favorites.map((font) => (
-                          <button
-                            key={font.name}
-                            onClick={() => {
-                              setFavorites((items) =>
-                                items.map((item) =>
-                                  item.name === font.name ? pendingFont : item,
-                                ),
-                              );
-                              setAnnouncement(
-                                `${font.name} replaced with ${pendingFont.name}.`,
-                              );
-                              setPendingFont(null);
-                            }}
-                          >
-                            {font.name}
-                          </button>
-                        ))}
-                        <button onClick={() => setPendingFont(null)}>
-                          Keep my favorites
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                  <div className="catalog-caption">
-                    <span>{visibleFonts.length} lettering styles</span>
-                    <span>
-                      Choose a font to add it <span aria-hidden="true">＋</span>
-                    </span>
-                  </div>
-                  <div
-                    className={`font-catalog ${expanded ? "expanded" : ""}`}
-                    role="region"
-                    aria-label="Lettering styles"
-                    tabIndex={0}
-                  >
-                    {visibleFonts.map((font) => {
-                      const selected = favorites.some(
-                        (item) => item.name === font.name,
-                      );
-                      return (
-                        <button
-                          key={font.name}
-                          className={`font-option ${selected ? "selected" : ""}`}
-                          aria-label={`${selected ? "Remove" : "Add"} ${font.name}${selected ? " from" : " to"} favorites`}
-                          aria-pressed={selected}
-                          onClick={() => chooseFont(font)}
-                        >
-                          <span className="font-option-top">
-                            <span className="font-option-label">
-                              {text ? font.name : font.category}
-                            </span>
-                            <span className="selection-mark" aria-hidden="true">
-                              {selected ? "✓" : "+"}
-                            </span>
-                          </span>
-                          {text ? (
-                            <span
-                              className="font-sample"
-                              dir="auto"
-                              style={{ fontFamily: familyFor(font) }}
-                            >
-                              {expanded ? text : text.split("\n")[0]}
-                            </span>
-                          ) : (
-                            <FontName font={font} />
-                          )}
-                          <span className="font-meta">
-                            {selected
-                              ? "✓ Selected"
-                              : text
-                                ? font.category
-                                : Object.keys(font.styles).length +
-                                  (Object.keys(font.styles).length === 1
-                                    ? " style"
-                                    : " styles")}
-                          </span>
-                        </button>
-                      );
-                    })}
-                    {!visibleFonts.length && (
-                      <div className="empty-search">
-                        <h3>No fonts found</h3>
-                        <p>Try a different name or category.</p>
-                        <button
-                          className="text-button"
-                          onClick={() => {
-                            setSearch("");
-                            setCategory("All");
-                          }}
-                        >
-                          Show all fonts
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                </section>
-              </div>
-              <aside
+                </div>
+              </section>
+              <section
                 id="favorites"
-                className="favorites-panel"
+                className={`favorites-panel ${comparisonExpanded ? "comparison-expanded" : ""}`}
+                hidden={workspaceView !== "compare"}
+                ref={comparisonRef}
+                tabIndex={-1}
                 data-count={favorites.length}
                 data-wording={Boolean(text.trim())}
                 aria-labelledby="favorites-title"
               >
                 <div className="favorites-heading">
                   <div className="section-heading">
-                    <h2 id="favorites-title">The favorites</h2>
-                    <span className="count-badge">
-                      {favorites.length} of 3 selected
-                    </span>
-                  </div>
-                  <p>Compare your wording. Keep the styles you love.</p>
-                  {favorites.length > 0 && (
-                    <div
-                      className="shortlist-names"
-                      aria-label="Selected favorites"
-                    >
-                      {favorites.map((font, i) => (
-                        <span key={font.name}>
-                          {i + 1}. {font.name}
-                        </span>
-                      ))}
+                    <h2 id="favorites-title">Your lettering choices</h2>
+                    <div className="comparison-actions">
+                      <button
+                        className="secondary-button comparison-toggle"
+                        aria-pressed={comparisonExpanded}
+                        onClick={() => setComparisonExpanded((value) => !value)}
+                      >
+                        {comparisonExpanded
+                          ? "Compact previews"
+                          : "Larger previews"}
+                      </button>
+                      <button
+                        className="secondary-button"
+                        onClick={() => switchWorkspace("browse", true)}
+                      >
+                        Browse more fonts <span aria-hidden="true">+</span>
+                      </button>
                     </div>
-                  )}
+                  </div>
+                  <p>
+                    These are the fonts you’ll send to Arch. Compare the
+                    lettering, adjust a style, or replace a choice.
+                  </p>
                 </div>
                 <div className="favorite-previews">
                   {favorites.map((font, index) => (
@@ -731,19 +830,8 @@ export default function App() {
                           ×
                         </button>
                       </div>
-                      <TextPreview
-                        text={text}
-                        font={font}
-                        large={favorites.length === 1}
-                      />
-                      {((font.name === "Collegiate" && /[éÉ]/.test(text)) ||
-                        (font.name === "I Love Glitter" &&
-                          text.includes("•"))) && (
-                        <p className="glyph-note">
-                          Some characters use a supporting font. Your designer
-                          will check them in the proof.
-                        </p>
-                      )}
+                      <TextPreview text={text} font={font} large />
+                      <FontGuidance text={text} font={font} />
                       <div className="favorite-card-bottom">
                         <label>
                           <span className="sr-only">{font.name} style</span>
@@ -775,11 +863,7 @@ export default function App() {
                           onClick={() => {
                             setReplaceName(font.name);
                             setPendingFont(null);
-                            catalogRef.current?.focus();
-                            catalogRef.current?.scrollIntoView({
-                              behavior: "smooth",
-                              block: "start",
-                            });
+                            switchWorkspace("browse", true);
                           }}
                         >
                           Replace
@@ -789,11 +873,24 @@ export default function App() {
                   ))}
                   {!favorites.length && (
                     <div className="empty-favorites">
-                      {text.trim() ? (
-                        <>
-                          <p className="specimen-caption">
-                            A FIRST LOOK AT YOUR WORDS
-                          </p>
+                      <div>
+                        <h3>No favorites selected</h3>
+                        <p>
+                          Nothing selected yet. Add a font to compare your
+                          wording.
+                        </p>
+                        <button
+                          className="secondary-button"
+                          onClick={() => switchWorkspace("browse", true)}
+                        >
+                          Explore all lettering
+                        </button>
+                      </div>
+                      {text.trim() && (
+                        <div className="unselected-sample">
+                          <span className="eyebrow">
+                            GARAMOND · SAMPLE ONLY
+                          </span>
                           <div className="inspiration-preview">
                             <TextPreview
                               text={text}
@@ -801,42 +898,13 @@ export default function App() {
                               large
                             />
                           </div>
-                          <div className="inspiration-credit">
-                            <span>Garamond · Sample preview</span>
-                            <button
-                              className="text-button"
-                              onClick={() => chooseFont(inspirationFont)}
-                            >
-                              Keep Garamond +
-                            </button>
-                          </div>
-                          <p className="empty-instruction">
-                            Nothing selected yet. Keep this style or explore the
-                            collection.
-                          </p>
-                        </>
-                      ) : (
-                        <>
-                          <p className="specimen-caption">
-                            A LITTLE INSPIRATION
-                          </p>
-                          <div
-                            className="lettering-poster"
-                            aria-label="Words worth keeping. A lettering sample."
+                          <button
+                            className="text-button"
+                            onClick={() => chooseFont(inspirationFont)}
                           >
-                            <span>Words</span>
-                            <span>worth</span>
-                            <span>keeping.</span>
-                          </div>
-                          <div className="poster-rule" aria-hidden="true">
-                            <span>✦</span>
-                          </div>
-                          <h3>Every word has a character.</h3>
-                          <p>
-                            Type your wording to see it come to life. Then
-                            choose the lettering that feels right.
-                          </p>
-                        </>
+                            Keep Garamond +
+                          </button>
+                        </div>
                       )}
                     </div>
                   )}
@@ -868,24 +936,68 @@ export default function App() {
                     </article>
                   )}
                 </div>
-                <div className="favorites-footer">
-                  <p className="proof-note">
-                    These are your preferences. We’ll take care of the proof.
-                  </p>
-                  <button className="primary-button" onClick={openReview}>
-                    Review my choices <span aria-hidden="true">→</span>
-                  </button>
-                  <p className="review-help">
-                    {ready
-                      ? "Next: your details and a final check."
-                      : "Add wording and a favorite, or create a monogram."}
-                  </p>
-                </div>
-              </aside>
+                <p className="proof-note">
+                  Arch will use your choices to prepare an engraving proof for
+                  your review.
+                </p>
+              </section>
             </div>
-            <div className="mobile-shortlist">
-              <a href="#favorites">View favorites · {favorites.length}/3</a>
-              <button onClick={openReview}>Review choices →</button>
+            <div className="selection-dock mobile-shortlist">
+              <div className="dock-selection">
+                <a
+                  href="#favorites"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    switchWorkspace("compare", true);
+                  }}
+                >
+                  <span className="dock-label">YOUR CHOICES</span>
+                  <span className="count-badge">
+                    {favorites.length} of 3 selected
+                  </span>
+                </a>
+                <div className="dock-fonts" aria-label="Selected favorites">
+                  {favorites.map((font, index) => (
+                    <button
+                      key={font.name}
+                      onClick={() => switchWorkspace("compare", true)}
+                    >
+                      <span>{index + 1}</span>
+                      {font.name}
+                    </button>
+                  ))}
+                  {!favorites.length && (
+                    <span>
+                      {text.trim()
+                        ? "Select a font to compare your wording."
+                        : "Start with the wording from your order."}
+                    </span>
+                  )}
+                  {monogramInfo && (
+                    <button onClick={() => switchWorkspace("compare", true)}>
+                      ✓ Monogram added
+                    </button>
+                  )}
+                </div>
+              </div>
+              <button
+                className="primary-button"
+                onClick={() => {
+                  if (ready) openReview();
+                  else if (text.trim()) switchWorkspace("browse", true);
+                  else {
+                    textRef.current?.focus();
+                    textRef.current?.scrollIntoView({ block: "center" });
+                  }
+                }}
+              >
+                {ready
+                  ? "Review my choices"
+                  : text.trim()
+                    ? "Choose a font"
+                    : "Enter wording"}{" "}
+                <span aria-hidden="true">→</span>
+              </button>
             </div>
             {!draftSaved && (
               <p role="status" className="inline-notice">
@@ -904,7 +1016,7 @@ export default function App() {
               ← Back to my choices
             </button>
             <div className="review-intro">
-              <p className="eyebrow">ONE LAST LOOK</p>
+              <p className="eyebrow">REVIEW & SEND</p>
               <h1 ref={pageHeading} tabIndex={-1}>
                 Ready to send to Arch?
               </h1>
@@ -973,6 +1085,14 @@ export default function App() {
                     </h3>
                     <p>{error.message}</p>
                     <p>Your wording, favorites, and details are still here.</p>
+                    <a
+                      className="text-button contact-link"
+                      href="https://archengraving.com/contact"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Contact Arch <span aria-hidden="true">↗</span>
+                    </a>
                   </div>
                 )}
                 <div className="submit-status" role="status">
@@ -1049,7 +1169,7 @@ export default function App() {
       </main>
       <footer className="site-footer">
         <span>ARCH ENGRAVING</span>
-        <p>Your words, thoughtfully crafted.</p>
+        <p>Lettering preferences. Prepared into a proof by Arch.</p>
         <span>Font Hub</span>
       </footer>
       <div className="sr-only" role="status" aria-live="polite">
