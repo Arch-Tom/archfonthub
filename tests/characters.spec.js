@@ -18,11 +18,17 @@ test.beforeEach(async ({ page }) => {
   await page.goto("/");
 });
 
-async function openTools(page, tab) {
-  const tools = page.locator(".character-tools");
-  if (!(await tools.evaluate((element) => element.open)))
-    await tools.locator("summary").click();
-  if (tab) await tools.getByRole("tab", { name: tab, exact: true }).click();
+const toolLabels = { Symbols: "Symbols", Accents: "Accented Characters", Hebrew: "Hebrew" };
+
+async function openTools(page, tab = "Symbols") {
+  const tools = page.locator(".character-tools--dialog");
+  if (!(await tools.count())) {
+    await page.getByRole("button", { name: toolLabels[tab], exact: true }).click();
+    await expect(tools).toBeVisible();
+    await expect(tools.getByRole("tab", { name: tab, exact: true })).toHaveAttribute("aria-selected", "true");
+  } else {
+    await tools.getByRole("tab", { name: tab, exact: true }).click();
+  }
   return tools;
 }
 
@@ -45,23 +51,25 @@ test("accents replace selected wording and symbols insert at the preserved curso
   await expect(wording).toBeFocused();
   await wording.press("Control+End");
   for (let i = 0; i < 5; i++) await wording.press("ArrowLeft");
-  await tools.getByRole("tab", { name: "Symbols", exact: true }).click();
+  await expect(tools).toHaveCount(0);
+  await openTools(page, "Symbols");
   await tools.getByRole("button", { name: "Insert •", exact: true }).click();
   await expect(wording).toHaveValue(
     "Renée O'Connor\nDirector, R&D\nSt. Louis • 2026",
   );
-  await tools.getByRole("button", { name: "Close character tools", exact: true }).click();
+  await expect(tools).toHaveCount(0);
+  await expect(wording).toBeFocused();
   await page
-    .getByRole("button", { name: "Save Garamond as favorite", exact: true })
+    .getByRole("button", { name: "Add Garamond to comparison", exact: true })
     .click();
-  await page.getByRole("button", { name: "Compare favorites", exact: false }).click();
-  const comparison = page.getByRole("dialog", { name: "Compare your favorite lettering" });
+  await page.getByRole("button", { name: "Compare options", exact: false }).click();
+  const comparison = page.getByRole("dialog", { name: "Compare options" });
   await expect(comparison.locator(".sample-line")).toHaveText([
     "Ren\u00e9e O'Connor", "Director, R&D", "St. Louis \u2022 2026",
   ]);
 });
 
-test("character tabs use arrow keys and Escape restores the disclosure focus", async ({
+test("character tabs use arrow keys and Escape restores the quick-tool focus", async ({
   page,
 }) => {
   const tools = await openTools(page, "Symbols");
@@ -79,8 +87,8 @@ test("character tabs use arrow keys and Escape restores the disclosure focus", a
     tools.getByRole("tab", { name: "Hebrew", exact: true }),
   ).toBeFocused();
   await page.keyboard.press("Escape");
-  await expect(tools).not.toHaveAttribute("open");
-  await expect(tools.locator("summary")).toBeFocused();
+  await expect(tools).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Symbols", exact: true })).toBeFocused();
 });
 
 test("Hebrew keyboard preserves niqqud, removes whole graphemes and inserts at the wording cursor", async ({
@@ -108,7 +116,7 @@ test("Hebrew keyboard preserves niqqud, removes whole graphemes and inserts at t
     .click();
   await expect(wording).toHaveValue("Name: דָ א");
   await expect(wording).toBeFocused();
-  await expect(tools).not.toHaveAttribute("open");
+  await expect(tools).toHaveCount(0);
   await openTools(page, "Hebrew");
   await composer.fill("שָׁלוֹם");
   await tools.getByRole("button", { name: "Clear", exact: true }).click();
@@ -186,10 +194,10 @@ for (const mode of ["classic", "flat", "circular", "split"]) {
       }
     }
     await dialog
-      .getByRole("button", { name: "Insert Monogram", exact: true })
+      .getByRole("button", { name: "Add monogram preference", exact: true })
       .click();
     await expect(dialog).toHaveCount(0);
-    await page.getByRole("button", { name: /Monogram added.*View/ }).click();
+    await page.getByRole("button", { name: /Monogram added/ }).click();
     const preview = page.getByRole("dialog", { name: "Your monogram", exact: true });
     await expect(preview.locator(".monogram-sample").getByRole("img")).toBeVisible();
     await page.keyboard.press("Escape");
@@ -271,10 +279,49 @@ test("monogram styles preserve accented initials and explain fallback lettering"
   await dialog.getByRole("textbox", { name: "Right initial", exact: true }).fill("C");
   await expect(dialog.locator(".monogram-coverage-notice")).toContainText("Optima Bold uses fallback lettering for \u00c9");
   await expect(dialog.getByRole("img", { name: "Monogram: \u00c9, B, C", exact: true })).toBeVisible();
-  await dialog.getByRole("button", { name: "Insert Monogram", exact: true }).click();
+  await dialog.getByRole("button", { name: "Add monogram preference", exact: true }).click();
   await page.getByRole("button", { name: "Review & send", exact: true }).click();
   const review = page.getByRole("dialog", { name: "Review your request" });
   await expect(review.locator(".monogram-sample").getByRole("img", { name: "Monogram: \u00c9, B, C", exact: true })).toBeVisible();
   await expect(review.locator(".request-summary")).toContainText("Optima");
   await expect(review.locator(".request-summary")).toContainText("Bold");
 });
+
+
+for (const viewport of [{ width: 1365, height: 930 }, { width: 390, height: 844 }]) {
+  test(`quick character tools are visible and open their own panel at ${viewport.width}px`, async ({ page }) => {
+    await page.setViewportSize(viewport);
+    for (const [tab, label] of Object.entries(toolLabels)) {
+      const opener = page.getByRole("button", { name: label, exact: true });
+      await expect(opener).toBeVisible();
+      await expect(opener).toBeInViewport();
+      await expect(opener).toContainText(label);
+      expect(await opener.locator('[aria-hidden="true"]').count(), `${label} must pair its text with an icon`).toBeGreaterThan(0);
+      await expect(opener.locator('[aria-hidden="true"]').first()).toBeVisible();
+      await opener.focus();
+      await page.keyboard.press("Enter");
+      const dialog = page.getByRole("dialog", { name: label, exact: true });
+      await expect(dialog).toBeVisible();
+      await expect(dialog.locator("details, summary")).toHaveCount(0);
+      await expect(dialog.getByRole("tabpanel", { name: tab, exact: true })).toBeVisible();
+      await expect(dialog.getByRole("tab", { name: tab, exact: true })).toBeFocused();
+      await page.keyboard.press("Escape");
+      await expect(dialog).toHaveCount(0);
+      await expect(opener).toBeFocused();
+    }
+    for (const label of ["Monogram Maker", "Designer Notes"]) {
+      const opener = page.getByRole("button", { name: label, exact: true });
+      await expect(opener).toBeVisible();
+      await expect(opener).toBeInViewport();
+      expect(await opener.locator('[aria-hidden="true"]').count(), `${label} must have an icon and visible text`).toBeGreaterThan(0);
+      await expect(opener.locator('[aria-hidden="true"]').first()).toBeVisible();
+      await opener.focus();
+      await page.keyboard.press("Enter");
+      const dialog = page.getByRole("dialog", { name: label, exact: true });
+      await expect(dialog).toBeVisible();
+      await page.keyboard.press("Escape");
+      await expect(dialog).toHaveCount(0);
+      await expect(opener).toBeFocused();
+    }
+  });
+}

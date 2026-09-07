@@ -1,4 +1,4 @@
-import { useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import "./CharacterTools.css";
 
 const symbols = [
@@ -123,21 +123,40 @@ const vowels = [
 ];
 const tabs = ["Symbols", "Accents", "Hebrew"];
 
-export default function CharacterTools({ onInsert }) {
+export default function CharacterTools({ onInsert, initialTab = 0, onClose }) {
   const id = useId();
   const disclosureRef = useRef(null);
   const tabRefs = useRef([]);
   const hebrewRef = useRef(null);
   const cursorRef = useRef({ start: 0, end: 0 });
-  const [activeTab, setActiveTab] = useState(0);
+  const modal = typeof onClose === "function";
+  const Wrapper = modal ? "div" : "details";
+  const [activeTab, setActiveTab] = useState(
+    Number.isInteger(initialTab) && initialTab >= 0 && initialTab < tabs.length
+      ? initialTab
+      : 0,
+  );
   const [hebrewText, setHebrewText] = useState("");
   const [announcement, setAnnouncement] = useState("");
+
+  useEffect(() => {
+    if (!modal) return;
+    // Parent Dialog opens in its effect; focus after it becomes interactive.
+    const frame = requestAnimationFrame(() => {
+      tabRefs.current.find((tab) => tab?.tabIndex === 0)?.focus();
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [modal]);
 
   const insertCharacter = (character) => {
     onInsert(character);
     setAnnouncement(`Inserted ${character} into your wording.`);
   };
   const closeTools = () => {
+    if (modal) {
+      onClose();
+      return;
+    }
     disclosureRef.current.open = false;
     disclosureRef.current.querySelector("summary").focus();
   };
@@ -194,22 +213,22 @@ export default function CharacterTools({ onInsert }) {
     onInsert(hebrewText);
     setHebrewText("");
     cursorRef.current = { start: 0, end: 0 };
-    disclosureRef.current.open = false;
+    if (!modal) disclosureRef.current.open = false;
     setAnnouncement("Hebrew text inserted into your wording.");
   };
 
   return (
-    <details
-      className="character-tools"
+    <Wrapper
+      className={`character-tools${modal ? " character-tools--dialog" : ""}`}
       ref={disclosureRef}
       onKeyDown={(event) => {
-        if (event.key === "Escape" && disclosureRef.current.open) {
+        if (!modal && event.key === "Escape" && disclosureRef.current.open) {
           event.preventDefault();
           closeTools();
         }
       }}
     >
-      <summary>Symbols & languages</summary>
+      {!modal && <summary>Symbols & languages</summary>}
       <div className="character-tools-panel">
         <div className="character-tools-heading">
           <div
@@ -236,14 +255,16 @@ export default function CharacterTools({ onInsert }) {
               </button>
             ))}
           </div>
-          <button
-            type="button"
-            className="character-tools-close"
-            onClick={closeTools}
-            aria-label="Close character tools"
-          >
-            ×
-          </button>
+          {!modal && (
+            <button
+              type="button"
+              className="character-tools-close"
+              onClick={closeTools}
+              aria-label="Close character tools"
+            >
+              ×
+            </button>
+          )}
         </div>
         {tabs.map((tab, index) => (
           <div
@@ -257,9 +278,7 @@ export default function CharacterTools({ onInsert }) {
           >
             {index === 0 && (
               <>
-                <p>
-                  Choose a symbol to insert at your cursor in the wording above.
-                </p>
+                <p>Choose a symbol to insert at your wording cursor.</p>
                 <div className="character-tools-grid">
                   {symbols.map((symbol) => (
                     <button
@@ -405,6 +424,6 @@ export default function CharacterTools({ onInsert }) {
           {announcement}
         </span>
       </div>
-    </details>
+    </Wrapper>
   );
 }

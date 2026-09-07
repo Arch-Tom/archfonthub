@@ -1,54 +1,87 @@
-import { useEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { familyFor } from "./fontLibrary";
+import {
+  layoutPreview,
+  measurePreviewLine,
+  textDirection,
+} from "./previewGeometry";
+import "./previewGeometry.css";
 
 export default function EngravingPreview({
   lines,
   activeLine = -1,
   onActivate,
-  size = 58,
-  spacing = 1.35,
+  size = 64,
+  spacing = 1,
+  letterSpacing = 0,
   align = "center",
   fit = true,
   sample = false,
 }) {
   const container = useRef(null);
-  const [fittedSize, setFittedSize] = useState(size);
+  const [geometry, setGeometry] = useState(null);
   const signature = JSON.stringify(lines);
-  useEffect(() => {
+  useLayoutEffect(() => {
     const node = container.current;
+    if (!node) return undefined;
     let cancelled = false;
+    let frame;
+    const parsed = JSON.parse(signature);
+    const context = document.createElement("canvas").getContext("2d");
     const measure = () => {
-      if (cancelled || !node) return;
-      if (!fit) {
-        setFittedSize(size);
-        return;
-      }
-      const ctx = document.createElement("canvas").getContext("2d");
-      const width = Math.max(40, node.clientWidth - (sample ? 20 : 90));
-      const availableHeight = Math.max(60, node.clientHeight - 50);
-      const parsed = JSON.parse(signature);
-      const widths = parsed.map((line) => {
-        ctx.font = `${size}px ${familyFor(line.fontName, line.styleKey)}`;
-        return ctx.measureText(line.text).width;
+      if (cancelled || !context) return;
+      const next = layoutPreview({
+        metrics: parsed.map((line) =>
+          measurePreviewLine(
+            context,
+            line.text,
+            familyFor(line.fontName, line.styleKey),
+            letterSpacing,
+          ),
+        ),
+        width: node.clientWidth,
+        height: node.clientHeight,
+        size,
+        spacing,
+        align,
+        fit,
+        inset: sample ? 14 : 24,
       });
-      const scale = Math.min(
-        1,
-        width / Math.max(1, ...widths),
-        availableHeight / (Math.max(1, parsed.length) * size * spacing),
+      setGeometry((previous) =>
+        JSON.stringify(previous) === JSON.stringify(next) ? previous : next,
       );
-      setFittedSize(Math.max(10, Math.floor(size * scale)));
+    };
+    const schedule = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(measure);
     };
     measure();
-    document.fonts.ready.then(measure);
-    document.fonts.addEventListener("loadingdone", measure);
-    const observer = new ResizeObserver(measure);
+    // Explicitly request every required face/glyph, even when the SVG has not
+    // appeared yet. FontFaceSet.ready alone can resolve before a new face loads.
+    Promise.allSettled(
+      parsed.map((line) =>
+        document.fonts.load(
+          `${size}px ${familyFor(line.fontName, line.styleKey)}`,
+          line.text || "M",
+        ),
+      ),
+    ).then(() => {
+      if (!cancelled) schedule();
+    });
+    document.fonts.ready.then(() => {
+      if (!cancelled) schedule();
+    });
+    document.fonts.addEventListener("loadingdone", schedule);
+    const observer = new ResizeObserver(schedule);
     observer.observe(node);
     return () => {
       cancelled = true;
+      cancelAnimationFrame(frame);
       observer.disconnect();
-      document.fonts.removeEventListener("loadingdone", measure);
+      document.fonts.removeEventListener("loadingdone", schedule);
     };
-  }, [signature, size, spacing, fit, sample]);
+  }, [signature, size, spacing, letterSpacing, align, fit, sample]);
+
   const activateKey = (event, index) => {
     let next;
     if (event.key === "ArrowDown") next = Math.min(lines.length - 1, index + 1);
@@ -57,18 +90,23 @@ export default function EngravingPreview({
     if (event.key === "End") next = lines.length - 1;
     if (next != null) {
       event.preventDefault();
-      onActivate(next);
-      container.current.querySelector(`[data-line="${next}"]`)?.focus();
+      onActivate(next, { source: "keyboard" });
+      container.current
+        .querySelector(`[data-line="${next}"]`)
+        ?.focus({ preventScroll: true });
     }
   };
   return (
     <div
       ref={container}
       className={`engraving-canvas ${sample ? "engraving-canvas--sample" : ""}`}
+      data-preview-font-size={geometry?.fontSize}
+      data-preview-baseline-advance={geometry?.baselineAdvance}
+      data-preview-spacing={spacing}
+      data-preview-letter-spacing={letterSpacing}
       style={{
-        "--engraving-size": `${fittedSize}px`,
+        "--engraving-size": `${geometry?.fontSize ?? size}px`,
         "--engraving-spacing": spacing,
-        textAlign: align,
       }}
     >
       {!lines.some((line) => line.text.trim()) ? (
@@ -78,39 +116,83 @@ export default function EngravingPreview({
           <p>
             Enter your engraving wording to see it here.
             <br />
-            Then choose a font to try.
+            Then click a line to choose its font.
           </p>
         </div>
       ) : (
         <div className="engraving-lines">
-          {lines.map((line, i) => {
-            const style = {
-              fontFamily: familyFor(line.fontName, line.styleKey),
-            };
-            return onActivate ? (
-              <button
-                key={i}
-                data-line={i}
-                className="engraving-line"
-                aria-label={`Edit line ${i + 1}: ${line.text || "Blank line"}`}
-                aria-pressed={activeLine === i}
-                onClick={() => onActivate(i)}
-                onKeyDown={(e) => activateKey(e, i)}
-              >
-                <span className="line-marker" aria-hidden="true">
-                  {activeLine === i ? "▸ " : ""}
-                  {i + 1}
-                </span>
-                <span className="line-wording" dir="auto" style={style}>
-                  {line.text || "\u00a0"}
-                </span>
-              </button>
-            ) : (
-              <div key={i} className="sample-line" dir="auto" style={style}>
-                {line.text || "\u00a0"}
-              </div>
-            );
-          })}
+          {geometry &&
+            lines.map((line, i) => {
+              const row = geometry.rows[i];
+              if (!row) return null;
+              const Row = onActivate ? "button" : "div";
+              const breath = Math.max(3, Math.min(7, geometry.fontSize * 0.1));
+              const inkWidth = Math.max(2, row.ink.width);
+              return (
+                <Row
+                  key={i}
+                  type={onActivate ? "button" : undefined}
+                  data-line={i}
+                  className={onActivate ? "engraving-line" : "sample-line"}
+                  aria-label={
+                    onActivate
+                      ? `Edit line ${i + 1}: ${line.text || "Blank line"}`
+                      : undefined
+                  }
+                  aria-pressed={onActivate ? activeLine === i : undefined}
+                  onClick={
+                    onActivate
+                      ? (event) =>
+                          onActivate(i, {
+                            source: event.detail === 0 ? "keyboard" : "pointer",
+                          })
+                      : undefined
+                  }
+                  onKeyDown={
+                    onActivate ? (event) => activateKey(event, i) : undefined
+                  }
+                  style={{ top: row.hitTop, height: row.hitHeight }}
+                >
+                  {onActivate && (
+                    <span
+                      className="line-selection-outline"
+                      aria-hidden="true"
+                      style={{
+                        left: row.ink.x - breath,
+                        top: row.ink.y - row.hitTop - breath,
+                        width: inkWidth + breath * 2,
+                        height: Math.max(2, row.ink.height) + breath * 2,
+                      }}
+                    />
+                  )}
+                  <svg
+                    className="line-glyphs"
+                    width="100%"
+                    height="100%"
+                    aria-hidden={onActivate ? "true" : undefined}
+                  >
+                    <text
+                      className="line-wording"
+                      x={row.x}
+                      y={row.baseline - row.hitTop}
+                      data-baseline={row.baseline}
+                      direction={textDirection(line.text)}
+                      textAnchor={
+                        textDirection(line.text) === "rtl" ? "end" : "start"
+                      }
+                      xmlSpace="preserve"
+                      style={{
+                        fontFamily: familyFor(line.fontName, line.styleKey),
+                        fontSize: geometry.fontSize,
+                        letterSpacing: `${letterSpacing}em`,
+                      }}
+                    >
+                      {line.text}
+                    </text>
+                  </svg>
+                </Row>
+              );
+            })}
         </div>
       )}
     </div>

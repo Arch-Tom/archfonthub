@@ -472,7 +472,7 @@ export default function MonogramMaker({ fontLibrary, onClose, onInsert }) {
             disabled={isInsertDisabled()}
             className="px-5 py-3 bg-blue-600 text-white rounded-2xl hover:bg-blue-700 font-bold transition-colors shadow-sm text-base disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Insert Monogram
+            Add monogram preference
           </button>
           <button
             type="button"

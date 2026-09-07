@@ -8,13 +8,13 @@ export default function FontSpecimen({ text, family }) {
     const fit = () => {
       if (cancelled || !node) return;
       const ctx = document.createElement("canvas").getContext("2d");
-      ctx.font = `32px ${family}`;
+      ctx.font = `42px ${family}`;
       setSize(
         Math.max(
           16,
           Math.min(
-            32,
-            (32 * Math.max(25, node.clientWidth - 20)) /
+            42,
+            (42 * Math.max(25, node.clientWidth - 20)) /
               Math.max(1, ctx.measureText(text).width),
           ),
         ),

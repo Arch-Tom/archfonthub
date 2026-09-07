@@ -5,11 +5,11 @@ import CircularMonogram from "./CircularMonogram";
 import SplitLetterMonogram from "./SplitLetterMonogram";
 import Dialog from "./Dialog";
 import EngravingPreview from "./EngravingPreview";
-import FontSpecimen from "./FontSpecimen";
+import FontRail from "./FontRail";
+import RailWorkspace from "./RailWorkspace";
 import {
   allFonts,
   defaultStyle,
-  familyFor,
   findFont,
   fontLibrary,
   sortedStyles,
@@ -24,12 +24,13 @@ import {
 } from "./draft";
 import { submitRequest } from "./submission";
 import { getFontCoverage, getPreviewFontFamily } from "./fontCoverage";
-import "./definitive.css";
+import "./requestDialogs.css";
+import "./rail.css";
 
 const params = new URLSearchParams(window.location.search);
 const sourceOrder = params.get("orderId") || "";
-const draftKey = `arch-font-hub:definitive:draft:${sourceOrder}`;
-const receiptKey = `arch-font-hub:definitive:receipt:${sourceOrder}`;
+const draftKey = `arch-font-hub:font-rail:draft:${sourceOrder}`;
+const receiptKey = `arch-font-hub:font-rail:receipt:${sourceOrder}`;
 const saved = readStored(draftKey) || {};
 const savedReceipt = readStored(receiptKey);
 const validReceipt =
@@ -108,7 +109,7 @@ function RequestSummary({ request, sent = false }) {
         {request.text || "Monogram only"}
       </p>
       <h3>
-        Favorite lettering styles{" "}
+        Alternative lettering styles{" "}
         <span className="count">{request.favorites.length} / 3</span>
       </h3>
       {request.favorites.length ? (
@@ -120,7 +121,7 @@ function RequestSummary({ request, sent = false }) {
           ))}
         </ol>
       ) : (
-        <p className="muted">No separate favorites saved.</p>
+        <p className="muted">No alternative styles included.</p>
       )}
       {!!request.text && (
         <>
@@ -154,17 +155,32 @@ function RequestSummary({ request, sent = false }) {
           <h3>Monogram</h3>
           <MonogramSample info={request.monogramInfo} />
           <p>
-            {request.monogramInfo.data.type} ·{" "}
-            {request.monogramInfo.data.font.name} ·{" "}
-            {request.monogramInfo.data.style
-              ? styleLabel(request.monogramInfo.data.style)
-              : "Circular initials"}
-            {request.monogramInfo.data.frameStyle &&
-              ` · ${request.monogramInfo.data.frameStyle} frame`}
+            {{
+              classic: "Classic monogram",
+              flat: "Flat monogram",
+              circular: "Circular monogram",
+              split: "Split letter monogram",
+            }[request.monogramInfo.data.type] || "Monogram"}
+            {request.monogramInfo.data.type !== "circular" && (
+              <>
+                {" "}
+                · {request.monogramInfo.data.font.name}
+                {request.monogramInfo.data.style &&
+                  " · " + styleLabel(request.monogramInfo.data.style)}
+              </>
+            )}
+          </p>
+          <p>
             {request.monogramInfo.data.text &&
-              ` · ${request.monogramInfo.data.text.join(" / ")}`}
+              "Initials: " + request.monogramInfo.data.text.join(" / ")}
             {request.monogramInfo.data.name &&
-              ` · ${request.monogramInfo.data.initial} / ${request.monogramInfo.data.name}`}
+              "Initial: " +
+                request.monogramInfo.data.initial +
+                " · Name: " +
+                request.monogramInfo.data.name}
+            {request.monogramInfo.data.frameStyle &&
+              request.monogramInfo.data.frameStyle !== "none" &&
+              " · Frame: " + styleLabel(request.monogramInfo.data.frameStyle)}
           </p>
         </>
       )}
@@ -232,13 +248,23 @@ export default function FontHub() {
   const [orderNumber, setOrderNumber] = useState(
     saved.orderNumber ?? sourceOrder,
   );
-  const [category, setCategory] = useState("All");
-  const [search, setSearch] = useState("");
-  const [expanded, setExpanded] = useState(false);
+  const [category, setCategory] = useState(
+    ["All", ...Object.keys(fontLibrary)].includes(saved.category)
+      ? saved.category
+      : "All",
+  );
+  const [search, setSearch] = useState(
+    typeof saved.search === "string" ? saved.search : "",
+  );
+  const [expanded, setExpanded] = useState(Boolean(saved.expanded));
+  const [isMobile, setIsMobile] = useState(
+    () => window.matchMedia("(max-width: 760px)").matches,
+  );
   const [size, setSize] = useState(saved.size || 64);
-  const [spacing, setSpacing] = useState(saved.spacing || 1.4);
+  const [spacing, setSpacing] = useState(saved.spacing || 1);
+  const [letterSpacing, setLetterSpacing] = useState(saved.letterSpacing || 0);
   const [align, setAlign] = useState(saved.align || "center");
-  const [fit, setFit] = useState(true);
+  const [fit, setFit] = useState(saved.fit !== false);
   const [modal, setModal] = useState(validReceipt ? "receipt" : null);
   const [receipt, setReceipt] = useState(validReceipt);
   const [pendingFont, setPendingFont] = useState(null);
@@ -250,6 +276,7 @@ export default function FontHub() {
   const [receiptSaved, setReceiptSaved] = useState(true);
   const textRef = useRef(null);
   const searchRef = useRef(null);
+  const pickerOrigin = useRef("line");
   const selection = useRef({ start: text.length, end: text.length });
   const history = useRef({});
   const submitLock = useRef(false);
@@ -291,6 +318,11 @@ export default function FontHub() {
         orderNumber,
         size,
         spacing,
+        letterSpacing,
+        category,
+        search,
+        expanded,
+        fit,
         align,
       }),
     );
@@ -307,8 +339,32 @@ export default function FontHub() {
     orderNumber,
     size,
     spacing,
+    letterSpacing,
+    category,
+    search,
+    expanded,
+    fit,
     align,
   ]);
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 760px)");
+    const update = () => {
+      setIsMobile(media.matches);
+      if (!media.matches)
+        setModal((value) => (value === "fonts" ? null : value));
+    };
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
+  function closePicker(forceLine = false) {
+    setModal(null);
+    if (forceLine === true || pickerOrigin.current === "line")
+      requestAnimationFrame(() =>
+        document
+          .querySelector('.engraving-line[data-line="' + activeLine + '"]')
+          ?.focus({ preventScroll: true }),
+      );
+  }
   function changeText(value) {
     const next = reconcileLines(text, value, assignments, history.current);
     history.current = next.history;
@@ -316,7 +372,11 @@ export default function FontHub() {
     setText(value);
     setActiveLine((index) => Math.min(index, value.split("\n").length - 1));
   }
-  function activate(index) {
+  function activate(index, options = {}) {
+    if (isMobile && options.source === "pointer") {
+      pickerOrigin.current = "line";
+      setModal("fonts");
+    }
     setActiveLine(index);
     setAnnouncement(
       `Editing line ${index + 1}: ${lines[index].text || "Blank line"}. Font choices apply to this line.`,
@@ -327,12 +387,14 @@ export default function FontHub() {
     style = font.styles[styleMemory[font.name]]
       ? styleMemory[font.name]
       : defaultStyle(font),
+    keepPicker = false,
   ) {
     if (!hasText) {
       textRef.current?.focus();
       setAnnouncement("Enter your wording first, then choose lettering.");
       return;
     }
+    if (modal === "fonts" && !keepPicker) closePicker(true);
     setStyleMemory((memory) => ({ ...memory, [font.name]: style }));
     setAssignments((items) =>
       lines.map((_, i) =>
@@ -353,7 +415,11 @@ export default function FontHub() {
     const favorite = {
       ...font,
       activeStyle:
-        current.fontName === font.name ? current.styleKey : defaultStyle(font),
+        current.fontName === font.name
+          ? current.styleKey
+          : font.styles[styleMemory[font.name]]
+            ? styleMemory[font.name]
+            : defaultStyle(font),
     };
     if (replaceName) {
       setFavorites((items) =>
@@ -366,7 +432,7 @@ export default function FontHub() {
     } else if (favorites.length < 3) {
       setFavorites((items) => [...items, favorite]);
       setAnnouncement(
-        `${font.name} saved as a favorite. ${favorites.length + 1} of 3 saved.`,
+        `${font.name} added to comparison. ${favorites.length + 1} of 3 saved.`,
       );
     } else {
       setPendingFont(favorite);
@@ -377,10 +443,11 @@ export default function FontHub() {
     setFavorites((items) => items.filter((font) => font.name !== name));
     if (replaceName === name) setReplaceName(null);
     setAnnouncement(
-      `${name} removed from favorites. Line lettering is unchanged.`,
+      `${name} removed from comparison. Line lettering is unchanged.`,
     );
   }
   function insert(value) {
+    setModal(null);
     const { start, end } = selection.current;
     changeText(text.slice(0, start) + value + text.slice(end));
     const cursor = start + value.length;
@@ -443,7 +510,7 @@ export default function FontHub() {
       "EXACT ENGRAVING WORDING",
       receipt.text,
       "",
-      "FAVORITE LETTERING STYLES",
+      "ALTERNATIVE LETTERING STYLES",
       ...receipt.favorites.map(
         (font) => `${font.name} — ${styleLabel(font.activeStyle)}`,
       ),
@@ -472,8 +539,30 @@ export default function FontHub() {
     link.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
+  const railProps = {
+    lines,
+    activeLine,
+    current,
+    currentFont,
+    hasText,
+    visibleFonts,
+    styleMemory,
+    category,
+    setCategory,
+    search,
+    setSearch,
+    expanded,
+    setExpanded,
+    favorites,
+    saveFavorite,
+    applyFont,
+    replaceName,
+    setReplaceName,
+    searchRef,
+    activate,
+  };
   return (
-    <div className="font-hub">
+    <div className={"font-hub" + (receipt ? " has-receipt" : "")}>
       <a href="#engraving-text" className="skip-link">
         Skip to wording
       </a>
@@ -483,15 +572,14 @@ export default function FontHub() {
           href="#engraving-text"
           aria-label="Arch Engraving Font Hub"
         >
-          <img src="/images/Arch Vector Logo.svg" alt="Arch Engraving" />
+          <img src="/images/Arch Vector Logo White.svg" alt="Arch Engraving" />
           <span>
             Font Hub<small>LETTERING FOR YOUR ENGRAVING</small>
           </span>
         </a>
-        <div className="header-guidance">
-          Choose lettering styles for your engraving proof.
-          <small>Arch will use your choices to prepare the final proof.</small>
-        </div>
+        <p className="header-guidance">
+          Choose lettering for your engraving proof.
+        </p>
         <button className="primary-button" onClick={openReview}>
           Review & send <span aria-hidden="true">↗</span>
         </button>
@@ -502,462 +590,79 @@ export default function FontHub() {
           <button onClick={() => setModal("receipt")}>View receipt</button>
         </div>
       )}
-      <main className={`workspace ${expanded ? "workspace--expanded" : ""}`}>
-        <section className="wording-section" aria-labelledby="wording-title">
-          <div className="section-heading">
-            <h1 id="wording-title">
-              <span className="step-number">01</span>Your wording
-            </h1>
-            <span className="muted">
-              Keep every line exactly as you want it.
-            </span>
-          </div>
-          <p className="mobile-purpose">
-            Arch uses your lettering choices to prepare your final proof.
-          </p>
-          <label className="sr-only" htmlFor="engraving-text">
-            Your engraving wording
-          </label>
-          <textarea
-            id="engraving-text"
-            ref={textRef}
-            rows={3}
-            value={text}
-            placeholder={
-              "Enter your engraving wording…\nUse a new line for each line of text."
-            }
-            dir="auto"
-            onChange={(event) => {
-              changeText(event.target.value);
-              selection.current = {
-                start: event.target.selectionStart,
-                end: event.target.selectionEnd,
-              };
-            }}
-            onSelect={(event) => {
-              selection.current = {
-                start: event.target.selectionStart,
-                end: event.target.selectionEnd,
-              };
-            }}
-          />
-          <div className="wording-extras">
-            <CharacterTools onInsert={insert} />
-            <button
-              className="text-button"
-              onClick={() => setModal("monogram")}
-            >
-              Monogram Maker <span aria-hidden="true">↗</span>
-            </button>
-          </div>
-        </section>
-        <section className="catalog" aria-labelledby="catalog-title">
-          <div className="section-heading">
-            <h2 id="catalog-title">
-              <span className="step-number">02</span>Browse lettering
-            </h2>
-            <button
-              className="text-button expand-button"
-              aria-pressed={expanded}
-              onClick={() => setExpanded((value) => !value)}
-            >
-              {expanded ? "Compact fonts" : "Expand fonts"}{" "}
-              <span aria-hidden="true">{expanded ? "↙" : "↗"}</span>
-            </button>
-          </div>
-          <div className="catalog-target" aria-live="polite">
-            <span>
-              {hasText
-                ? `▸ Editing line ${activeLine + 1}`
-                : "Start with your wording above"}
-            </span>
-            {hasText && (
-              <strong dir="auto">
-                {lines[activeLine]?.text || "(Blank line)"}
-              </strong>
-            )}
-          </div>
-          <div className="mobile-line-picker">
-            <label htmlFor="catalog-line">Line to edit</label>
-            <select
-              id="catalog-line"
-              value={activeLine}
-              disabled={!hasText}
-              onChange={(event) => activate(Number(event.target.value))}
-            >
-              {lines.map((line, i) => (
-                <option key={i} value={i}>
-                  Line {i + 1}: {line.text || "(Blank line)"}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="catalog-search">
-            <label className="sr-only" htmlFor="font-search">
-              Search fonts
-            </label>
-            <span aria-hidden="true">⌕</span>
-            <input
-              id="font-search"
-              ref={searchRef}
-              type="search"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder={`Search ${allFonts.length} fonts`}
-            />
-            <span>{visibleFonts.length} fonts</span>
-          </div>
-          <div className="category-filters" aria-label="Font categories">
-            {["All", ...Object.keys(fontLibrary)].map((item) => (
-              <button
-                key={item}
-                aria-pressed={category === item}
-                onClick={() => setCategory(item)}
-              >
-                {item}
-              </button>
-            ))}
-          </div>
-          <div className="current-font">
-            <div>
-              <span className="eyebrow">
-                Current font{hasText ? ` · Line ${activeLine + 1}` : ""}
-              </span>
-              <strong>{currentFont.name}</strong>
-            </div>
-            <StyleSelect
-              font={currentFont}
-              value={current.styleKey}
-              onChange={(style) => applyFont(currentFont, style)}
-              label="Current font style"
-            />
-          </div>
-          {replaceName && (
-            <div className="replace-notice" role="status">
-              Save a new favorite to replace {replaceName}.
-              <button onClick={() => setReplaceName(null)}>Cancel</button>
-            </div>
-          )}
-          <div className="font-grid" aria-label="Lettering collection">
-            {visibleFonts.map((font) => {
-              const chosen = current.fontName === font.name;
-              const favorite = favorites.some(
-                (item) => item.name === font.name,
-              );
-              const fontStyle = chosen ? current.styleKey : defaultStyle(font);
-              const specimen = (lines[activeLine]?.text || "Aa").slice(0, 64);
-              return (
-                <div
-                  className={`font-option ${chosen && hasText ? "font-option--current" : ""}`}
-                  key={font.name}
-                >
-                  <button
-                    className="font-apply"
-                    aria-label={`Apply ${font.name} to line ${activeLine + 1}`}
-                    aria-pressed={chosen && hasText}
-                    onClick={() => applyFont(font)}
-                  >
-                    <FontSpecimen
-                      text={specimen}
-                      family={familyFor(font.name, fontStyle)}
-                    />
-                    <span className="font-label">
-                      {font.name}
-                      {chosen && hasText && (
-                        <span className="current-check" aria-hidden="true">
-                          ✓
-                        </span>
-                      )}
-                    </span>
-                  </button>
-                  <button
-                    className="favorite-toggle"
-                    aria-label={`${favorite ? "Remove" : "Save"} ${font.name} ${favorite ? "from favorites" : "as favorite"}`}
-                    aria-pressed={favorite}
-                    onClick={() => saveFavorite(font)}
-                    title={favorite ? "Remove favorite" : "Save favorite"}
-                  >
-                    {favorite ? "★" : "☆"}
-                  </button>
-                </div>
-              );
-            })}
-            {!visibleFonts.length && (
-              <div className="no-fonts">
-                <h3>No matching fonts</h3>
-                <p>Try another name or category.</p>
-                <button
-                  className="secondary-button"
-                  onClick={() => {
-                    setSearch("");
-                    setCategory("All");
-                    searchRef.current?.focus();
-                  }}
-                >
-                  Show all fonts
-                </button>
-              </div>
-            )}
-          </div>
-          <a className="mobile-preview-link text-button" href="#preview-title">
-            View mixed preview ↑
-          </a>
-          <p className="catalog-help">
-            Click lettering to try it. <span aria-hidden="true">☆</span> saves a
-            favorite.
-          </p>
-        </section>
-        <section className="preview-section" aria-labelledby="preview-title">
-          <div className="section-heading">
-            <div>
-              <p className="eyebrow">Live engraving preview</p>
-              <h2 id="preview-title">See your lettering together</h2>
-            </div>
-            <button
-              className="secondary-button fit-button"
-              aria-pressed={fit}
-              onClick={() => {
-                setFit(true);
-                setSize(64);
-              }}
-              disabled={!hasText}
-            >
-              Fit to Preview
-            </button>
-          </div>
-          <div className="active-line-bar">
-            <div className="line-tabs" aria-label="Choose a line to edit">
-              {lines.map((line, i) => (
-                <button
-                  key={i}
-                  aria-label={`Activate line ${i + 1}`}
-                  aria-pressed={activeLine === i}
-                  onClick={() => activate(i)}
-                  disabled={!hasText}
-                >
-                  {activeLine === i ? "▸ " : ""}Line {i + 1}
-                </button>
-              ))}
-            </div>
-            <span>
-              {hasText
-                ? `Editing line ${activeLine + 1}`
-                : "Your preview appears as you type"}
-            </span>
-          </div>
-          <EngravingPreview
-            lines={lines}
-            activeLine={activeLine}
-            onActivate={activate}
-            size={size}
-            spacing={spacing}
-            align={align}
-            fit={fit}
-          />
-          <div className="preview-caption">
-            <p>Click a line to change its lettering.</p>
-            <a
-              className="mobile-preview-link text-button"
-              href="#catalog-title"
-            >
-              Browse fonts ↓
-            </a>
-            <button
-              className="text-button"
-              disabled={!hasText}
-              onClick={() => {
-                setAssignments(lines.map(() => ({ ...current })));
-                setAnnouncement(
-                  `${current.fontName} applied to every line. Favorites are unchanged.`,
-                );
-              }}
-            >
-              Use on every line
-            </button>
-          </div>
-          <GlyphNote lines={lines} />
-          {monogramInfo && (
-            <div className="monogram-attached">
-              <button
-                className="text-button"
-                onClick={() => setModal("monogram-preview")}
-              >
-                ✓ Monogram added · View
-              </button>
-              <button
-                className="text-button"
-                onClick={() => setMonogramInfo(null)}
-              >
-                Remove monogram
-              </button>
-            </div>
-          )}
-          <div className="preview-controls">
-            <span className="eyebrow">Preview only</span>
-            <label>
-              Size
-              <input
-                type="range"
-                min="16"
-                max="100"
-                value={size}
-                onChange={(e) => {
-                  setSize(Number(e.target.value));
-                  setFit(false);
-                }}
-              />
-            </label>
-            <label>
-              Spacing
-              <input
-                type="range"
-                min="1"
-                max="2"
-                step="0.05"
-                value={spacing}
-                onChange={(e) => setSpacing(Number(e.target.value))}
-              />
-            </label>
-            <div className="align-controls" aria-label="Preview alignment">
-              {["left", "center", "right"].map((value) => (
-                <button
-                  key={value}
-                  aria-label={`Align ${value}`}
-                  aria-pressed={align === value}
-                  onClick={() => setAlign(value)}
-                >
-                  <span
-                    className={`align-icon align-icon--${value}`}
-                    aria-hidden="true"
-                  >
-                    <i />
-                    <i />
-                    <i />
-                  </span>
-                </button>
-              ))}
-            </div>
-            <button
-              className="text-button"
-              onClick={() => {
-                setSize(64);
-                setSpacing(1.4);
-                setAlign("center");
-                setFit(true);
-              }}
-            >
-              Reset
-            </button>
-          </div>
-        </section>
-        <section
-          className="favorites-section"
-          aria-labelledby="favorites-title"
-        >
-          <div className="favorites-heading">
-            <div>
-              <h2 id="favorites-title">
-                <span className="star-accent" aria-hidden="true">
-                  ★
-                </span>
-                Your favorites{" "}
-                <span className="count">{favorites.length} / 3</span>
-              </h2>
-              <p>Styles you like, saved separately from your lines.</p>
-            </div>
-            <button
-              className="text-button"
-              disabled={!favorites.length || !hasText}
-              onClick={() => setModal("compare")}
-            >
-              Compare favorites <span aria-hidden="true">↗</span>
-            </button>
-          </div>
-          <div className="favorite-slots">
-            {[0, 1, 2].map((index) => {
-              const font = favorites[index];
-              return font ? (
-                <div className="favorite-slot" key={index}>
-                  <div className="favorite-top">
-                    <span className="favorite-number">0{index + 1}</span>
-                    <strong>{font.name}</strong>
-                    <button
-                      className="icon-button"
-                      aria-label={`Remove ${font.name} from favorites`}
-                      onClick={() => removeFavorite(font.name)}
-                    >
-                      ×
-                    </button>
-                  </div>
-                  <div className="favorite-actions">
-                    <StyleSelect
-                      font={font}
-                      value={font.activeStyle}
-                      label={`Favorite ${index + 1} style`}
-                      onChange={(style) =>
-                        setFavorites((items) =>
-                          items.map((item) =>
-                            item.name === font.name
-                              ? { ...item, activeStyle: style }
-                              : item,
-                          ),
-                        )
-                      }
-                    />
-                    <button
-                      className="text-button"
-                      aria-label={`Apply ${font.name} to line ${activeLine + 1}`}
-                      disabled={!hasText}
-                      onClick={() => applyFont(font, font.activeStyle)}
-                    >
-                      Apply to line {activeLine + 1}
-                    </button>
-                    <button
-                      className="text-button"
-                      aria-label={`Replace ${font.name}`}
-                      onClick={() => {
-                        setReplaceName(font.name);
-                        searchRef.current?.focus();
-                        searchRef.current?.scrollIntoView({ block: "nearest" });
-                      }}
-                    >
-                      Replace
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <div className="favorite-slot favorite-slot--empty" key={index}>
-                  <span className="favorite-number">0{index + 1}</span>
-                  <span>
-                    Save a style with <strong>☆</strong>
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-        </section>
-        <footer className="workspace-footer">
-          <button className="notes-button" onClick={() => setModal("notes")}>
-            <span aria-hidden="true">✎</span>
-            <strong>Designer Notes</strong>
-            <span>
-              {notes ? "Note added" : "Optional requests for your proof"}
-            </span>
-            <span aria-hidden="true">↗</span>
-          </button>
-          <span className="draft-status">
-            {draftSaved
-              ? "Draft saved on this device"
-              : "Draft could not be saved. Keep this page open."}
-          </span>
-          <button className="primary-button mobile-review" onClick={openReview}>
-            Review & send ↗
-          </button>
-        </footer>
-      </main>
+      <RailWorkspace
+        text={text}
+        textRef={textRef}
+        selection={selection}
+        changeText={changeText}
+        activeLine={activeLine}
+        current={current}
+        currentFont={currentFont}
+        lines={lines}
+        hasText={hasText}
+        activate={activate}
+        applyFont={applyFont}
+        applyAll={() => {
+          setAssignments(lines.map(() => ({ ...current })));
+          setAnnouncement(current.fontName + " applied to every line.");
+        }}
+        size={size}
+        setSize={setSize}
+        spacing={spacing}
+        setSpacing={setSpacing}
+        letterSpacing={letterSpacing}
+        setLetterSpacing={setLetterSpacing}
+        align={align}
+        setAlign={setAlign}
+        fit={fit}
+        setFit={setFit}
+        expanded={expanded}
+        isMobile={isMobile}
+        openPicker={() => {
+          pickerOrigin.current = "button";
+          setModal("fonts");
+        }}
+        openModal={setModal}
+        notes={notes}
+        monogramInfo={monogramInfo}
+        favorites={favorites}
+        draftSaved={draftSaved}
+        orderNumber={orderNumber}
+        railProps={railProps}
+        glyphNote={<GlyphNote lines={lines} />}
+      />
       <div className="sr-only" role="status" aria-live="polite">
         {announcement}
       </div>
+      {modal === "fonts" && isMobile && (
+        <Dialog
+          title="Choose lettering"
+          className="font-picker"
+          onClose={closePicker}
+        >
+          <FontRail {...railProps} mobile />
+        </Dialog>
+      )}
+      {["accents", "symbols", "hebrew"].includes(modal) && (
+        <Dialog
+          title={
+            {
+              accents: "Accented Characters",
+              symbols: "Symbols",
+              hebrew: "Hebrew",
+            }[modal]
+          }
+          onClose={() => setModal(null)}
+        >
+          <div className="dialog-body character-dialog-body">
+            <CharacterTools
+              initialTab={{ symbols: 0, accents: 1, hebrew: 2 }[modal]}
+              onClose={() => setModal(null)}
+              onInsert={insert}
+            />
+          </div>
+        </Dialog>
+      )}
       {modal === "notes" && (
         <Dialog title="Designer Notes" onClose={() => setModal(null)}>
           <div className="dialog-body">
@@ -983,33 +688,63 @@ export default function FontHub() {
         </Dialog>
       )}
       {modal === "compare" && (
-        <Dialog
-          title="Compare your favorite lettering"
-          wide
-          onClose={() => setModal(null)}
-        >
+        <Dialog title="Compare options" wide onClose={() => setModal(null)}>
           <div className="dialog-body">
             <p>
-              See your full wording in each saved style. Your line assignments
-              stay as you set them.
+              Keep up to three alternative styles for Arch to consider. Your
+              applied line lettering is shown in the main preview.
             </p>
+            {!favorites.length && (
+              <div className="comparison-empty">
+                <span aria-hidden="true">
+                  Aa <i>Aa</i>
+                </span>
+                <h3>Room for a few possibilities.</h3>
+                <p>
+                  Use “Compare” beside a font to see your full wording in that
+                  style. Adding an alternative does not change your lines.
+                </p>
+                <button
+                  className="secondary-button"
+                  onClick={() => {
+                    setModal(isMobile ? "fonts" : null);
+                    if (!isMobile)
+                      requestAnimationFrame(() => searchRef.current?.focus());
+                  }}
+                >
+                  Browse lettering
+                </button>
+              </div>
+            )}
             <div className="comparison-grid">
               {favorites.map((font, i) => {
-                const comparisonLines = text.split("\n").map((wording) => ({
-                  text: wording,
-                  fontName: font.name,
-                  styleKey: font.activeStyle,
-                }));
+                const comparisonLines = (text || "Aa Bb Cc")
+                  .split("\n")
+                  .map((wording) => ({
+                    text: wording,
+                    fontName: font.name,
+                    styleKey: font.activeStyle,
+                  }));
                 return (
-                  <section className="comparison-item" key={font.name}>
-                    <h3>
+                  <section
+                    className="comparison-item favorite-slot"
+                    key={font.name}
+                  >
+                    <div className="favorite-top">
                       <span className="favorite-number">0{i + 1}</span>
-                      {font.name}
-                    </h3>
+                      <h3>{font.name}</h3>
+                      <button
+                        className="icon-button"
+                        aria-label={"Remove " + font.name + " from comparison"}
+                        onClick={() => removeFavorite(font.name)}
+                      >
+                        ×
+                      </button>
+                    </div>
                     <StyleSelect
                       font={font}
                       value={font.activeStyle}
-                      label={`Compare ${font.name} style`}
+                      label={"Alternative " + (i + 1) + " style"}
                       onChange={(style) =>
                         setFavorites((items) =>
                           items.map((item) =>
@@ -1026,28 +761,49 @@ export default function FontHub() {
                       size={40}
                     />
                     <GlyphNote lines={comparisonLines} />
-                    <button
-                      className="secondary-button"
-                      onClick={() => {
-                        applyFont(font, font.activeStyle);
-                        setModal(null);
-                      }}
-                    >
-                      Apply {font.name} to line {activeLine + 1}
-                    </button>
+                    <div className="favorite-actions">
+                      <button
+                        className="secondary-button"
+                        disabled={!hasText}
+                        onClick={() => {
+                          applyFont(font, font.activeStyle);
+                          setModal(null);
+                        }}
+                      >
+                        Apply {font.name} to line {activeLine + 1}
+                      </button>
+                      <button
+                        className="text-button"
+                        aria-label={"Replace " + font.name}
+                        onClick={() => {
+                          setReplaceName(font.name);
+                          setModal(isMobile ? "fonts" : null);
+                          if (!isMobile)
+                            requestAnimationFrame(() =>
+                              searchRef.current?.focus(),
+                            );
+                        }}
+                      >
+                        Replace
+                      </button>
+                    </div>
                   </section>
                 );
               })}
             </div>
+            <p className="field-help">
+              These alternatives are included in your request. You can send your
+              applied lettering with no alternatives.
+            </p>
             <button className="text-button" onClick={() => setModal(null)}>
-              Back to my mixed preview
+              Back to my engraving
             </button>
           </div>
         </Dialog>
       )}
-      {modal === "replace" && (
+      {modal === "replace" && pendingFont && (
         <Dialog
-          title={`Save ${pendingFont.name}`}
+          title={"Compare " + pendingFont.name}
           onClose={() => {
             setPendingFont(null);
             setModal(null);
@@ -1055,8 +811,8 @@ export default function FontHub() {
         >
           <div className="dialog-body">
             <p>
-              You have three favorites. Choose one to replace with{" "}
-              {pendingFont.name}. Your line assignments will stay the same.
+              You have three alternatives. Choose one to replace with{" "}
+              {pendingFont.name}. Your applied lettering stays the same.
             </p>
             <div className="replacement-options">
               {favorites.map((font) => (
@@ -1070,7 +826,7 @@ export default function FontHub() {
                       ),
                     );
                     setAnnouncement(
-                      `${font.name} replaced with ${pendingFont.name}.`,
+                      font.name + " replaced with " + pendingFont.name + ".",
                     );
                     setPendingFont(null);
                     setModal(null);
@@ -1080,8 +836,14 @@ export default function FontHub() {
                 </button>
               ))}
             </div>
-            <button className="text-button" onClick={() => setModal(null)}>
-              Keep my favorites
+            <button
+              className="text-button"
+              onClick={() => {
+                setPendingFont(null);
+                setModal(null);
+              }}
+            >
+              Keep my alternatives
             </button>
           </div>
         </Dialog>
@@ -1101,12 +863,21 @@ export default function FontHub() {
         <Dialog title="Your monogram" onClose={() => setModal(null)}>
           <div className="dialog-body">
             <MonogramSample info={monogramInfo} />
-            <p>Included with your wording and favorites in your request.</p>
+            <p>Included with your wording and alternatives in your request.</p>
             <button
               className="secondary-button"
               onClick={() => setModal("monogram")}
             >
               Replace monogram
+            </button>
+            <button
+              className="text-button"
+              onClick={() => {
+                setMonogramInfo(null);
+                setModal(null);
+              }}
+            >
+              Remove monogram
             </button>
           </div>
         </Dialog>

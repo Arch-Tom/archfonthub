@@ -161,3 +161,46 @@
     grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
   }
 }
+
+/* Direct quick tools share the parent dialog's surface and dismissal controls. */
+.character-tools.character-tools--dialog {
+  min-width: 0;
+}
+.character-tools.character-tools--dialog .character-tools-panel {
+  position: static;
+  width: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+}
+.character-tools--dialog .character-tools-heading {
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid #d6dfe3;
+}
+.character-tools--dialog .character-tools-tabs {
+  width: 100%;
+  gap: 0.4rem;
+}
+.character-tools--dialog .character-tools-tabs button {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.character-tools--dialog .character-tools-content {
+  padding-top: 1rem;
+}
+.character-tools--dialog .character-tools-accents {
+  max-height: min(420px, 52dvh);
+  padding: 3px;
+  scroll-padding-block: 6px;
+}
+.character-tools--dialog .character-tools-actions {
+  padding-top: 0.5rem;
+}

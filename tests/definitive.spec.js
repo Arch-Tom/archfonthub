@@ -18,17 +18,28 @@ async function capture(page, name, fullPage = false) {
 async function expectFont(page, number, family) {
   await expect(line(page, number).locator('.line-wording')).toHaveCSS('font-family', new RegExp(family));
 }
+async function openComparison(page) {
+  const dialog = page.getByRole('dialog', { name: 'Compare options', exact: true });
+  if (!(await dialog.isVisible())) await page.getByRole('button', { name: /^Compare options/ }).click();
+  await expect(dialog).toBeVisible();
+  return dialog;
+}
 async function chooseFont(page, font, number) {
   await line(page, number).click();
   await expect(line(page, number)).toHaveAttribute('aria-pressed', 'true');
   await page.getByRole('searchbox', { name: 'Search fonts', exact: true }).fill(font);
   await catalogApply(page, font, number).click();
-  await page.getByRole('searchbox', { name: 'Search fonts', exact: true }).fill('');
+  if (page.viewportSize().width <= 760) {
+    await expect(page.getByRole('dialog', { name: 'Choose lettering', exact: true })).toHaveCount(0);
+  } else await page.getByRole('searchbox', { name: 'Search fonts', exact: true }).fill('');
 }
 async function saveFavorite(page, font) {
+  const mobile = page.viewportSize().width <= 760;
+  if (mobile) await page.getByRole('button', { name: /^Choose lettering/ }).click();
   await page.getByRole('searchbox', { name: 'Search fonts', exact: true }).fill(font);
-  await page.getByRole('button', { name: `Save ${font} as favorite`, exact: true }).click();
+  await page.getByRole('button', { name: `Add ${font} to comparison`, exact: true }).click();
   await page.getByRole('searchbox', { name: 'Search fonts', exact: true }).fill('');
+  if (mobile) await page.keyboard.press('Escape');
 }
 async function openReview(page) {
   await page.locator('.site-header').getByRole('button', { name: /^Review & send/ }).click();
@@ -58,12 +69,12 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/');
 });
 
-test('desktop keeps wording, live preview, favorites and font browsing in one working view', async ({ page }) => {
+test('desktop keeps wording, live preview, comparison and font browsing in one working view', async ({ page }) => {
   await wording(page).fill(WORDING);
   const controls = [
     wording(page), line(page, 1), line(page, 3),
     page.getByRole('searchbox', { name: 'Search fonts', exact: true }),
-    favorite(page, 1), favorite(page, 3),
+    page.getByRole('button', { name: /^Compare options/ }),
     page.getByRole('button', { name: /^Review & send/ }),
   ];
   for (const control of controls) {
@@ -76,7 +87,7 @@ test('desktop keeps wording, live preview, favorites and font browsing in one wo
   await capture(page, 'desktop-workspace');
 });
 
-test('compact and expanded browsing apply lettering only to the visibly active line', async ({ page }) => {
+test('standard and wider rail browsing apply lettering only to the visibly active line', async ({ page }) => {
   await wording(page).fill(WORDING);
   await chooseFont(page, 'Great Vibes', 1);
   await chooseFont(page, 'Arial', 2);
@@ -84,7 +95,7 @@ test('compact and expanded browsing apply lettering only to the visibly active l
   await expectFont(page, 1, 'Great Vibes');
   await expectFont(page, 2, 'Arial Bold');
   await expectFont(page, 3, 'EB Garamond Regular');
-  await page.getByRole('button', { name: 'Expand fonts', exact: true }).click();
+  await page.getByRole('button', { name: 'Wider font rail', exact: true }).click();
   await expect(line(page, 2)).toHaveAttribute('aria-pressed', 'true');
   await chooseFont(page, 'Optima', 3);
   await expectFont(page, 1, 'Great Vibes');
@@ -92,7 +103,7 @@ test('compact and expanded browsing apply lettering only to the visibly active l
   await expectFont(page, 3, 'Optima');
   await expect(line(page, 1)).toHaveAttribute('aria-pressed', 'false');
   await expect(line(page, 2)).toHaveAttribute('aria-pressed', 'false');
-  await page.getByRole('button', { name: 'Compact fonts', exact: true }).click();
+  await page.getByRole('button', { name: 'Standard font rail', exact: true }).click();
   await expect(line(page, 3)).toHaveAttribute('aria-pressed', 'true');
   await page.reload();
   await expect(line(page, 3)).toHaveAttribute('aria-pressed', 'true');
@@ -102,49 +113,51 @@ test('compact and expanded browsing apply lettering only to the visibly active l
   await expect(wording(page)).toHaveValue(WORDING);
 });
 
-test('favorites retain their own styles and compare full wording without changing mixed lines', async ({ page }) => {
+test('alternatives retain their own styles and compare full wording without changing mixed lines', async ({ page }) => {
   await wording(page).fill(WORDING);
   await chooseFont(page, 'Great Vibes', 1);
   await chooseFont(page, 'Arial', 2);
-  await saveFavorite(page, 'Garamond');
-  await saveFavorite(page, 'Arial');
-  await saveFavorite(page, 'Optima');
-  await page.getByRole('combobox', { name: 'Favorite 2 style', exact: true }).selectOption('italic');
+  for (const font of ['Garamond', 'Arial', 'Optima']) await saveFavorite(page, font);
+  const comparison = await openComparison(page);
+  await comparison.getByRole('combobox', { name: 'Alternative 2 style', exact: true }).selectOption('italic');
   await expectFont(page, 2, 'Arial');
   await expect(line(page, 2).locator('.line-wording')).not.toHaveCSS('font-family', /Italic/);
   await expectFont(page, 1, 'Great Vibes');
-  await capture(page, 'desktop-mixed-favorites');
-  await page.getByRole('button', { name: 'Compare favorites', exact: true }).click();
-  const comparison = page.getByRole('dialog');
-  await expect(comparison).toBeVisible();
-  await expect(comparison.locator('.engraving-lines')).toHaveCount(3);
-  for (const sample of await comparison.locator('.engraving-lines').all()) {
-    await expect(sample.locator('.sample-line')).toHaveText(PARTS);
+  await expect(comparison.locator('.comparison-item')).toHaveCount(3);
+  for (const sample of await comparison.locator('.comparison-item').all()) {
+    await expect(sample.locator('.line-wording')).toHaveText(PARTS);
   }
+  await capture(page, 'desktop-comparison');
   await page.keyboard.press('Escape');
   await line(page, 3).click();
+  await openComparison(page);
   await favorite(page, 2).getByRole('button', { name: 'Apply Arial to line 3', exact: true }).click();
+  await expect(page.getByRole('dialog', { name: 'Compare options', exact: true })).toHaveCount(0);
   await expectFont(page, 3, 'Arial Italic');
   await expectFont(page, 1, 'Great Vibes');
   await expectFont(page, 2, 'Arial');
-  await page.getByRole('button', { name: 'Use on every line', exact: true }).click();
+  await page.getByRole('button', { name: 'Use this font on all lines', exact: true }).click();
   for (const number of [1, 2, 3]) await expectFont(page, number, 'Arial Italic');
   await page.reload();
-  await expect(page.getByRole('combobox', { name: 'Favorite 2 style', exact: true })).toHaveValue('italic');
+  await openComparison(page);
+  await expect(page.getByRole('combobox', { name: 'Alternative 2 style', exact: true })).toHaveValue('italic');
   await expect(favorite(page, 1)).toContainText('Garamond');
   await expect(favorite(page, 3)).toContainText('Optima');
 });
 
-test('favorite replacement, filtering, search and wording edits preserve lettering preferences', async ({ page }) => {
+test('alternative replacement, filtering, search and wording edits preserve lettering preferences', async ({ page }) => {
   await wording(page).fill(WORDING);
   await chooseFont(page, 'Great Vibes', 1);
   await chooseFont(page, 'Arial', 2);
   for (const name of ['Garamond', 'Arial', 'Optima']) await saveFavorite(page, name);
+  await openComparison(page);
   await favorite(page, 2).getByRole('button', { name: 'Replace Arial', exact: true }).click();
   await saveFavorite(page, 'Montserrat');
+  await openComparison(page);
   await expect(favorite(page, 2)).toContainText('Montserrat');
   await expect(favorite(page, 1)).toContainText('Garamond');
   await expect(favorite(page, 3)).toContainText('Optima');
+  await page.keyboard.press('Escape');
   await expectFont(page, 2, 'Arial');
   await page.getByRole('button', { name: 'Script', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Script', exact: true })).toHaveAttribute('aria-pressed', 'true');
@@ -165,11 +178,15 @@ test('favorite replacement, filtering, search and wording edits preserve letteri
   await wording(page).fill(WORDING);
   await expectFont(page, 1, 'Great Vibes');
   await expectFont(page, 2, 'Arial');
-  await favorite(page, 3).getByRole('button', { name: 'Remove Optima from favorites', exact: true }).click();
-  await expect(favorite(page, 3)).not.toContainText('Optima');
+  await openComparison(page);
+  await favorite(page, 3).getByRole('button', { name: 'Remove Optima from comparison', exact: true }).click();
+  await expect(page.locator('.favorite-slot')).toHaveCount(2);
+  for (const slot of await page.locator('.favorite-slot').all()) await expect(slot).not.toContainText('Optima');
+  await page.keyboard.press('Escape');
   await expectFont(page, 2, 'Arial');
   await page.reload();
   await expect(wording(page)).toHaveValue(WORDING);
+  await openComparison(page);
   await expect(favorite(page, 2)).toContainText('Montserrat');
   await expectFont(page, 2, 'Arial');
 });
@@ -186,7 +203,7 @@ test('keyboard line selection and dialogs retain clear focus and active state', 
   await page.keyboard.press('Home');
   await expect(line(page, 1)).toBeFocused();
   await page.keyboard.press('ArrowDown');
-  const expand = page.getByRole('button', { name: 'Expand fonts', exact: true });
+  const expand = page.getByRole('button', { name: 'Wider font rail', exact: true });
   await expand.focus();
   await page.keyboard.press('Enter');
   await line(page, 2).focus();
@@ -210,13 +227,15 @@ test('keyboard line selection and dialogs retain clear focus and active state', 
   await expect(page.getByRole('button', { name: /^Review & send/ })).toBeFocused();
 });
 
-test('review includes exact Unicode, favorite styles, mixed assignments, notes and customer fields', async ({ page }) => {
+test('review includes exact Unicode, alternative styles, mixed assignments, notes and customer fields', async ({ page }) => {
   await wording(page).fill(WORDING);
   await chooseFont(page, 'Great Vibes', 1);
   await chooseFont(page, 'Arial', 2);
   await page.getByRole('combobox', { name: 'Current font style', exact: true }).selectOption('bold');
   await saveFavorite(page, 'Optima');
-  await page.getByRole('combobox', { name: 'Favorite 1 style', exact: true }).selectOption('bold');
+  await openComparison(page);
+  await page.getByRole('combobox', { name: 'Alternative 1 style', exact: true }).selectOption('bold');
+  await page.keyboard.press('Escape');
   await page.getByRole('button', { name: /^Designer Notes/ }).click();
   await page.getByRole('textbox', { name: 'Notes for your designer', exact: true }).fill(NOTES);
   await page.keyboard.press('Escape');
@@ -311,18 +330,15 @@ test('a duplicate response explains the conflict and preserves the request for c
   await expect(page.getByRole('heading', { name: 'Your choices were received', exact: true })).toHaveCount(0);
 });
 
-test('mobile supports mixing, expanded browsing, favorites and review without horizontal overflow', async ({ page }) => {
+test('mobile supports mixing, its font picker, alternatives and review without horizontal overflow', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await wording(page).fill(WORDING);
   await chooseFont(page, 'Great Vibes', 1);
   await chooseFont(page, 'Arial', 2);
   await saveFavorite(page, 'Garamond');
   await saveFavorite(page, 'Optima');
-  await page.getByRole('button', { name: 'Expand fonts', exact: true }).click();
-  await line(page, 3).click();
-  await expect(line(page, 3)).toHaveAttribute('aria-pressed', 'true');
   await chooseFont(page, 'Optima', 3);
-  await page.getByRole('button', { name: 'Compact fonts', exact: true }).click();
+  await expect(line(page, 3)).toHaveAttribute('aria-pressed', 'true');
   await expectFont(page, 1, 'Great Vibes');
   await expectFont(page, 2, 'Arial');
   await expectFont(page, 3, 'Optima');
@@ -335,6 +351,11 @@ test('mobile supports mixing, expanded browsing, favorites and review without ho
   await line(page, 1).scrollIntoViewIfNeeded();
   await capture(page, 'mobile-mixed-preview');
   await capture(page, 'mobile-full-workspace', true);
+  const comparison = await openComparison(page);
+  await expect(comparison.locator('.favorite-slot')).toHaveCount(2);
+  await expect(favorite(page, 1)).toContainText('Garamond');
+  await expect(favorite(page, 2)).toContainText('Optima');
+  await page.keyboard.press('Escape');
   const review = await openReview(page);
   const box = await review.boundingBox();
   expect(box.width).toBeLessThanOrEqual(390);
@@ -348,7 +369,7 @@ test('mobile supports mixing, expanded browsing, favorites and review without ho
 test('Optima keeps its ASCII lettering and renders accents and bullets through the verified fallback', async ({ page }) => {
   await wording(page).fill(WORDING);
   await chooseFont(page, 'Optima', 1);
-  await page.getByRole('button', { name: 'Use on every line', exact: true }).click();
+  await page.getByRole('button', { name: 'Use this font on all lines', exact: true }).click();
   await expect(page.locator('.preview-section').getByRole('note')).toContainText('\u00e9');
   await expect(page.locator('.preview-section').getByRole('note')).toContainText('\u2022');
   await expect(page.locator('.preview-section').getByRole('note')).toContainText('fallback lettering');
@@ -391,32 +412,36 @@ test('Optima keeps its ASCII lettering and renders accents and bullets through t
   await expect(wording(page)).toHaveValue(WORDING);
 });
 
-test('a fourth favorite requires explicit replacement and cancel keeps all three choices', async ({ page }) => {
+test('a fourth alternative requires explicit replacement and cancel keeps all three choices', async ({ page }) => {
   await wording(page).fill(WORDING);
   await chooseFont(page, 'Great Vibes', 1);
   for (const name of ['Garamond', 'Arial', 'Optima']) await saveFavorite(page, name);
   const search = page.getByRole('searchbox', { name: 'Search fonts', exact: true });
   await search.fill('Montserrat');
-  await page.getByRole('button', { name: 'Save Montserrat as favorite', exact: true }).click();
-  let replacement = page.getByRole('dialog', { name: 'Save Montserrat', exact: true });
-  await expect(replacement).toContainText('You have three favorites');
-  await replacement.getByRole('button', { name: 'Keep my favorites', exact: true }).click();
+  await page.getByRole('button', { name: 'Add Montserrat to comparison', exact: true }).click();
+  let replacement = page.getByRole('dialog', { name: /Montserrat/ });
+  await expect(replacement).toContainText(/three alternatives|three comparison options/i);
+  await replacement.getByRole('button', { name: /Keep my/ }).click();
+  await openComparison(page);
   for (const [index, font] of ['Garamond', 'Arial', 'Optima'].entries()) await expect(favorite(page, index + 1)).toContainText(font);
-  await page.getByRole('button', { name: 'Save Montserrat as favorite', exact: true }).click();
-  replacement = page.getByRole('dialog', { name: 'Save Montserrat', exact: true });
+  await page.keyboard.press('Escape');
+  await page.getByRole('button', { name: 'Add Montserrat to comparison', exact: true }).click();
+  replacement = page.getByRole('dialog', { name: /Montserrat/ });
   await replacement.getByRole('button', { name: 'Replace Arial', exact: true }).click();
-  await expect(page.locator('.favorite-slot .favorite-top')).toHaveCount(3);
+  await openComparison(page);
+  await expect(page.locator('.favorite-slot')).toHaveCount(3);
   await expect(favorite(page, 2)).toContainText('Montserrat');
   await expectFont(page, 1, 'Great Vibes');
 });
 
 test('Fit to Preview restores a readable full-line view after increasing preview size', async ({ page }) => {
   await wording(page).fill("Ren\u00e9e O'Connor - Excellence in Research & Development\nDirector, R&D\nSt. Louis \u2022 2026");
+  await page.locator('.preview-adjustments summary').click();
   const size = page.getByRole('slider', { name: 'Size', exact: true });
   await size.fill('100');
-  await expect(page.getByRole('button', { name: 'Fit to Preview', exact: true })).toHaveAttribute('aria-pressed', 'false');
-  await page.getByRole('button', { name: 'Fit to Preview', exact: true }).click();
-  await expect(page.getByRole('button', { name: 'Fit to Preview', exact: true })).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.getByRole('button', { name: /Fit to Preview$/ })).toHaveAttribute('aria-pressed', 'false');
+  await page.getByRole('button', { name: /Fit to Preview$/ }).click();
+  await expect(page.getByRole('button', { name: /Fit to Preview$/ })).toHaveAttribute('aria-pressed', 'true');
   const canvas = page.locator('.preview-section .engraving-canvas');
   const canvasBox = await canvas.boundingBox();
   for (const number of [1, 2, 3]) {
@@ -441,7 +466,7 @@ test('inserting and removing an intentional blank line retains each existing lin
   await blank.click();
   await expect(blank).toHaveAttribute('aria-pressed', 'true');
   await expect(page.locator('.catalog-target')).toContainText('Editing line 2');
-  await expect(page.locator('.active-line-bar')).toContainText('Editing line 2');
+  await expect(page.locator('.active-line-toolbar')).toContainText('Line 2');
   await page.reload();
   await expect(wording(page)).toHaveValue(withBlank);
   await expect(blank).toHaveAttribute('aria-pressed', 'true');
@@ -475,10 +500,10 @@ test('returning to a font restores its chosen style before and after reload', as
   await expectFont(page, 1, 'EB Garamond Regular');
 });
 
-test('font tiles preview the exact active line in compact and expanded modes', async ({ page }) => {
+test('font rows preview the exact active line in standard and wider modes', async ({ page }) => {
   await wording(page).fill(WORDING);
   for (const expanded of [false, true]) {
-    if (expanded) await page.getByRole('button', { name: 'Expand fonts', exact: true }).click();
+    if (expanded) await page.getByRole('button', { name: 'Wider font rail', exact: true }).click();
     for (const number of [1, 2, 3]) {
       await line(page, number).click();
       await expect(page.locator('.catalog-target')).toContainText(`Editing line ${number}`);
@@ -498,8 +523,7 @@ async function previewGeometry(page) {
       const text = button.querySelector('.line-wording');
       const box = text.getBoundingClientRect();
       const row = button.getBoundingClientRect();
-      const style = getComputedStyle(text);
-      return { text: text.textContent, height: box.height, lineHeight: parseFloat(style.lineHeight), top: row.top, bottom: row.bottom, wrapped: box.height > parseFloat(style.lineHeight) + 1 };
+      return { text: text.textContent, height: box.height, top: box.top, bottom: box.bottom, hitTop: row.top, hitBottom: row.bottom, wrapped: text.querySelectorAll('tspan').length > 0 || text.childNodes.length !== 1, baseline: Number(text.dataset.baseline) };
     });
     return { rows, contentTop, contentBottom, scrollHeight: canvas.scrollHeight, clientHeight: canvas.clientHeight, scrollWidth: canvas.scrollWidth, clientWidth: canvas.clientWidth, size: computed.getPropertyValue('--engraving-size') };
   });
@@ -510,8 +534,8 @@ test('first expansion automatically fits all mixed lines without wrapping or con
   await chooseFont(page, 'Great Vibes', 1);
   await chooseFont(page, 'Copperplate', 2);
   await chooseFont(page, 'Garamond', 3);
-  await expect(page.getByRole('button', { name: 'Fit to Preview', exact: true })).toHaveAttribute('aria-pressed', 'true');
-  await page.getByRole('button', { name: 'Expand fonts', exact: true }).click();
+  await expect(page.getByRole('button', { name: /Fit to Preview$/ })).toHaveAttribute('aria-pressed', 'true');
+  await page.getByRole('button', { name: 'Wider font rail', exact: true }).click();
   await page.evaluate(async () => {
     await document.fonts.ready;
     await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
@@ -529,40 +553,32 @@ test('first expansion automatically fits all mixed lines without wrapping or con
   }
 });
 
-test('mobile changes the exact active line from the catalog without returning to the preview', async ({ page }) => {
+test('mobile changes the exact active line inside the picker without returning to the preview', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await wording(page).fill(WORDING);
   await chooseFont(page, 'Great Vibes', 1);
-  const catalog = page.locator('.catalog');
-  const picker = catalog.getByRole('combobox', { name: 'Line to edit', exact: true });
-  const search = catalog.getByRole('searchbox', { name: 'Search fonts', exact: true });
-  await catalog.evaluate(element => element.scrollIntoView({ block: 'start' }));
-  await expect(picker).toBeInViewport();
-  await expect(line(page, 1)).not.toBeInViewport();
-  for (const { expanded, number, font } of [
-    { expanded: false, number: 2, font: 'Arial' },
-    { expanded: true, number: 3, font: 'Optima' },
-  ]) {
-    if (expanded) await page.getByRole('button', { name: 'Expand fonts', exact: true }).click();
-    await expect(picker).toBeInViewport();
+  for (const { number, font } of [{ number: 2, font: 'Arial' }, { number: 3, font: 'Optima' }]) {
+    await page.getByRole('button', { name: /^Choose lettering/ }).click();
+    const picker = page.getByRole('dialog', { name: 'Choose lettering', exact: true });
+    const catalog = picker.locator('.catalog');
+    const target = catalog.getByRole('combobox', { name: 'Line to edit', exact: true });
+    await expect(target).toBeInViewport();
     const scrollBefore = await page.evaluate(() => window.scrollY);
-    await picker.selectOption(String(number - 1));
-    expect(Math.abs(await page.evaluate(() => window.scrollY) - scrollBefore), 'Changing the line target must not scroll customers back to the preview').toBeLessThanOrEqual(1);
-    await expect(picker).toHaveValue(String(number - 1));
+    await target.selectOption(String(number - 1));
+    expect(Math.abs(await page.evaluate(() => window.scrollY) - scrollBefore), 'Changing the target must not leave the picker or scroll the underlying workspace').toBeLessThanOrEqual(1);
+    await expect(target).toHaveValue(String(number - 1));
     await expect(catalog.locator('.catalog-target')).toContainText(`Editing line ${number}`);
     await expect(catalog.locator('.catalog-target strong')).toHaveText(PARTS[number - 1]);
-    await search.fill(font);
-    await catalogApply(page, font, number).click();
-    await search.fill('');
+    await catalog.getByRole('searchbox', { name: 'Search fonts', exact: true }).fill(font);
+    await catalog.getByRole('button', { name: `Apply ${font} to line ${number}`, exact: true }).click();
+    await expect(picker).toHaveCount(0);
     await expect(line(page, number)).toHaveAttribute('aria-pressed', 'true');
     await expectFont(page, number, font);
     await expectFont(page, 1, 'Great Vibes');
-    await expect(line(page, 1)).not.toBeInViewport();
   }
   await expectFont(page, 2, 'Arial');
-  await page.getByRole('button', { name: 'Compact fonts', exact: true }).click();
-  await expect(picker).toHaveValue('2');
-  await expect(catalog.locator('.catalog-target')).toContainText('Editing line 3');
-  await capture(page, 'mobile-catalog-line-picker');
+  await page.getByRole('button', { name: /^Choose lettering/ }).click();
+  await expect(page.getByRole('combobox', { name: 'Line to edit', exact: true })).toHaveValue('2');
+  await capture(page, 'mobile-font-picker');
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
 });

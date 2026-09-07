@@ -5,6 +5,7 @@ export default function Dialog({
   children,
   wide = false,
   busy = false,
+  className = "",
 }) {
   const ref = useRef(null);
   const close = useRef(onClose);
@@ -51,7 +52,7 @@ export default function Dialog({
     <dialog
       ref={ref}
       tabIndex={-1}
-      className={`hub-dialog ${wide ? "hub-dialog--wide" : ""}`}
+      className={`hub-dialog ${wide ? "hub-dialog--wide" : ""} ${className}`}
       aria-labelledby="dialog-title"
       onKeyDown={trapFocus}
       onCancel={(event) => {
